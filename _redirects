@@ -73,9 +73,17 @@
 /products/miroir-gale-salle-de-bain-led-antibuee-anticorrosion  /produits/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/  301
 /products/nova-style-miroir-double-cercle  /produits/nova-style-miroir-double-cercle/  301
 
+# Shopify collections → real category pages
+/collections/sdb-premium             /categorie/sdb-premium/      301
+/collections/entree-de-gamme         /categorie/sdb-essentiel/    301
+/collections/salon                   /categorie/salon/            301
+/collections/dressing                /categorie/salon/            301
+/collections/consoles                /categorie/consoles/         301
+/collections/tables                  /categorie/tables/           301
+/collections/douches                 /categorie/douches/          301
+
 # Shopify collections → keyword hub pages
 /collections/all                     /miroir-salle-de-bain/       301
-/collections/entree-de-gamme         /miroir-salle-de-bain/       301
 /collections/miroir-avec-led         /miroir-salle-de-bain-led/   301
 /collections/miroir-anti-buee        /miroir-salle-de-bain-anti-buee/ 301
 /collections/*                       /miroir-salle-de-bain/       301
