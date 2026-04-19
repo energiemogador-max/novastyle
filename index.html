@@ -99,7 +99,268 @@
     </div>
   </div>
 </section>
-
+<!-- ===== INSTAGRAM STRIP ===== -->
+<section class="ns-insta-strip">
+<style>
+.ns-insta-strip {
+  background: linear-gradient(135deg, #fff5f9 0%, #fff8f2 50%, #f8f2ff 100%);
+  border-top: 1px solid #f0e0ea;
+  border-bottom: 1px solid #f0e0ea;
+  padding: 18px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.ns-insta-strip::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(240,148,51,0.08), rgba(188,24,136,0.08));
+  pointer-events: none;
+}
+.ns-insta-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.ns-insta-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.ns-insta-avatar-wrap {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+}
+.ns-insta-avatar-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  padding: 2.5px;
+}
+.ns-insta-avatar-ring-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ns-insta-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.ns-insta-sub {
+  font-size: 11.5px;
+  color: #b08090;
+  margin-top: 2px;
+  letter-spacing: 0.01em;
+}
+.ns-insta-middle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+}
+.ns-insta-thumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+  position: relative;
+}
+.ns-insta-thumb-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ns-insta-more-tile {
+  width: 46px;
+  height: 46px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(240,148,51,0.15), rgba(188,24,136,0.15));
+  border: 2px solid #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #cc2366;
+  letter-spacing: -0.02em;
+}
+.ns-insta-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+.ns-insta-stats {
+  display: flex;
+  gap: 20px;
+}
+.ns-insta-stat {
+  text-align: center;
+}
+.ns-insta-stat strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a1a;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.ns-insta-stat span {
+  font-size: 10px;
+  color: #b08090;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+  display: block;
+}
+.ns-insta-divider {
+  width: 1px;
+  height: 32px;
+  background: #f0d0dc;
+}
+.ns-insta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff !important;
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 11px 22px;
+  border-radius: 50px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.01em;
+  box-shadow: 0 3px 14px rgba(204,35,102,0.30);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.ns-insta-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 18px rgba(204,35,102,0.38);
+}
+@media (max-width: 680px) {
+  .ns-insta-middle { display: none; }
+  .ns-insta-inner { gap: 12px; }
+}
+@media (max-width: 420px) {
+  .ns-insta-stats { gap: 14px; }
+  .ns-insta-stat strong { font-size: 16px; }
+  .ns-insta-btn { padding: 10px 16px; font-size: 12px; }
+}
+</style>
+  <div class="ns-insta-inner">
+ 
+    <div class="ns-insta-left">
+      <div class="ns-insta-avatar-wrap">
+        <div class="ns-insta-avatar-ring">
+          <div class="ns-insta-avatar-ring-inner">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#ig-grad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <defs>
+                <linearGradient id="ig-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#f09433"/>
+                  <stop offset="100%" stop-color="#bc1888"/>
+                </linearGradient>
+              </defs>
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="#f09433" stroke-width="2.5"></line>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="ns-insta-name">@nova_home_style</div>
+        <div class="ns-insta-sub">✦ Réalisations &amp; inspirations déco</div>
+      </div>
+    </div>
+ 
+    <div class="ns-insta-middle">
+      <a href="https://www.instagram.com/nova_home_style/" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="ns-insta-thumb">
+          <div class="ns-insta-thumb-inner" style="background:linear-gradient(135deg,#fde8d8,#f8c5c5);">
+            <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><rect x="6" y="6" width="20" height="20" rx="2" stroke="#e06060" stroke-width="1.2"/><line x1="6" y1="13" x2="26" y2="13" stroke="#e06060" stroke-width="0.8" opacity="0.5"/><rect x="10" y="16" width="12" height="7" rx="1" stroke="#e06060" stroke-width="1"/></svg>
+          </div>
+        </div>
+      </a>
+      <a href="https://www.instagram.com/nova_home_style/" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="ns-insta-thumb">
+          <div class="ns-insta-thumb-inner" style="background:linear-gradient(135deg,#e8f4fd,#d0e8f8);">
+            <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="9" stroke="#5090d0" stroke-width="1.2"/><circle cx="16" cy="16" r="4" stroke="#5090d0" stroke-width="0.8" opacity="0.5"/></svg>
+          </div>
+        </div>
+      </a>
+      <a href="https://www.instagram.com/nova_home_style/" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="ns-insta-thumb">
+          <div class="ns-insta-thumb-inner" style="background:linear-gradient(135deg,#fdf4e8,#f8e4c0);">
+            <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><rect x="7" y="7" width="8" height="18" rx="1.5" stroke="#c08030" stroke-width="1.2"/><rect x="17" y="11" width="8" height="14" rx="1.5" stroke="#c08030" stroke-width="1.2"/></svg>
+          </div>
+        </div>
+      </a>
+      <a href="https://www.instagram.com/nova_home_style/" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="ns-insta-thumb">
+          <div class="ns-insta-thumb-inner" style="background:linear-gradient(135deg,#edf8ed,#c8ecc8);">
+            <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><polygon points="16,5 20,12 27,13 21.5,18.5 23,26 16,22 9,26 10.5,18.5 5,13 12,12" stroke="#40a040" stroke-width="1.2" fill="none"/></svg>
+          </div>
+        </div>
+      </a>
+      <a href="https://www.instagram.com/nova_home_style/" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="ns-insta-more-tile">+241</div>
+      </a>
+    </div>
+ 
+    <div class="ns-insta-right">
+      <div class="ns-insta-stats">
+        <div class="ns-insta-stat">
+          <strong>11.7K</strong>
+          <span>Abonnés</span>
+        </div>
+        <div class="ns-insta-divider"></div>
+        <div class="ns-insta-stat">
+          <strong>241</strong>
+          <span>Posts</span>
+        </div>
+      </div>
+      <a class="ns-insta-btn" href="https://www.instagram.com/nova_home_style/" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+          <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+        Nous suivre
+      </a>
+    </div>
+ 
+  </div>
+</section>
+<!-- ===== END INSTAGRAM STRIP ===== -->
+  
 <section class="city-section">
   <h2>Livraison et installation dans tout le Maroc</h2>
   <p>Fabrication à Casablanca, livraison partout au Maroc :</p>
