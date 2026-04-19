@@ -451,10 +451,21 @@
     <div style="margin-top: 30px;">
       <div class="orders-container">
         <div class="orders-header">
-          <h2>👥 Visiteurs en direct (10 dernières minutes)</h2>
+          <h2>👥 Visiteurs en direct</h2>
         </div>
         <div class="orders-list" id="visitors-list">
           <div class="empty-message">Aucun visiteur actuellement</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 30px;">
+      <div class="orders-container">
+        <div class="orders-header">
+          <h2>📊 Historique des sessions</h2>
+        </div>
+        <div class="orders-list" id="history-list">
+          <div class="empty-message">Aucune session enregistrée</div>
         </div>
       </div>
     </div>
@@ -595,6 +606,7 @@ function loadOrders() {
   updateStats();
   filterOrders();
   updateLiveVisitors();
+  updateSessionHistory();
 }
 
 function updateStats() {
@@ -781,59 +793,104 @@ function clearAllOrders() {
 document.addEventListener('DOMContentLoaded', checkAuth);
 
 // Live Visitor Tracking Functions
-function getActiveVisitors() {
+function getVisitorSessions() {
   try {
-    const visitors = localStorage.getItem('nova_active_visitors');
-    return visitors ? JSON.parse(visitors) : {};
+    const sessions = localStorage.getItem('nova_visitor_sessions');
+    return sessions ? JSON.parse(sessions) : {};
   } catch (e) {
     return {};
   }
 }
 
 function getLiveVisitorCount() {
-  const visitors = getActiveVisitors();
+  const sessions = getVisitorSessions();
   const now = Date.now();
-  const TIMEOUT = 10 * 60 * 1000; // 10 minutes
+  const TIMEOUT = 15 * 60 * 1000; // 15 minutes
   
-  return Object.values(visitors).filter(v => (now - v.lastSeen) < TIMEOUT).length;
+  return Object.values(sessions).filter(s => (now - s.lastSeen) < TIMEOUT && s.isActive).length;
 }
 
 function updateLiveVisitors() {
-  const visitors = getActiveVisitors();
+  const sessions = getVisitorSessions();
   const now = Date.now();
-  const TIMEOUT = 10 * 60 * 1000; // 10 minutes
+  const TIMEOUT = 15 * 60 * 1000; // 15 minutes
   
-  const activeVisitors = Object.values(visitors)
-    .filter(v => (now - v.lastSeen) < TIMEOUT)
+  const activeSessions = Object.values(sessions)
+    .filter(s => (now - s.lastSeen) < TIMEOUT && s.isActive)
     .sort((a, b) => b.lastSeen - a.lastSeen);
   
   const container = document.getElementById('visitors-list');
   
-  if (activeVisitors.length === 0) {
+  if (activeSessions.length === 0) {
     container.innerHTML = '<div class="empty-message">Aucun visiteur actuellement</div>';
     return;
   }
   
-  container.innerHTML = activeVisitors.map(visitor => {
-    const lastSeenMin = Math.floor((now - visitor.lastSeen) / 60000);
+  container.innerHTML = activeSessions.map(session => {
+    const lastSeenMin = Math.floor((now - session.lastSeen) / 60000);
     const timeSeen = lastSeenMin === 0 ? 'À l\'instant' : `Il y a ${lastSeenMin}m`;
-    const duration = Math.floor((visitor.lastSeen - visitor.firstVisit) / 1000);
+    const duration = Math.floor((session.lastSeen - session.sessionStart) / 1000);
     const durationMin = Math.floor(duration / 60);
     const durationSec = duration % 60;
     
     return `
       <div class="order-item">
         <div class="order-header">
-          <div class="order-name">👤 ${visitor.visitorId.slice(0, 20)}...</div>
+          <div class="order-name">👤 ${session.visitorId.slice(0, 15)}...</div>
           <div class="order-time">${timeSeen}</div>
         </div>
         <div class="order-info">
-          <div class="order-info-label">📄 Page:</div>
-          <div class="order-info-value">${getPageNameForVisitor(visitor.lastPage)}</div>
-          <div class="order-info-label">👁️ Visites:</div>
-          <div class="order-info-value">${visitor.visitCount}</div>
-          <div class="order-info-label">⏱️ Durée:</div>
+          <div class="order-info-label">📄 Page actuelle:</div>
+          <div class="order-info-value">${getPageNameForVisitor(session.lastPage)}</div>
+          <div class="order-info-label">📍 Pages visitées:</div>
+          <div class="order-info-value">${session.pages ? session.pages.length : 1} page(s)</div>
+          <div class="order-info-label">👁️ Total visites:</div>
+          <div class="order-info-value">${session.visitCount || 1}</div>
+          <div class="order-info-label">⏱️ Durée session:</div>
           <div class="order-info-value">${durationMin}m ${durationSec}s</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateSessionHistory() {
+  const sessions = getVisitorSessions();
+  const now = Date.now();
+  
+  const allSessions = Object.values(sessions)
+    .sort((a, b) => b.lastSeen - a.lastSeen)
+    .slice(0, 50); // Show last 50 sessions
+  
+  const container = document.getElementById('history-list');
+  
+  if (allSessions.length === 0) {
+    container.innerHTML = '<div class="empty-message">Aucune session enregistrée</div>';
+    return;
+  }
+  
+  container.innerHTML = allSessions.map(session => {
+    const totalDuration = Math.floor((session.lastSeen - session.sessionStart) / 1000);
+    const durationMin = Math.floor(totalDuration / 60);
+    const durationSec = totalDuration % 60;
+    const lastSeenTime = new Date(session.lastSeen).toLocaleString('fr-MA');
+    const status = (now - session.lastSeen) < (15 * 60 * 1000) && session.isActive ? '🟢 Actif' : '🔴 Inactif';
+    
+    return `
+      <div class="order-item">
+        <div class="order-header">
+          <div class="order-name">👤 ${session.visitorId.slice(0, 15)}...</div>
+          <div class="order-time">${status}</div>
+        </div>
+        <div class="order-info">
+          <div class="order-info-label">⏰ Dernière activité:</div>
+          <div class="order-info-value">${lastSeenTime}</div>
+          <div class="order-info-label">📄 Pages visitées:</div>
+          <div class="order-info-value">${session.pages ? session.pages.length : 1}</div>
+          <div class="order-info-label">⏱️ Durée totale:</div>
+          <div class="order-info-value">${durationMin}m ${durationSec}s</div>
+          <div class="order-info-label">🔗 Première visite:</div>
+          <div class="order-info-value">${new Date(session.firstVisit).toLocaleString('fr-MA')}</div>
         </div>
       </div>
     `;
@@ -855,10 +912,7 @@ function getPageNameForVisitor(path) {
   if (pathMap[path]) return pathMap[path];
   
   if (path.includes('/produits/')) {
-    const parts = path.split('/').filter(p => p && p !== 'produits' && p !== 'index.html');
-    if (parts.length > 0) {
-      return '🛍️ Produit';
-    }
+    return '🛍️ Produit';
   }
   
   if (path.includes('/categorie/')) {
@@ -869,13 +923,14 @@ function getPageNameForVisitor(path) {
   return path;
 }
 
-// Refresh live visitors every 5 seconds
+// Refresh live visitors every 3 seconds
 setInterval(() => {
   if (document.getElementById('dashboard-page').style.display !== 'none') {
     updateLiveVisitors();
+    updateSessionHistory();
     document.getElementById('live-visitors').textContent = getLiveVisitorCount();
   }
-}, 5000);
+}, 3000);
 </script>
 
 </body>

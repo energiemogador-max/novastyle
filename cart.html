@@ -634,13 +634,6 @@ function submitOrder() {
     return;
   }
   
-  // Anti-spam: Check for duplicate orders within 60 seconds
-  const recentOrders = getRecentOrders(60000);
-  if (recentOrders.some(o => o.phone === phone)) {
-    alert('Une commande a déjà été soumise récemment avec ce numéro. Veuillez attendre un moment avant de réessayer.');
-    return;
-  }
-  
   const cart = getCart();
   if (cart.length === 0) {
     alert('Votre panier est vide');
@@ -648,13 +641,6 @@ function submitOrder() {
   }
   
   const total = getCartTotal();
-  const cartDetails = cart.map(i => {
-    let detail = `${i.name} x${i.quantity} = ${formatPrice(i.price * i.quantity)}`;
-    if (i.options) {
-      detail += ` (${Object.entries(i.options).map(([k, v]) => `${k}: ${v}`).join(', ')})`;
-    }
-    return detail;
-  }).join('\n');
   
   // Save order to admin dashboard
   const order = {
@@ -678,28 +664,6 @@ function submitOrder() {
   // Save to admin orders
   saveAdminOrder(order);
   
-  const message = `
-Nouvelle Commande Nova Style
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CLIENT:
-Nom: ${name}
-Téléphone: ${phone}
-Ville: ${city}
-Adresse: ${address}
-
-ARTICLES:
-${cartDetails}
-
-Total: ${formatPrice(total)}
-
-Notes: ${notes || '(aucune)'}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Acompte de 50% sera demandé: ${formatPrice(total * 0.5)}
-  `.trim();
-  
-  const whatsappUrl = `https://wa.me/212707074748?text=${encodeURIComponent(message)}`;
-  
   // Clear form
   document.getElementById('form-name').value = '';
   document.getElementById('form-phone').value = '';
@@ -710,12 +674,12 @@ Acompte de 50% sera demandé: ${formatPrice(total * 0.5)}
   // Close modal
   closeOrderModal();
   
-  // Open WhatsApp
-  window.open(whatsappUrl, '_blank');
+  // Show success message
+  alert('Commande reçue! Notre équipe vous contactera bientôt.');
   
   // Clear cart after successful submission
   setTimeout(() => {
-    if (confirm('Commande envoyée avec succès! Vider le panier?')) {
+    if (confirm('Vider le panier?')) {
       clearCart();
       renderCart();
     }
@@ -730,18 +694,6 @@ function saveAdminOrder(order) {
     localStorage.setItem('nova_style_orders', JSON.stringify(allOrders));
   } catch (e) {
     console.error('Error saving order:', e);
-  }
-}
-
-function getRecentOrders(timeWindow) {
-  try {
-    const orders = localStorage.getItem('nova_style_orders');
-    if (!orders) return [];
-    const allOrders = JSON.parse(orders);
-    const now = Date.now();
-    return allOrders.filter(o => (now - o.timestamp) < timeWindow);
-  } catch (e) {
-    return [];
   }
 }
 
