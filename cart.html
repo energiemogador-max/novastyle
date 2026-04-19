@@ -6,6 +6,7 @@
 <title>Nova Style — Panier</title>
 <meta name="description" content="Votre panier Nova Style - Procédez à la commande">
 <link rel="stylesheet" href="/assets/style.css">
+<script src="/assets/cart-display.js" defer></script>
 <style>
   .container {
     max-width: 1100px;
@@ -501,7 +502,7 @@
   <p>© 2024 Nova Style · Casablanca · <a href="tel:+212707074748" style="color: var(--accent);">+212 70 70 74 748</a></p>
 </footer>
 
-<script src="/assets/cart.js"></script>
+<script type="module" src="/assets/cart.js"></script>
 <script>
 function renderCart() {
   const cart = getCart();
@@ -710,6 +711,14 @@ document.getElementById('form-modal').addEventListener('click', function(e) {
     closeOrderModal();
   }
 });
+
+// Prevent form from closing when clicking inside it
+const modalContent = document.querySelector('.modal-content');
+if (modalContent) {
+  modalContent.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+}
 
 // Render cart on load
 document.addEventListener('DOMContentLoaded', renderCart);
