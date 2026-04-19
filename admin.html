@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - Nova Style</title>
+<link rel="stylesheet" href="/assets/style.css">
+<style>
+  body {
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .login-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .login-box h1 {
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-dim);
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: opacity 0.2s;
+  }
+
+  .login-btn:hover {
+    opacity: 0.9;
+  }
+
+  .login-error {
+    background: var(--red);
+    color: white;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: none;
+  }
+
+  .login-error.show {
+    display: block;
+  }
+
+  .dashboard-page {
+    display: none;
+  }
+
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 20px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 28px;
+    margin: 0;
+  }
+
+  .logout-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.2s;
+  }
+
+  .logout-btn:hover {
+    opacity: 0.9;
+  }
+
+  .dashboard-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-box {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .filter-btn {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .orders-container {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .orders-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-soft);
+  }
+
+  .orders-header h2 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .orders-list {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .order-item {
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+
+  .order-item:hover {
+    background: var(--bg-soft);
+  }
+
+  .order-item:last-child {
+    border-bottom: none;
+  }
+
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+
+  .order-name {
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .order-time {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .order-info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px 16px;
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+
+  .order-info-label {
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .order-info-value {
+    color: var(--text);
+  }
+
+  .order-items-preview {
+    background: var(--bg-soft);
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+
+  .order-item-line {
+    padding: 4px 0;
+    line-height: 1.4;
+  }
+
+  .order-total {
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  .order-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .btn-action {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.2s;
+  }
+
+  .btn-copy {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-delete {
+    background: var(--red);
+    color: white;
+  }
+
+  .btn-action:hover {
+    opacity: 0.8;
+  }
+
+  .empty-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+  }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal-content {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-close {
+    float: right;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--muted);
+  }
+
+  .modal-close:hover {
+    color: var(--text);
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-header {
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .dashboard-controls {
+      flex-direction: column;
+    }
+
+    .search-box {
+      width: 100%;
+    }
+
+    .order-info {
+      grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="admin-container">
+  <!-- Login Page -->
+  <div class="login-page" id="login-page">
+    <div class="login-box">
+      <h1>🔐 Admin Dashboard</h1>
+      <div class="login-error" id="login-error"></div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" id="password-input" placeholder="Entrez le mot de passe" onkeypress="handleLoginKeypress(event)">
+      </div>
+      <button class="login-btn" onclick="handleLogin()">Connexion</button>
+    </div>
+  </div>
+
+  <!-- Dashboard Page -->
+  <div class="dashboard-page" id="dashboard-page">
+    <div class="dashboard-header">
+      <h1>📊 Commandes</h1>
+      <button class="logout-btn" onclick="handleLogout()">Déconnexion</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="total-orders">0</div>
+        <div class="stat-label">Commandes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="total-revenue">0 MAD</div>
+        <div class="stat-label">Chiffre d'affaires</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="avg-order">0 MAD</div>
+        <div class="stat-label">Panier moyen</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="total-items">0</div>
+        <div class="stat-label">Articles</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="live-visitors">0</div>
+        <div class="stat-label">Visiteurs en ligne</div>
+      </div>
+    </div>
+
+    <div class="dashboard-controls">
+      <input type="text" class="search-box" id="search-input" placeholder="Chercher par nom, téléphone, ville..." onkeyup="filterOrders()">
+      <button class="filter-btn active" onclick="setFilter('all')" data-filter="all">Tous</button>
+      <button class="filter-btn" onclick="setFilter('today')" data-filter="today">Aujourd'hui</button>
+      <button class="filter-btn" onclick="setFilter('week')" data-filter="week">Cette semaine</button>
+      <button class="filter-btn" onclick="clearAllOrders()" style="background: var(--red); color: white; border-color: var(--red);">Vider tout</button>
+    </div>
+
+    <div class="orders-container">
+      <div class="orders-header">
+        <h2>Liste des commandes</h2>
+      </div>
+      <div class="orders-list" id="orders-list">
+        <div class="empty-message">Aucune commande pour le moment</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 30px;">
+      <div class="orders-container">
+        <div class="orders-header">
+          <h2>👥 Visiteurs en direct (10 dernières minutes)</h2>
+        </div>
+        <div class="orders-list" id="visitors-list">
+          <div class="empty-message">Aucun visiteur actuellement</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Order Details Modal -->
+<div class="modal-overlay" id="order-modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeOrderModal()">×</button>
+    <h2>Détails de la commande</h2>
+    <div id="order-details"></div>
+  </div>
+</div>
+
+<script src="/assets/cart.js"></script>
+<script>
+const ADMIN_PASSWORD = 'nova2024'; // Change this to your password
+const MAX_FAILED_ATTEMPTS = 5;
+const LOCKOUT_DURATION = 300000; // 5 minutes
+
+let currentFilter = 'all';
+let allOrders = [];
+
+function getAdminOrders() {
+  try {
+    const orders = localStorage.getItem('nova_style_orders');
+    return orders ? JSON.parse(orders) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveAdminOrders(orders) {
+  localStorage.setItem('nova_style_orders', JSON.stringify(orders));
+}
+
+function hashPassword(pwd) {
+  let hash = 0;
+  for (let i = 0; i < pwd.length; i++) {
+    const char = pwd.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString();
+}
+
+function getFailedAttempts() {
+  const attempts = localStorage.getItem('admin_failed_attempts');
+  const timestamp = localStorage.getItem('admin_lockout_time');
+  
+  if (!attempts) return 0;
+  
+  const now = Date.now();
+  if (timestamp && now - parseInt(timestamp) < LOCKOUT_DURATION) {
+    return parseInt(attempts);
+  }
+  
+  localStorage.removeItem('admin_failed_attempts');
+  localStorage.removeItem('admin_lockout_time');
+  return 0;
+}
+
+function incrementFailedAttempts() {
+  let attempts = getFailedAttempts() + 1;
+  localStorage.setItem('admin_failed_attempts', attempts.toString());
+  localStorage.setItem('admin_lockout_time', Date.now().toString());
+  return attempts;
+}
+
+function isLockedOut() {
+  const attempts = getFailedAttempts();
+  return attempts >= MAX_FAILED_ATTEMPTS;
+}
+
+function handleLogin() {
+  if (isLockedOut()) {
+    showLoginError('Trop de tentatives. Veuillez réessayer dans 5 minutes.');
+    return;
+  }
+
+  const password = document.getElementById('password-input').value;
+  
+  if (!password) {
+    showLoginError('Veuillez entrer le mot de passe');
+    return;
+  }
+
+  if (hashPassword(password) === hashPassword(ADMIN_PASSWORD)) {
+    localStorage.setItem('admin_logged_in', 'true');
+    localStorage.removeItem('admin_failed_attempts');
+    showDashboard();
+  } else {
+    incrementFailedAttempts();
+    showLoginError('Mot de passe incorrect');
+    document.getElementById('password-input').value = '';
+  }
+}
+
+function handleLoginKeypress(e) {
+  if (e.key === 'Enter') {
+    handleLogin();
+  }
+}
+
+function showLoginError(msg) {
+  const error = document.getElementById('login-error');
+  error.textContent = msg;
+  error.classList.add('show');
+  setTimeout(() => error.classList.remove('show'), 4000);
+}
+
+function checkAuth() {
+  const isLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
+  
+  if (!isLoggedIn) {
+    document.getElementById('login-page').style.display = 'flex';
+    document.getElementById('dashboard-page').style.display = 'none';
+  } else {
+    showDashboard();
+  }
+}
+
+function showDashboard() {
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('dashboard-page').style.display = 'block';
+  loadOrders();
+}
+
+function handleLogout() {
+  localStorage.removeItem('admin_logged_in');
+  document.getElementById('password-input').value = '';
+  checkAuth();
+}
+
+function loadOrders() {
+  allOrders = getAdminOrders();
+  updateStats();
+  filterOrders();
+  updateLiveVisitors();
+}
+
+function updateStats() {
+  const totalOrders = allOrders.length;
+  const totalRevenue = allOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+  const totalItems = allOrders.reduce((sum, o) => sum + (o.itemCount || 0), 0);
+  const avgOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+  const liveCount = getLiveVisitorCount();
+
+  document.getElementById('total-orders').textContent = totalOrders;
+  document.getElementById('total-revenue').textContent = formatPrice(totalRevenue);
+  document.getElementById('total-items').textContent = totalItems;
+  document.getElementById('avg-order').textContent = formatPrice(avgOrder);
+  document.getElementById('live-visitors').textContent = liveCount;
+}
+
+function setFilter(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  filterOrders();
+}
+
+function filterOrders() {
+  const searchTerm = document.getElementById('search-input').value.toLowerCase();
+  let filtered = allOrders;
+
+  // Filter by date
+  const now = Date.now();
+  if (currentFilter === 'today') {
+    const startOfDay = new Date().setHours(0, 0, 0, 0);
+    filtered = filtered.filter(o => o.timestamp >= startOfDay);
+  } else if (currentFilter === 'week') {
+    const weekAgo = now - (7 * 24 * 60 * 60 * 1000);
+    filtered = filtered.filter(o => o.timestamp >= weekAgo);
+  }
+
+  // Filter by search term
+  if (searchTerm) {
+    filtered = filtered.filter(o => 
+      o.name.toLowerCase().includes(searchTerm) ||
+      o.phone.toLowerCase().includes(searchTerm) ||
+      o.city.toLowerCase().includes(searchTerm) ||
+      o.address.toLowerCase().includes(searchTerm)
+    );
+  }
+
+  // Sort by newest first
+  filtered.sort((a, b) => b.timestamp - a.timestamp);
+
+  renderOrders(filtered);
+}
+
+function renderOrders(orders) {
+  const container = document.getElementById('orders-list');
+
+  if (orders.length === 0) {
+    container.innerHTML = '<div class="empty-message">Aucune commande trouvée</div>';
+    return;
+  }
+
+  container.innerHTML = orders.map(order => `
+    <div class="order-item" onclick="showOrderDetails(${allOrders.indexOf(order)})">
+      <div class="order-header">
+        <div class="order-name">${order.name}</div>
+        <div class="order-time">${new Date(order.timestamp).toLocaleString('fr-MA')}</div>
+      </div>
+      <div class="order-info">
+        <div class="order-info-label">📱 Téléphone:</div>
+        <div class="order-info-value">${order.phone}</div>
+        <div class="order-info-label">📍 Ville:</div>
+        <div class="order-info-value">${order.city}</div>
+        <div class="order-info-label">💰 Total:</div>
+        <div class="order-info-value">${formatPrice(order.total)}</div>
+      </div>
+      <div class="order-items-preview">
+        <strong>${order.items.length} article(s):</strong>
+        ${order.items.slice(0, 2).map(item => `
+          <div class="order-item-line">• ${item.name} x${item.quantity}</div>
+        `).join('')}
+        ${order.items.length > 2 ? `<div class="order-item-line">• +${order.items.length - 2} autre(s)</div>` : ''}
+      </div>
+      <div class="order-total">Total: ${formatPrice(order.total)}</div>
+      <div class="order-actions">
+        <button class="btn-action btn-copy" onclick="copyOrderToClipboard(event, ${allOrders.indexOf(order)})">📋 Copier</button>
+        <button class="btn-action btn-delete" onclick="deleteOrder(event, ${allOrders.indexOf(order)})">🗑️ Supprimer</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showOrderDetails(index) {
+  const order = allOrders[index];
+  const itemsHTML = order.items.map(item => `
+    <div style="margin: 10px 0; padding: 10px; background: var(--bg-soft); border-radius: 4px;">
+      <strong>${item.name}</strong> x${item.quantity}
+      <div style="font-size: 13px; color: var(--muted); margin-top: 4px;">
+        Prix unitaire: ${formatPrice(item.price)}
+        ${item.options ? `<div>Options: ${Object.values(item.options).join(', ')}</div>` : ''}
+      </div>
+      <div style="font-weight: 600; color: var(--accent); margin-top: 6px;">
+        Sous-total: ${formatPrice(item.price * item.quantity)}
+      </div>
+    </div>
+  `).join('');
+
+  const detailsHTML = `
+    <div style="margin: 20px 0;">
+      <h3>Informations client</h3>
+      <div style="background: var(--bg-soft); padding: 12px; border-radius: 6px; margin: 10px 0;">
+        <p><strong>Nom:</strong> ${order.name}</p>
+        <p><strong>Téléphone:</strong> ${order.phone}</p>
+        <p><strong>Ville:</strong> ${order.city}</p>
+        <p><strong>Adresse:</strong> ${order.address}</p>
+        ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ''}
+      </div>
+
+      <h3 style="margin-top: 20px;">Articles commandés</h3>
+      ${itemsHTML}
+
+      <h3 style="margin-top: 20px;">Résumé</h3>
+      <div style="background: var(--accent-dim); padding: 12px; border-radius: 6px; border: 2px solid var(--accent);">
+        <p style="margin: 6px 0;"><strong>Nombre d'articles:</strong> ${order.itemCount}</p>
+        <p style="margin: 6px 0;"><strong>Total:</strong> <span style="font-size: 20px; color: var(--accent);">${formatPrice(order.total)}</span></p>
+        <p style="margin: 6px 0; color: var(--muted); font-size: 12px;"><strong>Acompte (50%):</strong> ${formatPrice(order.total * 0.5)}</p>
+        <p style="margin: 6px 0; color: var(--muted); font-size: 12px;"><strong>Date:</strong> ${new Date(order.timestamp).toLocaleString('fr-MA')}</p>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('order-details').innerHTML = detailsHTML;
+  document.getElementById('order-modal').classList.add('active');
+}
+
+function closeOrderModal() {
+  document.getElementById('order-modal').classList.remove('active');
+}
+
+function copyOrderToClipboard(e, index) {
+  e.stopPropagation();
+  const order = allOrders[index];
+  const text = `
+COMMANDE NOVA STYLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Client: ${order.name}
+Téléphone: ${order.phone}
+Ville: ${order.city}
+Adresse: ${order.address}
+
+Articles:
+${order.items.map(i => `• ${i.name} x${i.quantity} = ${formatPrice(i.price * i.quantity)}`).join('\n')}
+
+Total: ${formatPrice(order.total)}
+Acompte (50%): ${formatPrice(order.total * 0.5)}
+
+${order.notes ? `Notes: ${order.notes}` : ''}
+  `.trim();
+
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Commande copiée!');
+  });
+}
+
+function deleteOrder(e, index) {
+  e.stopPropagation();
+  if (confirm('Supprimer cette commande?')) {
+    allOrders.splice(index, 1);
+    saveAdminOrders(allOrders);
+    loadOrders();
+  }
+}
+
+function clearAllOrders() {
+  if (confirm('Êtes-vous sûr de vouloir supprimer TOUTES les commandes? Cette action ne peut pas être annulée.')) {
+    if (confirm('CONFIRMEZ: Supprimer toutes les commandes?')) {
+      allOrders = [];
+      saveAdminOrders([]);
+      loadOrders();
+    }
+  }
+}
+
+// Check auth on load
+document.addEventListener('DOMContentLoaded', checkAuth);
+
+// Live Visitor Tracking Functions
+function getActiveVisitors() {
+  try {
+    const visitors = localStorage.getItem('nova_active_visitors');
+    return visitors ? JSON.parse(visitors) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function getLiveVisitorCount() {
+  const visitors = getActiveVisitors();
+  const now = Date.now();
+  const TIMEOUT = 10 * 60 * 1000; // 10 minutes
+  
+  return Object.values(visitors).filter(v => (now - v.lastSeen) < TIMEOUT).length;
+}
+
+function updateLiveVisitors() {
+  const visitors = getActiveVisitors();
+  const now = Date.now();
+  const TIMEOUT = 10 * 60 * 1000; // 10 minutes
+  
+  const activeVisitors = Object.values(visitors)
+    .filter(v => (now - v.lastSeen) < TIMEOUT)
+    .sort((a, b) => b.lastSeen - a.lastSeen);
+  
+  const container = document.getElementById('visitors-list');
+  
+  if (activeVisitors.length === 0) {
+    container.innerHTML = '<div class="empty-message">Aucun visiteur actuellement</div>';
+    return;
+  }
+  
+  container.innerHTML = activeVisitors.map(visitor => {
+    const lastSeenMin = Math.floor((now - visitor.lastSeen) / 60000);
+    const timeSeen = lastSeenMin === 0 ? 'À l\'instant' : `Il y a ${lastSeenMin}m`;
+    const duration = Math.floor((visitor.lastSeen - visitor.firstVisit) / 1000);
+    const durationMin = Math.floor(duration / 60);
+    const durationSec = duration % 60;
+    
+    return `
+      <div class="order-item">
+        <div class="order-header">
+          <div class="order-name">👤 ${visitor.visitorId.slice(0, 20)}...</div>
+          <div class="order-time">${timeSeen}</div>
+        </div>
+        <div class="order-info">
+          <div class="order-info-label">📄 Page:</div>
+          <div class="order-info-value">${getPageNameForVisitor(visitor.lastPage)}</div>
+          <div class="order-info-label">👁️ Visites:</div>
+          <div class="order-info-value">${visitor.visitCount}</div>
+          <div class="order-info-label">⏱️ Durée:</div>
+          <div class="order-info-value">${durationMin}m ${durationSec}s</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function getPageNameForVisitor(path) {
+  const pathMap = {
+    '/': 'Accueil',
+    '/index.html': 'Accueil',
+    '/shop.html': 'Boutique',
+    '/shop': 'Boutique',
+    '/cart.html': 'Panier',
+    '/cart': 'Panier',
+    '/admin.html': 'Admin',
+    '/admin': 'Admin'
+  };
+  
+  if (pathMap[path]) return pathMap[path];
+  
+  if (path.includes('/produits/')) {
+    const parts = path.split('/').filter(p => p && p !== 'produits' && p !== 'index.html');
+    if (parts.length > 0) {
+      return '🛍️ Produit';
+    }
+  }
+  
+  if (path.includes('/categorie/')) {
+    const category = path.split('/categorie/')[1].replace(/\/$/, '');
+    return '📂 ' + category;
+  }
+  
+  return path;
+}
+
+// Refresh live visitors every 5 seconds
+setInterval(() => {
+  if (document.getElementById('dashboard-page').style.display !== 'none') {
+    updateLiveVisitors();
+    document.getElementById('live-visitors').textContent = getLiveVisitorCount();
+  }
+}, 5000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "products": [
+    {"id": "miroir-anfa-essentiel", "name": "Miroir Anfa Essentiel", "price": 1200, "category": "Miroirs SDB", "image": "/images/miroir-anfa-essentiel/default.jpg"},
+    {"id": "nova-style-miroir-bloom", "name": "Miroir Bloom LED", "price": 2500, "category": "Miroirs SDB Premium", "image": "/images/nova-style-miroir-bloom/default.jpg"},
+    {"id": "nova-style-miroir-halo", "name": "Miroir Halo LED Rétroéclairé", "price": 3200, "category": "Miroirs SDB Premium", "image": "/images/nova-style-miroir-halo/default.jpg"},
+    {"id": "nova-style-miroir-pebble", "name": "Miroir Pebble LED", "price": 2800, "category": "Miroirs SDB Premium", "image": "/images/nova-style-miroir-pebble/default.jpg"},
+    {"id": "nova-style-miroir-vega", "name": "Miroir Vega LED", "price": 2600, "category": "Miroirs SDB Premium", "image": "/images/nova-style-miroir-vega/default.jpg"},
+    {"id": "miroir-eclipse-essentiel", "name": "Miroir Eclipse Essentiel", "price": 1400, "category": "Miroirs SDB", "image": "/images/miroir-eclipse-essentiel/default.jpg"},
+    {"id": "nova-style-miroir-vortex", "name": "Miroir Vortex Salon", "price": 1800, "category": "Salon & Dressing", "image": "/images/nova-style-miroir-vortex/default.jpg"},
+    {"id": "deco-miroir-mural-nova-style-miroir-rital", "name": "Miroir Rital Décoration", "price": 2200, "category": "Salon & Dressing", "image": "/images/deco-miroir-mural-nova-style-miroir-rital/default.jpg"},
+    {"id": "consol-et-miroir-nova-style-ensemble", "name": "Console et Miroir Ensemble", "price": 3500, "category": "Consoles & Entrée", "image": "/images/consol-et-miroir-nova-style-ensemble/default.jpg"},
+    {"id": "douche-italienne-en-forme-droite", "name": "Douche Italienne Forme Droite", "price": 4200, "category": "Douches Italiennes", "image": "/images/douche-italienne-en-forme-droite/default.jpg"},
+    {"id": "douche-italienne-en-l-verre-trempe", "name": "Douche Italienne Forme L", "price": 5100, "category": "Douches Italiennes", "image": "/images/douche-italienne-en-l-verre-trempe/default.jpg"},
+    {"id": "miroir-avec-cadre-nova-style-miroir-rectangulaire-cm", "name": "Miroir Rectangulaire Cadre CM", "price": 1900, "category": "Miroirs SDB", "image": "/images/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/default.jpg"},
+    {"id": "miroire-nova-style-miroir-horizon", "name": "Miroir Horizon LED", "price": 2400, "category": "Miroirs SDB Premium", "image": "/images/miroire-nova-style-miroir-horizon/default.jpg"},
+    {"id": "nova-style-miroir-magnum", "name": "Miroir Magnum Premium", "price": 3800, "category": "Miroirs SDB Premium", "image": "/images/nova-style-miroir-magnum/default.jpg"},
+    {"id": "nova-style-miroir-archway", "name": "Miroir Archway Design", "price": 2700, "category": "Miroirs SDB Premium", "image": "/images/nova-style-miroir-archway/default.jpg"},
+    {"id": "table-basse-de-sejour-en-bois-mdf-et-verre-trempe", "name": "Table Basse Bois & Verre MDF", "price": 2100, "category": "Tables de Séjour", "image": "/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/default.jpg"}
+  ]
+}
