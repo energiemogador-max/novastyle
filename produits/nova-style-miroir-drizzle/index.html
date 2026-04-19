@@ -82,10 +82,10 @@
       <div class="opt-values" data-axis="Finition"><button type="button" class="opt-pill" data-axis="Finition" data-value="BAMBOU" onclick="selectOption('Finition', 'BAMBOU')">BAMBOU</button><button type="button" class="opt-pill" data-axis="Finition" data-value="TABAC" onclick="selectOption('Finition', 'TABAC')">TABAC</button><button type="button" class="opt-pill" data-axis="Finition" data-value="TEAK" onclick="selectOption('Finition', 'TEAK')">TEAK</button><button type="button" class="opt-pill" data-axis="Finition" data-value="LARA CLAIRE" onclick="selectOption('Finition', 'LARA CLAIRE')">LARA CLAIRE</button><button type="button" class="opt-pill" data-axis="Finition" data-value="MONTEBELLO" onclick="selectOption('Finition', 'MONTEBELLO')">MONTEBELLO</button><button type="button" class="opt-pill" data-axis="Finition" data-value="CHÊNE ARIZONA" onclick="selectOption('Finition', 'CHÊNE ARIZONA')">CHÊNE ARIZONA</button><button type="button" class="opt-pill" data-axis="Finition" data-value="CHÊNE ALLEMAND" onclick="selectOption('Finition', 'CHÊNE ALLEMAND')">CHÊNE ALLEMAND</button><button type="button" class="opt-pill" data-axis="Finition" data-value="NOYER CLAIR" onclick="selectOption('Finition', 'NOYER CLAIR')">NOYER CLAIR</button></div>
     </div>
     <div class="p-cta">
-      <a class="btn-primary" id="wa-order-btn" href="https://wa.me/212707074748?text=Bonjour%20Nova%20Style,%20je%20suis%20intéressé(e)%20par%20le%20Nova%20Style%20:%20Miroir%20DRIZZLE.%20Merci%20de%20me%20donner%20plus%20d&#39;informations." target="_blank">💬 Commander sur WhatsApp</a>
-      <a class="btn-secondary" href="tel:+212707074748">📞 07 07 07 47 48</a>
+      <button class="btn-primary" id="add-to-cart-btn" onclick="addProductToCart()">🛒 Ajouter au panier</button>
+      <a class="btn-secondary" href="/cart">Voir panier</a>
     </div>
-    <div class="deposit-note">💡 Acompte de 50% requis pour confirmer la commande. Solde à la livraison ou installation.</div>
+    <div class="deposit-note"💡 Acompte de 50% requis pour confirmer la commande. Solde à la livraison ou installation.</div>
   </div>
 </article>
 
@@ -211,12 +211,7 @@
   <div class="foot-legal">© Nova Style · Fabrication à Casablanca, Maroc · Livraison nationale</div>
 </footer>
 
-
-<div class="bottom-bar">
-  <a class="call" href="tel:+212707074748">📞 07 07 07 47 48</a>
-  <a class="wa" href="https://wa.me/212707074748" target="_blank">💬 WhatsApp</a>
-</div>
-
+<script src="/assets/cart.js"></script>
 <script>
 const PRODUCT = {"title": "Nova Style : Miroir DRIZZLE", "variants": [{"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Sans Installation", "Finition": "BAMBOU"}, "price": 1000.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Sans Installation", "Finition": "TABAC"}, "price": 1000.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Sans Installation", "Finition": "TEAK"}, "price": 1000.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Sans Installation", "Finition": "LARA CLAIRE"}, "price": 1000.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Sans Installation", "Finition": "MONTEBELLO"}, "price": 1000.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Sans Installation", "Finition": "CHÊNE ARIZONA"}, "price": 1000.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Sans Installation", "Finition": "CHÊNE ALLEMAND"}, "price": 1000.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Sans Installation", "Finition": "NOYER CLAIR"}, "price": 1000.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Avec Installation", "Finition": "BAMBOU"}, "price": 1100.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Avec Installation", "Finition": "TABAC"}, "price": 1100.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Avec Installation", "Finition": "TEAK"}, "price": 1100.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Avec Installation", "Finition": "LARA CLAIRE"}, "price": 1100.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Avec Installation", "Finition": "MONTEBELLO"}, "price": 1100.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Avec Installation", "Finition": "CHÊNE ARIZONA"}, "price": 1100.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Avec Installation", "Finition": "CHÊNE ALLEMAND"}, "price": 1100.0, "sku": ""}, {"axes": {"Dimension": "50 cm X 90 cm", "Installation": "Avec Installation", "Finition": "NOYER CLAIR"}, "price": 1100.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Sans Installation", "Finition": "BAMBOU"}, "price": 1280.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Sans Installation", "Finition": "TABAC"}, "price": 1280.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Sans Installation", "Finition": "TEAK"}, "price": 1280.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Sans Installation", "Finition": "LARA CLAIRE"}, "price": 1280.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Sans Installation", "Finition": "MONTEBELLO"}, "price": 1280.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Sans Installation", "Finition": "CHÊNE ARIZONA"}, "price": 1280.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Sans Installation", "Finition": "CHÊNE ALLEMAND"}, "price": 1280.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Sans Installation", "Finition": "NOYER CLAIR"}, "price": 1280.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Avec Installation", "Finition": "BAMBOU"}, "price": 1380.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Avec Installation", "Finition": "TABAC"}, "price": 1380.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Avec Installation", "Finition": "TEAK"}, "price": 1380.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Avec Installation", "Finition": "LARA CLAIRE"}, "price": 1380.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Avec Installation", "Finition": "MONTEBELLO"}, "price": 1380.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Avec Installation", "Finition": "CHÊNE ARIZONA"}, "price": 1380.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Avec Installation", "Finition": "CHÊNE ALLEMAND"}, "price": 1380.0, "sku": ""}, {"axes": {"Dimension": "60 cm X 116 cm", "Installation": "Avec Installation", "Finition": "NOYER CLAIR"}, "price": 1380.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Sans Installation", "Finition": "BAMBOU"}, "price": 1500.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Sans Installation", "Finition": "TABAC"}, "price": 1500.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Sans Installation", "Finition": "TEAK"}, "price": 1500.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Sans Installation", "Finition": "LARA CLAIRE"}, "price": 1500.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Sans Installation", "Finition": "MONTEBELLO"}, "price": 1500.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Sans Installation", "Finition": "CHÊNE ARIZONA"}, "price": 1500.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Sans Installation", "Finition": "CHÊNE ALLEMAND"}, "price": 1500.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Sans Installation", "Finition": "NOYER CLAIR"}, "price": 1500.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Avec Installation", "Finition": "BAMBOU"}, "price": 1600.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Avec Installation", "Finition": "TABAC"}, "price": 1600.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Avec Installation", "Finition": "TEAK"}, "price": 1600.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Avec Installation", "Finition": "LARA CLAIRE"}, "price": 1600.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Avec Installation", "Finition": "MONTEBELLO"}, "price": 1600.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Avec Installation", "Finition": "CHÊNE ARIZONA"}, "price": 1600.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Avec Installation", "Finition": "CHÊNE ALLEMAND"}, "price": 1600.0, "sku": ""}, {"axes": {"Dimension": "80 cm X 145 cm", "Installation": "Avec Installation", "Finition": "NOYER CLAIR"}, "price": 1600.0, "sku": ""}], "axis_order": ["Dimension", "Installation", "Finition"], "axes": {"Dimension": ["50 cm X 90 cm", "60 cm X 116 cm", "80 cm X 145 cm"], "Installation": ["Sans Installation", "Avec Installation"], "Finition": ["BAMBOU", "TABAC", "TEAK", "LARA CLAIRE", "MONTEBELLO", "CHÊNE ARIZONA", "CHÊNE ALLEMAND", "NOYER CLAIR"]}, "price_min": 1000.0, "price_max": 1600.0};
 const WHATSAPP = "212707074748";
@@ -306,5 +301,35 @@ for (const axis of PRODUCT.axis_order) {
   }
 }
 updateUI();
+
+// Add to Cart functionality
+function addProductToCart() {
+  const matching = findMatchingVariant();
+  
+  if (!matching) {
+    alert("Veuillez sélectionner toutes les options");
+    return;
+  }
+
+  const product = {
+    name: PRODUCT.title,
+    price: matching.price
+  };
+
+  const productId = window.location.pathname.split("/").filter(p => p).pop() || "product";
+  
+  addToCart(productId, product, SELECTION);
+  
+  const btn = document.getElementById("add-to-cart-btn");
+  const originalText = btn.textContent;
+  btn.textContent = "✓ Ajouté au panier!";
+  btn.style.opacity = "0.7";
+  
+  setTimeout(() => {
+    btn.textContent = originalText;
+    btn.style.opacity = "1";
+  }, 2000);
+}
 </script>
+<script src="/assets/visitor-tracker.js"></script>
 </body></html>
