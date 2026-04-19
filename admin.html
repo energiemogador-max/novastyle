@@ -1,8 +1,9 @@
-<script visitor-tracker.js>
+<!-- FIX: was <script visitor-tracker.js> which is invalid.
+     Must be type="module" to use ES import statements. -->
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-  // Votre config récupérée sur la console
   const firebaseConfig = {
     apiKey: "AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",
     authDomain: "nova-9ac76.firebaseapp.com",
@@ -14,19 +15,17 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  // ÉCOUTEUR INSTANTANÉ
   const ordersRef = ref(db, 'orders');
-  
+
   onValue(ordersRef, (snapshot) => {
     const data = snapshot.val();
-    const container = document.getElementById('orders-display'); // Vérifiez cet ID dans votre HTML
-    
+    const container = document.getElementById('orders-display');
+
     if (!data) {
       container.innerHTML = "<div class='no-order'>En attente de nouvelles commandes...</div>";
       return;
     }
 
-    // Transformer l'objet en tableau et trier par le plus récent
     const list = Object.entries(data).sort((a, b) => b[1].timestamp - a[1].timestamp);
 
     container.innerHTML = list.map(([id, order]) => `
@@ -38,8 +37,7 @@
       </div>
     `).join('');
 
-    // Jouer un son si une nouvelle commande arrive
-    playNotificationSound(); 
+    playNotificationSound();
   });
 
   function playNotificationSound() {
