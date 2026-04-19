@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// Votre configuration Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",
   authDomain: "nova-9ac76.firebaseapp.com",
@@ -15,59 +14,118 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// ─── CART STORAGE HELPERS ────────────────────────────────────────────────────
+
+function getCart() {
+  try {
+    const data = localStorage.getItem('nova_style_cart');
+    const cart = data ? JSON.parse(data) : [];
+    return Array.isArray(cart) ? cart : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveCart(cart) {
+  localStorage.setItem('nova_style_cart', JSON.stringify(cart));
+  document.dispatchEvent(new CustomEvent('cartUpdated'));
+  if (window.refreshCartDisplay) window.refreshCartDisplay();
+}
+
+function getCartTotal() {
+  return getCart().reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
+}
+
+function formatPrice(price) {
+  return new Intl.NumberFormat('fr-MA', {
+    style: 'currency',
+    currency: 'MAD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(price);
+}
+
+// ─── CART OPERATIONS ─────────────────────────────────────────────────────────
+
 /**
- * 1. AJOUT AU PANIER (Appelé par vos 90 pages)
+ * Add a product to the cart (called by product pages).
+ * If the same product+options combo is already in the cart, increments quantity.
  */
 function addToCart(productId, product, options) {
-    let cart = JSON.parse(localStorage.getItem('nova_style_cart') || '[]');
-    
-    // On ajoute l'article au stockage local
+  const cart = getCart();
+  // Build a stable unique key per product/option combination
+  const key = productId + '_' + JSON.stringify(options || {});
+  const existing = cart.find(i => i.key === key);
+
+  if (existing) {
+    existing.quantity = (existing.quantity || 1) + 1;
+  } else {
     cart.push({
-        id: productId,
-        name: product.name,
-        price: product.price,
-        options: options,
-        timestamp: Date.now()
+      key:       key,
+      id:        productId,
+      name:      product.name,
+      price:     product.price,
+      options:   options || null,
+      quantity:  1,
+      timestamp: Date.now()
     });
-    
-    localStorage.setItem('nova_style_cart', JSON.stringify(cart));
-    console.log("Produit ajouté :", product.name);
+  }
+
+  saveCart(cart);
+  console.log("✅ Produit ajouté :", product.name);
 }
 
-/**
- * 2. VALIDATION FINALE (Envoi vers Firebase)
- */
+function removeFromCart(itemKey) {
+  saveCart(getCart().filter(i => i.key !== itemKey));
+}
+
+function updateQuantity(itemKey, qty) {
+  const cart = getCart();
+  const item = cart.find(i => i.key === itemKey);
+  if (item) {
+    item.quantity = Math.max(1, qty);
+    saveCart(cart);
+  }
+}
+
+function clearCart() {
+  saveCart([]);
+}
+
+// ─── FIREBASE CHECKOUT ───────────────────────────────────────────────────────
+
 function finalizeCheckout(customerDetails) {
-    const cart = JSON.parse(localStorage.getItem('nova_style_cart') || '[]');
-    
-    if (cart.length === 0) return alert("Votre panier est vide");
+  const cart = getCart();
+  if (cart.length === 0) return alert("Votre panier est vide");
 
-    const orderData = {
-        customer: customerDetails,
-        items: cart,
-        total: cart.reduce((sum, item) => sum + (item.price || 0), 0),
-        status: 'En attente',
-        timestamp: Date.now(),
-        dateString: new Date().toLocaleString('fr-MA')
-    };
+  const orderData = {
+    customer:   customerDetails,
+    items:      cart,
+    total:      getCartTotal(),
+    status:     'En attente',
+    timestamp:  Date.now(),
+    dateString: new Date().toLocaleString('fr-MA')
+  };
 
-    const ordersRef = ref(db, 'orders');
-    const newOrderRef = push(ordersRef);
-
-    set(newOrderRef, orderData).then(() => {
-        localStorage.removeItem('nova_style_cart');
-        window.location.href = "/success.html";
-    }).catch(err => alert("Erreur de connexion : " + err.message));
+  const newOrderRef = push(ref(db, 'orders'));
+  set(newOrderRef, orderData)
+    .then(() => {
+      clearCart();
+      window.location.href = "/confirmation.html";
+    })
+    .catch(err => alert("Erreur de connexion : " + err.message));
 }
 
-// À mettre à la toute fin de cart.js
-// --- RENDRE LES FONCTIONS ACCESSIBLES ---
-window.getCart = getCart;
-window.addToCart = addToCart;
-window.removeFromCart = removeFromCart;
-window.updateQuantity = updateQuantity;
-window.clearCart = clearCart;
+// ─── EXPOSE TO GLOBAL SCOPE (used by inline scripts) ─────────────────────────
+window.getCart         = getCart;
+window.saveCart        = saveCart;
+window.addToCart       = addToCart;
+window.removeFromCart  = removeFromCart;
+window.updateQuantity  = updateQuantity;
+window.clearCart       = clearCart;
+window.getCartTotal    = getCartTotal;
+window.formatPrice     = formatPrice;
 window.finalizeCheckout = finalizeCheckout;
 
-// Forcer la mise à jour du badge quand un produit est ajouté
+// Trigger badge refresh on initial load
 document.dispatchEvent(new CustomEvent('cartUpdated'));
