@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmation de Commande - Nova Style</title>
+<link rel="stylesheet" href="/assets/style.css">
+<style>
+  body {
+    background: linear-gradient(135deg, var(--bg) 0%, var(--bg-soft) 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .confirmation-container {
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .confirmation-header {
+    background: linear-gradient(135deg, var(--accent) 0%, #d91a4a 100%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px 16px 0 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .confirmation-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  .success-icon {
+    position: relative;
+    z-index: 1;
+    font-size: 60px;
+    margin-bottom: 20px;
+    animation: bounce 0.6s ease-in-out;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  .confirmation-header h1 {
+    margin: 0;
+    font-size: 32px;
+    position: relative;
+    z-index: 1;
+    font-weight: 700;
+  }
+
+  .confirmation-header p {
+    margin: 10px 0 0 0;
+    font-size: 15px;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+  }
+
+  .order-number {
+    background: rgba(255,255,255,0.2);
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+  }
+
+  .confirmation-body {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 30px;
+  }
+
+  .section {
+    margin-bottom: 28px;
+  }
+
+  .section:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .customer-info {
+    display: grid;
+    gap: 10px;
+    font-size: 14px;
+  }
+
+  .info-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .info-label {
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .info-value {
+    color: var(--text);
+  }
+
+  .items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .item {
+    background: var(--bg-soft);
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent);
+    font-size: 14px;
+  }
+
+  .item-name {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .item-details {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .item-price {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .summary {
+    background: linear-gradient(135deg, var(--accent-dim) 0%, rgba(217, 26, 74, 0.05) 100%);
+    border: 2px solid var(--accent);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+  }
+
+  .summary-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  .summary-line:last-child {
+    margin-bottom: 0;
+  }
+
+  .summary-total {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    border-top: 1px solid var(--accent);
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+
+  .deposit-info {
+    background: var(--bg-soft);
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 16px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .deposit-info strong {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .confirmation-footer {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 24px;
+    border-radius: 0 0 16px 16px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: #d91a4a;
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    background: var(--bg);
+    color: var(--accent);
+    border: 2px solid var(--accent);
+  }
+
+  .btn-secondary:hover {
+    background: var(--accent);
+    color: white;
+  }
+
+  .message {
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 16px;
+    padding: 0 20px;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  @media (max-width: 768px) {
+    .confirmation-header {
+      padding: 30px 20px;
+    }
+
+    .confirmation-header h1 {
+      font-size: 24px;
+    }
+
+    .success-icon {
+      font-size: 48px;
+    }
+
+    .confirmation-body {
+      padding: 20px;
+    }
+
+    .confirmation-footer {
+      flex-direction: column;
+    }
+
+    .info-row {
+      grid-template-columns: 80px 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="confirmation-container">
+  <div class="confirmation-header">
+    <div class="success-icon">✅</div>
+    <h1>Commande Confirmée!</h1>
+    <p>Merci d'avoir choisi Nova Style</p>
+    <div class="order-number" id="order-number">Commande #000000</div>
+  </div>
+
+  <div class="confirmation-body">
+    <!-- Customer Info -->
+    <div class="section">
+      <div class="section-title">👤 Informations Client</div>
+      <div class="customer-info">
+        <div class="info-row">
+          <span class="info-label">Nom:</span>
+          <span class="info-value" id="customer-name">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Téléphone:</span>
+          <span class="info-value" id="customer-phone">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Ville:</span>
+          <span class="info-value" id="customer-city">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Adresse:</span>
+          <span class="info-value" id="customer-address">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Items -->
+    <div class="section">
+      <div class="section-title">📦 Articles Commandés</div>
+      <div class="items-list" id="items-list">
+        <!-- Items will be inserted here -->
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Summary -->
+    <div class="section">
+      <div class="section-title">💰 Résumé</div>
+      <div class="summary">
+        <div class="summary-line">
+          <span>Nombre d'articles:</span>
+          <span id="item-count">0</span>
+        </div>
+        <div class="summary-line">
+          <span>Sous-total:</span>
+          <span id="subtotal">0 MAD</span>
+        </div>
+        <div class="summary-line summary-total">
+          <span>Total:</span>
+          <span id="total">0 MAD</span>
+        </div>
+        <div class="deposit-info">
+          ℹ️ <strong>Acompte de 50%</strong> requis pour confirmer votre commande: <strong id="deposit">0 MAD</strong><br>
+          Le solde sera payable à la livraison ou l'installation.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="confirmation-footer">
+    <a href="/" class="btn btn-secondary">← Retour Accueil</a>
+    <a href="/categorie/sdb-premium/" class="btn btn-primary">Continuer Shopping 🛍️</a>
+  </div>
+
+  <p class="message">
+    Une équipe Nova Style vous contactera très bientôt pour confirmer les détails et planifier la livraison.
+  </p>
+</div>
+
+<script>
+  // Get order data from URL parameters or sessionStorage
+  function loadOrderData() {
+    const params = new URLSearchParams(window.location.search);
+    const orderData = sessionStorage.getItem('nova_confirmation_order');
+    
+    if (!orderData) {
+      console.error('No order data found');
+      return;
+    }
+
+    const order = JSON.parse(orderData);
+    
+    // Populate header
+    document.getElementById('order-number').textContent = `Commande #${String(order.id).slice(-6)}`;
+    
+    // Populate customer info
+    document.getElementById('customer-name').textContent = order.name;
+    document.getElementById('customer-phone').textContent = order.phone;
+    document.getElementById('customer-city').textContent = order.city;
+    document.getElementById('customer-address').textContent = order.address;
+    
+    // Populate items
+    const itemsList = document.getElementById('items-list');
+    itemsList.innerHTML = order.items.map(item => `
+      <div class="item">
+        <div class="item-name">${item.name}</div>
+        <div class="item-details">
+          <span>
+            Quantité: <strong>${item.quantity}</strong>
+            ${item.options ? `<span style="margin-left: 12px; color: var(--muted); font-size: 11px;">${Object.entries(item.options).map(([k,v]) => `${k}: ${v}`).join(' • ')}</span>` : ''}
+          </span>
+          <span class="item-price">${formatPrice(item.price * item.quantity)}</span>
+        </div>
+      </div>
+    `).join('');
+    
+    // Populate summary
+    document.getElementById('item-count').textContent = order.itemCount;
+    document.getElementById('subtotal').textContent = formatPrice(order.total);
+    document.getElementById('total').textContent = formatPrice(order.total);
+    document.getElementById('deposit').textContent = formatPrice(order.total * 0.5);
+    
+    // Clear session storage after displaying
+    setTimeout(() => sessionStorage.removeItem('nova_confirmation_order'), 5000);
+  }
+
+  function formatPrice(price) {
+    return new Intl.NumberFormat('fr-MA', {
+      style: 'currency',
+      currency: 'MAD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(price);
+  }
+
+  // Load data when page loads
+  document.addEventListener('DOMContentLoaded', loadOrderData);
+</script>
+
+</body>
+</html>

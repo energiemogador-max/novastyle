@@ -678,16 +678,14 @@ function submitOrder() {
   // Close modal
   closeOrderModal();
   
-  // Show success message
-  alert('Commande reçue! Notre équipe vous contactera bientôt.');
+  // Store order data in sessionStorage for confirmation page
+  sessionStorage.setItem('nova_confirmation_order', JSON.stringify(order));
   
-  // Clear cart after successful submission
-  setTimeout(() => {
-    if (confirm('Vider le panier?')) {
-      clearCart();
-      renderCart();
-    }
-  }, 1000);
+  // Clear cart before redirecting
+  clearCart();
+  
+  // Redirect to confirmation page
+  window.location.href = '/confirmation.html';
 }
 
 function saveAdminOrder(order) {
