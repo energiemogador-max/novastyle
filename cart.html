@@ -404,7 +404,6 @@
   </a>
   <nav class="main-nav">
     <a href="/">Accueil</a>
-    <a href="/shop">Boutique</a>
     <a href="/categorie/sdb-premium/">Miroirs Premium</a>
   </nav>
 </header>
@@ -507,7 +506,7 @@ function renderCart() {
     container.innerHTML = `
       <div class="empty-cart">
         <p>Votre panier est vide</p>
-        <a href="/shop" class="empty-cart-btn">Parcourir les produits</a>
+        <a href="/categorie/sdb-premium/" class="empty-cart-btn">Parcourir les produits</a>
       </div>
     `;
     updateCheckoutButtons();
@@ -698,7 +697,7 @@ function saveAdminOrder(order) {
 }
 
 function continueShopping() {
-  window.location.href = '/shop';
+  window.location.href = '/categorie/sdb-premium/';
 }
 
 // Close modal when clicking outside
