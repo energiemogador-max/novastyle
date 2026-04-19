@@ -61,9 +61,13 @@ function finalizeCheckout(customerDetails) {
 }
 
 // À mettre à la toute fin de cart.js
+// --- RENDRE LES FONCTIONS ACCESSIBLES ---
+window.getCart = getCart;
 window.addToCart = addToCart;
-window.addProductToCart = addProductToCart;
+window.removeFromCart = removeFromCart;
+window.updateQuantity = updateQuantity;
+window.clearCart = clearCart;
 window.finalizeCheckout = finalizeCheckout;
 
-// Dispatch un événement pour que le badge (cart-display.js) se mette à jour
+// Forcer la mise à jour du badge quand un produit est ajouté
 document.dispatchEvent(new CustomEvent('cartUpdated'));
