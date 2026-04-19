@@ -1,5 +1,5 @@
 // Visitor Tracking System for Nova Style
-// Tracks page visits and user activity
+// Tracks page visits and user activity with session history
 
 function trackVisitor() {
   const visitorId = getOrCreateVisitorId();
@@ -19,9 +19,9 @@ function trackVisitor() {
     let visits = JSON.parse(localStorage.getItem('nova_visitor_tracking') || '[]');
     visits.push(visit);
     
-    // Keep only last 1000 visits to avoid storage issues
-    if (visits.length > 1000) {
-      visits = visits.slice(-1000);
+    // Keep last 5000 visits
+    if (visits.length > 5000) {
+      visits = visits.slice(-5000);
     }
     
     localStorage.setItem('nova_visitor_tracking', JSON.stringify(visits));
@@ -29,36 +29,54 @@ function trackVisitor() {
     console.error('Visitor tracking error:', e);
   }
   
-  // Update visitor last seen
-  updateVisitorActivity(visitorId, currentPage);
+  // Update visitor session
+  updateVisitorSession(visitorId, currentPage);
 }
 
 function getOrCreateVisitorId() {
   let visitorId = localStorage.getItem('nova_visitor_id');
   
   if (!visitorId) {
-    visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    visitorId = 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('nova_visitor_id', visitorId);
   }
   
   return visitorId;
 }
 
-function updateVisitorActivity(visitorId, page) {
+function updateVisitorSession(visitorId, page) {
   try {
-    let visitors = JSON.parse(localStorage.getItem('nova_active_visitors') || '{}');
+    let sessions = JSON.parse(localStorage.getItem('nova_visitor_sessions') || '{}');
     
-    visitors[visitorId] = {
-      visitorId: visitorId,
-      lastPage: page,
-      lastSeen: Date.now(),
-      firstVisit: visitors[visitorId]?.firstVisit || Date.now(),
-      visitCount: (visitors[visitorId]?.visitCount || 0) + 1
-    };
+    if (!sessions[visitorId]) {
+      sessions[visitorId] = {
+        visitorId: visitorId,
+        firstVisit: Date.now(),
+        sessionStart: Date.now(),
+        lastSeen: Date.now(),
+        lastPage: page,
+        pages: [page],
+        pageCount: 1,
+        visitCount: 1,
+        isActive: true
+      };
+    } else {
+      const session = sessions[visitorId];
+      session.lastSeen = Date.now();
+      session.lastPage = page;
+      session.visitCount = (session.visitCount || 0) + 1;
+      session.isActive = true;
+      
+      if (!session.pages) session.pages = [];
+      if (!session.pages.includes(page)) {
+        session.pages.push(page);
+        session.pageCount = session.pages.length;
+      }
+    }
     
-    localStorage.setItem('nova_active_visitors', JSON.stringify(visitors));
+    localStorage.setItem('nova_visitor_sessions', JSON.stringify(sessions));
   } catch (e) {
-    console.error('Activity update error:', e);
+    console.error('Session update error:', e);
   }
 }
 
@@ -80,7 +98,7 @@ function getPageName(path) {
   if (path.includes('/produits/')) {
     const parts = path.split('/').filter(p => p && p !== 'produits' && p !== 'index.html');
     if (parts.length > 0) {
-      return 'Produit: ' + parts[parts.length - 1].replace(/-/g, ' ');
+      return 'Produit: ' + parts[parts.length - 1].replace(/-/g, ' ').substring(0, 20);
     }
   }
   
@@ -99,10 +117,30 @@ if (document.readyState === 'loading') {
   trackVisitor();
 }
 
-// Update activity every 10 seconds to mark as active
+// Update activity every 5 seconds to mark as active
 setInterval(() => {
   const visitorId = localStorage.getItem('nova_visitor_id');
   if (visitorId) {
-    updateVisitorActivity(visitorId, window.location.pathname || '/');
+    updateVisitorSession(visitorId, window.location.pathname || '/');
   }
-}, 10000);
+}, 5000);
+
+// Mark as inactive after 15 minutes of no activity
+setInterval(() => {
+  try {
+    let sessions = JSON.parse(localStorage.getItem('nova_visitor_sessions') || '{}');
+    const now = Date.now();
+    const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes
+    
+    for (let visitorId in sessions) {
+      if ((now - sessions[visitorId].lastSeen) > INACTIVITY_TIMEOUT) {
+        sessions[visitorId].isActive = false;
+      }
+    }
+    
+    localStorage.setItem('nova_visitor_sessions', JSON.stringify(sessions));
+  } catch (e) {
+    console.error('Inactivity check error:', e);
+  }
+}, 60000); // Check every minute
+
