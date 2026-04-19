@@ -645,61 +645,44 @@ function submitOrder() {
     return;
   }
   
-  const total = getCartTotal();
-  
-  // Save order to admin dashboard
-  const order = {
-    id: Date.now(),
-    timestamp: Date.now(),
-    name: name,
-    phone: phone,
-    city: city,
+  // Build customer details and send to Firebase via finalizeCheckout()
+  const customerDetails = {
+    name:    name,
+    phone:   phone,
+    city:    city,
     address: address,
-    notes: notes,
-    items: cart.map(i => ({
-      name: i.name,
-      price: i.price,
+    notes:   notes
+  };
+
+  // Store a snapshot in sessionStorage for the confirmation page
+  // (must happen before finalizeCheckout clears the cart)
+  const orderSnapshot = {
+    id:        Date.now(),
+    timestamp: Date.now(),
+    ...customerDetails,
+    items:     cart.map(i => ({
+      name:     i.name,
+      price:    i.price,
       quantity: i.quantity,
-      options: i.options
+      options:  i.options
     })),
     itemCount: cart.reduce((sum, i) => sum + i.quantity, 0),
-    total: total
+    total:     getCartTotal()
   };
-  
-  // Save to admin orders
-  saveAdminOrder(order);
-  
-  // Clear form
-  document.getElementById('form-name').value = '';
-  document.getElementById('form-phone').value = '';
-  document.getElementById('form-city').value = '';
+  sessionStorage.setItem('nova_confirmation_order', JSON.stringify(orderSnapshot));
+
+  // Clear form and close modal before async call
+  document.getElementById('form-name').value    = '';
+  document.getElementById('form-phone').value   = '';
+  document.getElementById('form-city').value    = '';
   document.getElementById('form-address').value = '';
-  document.getElementById('form-notes').value = '';
-  
-  // Close modal
+  document.getElementById('form-notes').value   = '';
   closeOrderModal();
-  
-  // Store order data in sessionStorage for confirmation page
-  sessionStorage.setItem('nova_confirmation_order', JSON.stringify(order));
-  
-  // Clear cart before redirecting
-  clearCart();
-  
-  // Redirect to confirmation page
-  window.location.href = '/confirmation.html';
+
+  // Send to Firebase (this also clears the cart and redirects on success)
+  finalizeCheckout(customerDetails);
 }
 
-function saveAdminOrder(order) {
-  try {
-    const orders = localStorage.getItem('nova_style_orders');
-    const allOrders = orders ? JSON.parse(orders) : [];
-    allOrders.push(order);
-    localStorage.setItem('nova_style_orders', JSON.stringify(allOrders));
-    console.log('✅ Commande sauvegardée:', order);
-  } catch (e) {
-    console.error('Error saving order:', e);
-  }
-}
 
 function continueShopping() {
   window.location.href = '/categorie/sdb-premium/';
