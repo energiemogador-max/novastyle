@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function updateCartCount() {
-  const cartKey = 'cart';
+  const cartKey = 'nova_style_cart';
   let cartData = localStorage.getItem(cartKey);
   let cartItems = [];
   

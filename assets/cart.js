@@ -60,6 +60,10 @@ function finalizeCheckout(customerDetails) {
     }).catch(err => alert("Erreur de connexion : " + err.message));
 }
 
-// --- CRITIQUE : Rendre les fonctions visibles pour vos 90 pages HTML ---
+// À mettre à la toute fin de cart.js
 window.addToCart = addToCart;
+window.addProductToCart = addProductToCart;
 window.finalizeCheckout = finalizeCheckout;
+
+// Dispatch un événement pour que le badge (cart-display.js) se mette à jour
+document.dispatchEvent(new CustomEvent('cartUpdated'));
