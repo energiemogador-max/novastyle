@@ -195,5 +195,83 @@
 <div class="bottom-bar">
   <a class="call" href="tel:+212707074748">📞 07 07 07 47 48</a>
   <a class="wa" href="https://wa.me/212707074748" target="_blank">💬 WhatsApp</a>
+</div><!-- ===== FLOATING INSTAGRAM BUTTON ===== -->
+<style>
+.ns-ig-float {
+  position: fixed;
+  right: 20px;
+  bottom: 90px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.ns-ig-fab {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(188,24,136,0.40);
+  text-decoration: none;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  position: relative;
+}
+.ns-ig-fab:hover {
+  transform: scale(1.10);
+  box-shadow: 0 6px 22px rgba(188,24,136,0.52);
+}
+.ns-ig-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #fff;
+  border: 1.5px solid #f0d0e0;
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #cc2366;
+  padding: 1px 5px;
+  line-height: 1.4;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+.ns-ig-label {
+  margin-top: 6px;
+  background: #fff;
+  border: 1px solid #f0d8e8;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #cc2366;
+  padding: 3px 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.ns-ig-float:hover .ns-ig-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+ 
+<div class="ns-ig-float">
+  <a class="ns-ig-fab" href="https://www.instagram.com/nova_home_style/" target="_blank" rel="noopener" aria-label="Suivez-nous sur Instagram">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+      <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path>
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+    </svg>
+    <span class="ns-ig-badge">11.7K</span>
+  </a>
+  <div class="ns-ig-label">Nous suivre</div>
 </div>
+<!-- ===== END FLOATING INSTAGRAM BUTTON ===== -->
 </body></html>
