@@ -1,110 +1,30 @@
-// Cart management using localStorage
-const CART_KEY = 'nova_style_cart';
+// Scripts Firebase (Version compatible pour script classique)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-function getCart() {
-  const cart = localStorage.getItem(CART_KEY);
-  return cart ? JSON.parse(cart) : [];
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",
+  authDomain: "nova-9ac76.firebaseapp.com",
+  projectId: "nova-9ac76",
+  databaseURL: "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app", // Vérifie cette URL dans ton onglet Realtime Database
+  storageBucket: "nova-9ac76.firebasestorage.app",
+  messagingSenderId: "645613145752",
+  appId: "1:645613145752:web:775e6f8ffce64ae12c4aed"
+};
 
-function saveCart(cart) {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-}
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-function addToCart(productId, product, options = null) {
-  const cart = getCart();
-  
-  // Create unique key including options
-  const optionKey = options ? JSON.stringify(options) : '';
-  const itemKey = `${productId}|${optionKey}`;
-  
-  const item = cart.find(i => i.key === itemKey);
-  
-  if (item) {
-    item.quantity += 1;
-  } else {
-    cart.push({
-      key: itemKey,
-      id: productId,
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-      options: options || null
+// Ta fonction qui valide la commande (ajoute ce code dedans)
+function saveOrderToCloud(orderDetails) {
+    const ordersRef = ref(db, 'orders');
+    const newOrderRef = push(ordersRef);
+    
+    set(newOrderRef, {
+        ...orderDetails,
+        date: new Date().toISOString(),
+        status: 'new'
+    }).then(() => {
+        console.log("Commande synchronisée sur le Cloud !");
     });
-  }
-  
-  saveCart(cart);
-  showNotification('Produit ajouté au panier');
-}
-
-function removeFromCart(itemKey) {
-  let cart = getCart();
-  cart = cart.filter(i => i.key !== itemKey);
-  saveCart(cart);
-}
-
-function updateQuantity(itemKey, quantity) {
-  const cart = getCart();
-  const item = cart.find(i => i.key === itemKey);
-  
-  if (item) {
-    if (quantity <= 0) {
-      removeFromCart(itemKey);
-    } else {
-      item.quantity = quantity;
-      saveCart(cart);
-    }
-  }
-}
-
-function getCartTotal() {
-  const cart = getCart();
-  return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-}
-
-function getCartCount() {
-  const cart = getCart();
-  return cart.reduce((count, item) => count + item.quantity, 0);
-}
-
-function clearCart() {
-  localStorage.removeItem(CART_KEY);
-}
-
-function showNotification(message) {
-  const notification = document.createElement('div');
-  notification.className = 'notification';
-  notification.textContent = message;
-  document.body.appendChild(notification);
-  
-  setTimeout(() => {
-    notification.classList.add('show');
-  }, 10);
-  
-  setTimeout(() => {
-    notification.classList.remove('show');
-    setTimeout(() => notification.remove(), 300);
-  }, 2000);
-}
-
-function formatPrice(price) {
-  return new Intl.NumberFormat('fr-MA', {
-    style: 'currency',
-    currency: 'MAD'
-  }).format(price);
-}
-
-function updateCartBadge() {
-  const badge = document.getElementById('cart-badge');
-  const count = getCartCount();
-  if (badge) {
-    badge.textContent = count;
-    badge.style.display = count > 0 ? 'inline-block' : 'none';
-  }
-}
-
-// Update badge on page load
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', updateCartBadge);
-} else {
-  updateCartBadge();
 }
