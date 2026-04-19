@@ -436,6 +436,7 @@
       <button class="filter-btn active" onclick="setFilter('all')" data-filter="all">Tous</button>
       <button class="filter-btn" onclick="setFilter('today')" data-filter="today">Aujourd'hui</button>
       <button class="filter-btn" onclick="setFilter('week')" data-filter="week">Cette semaine</button>
+      <button class="filter-btn" onclick="loadTestOrders()" style="background: var(--accent); color: white; border-color: var(--accent);">Test</button>
       <button class="filter-btn" onclick="clearAllOrders()" style="background: var(--red); color: white; border-color: var(--red);">Vider tout</button>
     </div>
 
@@ -787,6 +788,59 @@ function clearAllOrders() {
       loadOrders();
     }
   }
+}
+
+function loadTestOrders() {
+  const testOrders = [
+    {
+      id: Date.now() - 3600000,
+      timestamp: Date.now() - 3600000,
+      name: 'Ahmed Hassan',
+      phone: '0612345678',
+      city: 'Casablanca',
+      address: '123 Rue Mohammed V, Casablanca',
+      notes: 'Livraison matin de préférence',
+      items: [
+        { name: 'Miroir BLOOM LED', price: 2500, quantity: 1, options: { Dimension: '80x60', LED: 'Oui' } },
+        { name: 'Miroir ECLIPSE', price: 1800, quantity: 1, options: { Dimension: '60x40' } }
+      ],
+      itemCount: 2,
+      total: 4300
+    },
+    {
+      id: Date.now() - 1800000,
+      timestamp: Date.now() - 1800000,
+      name: 'Fatima Bennani',
+      phone: '0698765432',
+      city: 'Rabat',
+      address: 'Avenue Hassan II, Rabat',
+      notes: 'Appeler avant livraison',
+      items: [
+        { name: 'Miroir MAGNUM SDB', price: 3200, quantity: 1, options: { Dimension: '100x80', LED: 'Oui', Installation: 'Oui' } }
+      ],
+      itemCount: 1,
+      total: 3200
+    },
+    {
+      id: Date.now() - 600000,
+      timestamp: Date.now() - 600000,
+      name: 'Mohamed Chraibi',
+      phone: '0634567890',
+      city: 'Marrakech',
+      address: 'Medina, Marrakech',
+      notes: '',
+      items: [
+        { name: 'Miroir CROISSANT LED', price: 2000, quantity: 2, options: { LED: 'Oui' } }
+      ],
+      itemCount: 2,
+      total: 4000
+    }
+  ];
+  
+  allOrders = testOrders;
+  saveAdminOrders(testOrders);
+  loadOrders();
+  alert('📦 Commandes de test chargées! (Ces données sont sauvegardées)');
 }
 
 // Check auth on load

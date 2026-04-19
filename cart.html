@@ -404,7 +404,12 @@
   </a>
   <nav class="main-nav">
     <a href="/">Accueil</a>
-    <a href="/categorie/sdb-premium/">Miroirs Premium</a>
+    <a href="/categorie/sdb-premium/">Miroirs SDB Premium</a>
+    <a href="/categorie/sdb-essentiel/">Entrée de gamme</a>
+    <a href="/categorie/salon/">Salon &amp; dressing</a>
+    <a href="/categorie/consoles/">Consoles &amp; entrée</a>
+    <a href="/categorie/tables/">Tables de séjour</a>
+    <a href="/categorie/douches/">Douches italiennes</a>
   </nav>
 </header>
 
@@ -691,6 +696,7 @@ function saveAdminOrder(order) {
     const allOrders = orders ? JSON.parse(orders) : [];
     allOrders.push(order);
     localStorage.setItem('nova_style_orders', JSON.stringify(allOrders));
+    console.log('✅ Commande sauvegardée:', order);
   } catch (e) {
     console.error('Error saving order:', e);
   }
