@@ -1,5 +1,228 @@
-<!-- FIX: was <script visitor-tracker.js> which is invalid.
-     Must be type="module" to use ES import statements. -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova Style — Admin Commandes</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #f0f0f0;
+      min-height: 100vh;
+    }
+
+    .admin-header {
+      background: #1a1a1a;
+      border-bottom: 2px solid #e8194b;
+      padding: 18px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .admin-header h1 { font-size: 22px; color: #e8194b; }
+    .admin-header span { font-size: 13px; color: #888; }
+
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      padding: 20px 30px;
+      background: #141414;
+      border-bottom: 1px solid #222;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: #1e1e1e;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 14px 20px;
+      min-width: 140px;
+    }
+
+    .stat-card .label {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #e8194b;
+    }
+
+    .container {
+      padding: 24px 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    #orders-display {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .no-order {
+      text-align: center;
+      padding: 60px 20px;
+      color: #555;
+      font-size: 16px;
+      background: #1a1a1a;
+      border-radius: 12px;
+      border: 1px dashed #333;
+    }
+
+    .order-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-left: 4px solid #e8194b;
+      border-radius: 10px;
+      padding: 18px 20px;
+      display: grid;
+      grid-template-columns: auto 1fr auto auto auto;
+      gap: 16px;
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .order-card:hover { background: #1f1f1f; }
+
+    .order-card.new-order {
+      animation: flash 1s ease-in-out 3;
+      border-left-color: #00c853;
+    }
+
+    @keyframes flash {
+      0%, 100% { background: #1a1a1a; }
+      50% { background: #0d1f0d; }
+    }
+
+    .order-id {
+      font-family: monospace;
+      font-size: 13px;
+      color: #e8194b;
+      font-weight: 700;
+      background: #2a1a1a;
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .order-customer { font-size: 15px; font-weight: 600; color: #f0f0f0; }
+    .order-customer .city { font-size: 12px; color: #888; font-weight: 400; margin-top: 2px; }
+
+    .order-items {
+      font-size: 12px;
+      color: #888;
+      max-width: 280px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .order-total { font-size: 16px; font-weight: 700; color: #00c853; white-space: nowrap; }
+
+    .order-time { font-size: 12px; color: #555; white-space: nowrap; text-align: right; }
+
+    .order-status {
+      display: inline-block;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      background: #2a2a1a;
+      color: #ffb300;
+      border: 1px solid #ffb30044;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #555;
+      font-size: 15px;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #00c853;
+      background: #0a1f0a;
+      border: 1px solid #00c85344;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background: #00c853;
+      border-radius: 50%;
+      animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    @media (max-width: 768px) {
+      .order-card { grid-template-columns: 1fr 1fr; }
+      .order-items { display: none; }
+      .container { padding: 16px; }
+      .stats-bar { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="admin-header">
+  <h1>🛍️ Nova Style — Commandes</h1>
+  <div class="live-badge">
+    <span class="live-dot"></span>
+    Temps réel
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="label">Total commandes</div>
+    <div class="value" id="stat-total">—</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Chiffre d'affaires</div>
+    <div class="value" id="stat-revenue">—</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Aujourd'hui</div>
+    <div class="value" id="stat-today">—</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="section-title">📦 Dernières commandes</div>
+  <div id="orders-display">
+    <div class="loading">Connexion à Firebase en cours…</div>
+  </div>
+</div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -13,37 +236,63 @@
   };
 
   const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+  const db  = getDatabase(app);
 
-  const ordersRef = ref(db, 'orders');
+  let previousCount = 0;
 
-  onValue(ordersRef, (snapshot) => {
-    const data = snapshot.val();
+  onValue(ref(db, 'orders'), (snapshot) => {
+    const data      = snapshot.val();
     const container = document.getElementById('orders-display');
 
     if (!data) {
-      container.innerHTML = "<div class='no-order'>En attente de nouvelles commandes...</div>";
+      container.innerHTML = "<div class='no-order'>⏳ En attente de nouvelles commandes…</div>";
+      document.getElementById('stat-total').textContent   = '0';
+      document.getElementById('stat-revenue').textContent = '0 MAD';
+      document.getElementById('stat-today').textContent   = '0';
       return;
     }
 
-    const list = Object.entries(data).sort((a, b) => b[1].timestamp - a[1].timestamp);
+    const list       = Object.entries(data).sort((a, b) => b[1].timestamp - a[1].timestamp);
+    const isNewOrder = list.length > previousCount && previousCount > 0;
+    if (isNewOrder) playNotificationSound();
+    previousCount = list.length;
 
-    container.innerHTML = list.map(([id, order]) => `
-      <div class="order-card pulse-animation">
-        <div class="order-id">ID: ${id.slice(-5)}</div>
-        <div class="order-customer">${order.customer.name} - ${order.customer.city}</div>
-        <div class="order-total">${order.total} MAD</div>
-        <div class="order-time">${new Date(order.timestamp).toLocaleTimeString()}</div>
+    // Stats
+    const totalRevenue = list.reduce((s, [, o]) => s + (o.total || 0), 0);
+    const todayCount   = list.filter(([, o]) => {
+      return new Date(o.timestamp).toDateString() === new Date().toDateString();
+    }).length;
+
+    document.getElementById('stat-total').textContent   = list.length;
+    document.getElementById('stat-revenue').textContent = totalRevenue.toLocaleString('fr-MA') + ' MAD';
+    document.getElementById('stat-today').textContent   = todayCount;
+
+    // Orders list
+    container.innerHTML = list.map(([id, order], i) => `
+      <div class="order-card ${i === 0 && isNewOrder ? 'new-order' : ''}">
+        <div class="order-id">#${id.slice(-6).toUpperCase()}</div>
+        <div class="order-customer">
+          ${order.customer?.name || '—'}
+          <div class="city">📍 ${order.customer?.city || '—'} &nbsp;·&nbsp; ${order.customer?.phone || ''}</div>
+        </div>
+        <div class="order-items">
+          ${(order.items || []).map(it => `${it.name} ×${it.quantity || 1}`).join(' • ')}
+        </div>
+        <div class="order-total">${(order.total || 0).toLocaleString('fr-MA')} MAD</div>
+        <div class="order-time">
+          <span class="order-status">En attente</span><br>
+          ${new Date(order.timestamp).toLocaleDateString('fr-MA')}
+          ${new Date(order.timestamp).toLocaleTimeString('fr-MA', {hour:'2-digit', minute:'2-digit'})}
+        </div>
       </div>
     `).join('');
-
-    playNotificationSound();
   });
 
   function playNotificationSound() {
-    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-    audio.play().catch(() => {
-      console.log("Le navigateur bloque le son tant que vous n'avez pas cliqué sur la page.");
-    });
+    new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3')
+      .play().catch(() => {});
   }
 </script>
+
+</body>
+</html>
