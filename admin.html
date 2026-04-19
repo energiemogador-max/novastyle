@@ -93,63 +93,69 @@
       border: 1px solid #2a2a2a;
       border-left: 4px solid #e8194b;
       border-radius: 10px;
-      padding: 18px 20px;
-      display: grid;
-      grid-template-columns: auto 1fr auto auto auto;
-      gap: 16px;
-      align-items: center;
+      overflow: hidden;
       transition: background 0.2s;
     }
+    .order-card:hover { background: #1c1c1c; }
+    .order-card.new-order { animation: flash 1s ease-in-out 3; border-left-color: #00c853; }
+    @keyframes flash { 0%,100%{background:#1a1a1a} 50%{background:#0d1f0d} }
 
-    .order-card:hover { background: #1f1f1f; }
-
-    .order-card.new-order {
-      animation: flash 1s ease-in-out 3;
-      border-left-color: #00c853;
+    .order-head {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 18px; flex-wrap: wrap;
+      border-bottom: 1px solid #222;
     }
-
-    @keyframes flash {
-      0%, 100% { background: #1a1a1a; }
-      50% { background: #0d1f0d; }
-    }
-
     .order-id {
-      font-family: monospace;
-      font-size: 13px;
-      color: #e8194b;
-      font-weight: 700;
-      background: #2a1a1a;
-      padding: 4px 10px;
-      border-radius: 6px;
-      white-space: nowrap;
+      font-family: monospace; font-size: 13px; color: #e8194b; font-weight: 700;
+      background: #2a1a1a; padding: 4px 10px; border-radius: 6px; white-space: nowrap; flex-shrink: 0;
     }
-
-    .order-customer { font-size: 15px; font-weight: 600; color: #f0f0f0; }
-    .order-customer .city { font-size: 12px; color: #888; font-weight: 400; margin-top: 2px; }
-
-    .order-items {
-      font-size: 12px;
-      color: #888;
-      max-width: 280px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .order-total { font-size: 16px; font-weight: 700; color: #00c853; white-space: nowrap; }
-
-    .order-time { font-size: 12px; color: #555; white-space: nowrap; text-align: right; }
-
     .order-status {
-      display: inline-block;
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-weight: 600;
-      background: #2a2a1a;
-      color: #ffb300;
-      border: 1px solid #ffb30044;
+      font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600;
+      background: #2a2a1a; color: #ffb300; border: 1px solid #ffb30044; flex-shrink: 0;
     }
+    .order-time { font-size: 12px; color: #555; margin-left: auto; white-space: nowrap; }
+
+    .order-body { display: grid; grid-template-columns: 240px 1fr; }
+    @media(max-width:768px){ .order-body{grid-template-columns:1fr} .order-items-col{border-left:none!important;border-top:1px solid #222} }
+
+    .order-customer-col {
+      padding: 14px 16px; border-right: 1px solid #222;
+      display: flex; flex-direction: column; gap: 7px;
+    }
+    .customer-name { font-size: 15px; font-weight: 700; color: #f0f0f0; }
+    .customer-row { display:flex; align-items:flex-start; gap:5px; font-size:12px; color:#999; line-height:1.4; }
+    .customer-phone { color: #e8194b; font-weight: 600; font-size: 13px; }
+    .customer-notes {
+      font-size: 11px; color: #666; font-style: italic;
+      padding: 5px 8px; background: #111; border-radius: 6px; border-left: 2px solid #333;
+    }
+
+    .order-items-col { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+
+    .item-row {
+      background: #111; border: 1px solid #222; border-radius: 8px; padding: 10px 12px;
+    }
+    .item-name { font-size: 13px; font-weight: 600; color: #e0e0e0; margin-bottom: 6px; }
+    .item-options { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 7px; }
+    .opt-tag {
+      font-size: 11px; padding: 2px 8px; border-radius: 4px;
+      background: #1a1e2a; color: #7da0ba; border: 1px solid #2a303a;
+    }
+    .opt-tag.led { background: #2a1e1a; color: #ba9a7d; border-color: #3a2a1a; }
+    .opt-tag.install { background: #1e2a1e; color: #7dba7d; border-color: #2a3a2a; }
+
+    .item-footer { display:flex; justify-content:space-between; align-items:center; font-size:12px; }
+    .item-footer .qty { color: #777; }
+    .item-footer .item-price { color: #00c853; font-weight: 700; font-size: 13px; }
+
+    .order-foot {
+      display: flex; justify-content: flex-end; align-items: center; gap: 20px;
+      padding: 10px 18px; background: #141414; border-top: 1px solid #222;
+    }
+    .foot-label { font-size: 12px; color: #555; }
+    .foot-total { font-size: 18px; font-weight: 800; color: #00c853; }
+    .foot-deposit { font-size: 12px; color: #ffb300; }
+    .order-total { font-size: 16px; font-weight: 700; color: #00c853; white-space: nowrap; }
 
     .loading {
       text-align: center;
@@ -184,8 +190,6 @@
     }
 
     @media (max-width: 768px) {
-      .order-card { grid-template-columns: 1fr 1fr; }
-      .order-items { display: none; }
       .container { padding: 16px; }
       .stats-bar { padding: 16px; }
     }
@@ -268,24 +272,66 @@
     document.getElementById('stat-today').textContent   = todayCount;
 
     // Orders list
-    container.innerHTML = list.map(([id, order], i) => `
-      <div class="order-card ${i === 0 && isNewOrder ? 'new-order' : ''}">
-        <div class="order-id">#${id.slice(-6).toUpperCase()}</div>
-        <div class="order-customer">
-          ${order.customer?.name || '—'}
-          <div class="city">📍 ${order.customer?.city || '—'} &nbsp;·&nbsp; ${order.customer?.phone || ''}</div>
-        </div>
-        <div class="order-items">
-          ${(order.items || []).map(it => `${it.name} ×${it.quantity || 1}`).join(' • ')}
-        </div>
-        <div class="order-total">${(order.total || 0).toLocaleString('fr-MA')} MAD</div>
-        <div class="order-time">
-          <span class="order-status">En attente</span><br>
-          ${new Date(order.timestamp).toLocaleDateString('fr-MA')}
-          ${new Date(order.timestamp).toLocaleTimeString('fr-MA', {hour:'2-digit', minute:'2-digit'})}
-        </div>
-      </div>
-    `).join('');
+    function renderOptions(options) {
+      if (!options || typeof options !== 'object') return '';
+      return Object.entries(options).map(([k, v]) => {
+        const key = k.toLowerCase();
+        let cls = 'opt-tag';
+        if (key === 'led') cls += ' led';
+        else if (key === 'installation') cls += ' install';
+        return `<span class="${cls}">${k}: ${v}</span>`;
+      }).join('');
+    }
+
+    container.innerHTML = list.map(([id, order], i) => {
+      const c = order.customer || {};
+      const items = order.items || [];
+      const total = order.total || 0;
+      const deposit = Math.round(total * 0.5);
+      const dt = new Date(order.timestamp);
+
+      const itemsHTML = items.map(it => {
+        const lineTotal = (it.price || 0) * (it.quantity || 1);
+        return `
+          <div class="item-row">
+            <div class="item-name">${it.name}</div>
+            ${it.options ? `<div class="item-options">${renderOptions(it.options)}</div>` : ''}
+            <div class="item-footer">
+              <span class="qty">Qté: ${it.quantity || 1} × ${(it.price || 0).toLocaleString('fr-MA')} MAD</span>
+              <span class="item-price">${lineTotal.toLocaleString('fr-MA')} MAD</span>
+            </div>
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="order-card ${i === 0 && isNewOrder ? 'new-order' : ''}">
+          <div class="order-head">
+            <div class="order-id">#${id.slice(-6).toUpperCase()}</div>
+            <span class="order-status">En attente</span>
+            <div class="order-time">
+              ${dt.toLocaleDateString('fr-MA')} &nbsp;
+              ${dt.toLocaleTimeString('fr-MA', {hour:'2-digit', minute:'2-digit'})}
+            </div>
+          </div>
+
+          <div class="order-body">
+            <div class="order-customer-col">
+              <div class="customer-name">${c.name || '—'}</div>
+              <div class="customer-row"><span>📞</span><span class="customer-phone">${c.phone || '—'}</span></div>
+              <div class="customer-row"><span>📍</span><span>${c.city || '—'}</span></div>
+              ${c.address ? `<div class="customer-row"><span>🏠</span><span>${c.address}</span></div>` : ''}
+              ${c.notes ? `<div class="customer-notes">💬 ${c.notes}</div>` : ''}
+            </div>
+            <div class="order-items-col">${itemsHTML}</div>
+          </div>
+
+          <div class="order-foot">
+            <span class="foot-deposit">Acompte 50%: ${deposit.toLocaleString('fr-MA')} MAD</span>
+            <span class="foot-label">Total:</span>
+            <span class="foot-total">${total.toLocaleString('fr-MA')} MAD</span>
+          </div>
+        </div>`;
+    }).join('');
   });
 
   function playNotificationSound() {
