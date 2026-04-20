@@ -13,11 +13,11 @@
  *   {{items_html}} {{total}} {{deposit}} {{order_date}}
  * Customer template vars: same + {{reply_to}}
  */
-const EMAILJS_PUBLIC_KEY      = "";           // "user_xxxxxxxx"
-const EMAILJS_SERVICE_ID      = "";           // "service_nova"
-const EMAILJS_ADMIN_TEMPLATE  = "";           // "template_nova_admin"
-const EMAILJS_CLIENT_TEMPLATE = "";           // "template_nova_client"
-const ADMIN_EMAIL             = "admin@novastyle.ma";
+const EMAILJS_PUBLIC_KEY      = "k3e_LOpxkERLpQnz1";           // "user_xxxxxxxx"
+const EMAILJS_SERVICE_ID      = "service_e66tthp";           // "service_nova"
+const EMAILJS_ADMIN_TEMPLATE  = "template_hi0ana5";           // "template_nova_admin"
+const EMAILJS_CLIENT_TEMPLATE = "template_pbrlanl";           // "template_nova_client"
+const ADMIN_EMAIL             = "energiemogador@gmail.com";
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
