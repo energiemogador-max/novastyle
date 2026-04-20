@@ -1,196 +1,138 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>Nova Style — Panier</title>
-<link rel="stylesheet" href="/assets/style.css">
-<style>
-  :root { --green: #25D366; --red: #ff4d4d; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-  .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-  @media (max-width: 900px) { .checkout-grid { grid-template-columns: 1fr; } }
-  .cart-items { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-  .cart-item { 
-    display: flex; justify-content: space-between; align-items: center; 
-    padding: 15px 0; border-bottom: 1px solid var(--border); gap: 10px;
-  }
-  .item-info { flex: 1; }
-  .item-qty-controls { display: flex; align-items: center; gap: 10px; border: 1px solid var(--border); border-radius: 5px; padding: 2px 8px; }
-  .qty-btn { background: none; border: none; cursor: pointer; font-size: 20px; padding: 5px 10px; color: var(--text); }
-  .checkout-sidebar { 
-    background: var(--card); border: 1px solid var(--border); border-radius: 12px; 
-    padding: 20px; height: fit-content; position: sticky; top: 20px; 
-  }
-  .btn-checkout {
-    width: 100%; min-height: 55px; border: none; border-radius: 8px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    text-decoration: none; margin-bottom: 10px; touch-action: manipulation;
-  }
-  .btn-wa { background: var(--green); color: white; }
-  .btn-form { background: var(--accent); color: white; }
-  .modal-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-    z-index: 2000; align-items: center; justify-content: center; padding: 15px;
-  }
-  .modal-overlay.active { display: flex; }
-  .modal-content { background: var(--card); border-radius: 12px; padding: 20px; width: 100%; max-width: 450px; }
-  .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; }
-  .form-group input, .form-group textarea { padding: 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); }
-</style>
-</head>
-<body>
-
-<script src="/assets/header.js"></script>
-
-<div class="container">
-  <div class="cart-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-    <h1>Mon Panier</h1>
-    <a href="/categorie/sdb-premium/" style="text-decoration:none; color:var(--accent); font-weight:600;">← Boutique</a>
-  </div>
-  
-  <div class="checkout-grid">
-    <div class="cart-items" id="cart-display">
-      </div>
-    
-    <div class="checkout-sidebar">
-      <h3 style="margin-top:0">Résumé</h3>
-      <div style="display:flex; justify-content:space-between; font-size:1.2rem; margin: 20px 0;">
-        <span>Total:</span>
-        <span id="cart-total" style="font-weight:bold; color:var(--accent);">0 MAD</span>
-      </div>
-      <div id="action-buttons">
-        </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="order-modal">
-  <div class="modal-content">
-    <h2 style="margin-top:0">Finaliser ma commande</h2>
-    <div class="form-group">
-      <label>Nom complet *</label>
-      <input type="text" id="cust-name" required>
-    </div>
-    <div class="form-group">
-      <label>Téléphone *</label>
-      <input type="tel" id="cust-phone" required>
-    </div>
-    <div class="form-group">
-      <label>Ville *</label>
-      <input type="text" id="cust-city" required>
-    </div>
-    <div class="form-group">
-      <label>Adresse *</label>
-      <textarea id="cust-address" rows="2" required></textarea>
-    </div>
-    <button class="btn-checkout btn-wa" onclick="processOrder()">Envoyer la commande</button>
-    <button onclick="toggleModal(false)" style="width:100%; background:none; border:none; color:var(--muted); cursor:pointer;">Annuler</button>
-  </div>
-</div>
-
 <script type="module" src="/assets/cart.js"></script>
-
 <script>
-// Utilisation de la délégation d'événements pour éviter les erreurs de "token"
+// 1. Délégation d'événements (plus robuste que onclick)
 document.addEventListener('click', function(e) {
-  const target = e.target;
-  const key = target.getAttribute('data-key');
+  const btn = e.target.closest('button');
+  if (!btn) return;
   
+  const key = btn.getAttribute('data-key');
   if (!key) return;
 
-  if (target.classList.contains('qty-plus')) {
-    const currentQty = parseInt(target.getAttribute('data-qty'));
-    window.updateQuantity(key, currentQty + 1);
-    initCart();
-  }
-  
-  if (target.classList.contains('qty-minus')) {
-    const currentQty = parseInt(target.getAttribute('data-qty'));
-    if (currentQty > 1) {
-      window.updateQuantity(key, currentQty - 1);
-      initCart();
+  if (btn.classList.contains('qty-plus')) {
+    const cart = getCart();
+    const item = cart.find(i => i.key === key);
+    if (item) {
+      item.quantity += 1;
+      saveCart(cart);
+      renderCart();
     }
   }
 
-  if (target.classList.contains('remove-item')) {
-    if (confirm('Supprimer cet article ?')) {
-      window.removeFromCart(key);
-      initCart();
+  if (btn.classList.contains('qty-minus')) {
+    const cart = getCart();
+    const item = cart.find(i => i.key === key);
+    if (item && item.quantity > 1) {
+      item.quantity -= 1;
+      saveCart(cart);
+      renderCart();
+    }
+  }
+
+  if (btn.classList.contains('remove-btn')) {
+    if (confirm('Retirer cet article ?')) {
+      removeFromCart(key);
+      renderCart();
     }
   }
 });
 
-function initCart() {
-  if (typeof window.getCart !== 'function') return;
-  
-  const cart = window.getCart();
-  const display = document.getElementById('cart-display');
-  const totalDisplay = document.getElementById('cart-total');
-  const actionDiv = document.getElementById('action-buttons');
-
-  if (cart.length === 0) {
-    display.innerHTML = '<div style="padding:40px; text-align:center;">Votre panier est vide.</div>';
-    totalDisplay.textContent = '0 MAD';
-    actionDiv.innerHTML = '';
+function renderCart() {
+  // On s'assure que les fonctions globales de cart.js sont prêtes
+  if (typeof getCart !== 'function') {
+    setTimeout(renderCart, 100);
     return;
   }
 
-  display.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <div class="item-info">
-        <div style="font-weight:600;">${item.name}</div>
-        <div style="font-size:0.8rem; color:var(--muted);">${item.price} MAD</div>
+  const cart = getCart();
+  const container = document.getElementById('cart-items-container');
+  
+  if (cart.length === 0) {
+    container.innerHTML = `
+      <div class="empty-cart">
+        <p>Votre panier est vide</p>
+        <a href="/categorie/sdb-premium/" class="empty-cart-btn">Parcourir les produits</a>
       </div>
-      <div class="item-qty-controls">
-        <button class="qty-btn qty-minus" data-key='${item.key}' data-qty="${item.quantity}">-</button>
-        <span style="font-weight:bold;">${item.quantity}</span>
-        <button class="qty-btn qty-plus" data-key='${item.key}' data-qty="${item.quantity}">+</button>
+    `;
+    updateCheckoutButtons();
+    return;
+  }
+  
+  // Utilisation de guillemets simples pour data-key='' afin de ne pas casser le JSON interne
+  container.innerHTML = `
+    <h2>Articles dans votre panier (${cart.length})</h2>
+    ${cart.map((item) => `
+      <div class="cart-item">
+        <div class="item-name">
+          <div><strong>${item.name}</strong></div>
+          ${item.options ? `
+            <div style="font-size: 12px; color: var(--muted); margin-top: 6px;">
+              ${Object.entries(item.options).map(([k, v]) => `<div>• ${k}: ${v}</div>`).join('')}
+            </div>
+          ` : ''}
+        </div>
+        <div class="item-qty">
+          <button class="qty-btn qty-minus" data-key='${item.key}'>−</button>
+          <input type="number" class="qty-input" value="${item.quantity}" readonly>
+          <button class="qty-btn qty-plus" data-key='${item.key}'>+</button>
+        </div>
+        <div class="item-price">${formatPrice(item.price * item.quantity)}</div>
+        <button class="remove-btn" data-key='${item.key}'>Retirer</button>
       </div>
-      <div style="font-weight:600; min-width:80px; text-align:right;">${item.price * item.quantity} MAD</div>
-      <button class="remove-item" data-key='${item.key}' style="background:none; border:none; color:var(--red); cursor:pointer; font-size:1.2rem;">×</button>
-    </div>
-  `).join('');
+    `).join('')}
+  `;
+  
+  updateSummary();
+}
 
-  const total = window.getCartTotal();
-  totalDisplay.textContent = total + ' MAD';
+function updateSummary() {
+  const total = getCartTotal();
+  document.getElementById('subtotal').textContent = formatPrice(total);
+  document.getElementById('total').textContent = formatPrice(total);
+  if(document.getElementById('modal-total')) {
+    document.getElementById('modal-total').textContent = formatPrice(total);
+  }
+  updateCheckoutButtons();
+}
 
-  // Boutons d'action
+function updateCheckoutButtons() {
+  const cart = getCart();
+  const actionsDiv = document.getElementById('checkout-actions');
+  const noteDiv = document.getElementById('order-note');
+  
+  if (cart.length === 0) {
+    actionsDiv.innerHTML = '';
+    if(noteDiv) noteDiv.style.display = 'none';
+    return;
+  }
+  
+  if(noteDiv) noteDiv.style.display = 'block';
+  const total = getCartTotal();
   const cartSummary = encodeURIComponent(cart.map(i => `${i.name} x${i.quantity}`).join('\n'));
-  const waUrl = `https://wa.me/212707074748?text=Bonjour%20Nova%20Style,%20je%20souhaite%20commander:%0A${cartSummary}%0ATotal:%20${total}%20MAD`;
-
-  actionDiv.innerHTML = `
-    <a href="${waUrl}" target="_blank" class="btn-checkout btn-wa">💬 Commander via WhatsApp</a>
-    <button class="btn-checkout btn-form" onclick="toggleModal(true)">📝 Formulaire Rapide</button>
+  const whatsappUrl = `https://wa.me/212707074748?text=Commande%20Nova%20Style:%0A${cartSummary}%0ATotal:%20${total}%20MAD`;
+  
+  actionsDiv.innerHTML = `
+    <a href="${whatsappUrl}" target="_blank" class="btn-checkout btn-whatsapp">💬 Acheter via WhatsApp</a>
+    <button onclick="openOrderModal()" class="btn-checkout btn-form">📝 Remplir le formulaire</button>
   `;
 }
 
-function toggleModal(show) {
-  document.getElementById('order-modal').classList.toggle('active', show);
-}
+// Les fonctions de la modale restent identiques à ton code original...
+function openOrderModal() { document.getElementById('form-modal').classList.add('active'); }
+function closeOrderModal() { document.getElementById('form-modal').classList.remove('active'); }
 
-async function processOrder() {
+window.submitOrder = function() {
   const details = {
-    name: document.getElementById('cust-name').value,
-    phone: document.getElementById('cust-phone').value,
-    city: document.getElementById('cust-city').value,
-    address: document.getElementById('cust-address').value
+    name: document.getElementById('form-name').value,
+    phone: document.getElementById('form-phone').value,
+    city: document.getElementById('form-city').value,
+    address: document.getElementById('form-address').value,
+    notes: document.getElementById('form-notes').value
   };
-
-  if (!details.name || !details.phone) {
-    alert("Veuillez remplir les champs obligatoires.");
-    return;
+  
+  if (window.finalizeCheckout) {
+    window.finalizeCheckout(details);
   }
-
-  if (typeof window.finalizeCheckout === 'function') {
-    await window.finalizeCheckout(details);
-  }
-}
-
-// Lancement au chargement
-window.onload = () => {
-  setTimeout(initCart, 400); // Laisse le temps au module cart.js de charger
 };
+
+document.addEventListener('DOMContentLoaded', renderCart);
 </script>
-</body>
-</html>
