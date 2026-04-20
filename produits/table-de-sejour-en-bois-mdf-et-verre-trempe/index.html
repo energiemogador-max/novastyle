@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -246,7 +246,11 @@ function addProductToCart() {
 
   const productId = window.location.pathname.split("/").filter(p => p).pop() || "product";
   
-  addToCart(productId, product, SELECTION);
+  // FIXED: Get quantity from qty-input stepper (product-qty.js)
+  const qtyInput = document.getElementById("qty-input");
+  const qty = qtyInput ? Math.max(1, Math.min(99, parseInt(qtyInput.value) || 1)) : 1;
+  addToCart(productId, product, SELECTION, qty);
+addProductToCart._qtyAware = true; // mark as already qty-aware
   
   const btn = document.getElementById("add-to-cart-btn");
   const originalText = btn.textContent;
