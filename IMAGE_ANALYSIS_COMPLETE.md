@@ -24,7 +24,7 @@
 - **File:** [categorie/sdb-premium/index.html](categorie/sdb-premium/index.html#L313)
 - **Line:** 313
 - **Problem:** Reference to `/assets/images/nova-style-miroir-hawaii/1.webp`
-- **Actual File:** `/assets/images/nova-style-miroir-hawaii/1.jpg`
+- **Actual File:** `/assets/images/nova-style-miroir-hawaii/1.webp`
 - **Fix Applied:** Changed extension from .webp to .jpg
 - **Status:** ✅ FIXED
 

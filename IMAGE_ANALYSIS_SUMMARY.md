@@ -16,7 +16,7 @@
 **Problem:**
 - File: `categorie/sdb-premium/index.html` (line 313)
 - References: `/assets/images/nova-style-miroir-hawaii/1.webp`
-- Actual file: `/assets/images/nova-style-miroir-hawaii/1.jpg`
+- Actual file: `/assets/images/nova-style-miroir-hawaii/1.webp`
 
 **Solution:**
 Change line 313 in `categorie/sdb-premium/index.html` from:
@@ -26,7 +26,7 @@ Change line 313 in `categorie/sdb-premium/index.html` from:
 
 To:
 ```html
-<img src="/assets/images/nova-style-miroir-hawaii/1.jpg" alt="Nova Style : Miroir HAWAII" loading="lazy">
+<img src="/assets/images/nova-style-miroir-hawaii/1.webp" alt="Nova Style : Miroir HAWAII" loading="lazy">
 ```
 
 **Note:** Other pages (miroir-salle-de-bain, miroir-maroc, miroir-salle-de-bain-anti-buee) correctly reference `1.jpg`

@@ -26,8 +26,8 @@ None identified. All referenced image directories exist with at least the requir
 - `/assets/images/nova-style-miroir-hawaii/1.webp` (in: [categorie/sdb-premium/index.html](categorie/sdb-premium/index.html#L313))
 
 **Actual File:** 
-- `assets/images/nova-style-miroir-hawaii/1.jpg` ✓ exists
-- `assets/images/nova-style-miroir-hawaii/2.jpg` ✓ exists
+- `assets/images/nova-style-miroir-hawaii/1.webp` ✓ exists
+- `assets/images/nova-style-miroir-hawaii/2.webp` ✓ exists
 
 **Issue:** HTML declares 1.webp but actual primary image is 1.jpg
 
@@ -37,66 +37,66 @@ None identified. All referenced image directories exist with at least the requir
 
 ## VALID LINKS (Sample - All Primary Images)
 
-✓ `/assets/images/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/1.jpg`
-✓ `/assets/images/miroir-anfa-essentiel/1.png`
-✓ `/assets/images/nova-style-miroir-vortex/1.png`
-✓ `/assets/images/consol-et-miroir-nova-style-ensemble/1.jpg`
+✓ `/assets/images/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/1.webp`
+✓ `/assets/images/miroir-anfa-essentiel/1.webp`
+✓ `/assets/images/nova-style-miroir-vortex/1.webp`
+✓ `/assets/images/consol-et-miroir-nova-style-ensemble/1.webp`
 ✓ `/assets/images/table-de-sejour-en-bois-mdf-et-verre-trempe/1.webp`
-✓ `/assets/images/douche-italienne-en-forme-droite/1.jpg`
-✓ `/assets/images/miroire-nova-style-miroir-horizon/1.jpg`
-✓ `/assets/images/nova-style-deux-miroirs-anfa-medina/1.jpg`
-✓ `/assets/images/nova-style-miroir-halo/1.jpg`
-✓ `/assets/images/nova-style-miroir-bloom/1.jpg`
-✓ `/assets/images/nova-style-miroir-pebble/1.jpg`
-✓ `/assets/images/nova-style-miroir-vega/1.jpg`
-✓ `/assets/images/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/1.jpg`
-✓ `/assets/images/deco-miroir-mural-nova-style-miroir-rital/1.jpg`
-✓ `/assets/images/nova-style-miroir-elvis-woody/1.jpg`
-✓ `/assets/images/مرايا-nova-style-miroir-elios/1.png` (Arabic: Mirrors - Nova Style Mirror ELIOS)
-✓ `/assets/images/miroir-eclipse-essentiel/1.png`
-✓ `/assets/images/miroir-magnum-essentiel/1.png`
-✓ `/assets/images/nova-style-miroir-eclipse-cm/1.jpg`
-✓ `/assets/images/nova-style-miroir-anfa-cm/1.jpg`
-✓ `/assets/images/nova-style-miroir-archway/1.jpg`
-✓ `/assets/images/nova-style-miroir-azalee/1.jpg`
-✓ `/assets/images/nova-style-miroir-emeraude/1.jpg`
-✓ `/assets/images/nova-style-miroir-victoria/1.jpg`
-✓ `/assets/images/nova-style-miroir-dunes/1.jpg`
-✓ `/assets/images/miroir-marrakech-nova-style-miroir-celia/1.jpg`
-✓ `/assets/images/nova-style-miroir-eclipse-bright/1.jpg`
-✓ `/assets/images/miroir-rectangulaire-bright-ii/1.jpg`
-✓ `/assets/images/nova-style-miroir-magnum-sdb/1.jpg`
+✓ `/assets/images/douche-italienne-en-forme-droite/1.webp`
+✓ `/assets/images/miroire-nova-style-miroir-horizon/1.webp`
+✓ `/assets/images/nova-style-deux-miroirs-anfa-medina/1.webp`
+✓ `/assets/images/nova-style-miroir-halo/1.webp`
+✓ `/assets/images/nova-style-miroir-bloom/1.webp`
+✓ `/assets/images/nova-style-miroir-pebble/1.webp`
+✓ `/assets/images/nova-style-miroir-vega/1.webp`
+✓ `/assets/images/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/1.webp`
+✓ `/assets/images/deco-miroir-mural-nova-style-miroir-rital/1.webp`
+✓ `/assets/images/nova-style-miroir-elvis-woody/1.webp`
+✓ `/assets/images/مرايا-nova-style-miroir-elios/1.webp` (Arabic: Mirrors - Nova Style Mirror ELIOS)
+✓ `/assets/images/miroir-eclipse-essentiel/1.webp`
+✓ `/assets/images/miroir-magnum-essentiel/1.webp`
+✓ `/assets/images/nova-style-miroir-eclipse-cm/1.webp`
+✓ `/assets/images/nova-style-miroir-anfa-cm/1.webp`
+✓ `/assets/images/nova-style-miroir-archway/1.webp`
+✓ `/assets/images/nova-style-miroir-azalee/1.webp`
+✓ `/assets/images/nova-style-miroir-emeraude/1.webp`
+✓ `/assets/images/nova-style-miroir-victoria/1.webp`
+✓ `/assets/images/nova-style-miroir-dunes/1.webp`
+✓ `/assets/images/miroir-marrakech-nova-style-miroir-celia/1.webp`
+✓ `/assets/images/nova-style-miroir-eclipse-bright/1.webp`
+✓ `/assets/images/miroir-rectangulaire-bright-ii/1.webp`
+✓ `/assets/images/nova-style-miroir-magnum-sdb/1.webp`
 ✓ `/assets/images/nova-style-miroir-zenith/1.webp`
-✓ `/assets/images/nova-style-miroir-pear-ii/1.jpg`
-✓ `/assets/images/nova-style-miroir-galet-vertical/1.jpg`
-✓ `/assets/images/nova-style-miroir-iceberg/1.jpg`
-✓ `/assets/images/nova-style-miroir-havana/1.jpg`
-✓ `/assets/images/nova-style-miroir-anfa-half-plus/1.jpg`
-✓ `/assets/images/nova-style-miroir-anfa-plus/1.jpg`
-✓ `/assets/images/nova-style-miroir-lightning/1.jpg`
-✓ `/assets/images/nova-style-miroir-luxalight/1.jpg`
-✓ `/assets/images/nova-style-miroir-magnum/1.jpg`
-✓ `/assets/images/nova-style-deux-miroirs-triples/1.jpg`
-✓ `/assets/images/nova-style-miroir-rectangulaire-bright/1.jpg`
-✓ `/assets/images/nova-style-miroir-sunrise/1.jpg`
-✓ `/assets/images/nova-style-miroir-octogonal/1.jpg`
-✓ `/assets/images/nova-style-miroir-rectangulaire-1/1.jpg`
-✓ `/assets/images/nova-style-miroir-pear/1.jpg`
-✓ `/assets/images/miroir-maroc-nova-style-miroir-anfa/1.jpg`
-✓ `/assets/images/nova-style-miroir-asymetrique/1.jpg`
-✓ `/assets/images/nova-style-miroir-hawaii-sdb/1.jpg`
-✓ `/assets/images/nova-style-miroir-galet-2/1.jpg`
-✓ `/assets/images/nova-style-miroir-upside-down/1.jpg`
+✓ `/assets/images/nova-style-miroir-pear-ii/1.webp`
+✓ `/assets/images/nova-style-miroir-galet-vertical/1.webp`
+✓ `/assets/images/nova-style-miroir-iceberg/1.webp`
+✓ `/assets/images/nova-style-miroir-havana/1.webp`
+✓ `/assets/images/nova-style-miroir-anfa-half-plus/1.webp`
+✓ `/assets/images/nova-style-miroir-anfa-plus/1.webp`
+✓ `/assets/images/nova-style-miroir-lightning/1.webp`
+✓ `/assets/images/nova-style-miroir-luxalight/1.webp`
+✓ `/assets/images/nova-style-miroir-magnum/1.webp`
+✓ `/assets/images/nova-style-deux-miroirs-triples/1.webp`
+✓ `/assets/images/nova-style-miroir-rectangulaire-bright/1.webp`
+✓ `/assets/images/nova-style-miroir-sunrise/1.webp`
+✓ `/assets/images/nova-style-miroir-octogonal/1.webp`
+✓ `/assets/images/nova-style-miroir-rectangulaire-1/1.webp`
+✓ `/assets/images/nova-style-miroir-pear/1.webp`
+✓ `/assets/images/miroir-maroc-nova-style-miroir-anfa/1.webp`
+✓ `/assets/images/nova-style-miroir-asymetrique/1.webp`
+✓ `/assets/images/nova-style-miroir-hawaii-sdb/1.webp`
+✓ `/assets/images/nova-style-miroir-galet-2/1.webp`
+✓ `/assets/images/nova-style-miroir-upside-down/1.webp`
 ✓ `/assets/images/nova-style-miroir-rectangulaire/1.webp`
-✓ `/assets/images/مرأة-الحمام-nova-style-miroir-anfa-half/1.jpg` (Arabic: Bathroom Mirror)
-✓ `/assets/images/nova-style-miroir-pentagone-2/1.jpg`
-✓ `/assets/images/مرايا-حمام-nova-style-miroir-pentagone/1.jpg` (Arabic: Bathroom Mirrors)
-✓ `/assets/images/magasin-miroir-casablanca-nova-style-miroir-eclipse/1.jpg`
-✓ `/assets/images/nova-style-miroir-totem/1.jpg`
-✓ `/assets/images/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/1.jpg`
-✓ `/assets/images/nova-style-miroir-double-cercle/1.jpg`
+✓ `/assets/images/مرأة-الحمام-nova-style-miroir-anfa-half/1.webp` (Arabic: Bathroom Mirror)
+✓ `/assets/images/nova-style-miroir-pentagone-2/1.webp`
+✓ `/assets/images/مرايا-حمام-nova-style-miroir-pentagone/1.webp` (Arabic: Bathroom Mirrors)
+✓ `/assets/images/magasin-miroir-casablanca-nova-style-miroir-eclipse/1.webp`
+✓ `/assets/images/nova-style-miroir-totem/1.webp`
+✓ `/assets/images/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/1.webp`
+✓ `/assets/images/nova-style-miroir-double-cercle/1.webp`
 ✓ `/assets/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/1.webp`
-✓ `/assets/images/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm/1.jpg`
+✓ `/assets/images/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm/1.webp`
 
 ---
 
@@ -220,7 +220,7 @@ The following HTML files contain image references (102 total scanned):
 ## Recommendations
 
 ### Critical
-1. **Fix HAWAII mirror reference** - Update [categorie/sdb-premium/index.html](categorie/sdb-premium/index.html#L313) to use `/assets/images/nova-style-miroir-hawaii/1.jpg` instead of `.webp`
+1. **Fix HAWAII mirror reference** - Update [categorie/sdb-premium/index.html](categorie/sdb-premium/index.html#L313) to use `/assets/images/nova-style-miroir-hawaii/1.webp` instead of `.webp`
 
 ### Optimization (Not Critical)
 1. Consider consolidating format usage - WebP is more efficient, could convert additional JPGs

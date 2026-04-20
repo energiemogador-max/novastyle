@@ -332,6 +332,10 @@
           <span class="info-label">Adresse:</span>
           <span class="info-value" id="customer-address">—</span>
         </div>
+        <div class="info-row" id="email-row" style="display:none">
+          <span class="info-label">Email:</span>
+          <span class="info-value" id="customer-email">—</span>
+        </div>
       </div>
     </div>
 
@@ -398,31 +402,39 @@
     document.getElementById('order-number').textContent = `Commande #${String(order.id).slice(-6)}`;
     
     // Populate customer info
-    document.getElementById('customer-name').textContent = order.name;
-    document.getElementById('customer-phone').textContent = order.phone;
-    document.getElementById('customer-city').textContent = order.city;
-    document.getElementById('customer-address').textContent = order.address;
+    document.getElementById('customer-name').textContent    = order.customer?.name    || order.name    || '—';
+    document.getElementById('customer-phone').textContent   = order.customer?.phone   || order.phone   || '—';
+    document.getElementById('customer-city').textContent    = order.customer?.city    || order.city    || '—';
+    document.getElementById('customer-address').textContent = order.customer?.address || order.address || '—';
+
+    // Show email row only if email was provided
+    const email = order.customer?.email || order.email || '';
+    if (email) {
+      document.getElementById('customer-email').textContent = email;
+      document.getElementById('email-row').style.display = '';
+    }
     
     // Populate items
     const itemsList = document.getElementById('items-list');
-    itemsList.innerHTML = order.items.map(item => `
+    itemsList.innerHTML = (order.items || []).map(item => `
       <div class="item">
         <div class="item-name">${item.name}</div>
         <div class="item-details">
           <span>
-            Quantité: <strong>${item.quantity}</strong>
+            Quantité: <strong>${item.quantity || 1}</strong>
             ${item.options ? `<span style="margin-left: 12px; color: var(--muted); font-size: 11px;">${Object.entries(item.options).map(([k,v]) => `${k}: ${v}`).join(' • ')}</span>` : ''}
           </span>
-          <span class="item-price">${formatPrice(item.price * item.quantity)}</span>
+          <span class="item-price">${formatPrice((item.price || 0) * (item.quantity || 1))}</span>
         </div>
       </div>
     `).join('');
     
-    // Populate summary
-    document.getElementById('item-count').textContent = order.itemCount;
-    document.getElementById('subtotal').textContent = formatPrice(order.total);
-    document.getElementById('total').textContent = formatPrice(order.total);
-    document.getElementById('deposit').textContent = formatPrice(order.total * 0.5);
+    // Populate summary — itemCount = total units (sum of quantities)
+    const totalUnits = (order.items || []).reduce((s, i) => s + (i.quantity || 1), 0);
+    document.getElementById('item-count').textContent = totalUnits;
+    document.getElementById('subtotal').textContent   = formatPrice(order.total || 0);
+    document.getElementById('total').textContent      = formatPrice(order.total || 0);
+    document.getElementById('deposit').textContent    = formatPrice((order.total || 0) * 0.5);
     
     // Clear session storage after displaying
     setTimeout(() => sessionStorage.removeItem('nova_confirmation_order'), 5000);
