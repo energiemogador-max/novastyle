@@ -125,6 +125,7 @@ async function sendEmails(order,orderId) {
   }
   
   const p={
+    // Standard variables
     order_id:         orderId.slice(-6).toUpperCase(),
     customer_name:    order.customer?.name    ||"—",
     customer_phone:   order.customer?.phone   ||"—",
@@ -137,6 +138,18 @@ async function sendEmails(order,orderId) {
     deposit:          formatPrice(Math.round((order.total||0)*0.5)),
     order_date:       new Date(order.timestamp).toLocaleString("fr-MA"),
     reply_to:         ADMIN_EMAIL,
+    
+    // Aliases in case the template uses default or simpler variable names
+    id:               orderId.slice(-6).toUpperCase(),
+    name:             order.customer?.name    ||"—",
+    phone:            order.customer?.phone   ||"—",
+    city:             order.customer?.city    ||"—",
+    address:          order.customer?.address ||"—",
+    notes:            order.customer?.notes   ||"Aucune",
+    email:            order.customer?.email   ||"—",
+    items:            itemsText(order.items),
+    message:          itemsText(order.items), // Often the default text area in EmailJS
+    date:             new Date(order.timestamp).toLocaleString("fr-MA"),
   };
   
   // SEND TO ADMIN (always)
