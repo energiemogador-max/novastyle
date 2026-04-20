@@ -3,342 +3,324 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nova Style — Admin Commandes</title>
+  <title>Nova Style — Admin</title>
+  <meta name="robots" content="noindex, nofollow">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#f0f0f0;min-height:100vh}
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #0f0f0f;
-      color: #f0f0f0;
-      min-height: 100vh;
-    }
+    /* ── Login ─────────────────────────────────────────────── */
+    #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+    .login-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:16px;padding:40px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .login-logo{text-align:center;margin-bottom:28px}
+    .login-logo .brand{font-size:24px;font-weight:800;color:#e8194b;letter-spacing:-.5px}
+    .login-logo .sub{font-size:13px;color:#555;margin-top:4px}
+    .lf{margin-bottom:16px}
+    .lf label{display:block;font-size:11px;color:#666;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+    .lf input{width:100%;padding:12px 14px;background:#111;border:1px solid #333;border-radius:8px;color:#f0f0f0;font-size:15px;outline:none;transition:border-color .2s}
+    .lf input:focus{border-color:#e8194b}
+    .btn-login{width:100%;padding:13px;background:#e8194b;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity .2s}
+    .btn-login:hover{opacity:.88}
+    .btn-login:disabled{opacity:.45;cursor:not-allowed}
+    #login-error{color:#e8194b;font-size:13px;text-align:center;margin-top:12px;min-height:18px}
+    #login-attempts{font-size:12px;color:#555;text-align:center;margin-top:8px}
 
-    .admin-header {
-      background: #1a1a1a;
-      border-bottom: 2px solid #e8194b;
-      padding: 18px 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    /* ── Dashboard ─────────────────────────────────────────── */
+    #admin-screen{display:none}
+    .admin-header{background:#1a1a1a;border-bottom:2px solid #e8194b;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+    .admin-header h1{font-size:20px;color:#e8194b}
+    .hright{display:flex;align-items:center;gap:12px}
+    .admin-email{font-size:12px;color:#555}
+    .live-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#00c853;background:#0a1f0a;border:1px solid #00c85344;padding:4px 12px;border-radius:20px}
+    .live-dot{width:7px;height:7px;background:#00c853;border-radius:50%;animation:pdot 1.5s ease-in-out infinite}
+    @keyframes pdot{0%,100%{opacity:1}50%{opacity:.3}}
+    .btn-logout{background:none;border:1px solid #333;color:#777;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;transition:all .2s}
+    .btn-logout:hover{border-color:#e8194b;color:#e8194b}
 
-    .admin-header h1 { font-size: 22px; color: #e8194b; }
-    .admin-header span { font-size: 13px; color: #888; }
+    .stats-bar{display:flex;gap:14px;padding:18px 28px;background:#141414;border-bottom:1px solid #222;flex-wrap:wrap}
+    .stat-card{background:#1e1e1e;border:1px solid #2a2a2a;border-radius:10px;padding:12px 18px;min-width:130px}
+    .stat-card .lbl{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+    .stat-card .val{font-size:22px;font-weight:700;color:#e8194b}
 
-    .stats-bar {
-      display: flex;
-      gap: 16px;
-      padding: 20px 30px;
-      background: #141414;
-      border-bottom: 1px solid #222;
-      flex-wrap: wrap;
-    }
+    .container{padding:22px 28px;max-width:1200px;margin:0 auto}
+    .section-title{font-size:13px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+    #orders-display{display:flex;flex-direction:column;gap:14px}
+    .no-order{text-align:center;padding:60px 20px;color:#444;font-size:16px;background:#1a1a1a;border-radius:12px;border:1px dashed #2a2a2a}
+    .loading{text-align:center;padding:40px;color:#444}
 
-    .stat-card {
-      background: #1e1e1e;
-      border: 1px solid #2a2a2a;
-      border-radius: 10px;
-      padding: 14px 20px;
-      min-width: 140px;
-    }
+    /* ── Order cards ─────────────────────────────────────────── */
+    .order-card{background:#1a1a1a;border:1px solid #2a2a2a;border-left:4px solid #e8194b;border-radius:10px;overflow:hidden;transition:background .2s}
+    .order-card:hover{background:#1c1c1c}
+    .order-card.new-order{animation:flash 1s ease-in-out 3;border-left-color:#00c853}
+    @keyframes flash{0%,100%{background:#1a1a1a}50%{background:#0d1f0d}}
 
-    .stat-card .label {
-      font-size: 11px;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
+    .order-head{display:flex;align-items:center;gap:12px;padding:12px 18px;flex-wrap:wrap;border-bottom:1px solid #222}
+    .order-id{font-family:monospace;font-size:13px;color:#e8194b;font-weight:700;background:#2a1a1a;padding:4px 10px;border-radius:6px;white-space:nowrap}
+    .order-status{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;background:#2a2a1a;color:#ffb300;border:1px solid #ffb30044}
+    .order-time{font-size:12px;color:#555;margin-left:auto;white-space:nowrap}
 
-    .stat-card .value {
-      font-size: 24px;
-      font-weight: 700;
-      color: #e8194b;
-    }
+    .order-body{display:grid;grid-template-columns:240px 1fr}
+    .order-customer-col{padding:14px 16px;border-right:1px solid #222;display:flex;flex-direction:column;gap:7px}
+    .customer-name{font-size:15px;font-weight:700;color:#f0f0f0}
+    .customer-row{display:flex;align-items:flex-start;gap:5px;font-size:12px;color:#888;line-height:1.5}
+    .customer-phone{color:#e8194b;font-weight:600;font-size:13px}
+    .customer-notes{font-size:11px;color:#666;font-style:italic;padding:5px 8px;background:#111;border-radius:6px;border-left:2px solid #333}
 
-    .container {
-      padding: 24px 30px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+    .order-items-col{padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+    .item-row{background:#111;border:1px solid #222;border-radius:8px;padding:10px 12px}
+    .item-name{font-size:13px;font-weight:600;color:#e0e0e0;margin-bottom:6px}
+    .item-options{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+    .opt-tag{font-size:11px;padding:2px 8px;border-radius:4px;background:#1a1e2a;color:#7da0ba;border:1px solid #2a303a}
+    .opt-tag.led{background:#2a1e1a;color:#ba9a7d;border-color:#3a2a1a}
+    .opt-tag.install{background:#1e2a1e;color:#7dba7d;border-color:#2a3a2a}
+    .item-footer{display:flex;justify-content:space-between;align-items:center;font-size:12px}
+    .item-footer .qty{color:#666}
+    .item-footer .item-price{color:#00c853;font-weight:700;font-size:13px}
 
-    .section-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 16px;
-    }
+    .order-foot{display:flex;justify-content:flex-end;align-items:center;gap:18px;padding:10px 18px;background:#141414;border-top:1px solid #222}
+    .foot-deposit{font-size:12px;color:#ffb300}
+    .foot-label{font-size:12px;color:#555}
+    .foot-total{font-size:18px;font-weight:800;color:#00c853}
 
-    #orders-display {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .no-order {
-      text-align: center;
-      padding: 60px 20px;
-      color: #555;
-      font-size: 16px;
-      background: #1a1a1a;
-      border-radius: 12px;
-      border: 1px dashed #333;
-    }
-
-    .order-card {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-left: 4px solid #e8194b;
-      border-radius: 10px;
-      overflow: hidden;
-      transition: background 0.2s;
-    }
-    .order-card:hover { background: #1c1c1c; }
-    .order-card.new-order { animation: flash 1s ease-in-out 3; border-left-color: #00c853; }
-    @keyframes flash { 0%,100%{background:#1a1a1a} 50%{background:#0d1f0d} }
-
-    .order-head {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 18px; flex-wrap: wrap;
-      border-bottom: 1px solid #222;
-    }
-    .order-id {
-      font-family: monospace; font-size: 13px; color: #e8194b; font-weight: 700;
-      background: #2a1a1a; padding: 4px 10px; border-radius: 6px; white-space: nowrap; flex-shrink: 0;
-    }
-    .order-status {
-      font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600;
-      background: #2a2a1a; color: #ffb300; border: 1px solid #ffb30044; flex-shrink: 0;
-    }
-    .order-time { font-size: 12px; color: #555; margin-left: auto; white-space: nowrap; }
-
-    .order-body { display: grid; grid-template-columns: 240px 1fr; }
-    @media(max-width:768px){ .order-body{grid-template-columns:1fr} .order-items-col{border-left:none!important;border-top:1px solid #222} }
-
-    .order-customer-col {
-      padding: 14px 16px; border-right: 1px solid #222;
-      display: flex; flex-direction: column; gap: 7px;
-    }
-    .customer-name { font-size: 15px; font-weight: 700; color: #f0f0f0; }
-    .customer-row { display:flex; align-items:flex-start; gap:5px; font-size:12px; color:#999; line-height:1.4; }
-    .customer-phone { color: #e8194b; font-weight: 600; font-size: 13px; }
-    .customer-notes {
-      font-size: 11px; color: #666; font-style: italic;
-      padding: 5px 8px; background: #111; border-radius: 6px; border-left: 2px solid #333;
-    }
-
-    .order-items-col { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
-
-    .item-row {
-      background: #111; border: 1px solid #222; border-radius: 8px; padding: 10px 12px;
-    }
-    .item-name { font-size: 13px; font-weight: 600; color: #e0e0e0; margin-bottom: 6px; }
-    .item-options { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 7px; }
-    .opt-tag {
-      font-size: 11px; padding: 2px 8px; border-radius: 4px;
-      background: #1a1e2a; color: #7da0ba; border: 1px solid #2a303a;
-    }
-    .opt-tag.led { background: #2a1e1a; color: #ba9a7d; border-color: #3a2a1a; }
-    .opt-tag.install { background: #1e2a1e; color: #7dba7d; border-color: #2a3a2a; }
-
-    .item-footer { display:flex; justify-content:space-between; align-items:center; font-size:12px; }
-    .item-footer .qty { color: #777; }
-    .item-footer .item-price { color: #00c853; font-weight: 700; font-size: 13px; }
-
-    .order-foot {
-      display: flex; justify-content: flex-end; align-items: center; gap: 20px;
-      padding: 10px 18px; background: #141414; border-top: 1px solid #222;
-    }
-    .foot-label { font-size: 12px; color: #555; }
-    .foot-total { font-size: 18px; font-weight: 800; color: #00c853; }
-    .foot-deposit { font-size: 12px; color: #ffb300; }
-    .order-total { font-size: 16px; font-weight: 700; color: #00c853; white-space: nowrap; }
-
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: #555;
-      font-size: 15px;
-    }
-
-    .live-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #00c853;
-      background: #0a1f0a;
-      border: 1px solid #00c85344;
-      padding: 4px 12px;
-      border-radius: 20px;
-    }
-
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      background: #00c853;
-      border-radius: 50%;
-      animation: pulse-dot 1.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    @media (max-width: 768px) {
-      .container { padding: 16px; }
-      .stats-bar { padding: 16px; }
+    @media(max-width:768px){
+      .order-body{grid-template-columns:1fr}
+      .order-customer-col{border-right:none;border-bottom:1px solid #222}
+      .container,.stats-bar,.admin-header{padding:14px}
     }
   </style>
 </head>
 <body>
 
-<div class="admin-header">
-  <h1>🛍️ Nova Style — Commandes</h1>
-  <div class="live-badge">
-    <span class="live-dot"></span>
-    Temps réel
+<!-- LOGIN ─────────────────────────────────────────────────── -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="brand">Nova Style</div>
+      <div class="sub">Tableau de bord — Accès sécurisé</div>
+    </div>
+    <div class="lf">
+      <label>Adresse e-mail</label>
+      <input type="email" id="login-email" placeholder="admin@novastyle.ma" autocomplete="email">
+    </div>
+    <div class="lf">
+      <label>Mot de passe</label>
+      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-login" id="btn-login">Se connecter</button>
+    <div id="login-error"></div>
+    <div id="login-attempts"></div>
   </div>
 </div>
 
-<div class="stats-bar">
-  <div class="stat-card">
-    <div class="label">Total commandes</div>
-    <div class="value" id="stat-total">—</div>
+<!-- DASHBOARD ──────────────────────────────────────────────── -->
+<div id="admin-screen">
+  <div class="admin-header">
+    <h1>🛍️ Nova Style — Commandes</h1>
+    <div class="hright">
+      <div class="live-badge"><span class="live-dot"></span>Temps réel</div>
+      <span class="admin-email" id="admin-email-display"></span>
+      <button class="btn-logout" id="btn-logout">Déconnexion</button>
+    </div>
   </div>
-  <div class="stat-card">
-    <div class="label">Chiffre d'affaires</div>
-    <div class="value" id="stat-revenue">—</div>
+  <div class="stats-bar">
+    <div class="stat-card"><div class="lbl">Total commandes</div><div class="val" id="stat-total">—</div></div>
+    <div class="stat-card"><div class="lbl">Chiffre d'affaires</div><div class="val" id="stat-revenue">—</div></div>
+    <div class="stat-card"><div class="lbl">Aujourd'hui</div><div class="val" id="stat-today">—</div></div>
   </div>
-  <div class="stat-card">
-    <div class="label">Aujourd'hui</div>
-    <div class="value" id="stat-today">—</div>
-  </div>
-</div>
-
-<div class="container">
-  <div class="section-title">📦 Dernières commandes</div>
-  <div id="orders-display">
-    <div class="loading">Connexion à Firebase en cours…</div>
+  <div class="container">
+    <div class="section-title">📦 Dernières commandes</div>
+    <div id="orders-display"><div class="loading">Connexion Firebase…</div></div>
   </div>
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import {
+  getAuth, signInWithEmailAndPassword, signOut,
+  onAuthStateChanged, setPersistence, browserSessionPersistence
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",
-    authDomain: "nova-9ac76.firebaseapp.com",
-    projectId: "nova-9ac76",
-    databaseURL: "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app",
-    appId: "1:645613145752:web:775e6f8ffce64ae12c4aed"
-  };
+const firebaseConfig = {
+  apiKey:            "AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",
+  authDomain:        "nova-9ac76.firebaseapp.com",
+  projectId:         "nova-9ac76",
+  databaseURL:       "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app",
+  storageBucket:     "nova-9ac76.firebasestorage.app",
+  messagingSenderId: "645613145752",
+  appId:             "1:645613145752:web:775e6f8ffce64ae12c4aed"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db  = getDatabase(app);
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getDatabase(app);
 
-  let previousCount = 0;
+// Session only — auto-logout when tab closes
+await setPersistence(auth, browserSessionPersistence);
 
-  onValue(ref(db, 'orders'), (snapshot) => {
-    const data      = snapshot.val();
-    const container = document.getElementById('orders-display');
+// ── Brute-force protection ───────────────────────────────────────────────
+const FAIL_KEY   = "nva_admin_fails";
+const MAX_FAILS  = 5;
+const LOCK_MS    = 15 * 60 * 1000;
 
-    if (!data) {
-      container.innerHTML = "<div class='no-order'>⏳ En attente de nouvelles commandes…</div>";
-      document.getElementById('stat-total').textContent   = '0';
-      document.getElementById('stat-revenue').textContent = '0 MAD';
-      document.getElementById('stat-today').textContent   = '0';
-      return;
-    }
+function getFS() { try { return JSON.parse(sessionStorage.getItem(FAIL_KEY)||"{}"); } catch { return {}; } }
+function setFS(s){ sessionStorage.setItem(FAIL_KEY, JSON.stringify(s)); }
+function isLocked() {
+  const s = getFS();
+  if (!s.n || s.n < MAX_FAILS) return false;
+  if (Date.now() - s.t > LOCK_MS) { setFS({}); return false; }
+  return true;
+}
+function recordFail() { const s=getFS(); setFS({n:(s.n||0)+1, t:Date.now()}); updateAttempts(); }
+function clearFails() { setFS({}); }
 
-    const list       = Object.entries(data).sort((a, b) => b[1].timestamp - a[1].timestamp);
-    const isNewOrder = list.length > previousCount && previousCount > 0;
-    if (isNewOrder) playNotificationSound();
-    previousCount = list.length;
-
-    // Stats
-    const totalRevenue = list.reduce((s, [, o]) => s + (o.total || 0), 0);
-    const todayCount   = list.filter(([, o]) => {
-      return new Date(o.timestamp).toDateString() === new Date().toDateString();
-    }).length;
-
-    document.getElementById('stat-total').textContent   = list.length;
-    document.getElementById('stat-revenue').textContent = totalRevenue.toLocaleString('fr-MA') + ' MAD';
-    document.getElementById('stat-today').textContent   = todayCount;
-
-    // Orders list
-    function renderOptions(options) {
-      if (!options || typeof options !== 'object') return '';
-      return Object.entries(options).map(([k, v]) => {
-        const key = k.toLowerCase();
-        let cls = 'opt-tag';
-        if (key === 'led') cls += ' led';
-        else if (key === 'installation') cls += ' install';
-        return `<span class="${cls}">${k}: ${v}</span>`;
-      }).join('');
-    }
-
-    container.innerHTML = list.map(([id, order], i) => {
-      const c = order.customer || {};
-      const items = order.items || [];
-      const total = order.total || 0;
-      const deposit = Math.round(total * 0.5);
-      const dt = new Date(order.timestamp);
-
-      const itemsHTML = items.map(it => {
-        const lineTotal = (it.price || 0) * (it.quantity || 1);
-        return `
-          <div class="item-row">
-            <div class="item-name">${it.name}</div>
-            ${it.options ? `<div class="item-options">${renderOptions(it.options)}</div>` : ''}
-            <div class="item-footer">
-              <span class="qty">Qté: ${it.quantity || 1} × ${(it.price || 0).toLocaleString('fr-MA')} MAD</span>
-              <span class="item-price">${lineTotal.toLocaleString('fr-MA')} MAD</span>
-            </div>
-          </div>`;
-      }).join('');
-
-      return `
-        <div class="order-card ${i === 0 && isNewOrder ? 'new-order' : ''}">
-          <div class="order-head">
-            <div class="order-id">#${id.slice(-6).toUpperCase()}</div>
-            <span class="order-status">En attente</span>
-            <div class="order-time">
-              ${dt.toLocaleDateString('fr-MA')} &nbsp;
-              ${dt.toLocaleTimeString('fr-MA', {hour:'2-digit', minute:'2-digit'})}
-            </div>
-          </div>
-
-          <div class="order-body">
-            <div class="order-customer-col">
-              <div class="customer-name">${c.name || '—'}</div>
-              <div class="customer-row"><span>📞</span><span class="customer-phone">${c.phone || '—'}</span></div>
-              <div class="customer-row"><span>📍</span><span>${c.city || '—'}</span></div>
-              ${c.address ? `<div class="customer-row"><span>🏠</span><span>${c.address}</span></div>` : ''}
-              ${c.notes ? `<div class="customer-notes">💬 ${c.notes}</div>` : ''}
-            </div>
-            <div class="order-items-col">${itemsHTML}</div>
-          </div>
-
-          <div class="order-foot">
-            <span class="foot-deposit">Acompte 50%: ${deposit.toLocaleString('fr-MA')} MAD</span>
-            <span class="foot-label">Total:</span>
-            <span class="foot-total">${total.toLocaleString('fr-MA')} MAD</span>
-          </div>
-        </div>`;
-    }).join('');
-  });
-
-  function playNotificationSound() {
-    new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3')
-      .play().catch(() => {});
+function updateAttempts() {
+  const el = document.getElementById("login-attempts");
+  if (!el) return;
+  const s = getFS();
+  if (!s.n) { el.textContent = ""; return; }
+  if (isLocked()) {
+    const m = Math.ceil((LOCK_MS-(Date.now()-s.t))/60000);
+    el.textContent = `🔒 Bloqué — réessayez dans ${m} min`;
+  } else {
+    const r = MAX_FAILS - s.n;
+    el.textContent = r > 0 ? `${r} tentative${r>1?"s":""} restante${r>1?"s":""}` : "";
   }
-</script>
+}
 
+// ── Login ────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const emailEl = document.getElementById("login-email");
+  const passEl  = document.getElementById("login-password");
+  const errEl   = document.getElementById("login-error");
+  const btn     = document.getElementById("btn-login");
+  errEl.textContent = "";
+
+  if (isLocked()) { updateAttempts(); return; }
+
+  const email = emailEl.value.trim();
+  const pass  = passEl.value;
+  if (!email || !pass) { errEl.textContent = "Remplissez tous les champs."; return; }
+
+  btn.disabled = true; btn.textContent = "Connexion…";
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    clearFails();
+    passEl.value = "";
+  } catch {
+    recordFail();
+    btn.disabled = false; btn.textContent = "Se connecter";
+    errEl.textContent = "Email ou mot de passe incorrect.";
+  }
+}
+
+document.getElementById("btn-login").addEventListener("click", doLogin);
+document.getElementById("login-password").addEventListener("keydown", e => e.key==="Enter" && doLogin());
+document.getElementById("login-email").addEventListener("keydown",    e => e.key==="Enter" && doLogin());
+
+// ── Logout ───────────────────────────────────────────────────────────────
+document.getElementById("btn-logout").addEventListener("click", () => signOut(auth));
+
+// ── Auth router ──────────────────────────────────────────────────────────
+let unsub = null;
+onAuthStateChanged(auth, user => {
+  const ls = document.getElementById("login-screen");
+  const as = document.getElementById("admin-screen");
+  if (user) {
+    ls.style.display = "none";
+    as.style.display = "block";
+    document.getElementById("admin-email-display").textContent = user.email;
+    startOrders();
+  } else {
+    ls.style.display = "flex";
+    as.style.display = "none";
+    if (unsub) { unsub(); unsub = null; }
+    updateAttempts();
+  }
+});
+
+// ── Orders listener ──────────────────────────────────────────────────────
+let prevCount = 0;
+function startOrders() {
+  unsub = onValue(ref(db,"orders"), snap => {
+    const data = snap.val();
+    const el   = document.getElementById("orders-display");
+    if (!data) {
+      el.innerHTML = "<div class='no-order'>⏳ En attente de nouvelles commandes…</div>";
+      setStats(0,0,0); return;
+    }
+    const list       = Object.entries(data).sort((a,b)=>b[1].timestamp-a[1].timestamp);
+    const isNew      = list.length > prevCount && prevCount > 0;
+    if (isNew) ping();
+    prevCount = list.length;
+
+    const revenue = list.reduce((s,[,o])=>s+(o.total||0),0);
+    const today   = list.filter(([,o])=>new Date(o.timestamp).toDateString()===new Date().toDateString()).length;
+    setStats(list.length, revenue, today);
+    el.innerHTML = list.map(([id,o],i)=>renderOrder(id,o,i,isNew)).join("");
+  });
+}
+
+function setStats(t,r,td){
+  document.getElementById("stat-total").textContent   = t;
+  document.getElementById("stat-revenue").textContent = r.toLocaleString("fr-MA")+" MAD";
+  document.getElementById("stat-today").textContent   = td;
+}
+
+// ── Render ────────────────────────────────────────────────────────────────
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function optTags(opts){
+  if(!opts||typeof opts!=="object") return "";
+  return Object.entries(opts).map(([k,v])=>{
+    let c="opt-tag";
+    if(k.toLowerCase()==="led") c+=" led";
+    else if(k.toLowerCase()==="installation") c+=" install";
+    return `<span class="${c}">${esc(k)}: ${esc(v)}</span>`;
+  }).join("");
+}
+
+function renderOrder(id,o,i,isNew){
+  const c=o.customer||{}, items=o.items||[], total=o.total||0;
+  const deposit=Math.round(total*.5), dt=new Date(o.timestamp);
+  const items_html=items.map(it=>{
+    const lt=(it.price||0)*(it.quantity||1);
+    return `<div class="item-row">
+      <div class="item-name">${esc(it.name||"—")}</div>
+      ${it.options?`<div class="item-options">${optTags(it.options)}</div>`:""}
+      <div class="item-footer">
+        <span class="qty">Qté: ${it.quantity||1} × ${(it.price||0).toLocaleString("fr-MA")} MAD</span>
+        <span class="item-price">${lt.toLocaleString("fr-MA")} MAD</span>
+      </div></div>`;
+  }).join("");
+
+  return `<div class="order-card ${i===0&&isNew?"new-order":""}">
+    <div class="order-head">
+      <div class="order-id">#${id.slice(-6).toUpperCase()}</div>
+      <span class="order-status">En attente</span>
+      <div class="order-time">${dt.toLocaleDateString("fr-MA")} ${dt.toLocaleTimeString("fr-MA",{hour:"2-digit",minute:"2-digit"})}</div>
+    </div>
+    <div class="order-body">
+      <div class="order-customer-col">
+        <div class="customer-name">${esc(c.name||"—")}</div>
+        <div class="customer-row"><span>📞</span><span class="customer-phone">${esc(c.phone||"—")}</span></div>
+        <div class="customer-row"><span>📍</span><span>${esc(c.city||"—")}</span></div>
+        ${c.address?`<div class="customer-row"><span>🏠</span><span>${esc(c.address)}</span></div>`:""}
+        ${c.notes?`<div class="customer-notes">💬 ${esc(c.notes)}</div>`:""}
+      </div>
+      <div class="order-items-col">${items_html}</div>
+    </div>
+    <div class="order-foot">
+      <span class="foot-deposit">Acompte 50%: ${deposit.toLocaleString("fr-MA")} MAD</span>
+      <span class="foot-label">Total:</span>
+      <span class="foot-total">${total.toLocaleString("fr-MA")} MAD</span>
+    </div>
+  </div>`;
+}
+
+function ping(){
+  try{ new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play().catch(()=>{}); }catch{}
+}
+</script>
 </body>
 </html>
