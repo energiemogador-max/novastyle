@@ -113,8 +113,13 @@
   }
 
   // ─── Patch addProductToCart ────────────────────────────────────────────────
+  // Guard: if the product page's own addProductToCart already reads #qty-input
+  // (indicated by the _qtyAware flag), we do NOT wrap it again — doing so would
+  // multiply the quantity twice (once in the page script, once here).
   function patchAddToCart() {
     if (typeof window.addProductToCart !== "function") return;
+    if (window.addProductToCart._qtyAware) return; // already qty-aware, skip
+
     const original = window.addProductToCart.bind(window);
 
     window.addProductToCart = function () {
@@ -136,14 +141,13 @@
       const product = { name: PRODUCT.title, price: matching.price };
       const productId = window.location.pathname.split("/").filter(p => p).pop() || "product";
 
-      // Use addToCart from cart.js; call it qty times OR set quantity directly
       if (typeof window.addToCart === "function") {
-        const cart = window.getCart ? window.getCart() : [];
-        const key  = productId + "_" + JSON.stringify(SELECTION || {});
+        const cart     = window.getCart ? window.getCart() : [];
+        const key      = productId + "_" + JSON.stringify(SELECTION || {});
         const existing = cart.find(i => i.key === key);
 
         if (existing) {
-          existing.quantity = (existing.quantity || 1) + qty;
+          existing.quantity = Math.min(99, (existing.quantity || 1) + qty);
           if (window.saveCart) window.saveCart(cart);
         } else {
           const item = {
@@ -167,6 +171,7 @@
         original();
       }
     };
+    window.addProductToCart._qtyAware = true;
   }
 
   // ─── Inject aggregateRating into Product JSON-LD ─────────────────────────
