@@ -465,6 +465,11 @@
       </div>
       
       <div class="form-group">
+        <label>Email (optionnel - pour confirmation de commande)</label>
+        <input type="email" id="form-email" placeholder="votremail@example.com">
+      </div>
+      
+      <div class="form-group">
         <label>Notes supplémentaires (optionnel)</label>
         <textarea id="form-notes" rows="2" placeholder="Options, personnalisations..."></textarea>
       </div>
@@ -515,7 +520,7 @@ function renderCart() {
         </div>
         <div class="item-qty">
           <button class="qty-btn" onclick="decreaseQty('${item.key}')">−</button>
-          <input type="number" class="qty-input" value="${item.quantity}" readonly>
+          <input type="number" class="qty-input" value="${item.quantity}" min="1" max="99" onchange="updateQtyFromInput('${item.key}', this.value)">
           <button class="qty-btn" onclick="increaseQty('${item.key}')">+</button>
         </div>
         <div class="item-price">${formatPrice(item.price * item.quantity)}</div>
@@ -551,6 +556,17 @@ function decreaseQty(itemKey) {
   const item = cart.find(i => i.key === itemKey);
   if (item && item.quantity > 1) {
     item.quantity -= 1;
+    saveCart(cart);
+    renderCart();
+  }
+}
+
+function updateQtyFromInput(itemKey, value) {
+  const newQty = Math.max(1, Math.min(99, parseInt(value) || 1));
+  const cart = getCart();
+  const item = cart.find(i => i.key === itemKey);
+  if (item) {
+    item.quantity = newQty;
     saveCart(cart);
     renderCart();
   }
