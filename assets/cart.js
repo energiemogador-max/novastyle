@@ -1,212 +1,164 @@
+/**
+ * cart.js — Nova Style
+ * EMAIL SETUP (emailjs.com — free):
+ *   1. Sign up → Add Gmail service → note SERVICE_ID
+ *   2. Create template "nova_admin"  → note TEMPLATE_ID
+ *   3. Create template "nova_client" → note TEMPLATE_ID
+ *   4. Copy PUBLIC KEY from Account > API Keys
+ *   5. Fill the 5 constants below
+ * Leave EMAILJS_PUBLIC_KEY="" to disable emails silently.
+ *
+ * Admin template vars: {{order_id}} {{customer_name}} {{customer_phone}}
+ *   {{customer_city}} {{customer_address}} {{customer_notes}} {{customer_email}}
+ *   {{items_html}} {{total}} {{deposit}} {{order_date}}
+ * Customer template vars: same + {{reply_to}}
+ */
+const EMAILJS_PUBLIC_KEY      = "";           // "user_xxxxxxxx"
+const EMAILJS_SERVICE_ID      = "";           // "service_nova"
+const EMAILJS_ADMIN_TEMPLATE  = "";           // "template_nova_admin"
+const EMAILJS_CLIENT_TEMPLATE = "";           // "template_nova_client"
+const ADMIN_EMAIL             = "admin@novastyle.ma";
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",
-  authDomain: "nova-9ac76.firebaseapp.com",
-  projectId: "nova-9ac76",
-  databaseURL: "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app",
-  storageBucket: "nova-9ac76.firebasestorage.app",
+  apiKey:            "AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",
+  authDomain:        "nova-9ac76.firebaseapp.com",
+  projectId:         "nova-9ac76",
+  databaseURL:       "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app",
+  storageBucket:     "nova-9ac76.firebasestorage.app",
   messagingSenderId: "645613145752",
-  appId: "1:645613145752:web:775e6f8ffce64ae12c4aed"
+  appId:             "1:645613145752:web:775e6f8ffce64ae12c4aed"
 };
-
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
-// ─── CART STORAGE HELPERS ──────────────────────────────────────────────────
-
+// ── CART ──────────────────────────────────────────────────────────────────────
 function getCart() {
-  try {
-    const data = localStorage.getItem("nova_style_cart");
-    const cart = data ? JSON.parse(data) : [];
-    return Array.isArray(cart) ? cart : [];
-  } catch {
-    return [];
-  }
+  try { const d=localStorage.getItem("nova_style_cart"); const c=d?JSON.parse(d):[]; return Array.isArray(c)?c:[]; }
+  catch { return []; }
 }
-
 function saveCart(cart) {
   localStorage.setItem("nova_style_cart", JSON.stringify(cart));
   document.dispatchEvent(new CustomEvent("cartUpdated"));
   if (window.refreshCartDisplay) window.refreshCartDisplay();
 }
-
-function getCartTotal() {
-  return getCart().reduce(
-    (sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0
-  );
+function getCartTotal() { return getCart().reduce((s,i)=>s+(i.price||0)*(i.quantity||1),0); }
+function formatPrice(p) {
+  return new Intl.NumberFormat("fr-MA",{style:"currency",currency:"MAD",minimumFractionDigits:0,maximumFractionDigits:0}).format(p);
 }
-
-function formatPrice(price) {
-  return new Intl.NumberFormat("fr-MA", {
-    style: "currency", currency: "MAD",
-    minimumFractionDigits: 0, maximumFractionDigits: 0
-  }).format(price);
-}
-
-// ─── CART OPERATIONS ───────────────────────────────────────────────────────
-
-/**
- * Add a product to the cart.
- * @param {string} productId
- * @param {{ name: string, price: number }} product
- * @param {object|null} options   — variant axes selected by user
- * @param {number} [qty=1]        — quantity (NEW: used by product-qty.js)
- */
-function addToCart(productId, product, options, qty) {
-  const quantity = Math.max(1, Math.min(99, parseInt(qty) || 1));
-  const cart     = getCart();
-  const key      = productId + "_" + JSON.stringify(options || {});
-  const existing = cart.find(i => i.key === key);
-
-  if (existing) {
-    existing.quantity = Math.min(99, (existing.quantity || 1) + quantity);
-  } else {
-    cart.push({
-      key,
-      id:        productId,
-      name:      product.name,
-      price:     product.price,
-      options:   options || null,
-      quantity,
-      timestamp: Date.now()
-    });
-  }
-
+function addToCart(productId,product,options,qty) {
+  const quantity=Math.max(1,Math.min(99,parseInt(qty)||1));
+  const cart=getCart(), key=productId+"_"+JSON.stringify(options||{});
+  const ex=cart.find(i=>i.key===key);
+  if(ex) ex.quantity=Math.min(99,(ex.quantity||1)+quantity);
+  else cart.push({key,id:productId,name:product.name,price:product.price,options:options||null,quantity,timestamp:Date.now()});
   saveCart(cart);
-  console.log(`✅ Produit ajouté (×${quantity}) :`, product.name);
+  console.log(`✅ Produit ajouté (×${quantity}) :`,product.name);
+}
+function removeFromCart(k) { saveCart(getCart().filter(i=>i.key!==k)); }
+function updateQuantity(k,qty) { const c=getCart(),i=c.find(x=>x.key===k); if(i){i.quantity=Math.max(1,Math.min(99,qty));saveCart(c);} }
+function clearCart() { saveCart([]); }
+
+// ── SANITISE ──────────────────────────────────────────────────────────────────
+function san(s) { return typeof s==="string"?s.trim().replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\\/g,"").slice(0,500):""; }
+function sanCustomer(c) {
+  return { name:san(c.name||""), phone:san(c.phone||"").replace(/[^0-9+\s\-()]/g,""),
+           city:san(c.city||""), address:san(c.address||""), notes:san(c.notes||"").slice(0,300), email:san(c.email||"") };
 }
 
-function removeFromCart(itemKey) {
-  saveCart(getCart().filter(i => i.key !== itemKey));
-}
-
-function updateQuantity(itemKey, qty) {
-  const cart = getCart();
-  const item = cart.find(i => i.key === itemKey);
-  if (item) {
-    item.quantity = Math.max(1, Math.min(99, qty));
-    saveCart(cart);
-  }
-}
-
-function clearCart() {
-  saveCart([]);
-}
-
-// ─── ANTISPAM — client-side rate limiting ──────────────────────────────────
-// Max 3 orders per rolling 15-minute window per browser
-
-const SPAM_KEY    = "nova_order_times";
-const MAX_ORDERS  = 3;
-const WINDOW_MS   = 15 * 60 * 1000; // 15 min
-
+// ── ANTISPAM ──────────────────────────────────────────────────────────────────
 function isRateLimited() {
-  try {
-    const now    = Date.now();
-    const stored = JSON.parse(localStorage.getItem(SPAM_KEY) || "[]");
-    const recent = stored.filter(t => now - t < WINDOW_MS);
-    if (recent.length >= MAX_ORDERS) return true;
-    // Update the list (write happens after successful order, see finalizeCheckout)
-    return false;
-  } catch {
-    return false;
-  }
+  try { const n=Date.now(),s=JSON.parse(localStorage.getItem("nova_order_times")||"[]"); return s.filter(t=>n-t<900000).length>=3; }
+  catch { return false; }
 }
-
 function recordOrderTime() {
-  try {
-    const now    = Date.now();
-    const stored = JSON.parse(localStorage.getItem(SPAM_KEY) || "[]");
-    const recent = stored.filter(t => now - t < WINDOW_MS);
-    recent.push(now);
-    localStorage.setItem(SPAM_KEY, JSON.stringify(recent));
-  } catch { /* ignore */ }
+  try { const n=Date.now(),s=JSON.parse(localStorage.getItem("nova_order_times")||"[]");
+        localStorage.setItem("nova_order_times",JSON.stringify([...s.filter(t=>n-t<900000),n])); }
+  catch {}
 }
 
-// ─── INPUT SANITISATION ────────────────────────────────────────────────────
-
-function sanitize(str) {
-  if (typeof str !== "string") return "";
-  return str
-    .trim()
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\\/g, "")
-    .slice(0, 500);           // hard cap per field
+// ── EMAILJS ───────────────────────────────────────────────────────────────────
+function loadEmailJS() {
+  return new Promise(resolve=>{
+    if(!EMAILJS_PUBLIC_KEY){resolve(false);return;}
+    if(window.emailjs){resolve(true);return;}
+    const s=document.createElement("script");
+    s.src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
+    s.onload=()=>{window.emailjs.init(EMAILJS_PUBLIC_KEY);resolve(true);};
+    s.onerror=()=>resolve(false);
+    document.head.appendChild(s);
+  });
 }
-
-function sanitizeCustomer(c) {
-  return {
-    name:    sanitize(c.name    || ""),
-    phone:   sanitize(c.phone   || "").replace(/[^0-9+\s\-()]/g, ""),
-    city:    sanitize(c.city    || ""),
-    address: sanitize(c.address || ""),
-    notes:   sanitize(c.notes   || "").slice(0, 300)
+function itemsText(items) {
+  return (items||[]).map(i=>{
+    let l=`• ${i.name} ×${i.quantity||1} = ${formatPrice((i.price||0)*(i.quantity||1))}`;
+    if(i.options) l+="\n  "+Object.entries(i.options).map(([k,v])=>`${k}: ${v}`).join(" | ");
+    return l;
+  }).join("\n");
+}
+async function sendEmails(order,orderId) {
+  const ok=await loadEmailJS(); if(!ok) return;
+  const p={
+    order_id:         orderId.slice(-6).toUpperCase(),
+    customer_name:    order.customer?.name    ||"—",
+    customer_phone:   order.customer?.phone   ||"—",
+    customer_city:    order.customer?.city    ||"—",
+    customer_address: order.customer?.address ||"—",
+    customer_notes:   order.customer?.notes   ||"Aucune",
+    customer_email:   order.customer?.email   ||"—",
+    items_html:       itemsText(order.items),
+    total:            formatPrice(order.total||0),
+    deposit:          formatPrice(Math.round((order.total||0)*0.5)),
+    order_date:       new Date(order.timestamp).toLocaleString("fr-MA"),
+    reply_to:         ADMIN_EMAIL,
   };
+  try { await window.emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_ADMIN_TEMPLATE,{...p,to_email:ADMIN_EMAIL}); console.log("📧 Admin notifié"); }
+  catch(e) { console.warn("Email admin:",e); }
+  if(order.customer?.email && EMAILJS_CLIENT_TEMPLATE) {
+    try { await window.emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_CLIENT_TEMPLATE,{...p,to_email:order.customer.email}); console.log("📧 Client notifié"); }
+    catch(e) { console.warn("Email client:",e); }
+  }
 }
 
-// ─── FIREBASE CHECKOUT ─────────────────────────────────────────────────────
-
+// ── CHECKOUT → FIREBASE ───────────────────────────────────────────────────────
 function finalizeCheckout(customerDetails) {
-  const cart = getCart();
-  if (cart.length === 0) { alert("Votre panier est vide"); return; }
+  const cart=getCart();
+  if(cart.length===0){alert("Votre panier est vide");return;}
+  if(isRateLimited()){alert("Trop de commandes. Réessayez dans quelques minutes.");return;}
+  const c=sanCustomer(customerDetails);
+  if(!c.name||!c.phone||!c.city||!c.address){alert("Veuillez remplir tous les champs obligatoires.");return;}
+  if(c.phone.replace(/\D/g,"").length<9){alert("Numéro de téléphone invalide.");return;}
 
-  // Antispam check
-  if (isRateLimited()) {
-    alert("Trop de commandes en peu de temps. Veuillez réessayer dans quelques minutes.");
-    return;
-  }
-
-  // Validate required fields
-  const c = sanitizeCustomer(customerDetails);
-  if (!c.name || !c.phone || !c.city || !c.address) {
-    alert("Veuillez remplir tous les champs obligatoires.");
-    return;
-  }
-
-  // Validate phone (Moroccan: starts with 0 or +212, 9-13 digits)
-  const phoneDigits = c.phone.replace(/\D/g, "");
-  if (phoneDigits.length < 9 || phoneDigits.length > 13) {
-    alert("Numéro de téléphone invalide.");
-    return;
-  }
-
-  const orderData = {
-    customer:   c,
-    items:      cart.map(i => ({
-      name:     sanitize(i.name || ""),
-      price:    Number(i.price) || 0,
-      quantity: Number(i.quantity) || 1,
-      options:  i.options || null
-    })),
-    total:      getCartTotal(),
-    status:     "En attente",
-    timestamp:  Date.now(),
-    dateString: new Date().toLocaleString("fr-MA"),
-    // Honeypot checked on server (Firebase rules): presence of __hp means spam
+  const orderData={
+    customer: c,
+    items: cart.map(i=>({name:san(i.name||""),price:Number(i.price)||0,quantity:Number(i.quantity)||1,options:i.options||null})),
+    total: getCartTotal(), status:"En attente", timestamp:Date.now(),
+    dateString:new Date().toLocaleString("fr-MA"), source:"formulaire"
   };
 
-  const newOrderRef = push(ref(db, "orders"));
-  set(newOrderRef, orderData)
-    .then(() => {
+  // Disable submit buttons while saving
+  document.querySelectorAll(".btn-submit,[data-submit-order]").forEach(b=>{b.disabled=true;b.textContent="Envoi…";});
+
+  const newRef=push(ref(db,"orders"));
+  set(newRef,orderData)
+    .then(async()=>{
       recordOrderTime();
+      sendEmails(orderData,newRef.key).catch(()=>{});
       clearCart();
-      window.location.href = "/confirmation.html";
+      sessionStorage.setItem("nova_confirmation_order",JSON.stringify({...orderData,id:newRef.key}));
+      window.location.href="/confirmation.html";
     })
-    .catch(err => alert("Erreur de connexion : " + err.message));
+    .catch(err=>{
+      document.querySelectorAll(".btn-submit,[data-submit-order]").forEach(b=>{b.disabled=false;b.textContent="Envoyer la commande";});
+      alert("Erreur Firebase : "+err.message);
+    });
 }
 
-// ─── EXPOSE TO GLOBAL SCOPE ────────────────────────────────────────────────
-window.getCart          = getCart;
-window.saveCart         = saveCart;
-window.addToCart        = addToCart;
-window.removeFromCart   = removeFromCart;
-window.updateQuantity   = updateQuantity;
-window.clearCart        = clearCart;
-window.getCartTotal     = getCartTotal;
-window.formatPrice      = formatPrice;
-window.finalizeCheckout = finalizeCheckout;
-
+// ── EXPORTS ───────────────────────────────────────────────────────────────────
+window.getCart=getCart; window.saveCart=saveCart; window.addToCart=addToCart;
+window.removeFromCart=removeFromCart; window.updateQuantity=updateQuantity;
+window.clearCart=clearCart; window.getCartTotal=getCartTotal;
+window.formatPrice=formatPrice; window.finalizeCheckout=finalizeCheckout;
 document.dispatchEvent(new CustomEvent("cartUpdated"));
