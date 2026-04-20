@@ -1,135 +1,204 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nova Style — Admin</title>
-  <meta name="robots" content="noindex, nofollow">
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#f0f0f0;min-height:100vh}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Style — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#f0f0f0;min-height:100vh}
 
-    /* ── Login ─────────────────────────────────────────────── */
-    #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-    .login-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:16px;padding:40px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-    .login-logo{text-align:center;margin-bottom:28px}
-    .login-logo .brand{font-size:24px;font-weight:800;color:#e8194b;letter-spacing:-.5px}
-    .login-logo .sub{font-size:13px;color:#555;margin-top:4px}
-    .lf{margin-bottom:16px}
-    .lf label{display:block;font-size:11px;color:#666;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-    .lf input{width:100%;padding:12px 14px;background:#111;border:1px solid #333;border-radius:8px;color:#f0f0f0;font-size:15px;outline:none;transition:border-color .2s}
-    .lf input:focus{border-color:#e8194b}
-    .btn-login{width:100%;padding:13px;background:#e8194b;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity .2s}
-    .btn-login:hover{opacity:.88}
-    .btn-login:disabled{opacity:.45;cursor:not-allowed}
-    #login-error{color:#e8194b;font-size:13px;text-align:center;margin-top:12px;min-height:18px}
-    #login-attempts{font-size:12px;color:#555;text-align:center;margin-top:8px}
+/* ── LOGIN ───────────────────────────────────────── */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:16px;padding:40px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-logo .brand{font-size:26px;font-weight:800;color:#e8194b}
+.login-logo .sub{font-size:13px;color:#555;margin-top:4px}
+.lf{margin-bottom:16px}
+.lf label{display:block;font-size:11px;color:#666;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.lf input{width:100%;padding:12px 14px;background:#111;border:1px solid #333;border-radius:8px;color:#f0f0f0;font-size:15px;outline:none;transition:border-color .2s}
+.lf input:focus{border-color:#e8194b}
+.btn-login{width:100%;padding:13px;background:#e8194b;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity .2s}
+.btn-login:hover{opacity:.88}.btn-login:disabled{opacity:.45;cursor:not-allowed}
+#login-error{color:#e8194b;font-size:13px;text-align:center;margin-top:12px;min-height:18px}
+#login-attempts{font-size:12px;color:#555;text-align:center;margin-top:8px}
 
-    /* ── Dashboard ─────────────────────────────────────────── */
-    #admin-screen{display:none}
-    .admin-header{background:#1a1a1a;border-bottom:2px solid #e8194b;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-    .admin-header h1{font-size:20px;color:#e8194b}
-    .hright{display:flex;align-items:center;gap:12px}
-    .admin-email{font-size:12px;color:#555}
-    .live-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#00c853;background:#0a1f0a;border:1px solid #00c85344;padding:4px 12px;border-radius:20px}
-    .live-dot{width:7px;height:7px;background:#00c853;border-radius:50%;animation:pdot 1.5s ease-in-out infinite}
-    @keyframes pdot{0%,100%{opacity:1}50%{opacity:.3}}
-    .btn-logout{background:none;border:1px solid #333;color:#777;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;transition:all .2s}
-    .btn-logout:hover{border-color:#e8194b;color:#e8194b}
+/* ── DASHBOARD ───────────────────────────────────── */
+#admin-screen{display:none}
+.admin-header{background:#1a1a1a;border-bottom:2px solid #e8194b;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.admin-header h1{font-size:18px;color:#e8194b;font-weight:800}
+.hright{display:flex;align-items:center;gap:12px}
+.admin-email{font-size:12px;color:#555}
+.live-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#00c853;background:#0a1f0a;border:1px solid #00c85344;padding:3px 10px;border-radius:20px}
+.live-dot{width:6px;height:6px;background:#00c853;border-radius:50%;animation:pdot 1.5s infinite}
+@keyframes pdot{0%,100%{opacity:1}50%{opacity:.3}}
+.btn-logout{background:none;border:1px solid #333;color:#777;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;transition:all .2s}
+.btn-logout:hover{border-color:#e8194b;color:#e8194b}
 
-    .stats-bar{display:flex;gap:14px;padding:18px 28px;background:#141414;border-bottom:1px solid #222;flex-wrap:wrap}
-    .stat-card{background:#1e1e1e;border:1px solid #2a2a2a;border-radius:10px;padding:12px 18px;min-width:130px}
-    .stat-card .lbl{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-    .stat-card .val{font-size:22px;font-weight:700;color:#e8194b}
+/* ── TABS ────────────────────────────────────────── */
+.tab-bar{display:flex;gap:0;background:#141414;border-bottom:1px solid #222;padding:0 24px}
+.tab{padding:12px 20px;font-size:13px;font-weight:600;color:#666;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.tab.active{color:#e8194b;border-bottom-color:#e8194b}
+.tab:hover:not(.active){color:#aaa}
+.tab-panel{display:none}.tab-panel.active{display:block}
 
-    .container{padding:22px 28px;max-width:1200px;margin:0 auto}
-    .section-title{font-size:13px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
-    #orders-display{display:flex;flex-direction:column;gap:14px}
-    .no-order{text-align:center;padding:60px 20px;color:#444;font-size:16px;background:#1a1a1a;border-radius:12px;border:1px dashed #2a2a2a}
-    .loading{text-align:center;padding:40px;color:#444}
+/* ── STATS BAR ───────────────────────────────────── */
+.stats-bar{display:flex;gap:12px;padding:16px 24px;background:#141414;border-bottom:1px solid #222;flex-wrap:wrap}
+.stat-card{background:#1e1e1e;border:1px solid #2a2a2a;border-radius:10px;padding:12px 16px;min-width:120px}
+.stat-card .lbl{font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.stat-card .val{font-size:22px;font-weight:800;color:#e8194b}
+.stat-card .val.green{color:#00c853}
+.stat-card .val.blue{color:#4da6ff}
 
-    /* ── Order cards ─────────────────────────────────────────── */
-    .order-card{background:#1a1a1a;border:1px solid #2a2a2a;border-left:4px solid #e8194b;border-radius:10px;overflow:hidden;transition:background .2s}
-    .order-card:hover{background:#1c1c1c}
-    .order-card.new-order{animation:flash 1s ease-in-out 3;border-left-color:#00c853}
-    @keyframes flash{0%,100%{background:#1a1a1a}50%{background:#0d1f0d}}
+/* ── CONTAINER ───────────────────────────────────── */
+.container{padding:20px 24px;max-width:1300px;margin:0 auto}
+.section-title{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px}
 
-    .order-head{display:flex;align-items:center;gap:12px;padding:12px 18px;flex-wrap:wrap;border-bottom:1px solid #222}
-    .order-id{font-family:monospace;font-size:13px;color:#e8194b;font-weight:700;background:#2a1a1a;padding:4px 10px;border-radius:6px;white-space:nowrap}
-    .order-status{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;background:#2a2a1a;color:#ffb300;border:1px solid #ffb30044}
-    .order-time{font-size:12px;color:#555;margin-left:auto;white-space:nowrap}
+/* ── ORDER CARDS ─────────────────────────────────── */
+#orders-display{display:flex;flex-direction:column;gap:12px}
+.no-order{text-align:center;padding:50px 20px;color:#444;background:#1a1a1a;border-radius:12px;border:1px dashed #2a2a2a}
+.loading{text-align:center;padding:40px;color:#444}
+.order-card{background:#1a1a1a;border:1px solid #2a2a2a;border-left:4px solid #e8194b;border-radius:10px;overflow:hidden;transition:background .2s}
+.order-card:hover{background:#1c1c1c}
+.order-card.new-order{animation:flash 1s ease-in-out 3;border-left-color:#00c853}
+@keyframes flash{0%,100%{background:#1a1a1a}50%{background:#0d1f0d}}
+.order-head{display:flex;align-items:center;gap:10px;padding:10px 16px;flex-wrap:wrap;border-bottom:1px solid #222}
+.order-id{font-family:monospace;font-size:12px;color:#e8194b;font-weight:700;background:#2a1a1a;padding:3px 8px;border-radius:5px;white-space:nowrap}
+.order-status{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;background:#2a2a1a;color:#ffb300;border:1px solid #ffb30033}
+.order-time{font-size:11px;color:#555;margin-left:auto;white-space:nowrap}
+.order-body{display:grid;grid-template-columns:220px 1fr}
+.order-customer-col{padding:12px 14px;border-right:1px solid #222;display:flex;flex-direction:column;gap:6px}
+.customer-name{font-size:14px;font-weight:700;color:#f0f0f0}
+.customer-row{display:flex;gap:5px;font-size:11px;color:#888;line-height:1.5}
+.customer-phone{color:#e8194b;font-weight:600;font-size:12px}
+.customer-notes{font-size:10px;color:#666;font-style:italic;padding:4px 7px;background:#111;border-radius:5px;border-left:2px solid #333;margin-top:2px}
+.order-items-col{padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.item-row{background:#111;border:1px solid #222;border-radius:7px;padding:9px 11px}
+.item-name{font-size:12px;font-weight:600;color:#e0e0e0;margin-bottom:5px}
+.item-options{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.opt-tag{font-size:10px;padding:1px 7px;border-radius:3px;background:#1a1e2a;color:#7da0ba;border:1px solid #2a303a}
+.opt-tag.led{background:#2a1e1a;color:#ba9a7d;border-color:#3a2a1a}
+.opt-tag.install{background:#1e2a1e;color:#7dba7d;border-color:#2a3a2a}
+.item-footer{display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.item-footer .qty{color:#666}
+.item-footer .item-price{color:#00c853;font-weight:700;font-size:12px}
+.order-foot{display:flex;justify-content:flex-end;align-items:center;gap:16px;padding:9px 16px;background:#141414;border-top:1px solid #222}
+.foot-deposit{font-size:11px;color:#ffb300}
+.foot-label{font-size:11px;color:#555}
+.foot-total{font-size:17px;font-weight:800;color:#00c853}
 
-    .order-body{display:grid;grid-template-columns:240px 1fr}
-    .order-customer-col{padding:14px 16px;border-right:1px solid #222;display:flex;flex-direction:column;gap:7px}
-    .customer-name{font-size:15px;font-weight:700;color:#f0f0f0}
-    .customer-row{display:flex;align-items:flex-start;gap:5px;font-size:12px;color:#888;line-height:1.5}
-    .customer-phone{color:#e8194b;font-weight:600;font-size:13px}
-    .customer-notes{font-size:11px;color:#666;font-style:italic;padding:5px 8px;background:#111;border-radius:6px;border-left:2px solid #333}
+/* ── VISITORS PANEL ──────────────────────────────── */
+.visitors-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+@media(max-width:900px){.visitors-grid{grid-template-columns:1fr}}
+.vis-panel{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;overflow:hidden}
+.vis-panel-head{padding:12px 16px;border-bottom:1px solid #222;font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;justify-content:space-between}
+.vis-panel-head .count{font-size:18px;font-weight:800;color:#00c853}
+.vis-list{display:flex;flex-direction:column;max-height:320px;overflow-y:auto}
+.vis-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #1e1e1e;transition:background .15s}
+.vis-row:hover{background:#1e1e1e}
+.vis-row:last-child{border-bottom:none}
+.vis-dot{width:8px;height:8px;background:#00c853;border-radius:50%;flex-shrink:0;animation:pdot 2s infinite}
+.vis-page{font-size:12px;color:#ccc;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vis-meta{font-size:10px;color:#555;white-space:nowrap;text-align:right}
+.vis-device{font-size:10px;padding:1px 6px;border-radius:3px;background:#1e1e2a;color:#7da0ba;border:1px solid #2a303a;white-space:nowrap}
+.vis-device.mobile{background:#2a1e1a;color:#ba9a7d;border-color:#3a2a1a}
+.no-visitors{text-align:center;padding:30px;color:#444;font-size:13px}
 
-    .order-items-col{padding:14px 16px;display:flex;flex-direction:column;gap:8px}
-    .item-row{background:#111;border:1px solid #222;border-radius:8px;padding:10px 12px}
-    .item-name{font-size:13px;font-weight:600;color:#e0e0e0;margin-bottom:6px}
-    .item-options{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
-    .opt-tag{font-size:11px;padding:2px 8px;border-radius:4px;background:#1a1e2a;color:#7da0ba;border:1px solid #2a303a}
-    .opt-tag.led{background:#2a1e1a;color:#ba9a7d;border-color:#3a2a1a}
-    .opt-tag.install{background:#1e2a1e;color:#7dba7d;border-color:#2a3a2a}
-    .item-footer{display:flex;justify-content:space-between;align-items:center;font-size:12px}
-    .item-footer .qty{color:#666}
-    .item-footer .item-price{color:#00c853;font-weight:700;font-size:13px}
+/* Chart bars */
+.chart-wrap{padding:14px 16px}
+.chart-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.chart-bar-label{font-size:11px;color:#888;width:80px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chart-bar-track{flex:1;height:14px;background:#111;border-radius:7px;overflow:hidden}
+.chart-bar-fill{height:100%;background:#e8194b;border-radius:7px;transition:width .6s ease}
+.chart-bar-val{font-size:10px;color:#666;width:30px;text-align:right;flex-shrink:0}
 
-    .order-foot{display:flex;justify-content:flex-end;align-items:center;gap:18px;padding:10px 18px;background:#141414;border-top:1px solid #222}
-    .foot-deposit{font-size:12px;color:#ffb300}
-    .foot-label{font-size:12px;color:#555}
-    .foot-total{font-size:18px;font-weight:800;color:#00c853}
-
-    @media(max-width:768px){
-      .order-body{grid-template-columns:1fr}
-      .order-customer-col{border-right:none;border-bottom:1px solid #222}
-      .container,.stats-bar,.admin-header{padding:14px}
-    }
-  </style>
+@media(max-width:768px){
+  .order-body{grid-template-columns:1fr}
+  .order-customer-col{border-right:none;border-bottom:1px solid #222}
+  .container,.stats-bar,.admin-header{padding:12px}
+  .tab-bar{padding:0 12px;overflow-x:auto}
+}
+</style>
 </head>
 <body>
 
-<!-- LOGIN ─────────────────────────────────────────────────── -->
+<!-- LOGIN ───────────────────────────── -->
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
       <div class="brand">Nova Style</div>
-      <div class="sub">Tableau de bord — Accès sécurisé</div>
+      <div class="sub">Tableau de bord · Accès sécurisé</div>
     </div>
-    <div class="lf">
-      <label>Adresse e-mail</label>
-      <input type="email" id="login-email" placeholder="admin@novastyle.ma" autocomplete="email">
-    </div>
-    <div class="lf">
-      <label>Mot de passe</label>
-      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
-    </div>
+    <div class="lf"><label>Email</label><input type="email" id="login-email" placeholder="admin@novastyle.ma" autocomplete="email"></div>
+    <div class="lf"><label>Mot de passe</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
     <button class="btn-login" id="btn-login">Se connecter</button>
     <div id="login-error"></div>
     <div id="login-attempts"></div>
   </div>
 </div>
 
-<!-- DASHBOARD ──────────────────────────────────────────────── -->
+<!-- DASHBOARD ──────────────────────── -->
 <div id="admin-screen">
   <div class="admin-header">
-    <h1>🛍️ Nova Style — Commandes</h1>
+    <h1>🛍️ Nova Style</h1>
     <div class="hright">
-      <div class="live-badge"><span class="live-dot"></span>Temps réel</div>
+      <div class="live-badge"><span class="live-dot"></span>Live</div>
       <span class="admin-email" id="admin-email-display"></span>
       <button class="btn-logout" id="btn-logout">Déconnexion</button>
     </div>
   </div>
+
   <div class="stats-bar">
-    <div class="stat-card"><div class="lbl">Total commandes</div><div class="val" id="stat-total">—</div></div>
+    <div class="stat-card"><div class="lbl">Commandes</div><div class="val" id="stat-total">—</div></div>
     <div class="stat-card"><div class="lbl">Chiffre d'affaires</div><div class="val" id="stat-revenue">—</div></div>
     <div class="stat-card"><div class="lbl">Aujourd'hui</div><div class="val" id="stat-today">—</div></div>
+    <div class="stat-card"><div class="lbl">Visiteurs en ligne</div><div class="val green" id="stat-visitors">0</div></div>
+    <div class="stat-card"><div class="lbl">Avec panier</div><div class="val blue" id="stat-cart">0</div></div>
   </div>
-  <div class="container">
-    <div class="section-title">📦 Dernières commandes</div>
-    <div id="orders-display"><div class="loading">Connexion Firebase…</div></div>
+
+  <div class="tab-bar">
+    <div class="tab active" data-tab="orders">📦 Commandes</div>
+    <div class="tab" data-tab="visitors">👥 Visiteurs live</div>
+  </div>
+
+  <!-- ORDERS TAB -->
+  <div class="tab-panel active" id="tab-orders">
+    <div class="container">
+      <div class="section-title">Dernières commandes</div>
+      <div id="orders-display"><div class="loading">Connexion Firebase…</div></div>
+    </div>
+  </div>
+
+  <!-- VISITORS TAB -->
+  <div class="tab-panel" id="tab-visitors">
+    <div class="container">
+      <div class="visitors-grid">
+        <div class="vis-panel">
+          <div class="vis-panel-head">
+            <span>Visiteurs actifs</span>
+            <span class="count" id="vis-count">0</span>
+          </div>
+          <div class="vis-list" id="vis-list">
+            <div class="no-visitors">Aucun visiteur en ce moment</div>
+          </div>
+        </div>
+        <div class="vis-panel">
+          <div class="vis-panel-head"><span>Pages populaires maintenant</span></div>
+          <div class="chart-wrap" id="vis-pages-chart"></div>
+        </div>
+      </div>
+      <div class="visitors-grid">
+        <div class="vis-panel">
+          <div class="vis-panel-head"><span>Appareils</span></div>
+          <div class="chart-wrap" id="vis-devices-chart"></div>
+        </div>
+        <div class="vis-panel">
+          <div class="vis-panel-head"><span>Sources de trafic</span></div>
+          <div class="chart-wrap" id="vis-sources-chart"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -141,186 +210,144 @@ import {
   onAuthStateChanged, setPersistence, browserSessionPersistence
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey:            "AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",
-  authDomain:        "nova-9ac76.firebaseapp.com",
-  projectId:         "nova-9ac76",
-  databaseURL:       "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app",
-  storageBucket:     "nova-9ac76.firebasestorage.app",
-  messagingSenderId: "645613145752",
-  appId:             "1:645613145752:web:775e6f8ffce64ae12c4aed"
-};
+const firebaseConfig={apiKey:"AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",authDomain:"nova-9ac76.firebaseapp.com",projectId:"nova-9ac76",databaseURL:"https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app",storageBucket:"nova-9ac76.firebasestorage.app",messagingSenderId:"645613145752",appId:"1:645613145752:web:775e6f8ffce64ae12c4aed"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
+await setPersistence(auth,browserSessionPersistence);
 
-const app  = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getDatabase(app);
+// ── Brute-force lockout ──────────────────────────────────────────────────────
+const FK="nva_af";
+function getFS(){try{return JSON.parse(sessionStorage.getItem(FK)||"{}");}catch{return{};}}
+function setFS(s){sessionStorage.setItem(FK,JSON.stringify(s));}
+function isLocked(){const s=getFS();if(!s.n||s.n<5)return false;if(Date.now()-s.t>900000){setFS({});return false;}return true;}
+function recFail(){const s=getFS();setFS({n:(s.n||0)+1,t:Date.now()});updAttempts();}
+function clrFails(){setFS({});}
+function updAttempts(){
+  const el=document.getElementById("login-attempts");if(!el)return;
+  const s=getFS();if(!s.n){el.textContent="";return;}
+  if(isLocked()){const m=Math.ceil((900000-(Date.now()-s.t))/60000);el.textContent=`🔒 Bloqué ${m} min`;}
+  else{const r=5-s.n;el.textContent=r>0?`${r} tentative${r>1?"s":""} restante${r>1?"s":""}`:"";} }
 
-// Session only — auto-logout when tab closes
-await setPersistence(auth, browserSessionPersistence);
-
-// ── Brute-force protection ───────────────────────────────────────────────
-const FAIL_KEY   = "nva_admin_fails";
-const MAX_FAILS  = 5;
-const LOCK_MS    = 15 * 60 * 1000;
-
-function getFS() { try { return JSON.parse(sessionStorage.getItem(FAIL_KEY)||"{}"); } catch { return {}; } }
-function setFS(s){ sessionStorage.setItem(FAIL_KEY, JSON.stringify(s)); }
-function isLocked() {
-  const s = getFS();
-  if (!s.n || s.n < MAX_FAILS) return false;
-  if (Date.now() - s.t > LOCK_MS) { setFS({}); return false; }
-  return true;
+// ── Login ────────────────────────────────────────────────────────────────────
+async function doLogin(){
+  const em=document.getElementById("login-email"),pw=document.getElementById("login-password"),
+        er=document.getElementById("login-error"),bt=document.getElementById("btn-login");
+  er.textContent="";
+  if(isLocked()){updAttempts();return;}
+  if(!em.value.trim()||!pw.value){er.textContent="Remplissez tous les champs.";return;}
+  bt.disabled=true;bt.textContent="Connexion…";
+  try{await signInWithEmailAndPassword(auth,em.value.trim(),pw.value);clrFails();pw.value="";}
+  catch{recFail();bt.disabled=false;bt.textContent="Se connecter";er.textContent="Email ou mot de passe incorrect.";}
 }
-function recordFail() { const s=getFS(); setFS({n:(s.n||0)+1, t:Date.now()}); updateAttempts(); }
-function clearFails() { setFS({}); }
+document.getElementById("btn-login").addEventListener("click",doLogin);
+["login-password","login-email"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>e.key==="Enter"&&doLogin()));
+document.getElementById("btn-logout").addEventListener("click",()=>signOut(auth));
 
-function updateAttempts() {
-  const el = document.getElementById("login-attempts");
-  if (!el) return;
-  const s = getFS();
-  if (!s.n) { el.textContent = ""; return; }
-  if (isLocked()) {
-    const m = Math.ceil((LOCK_MS-(Date.now()-s.t))/60000);
-    el.textContent = `🔒 Bloqué — réessayez dans ${m} min`;
+// ── Tabs ─────────────────────────────────────────────────────────────────────
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById("tab-"+tab.dataset.tab).classList.add("active");
+  });
+});
+
+// ── Auth router ──────────────────────────────────────────────────────────────
+let unsubOrders=null,unsubVisitors=null;
+onAuthStateChanged(auth,user=>{
+  const ls=document.getElementById("login-screen"),as=document.getElementById("admin-screen");
+  if(user){
+    ls.style.display="none";as.style.display="block";
+    document.getElementById("admin-email-display").textContent=user.email;
+    startOrders();startVisitors();
   } else {
-    const r = MAX_FAILS - s.n;
-    el.textContent = r > 0 ? `${r} tentative${r>1?"s":""} restante${r>1?"s":""}` : "";
-  }
-}
-
-// ── Login ────────────────────────────────────────────────────────────────
-async function doLogin() {
-  const emailEl = document.getElementById("login-email");
-  const passEl  = document.getElementById("login-password");
-  const errEl   = document.getElementById("login-error");
-  const btn     = document.getElementById("btn-login");
-  errEl.textContent = "";
-
-  if (isLocked()) { updateAttempts(); return; }
-
-  const email = emailEl.value.trim();
-  const pass  = passEl.value;
-  if (!email || !pass) { errEl.textContent = "Remplissez tous les champs."; return; }
-
-  btn.disabled = true; btn.textContent = "Connexion…";
-  try {
-    await signInWithEmailAndPassword(auth, email, pass);
-    clearFails();
-    passEl.value = "";
-  } catch {
-    recordFail();
-    btn.disabled = false; btn.textContent = "Se connecter";
-    errEl.textContent = "Email ou mot de passe incorrect.";
-  }
-}
-
-document.getElementById("btn-login").addEventListener("click", doLogin);
-document.getElementById("login-password").addEventListener("keydown", e => e.key==="Enter" && doLogin());
-document.getElementById("login-email").addEventListener("keydown",    e => e.key==="Enter" && doLogin());
-
-// ── Logout ───────────────────────────────────────────────────────────────
-document.getElementById("btn-logout").addEventListener("click", () => signOut(auth));
-
-// ── Auth router ──────────────────────────────────────────────────────────
-let unsub = null;
-onAuthStateChanged(auth, user => {
-  const ls = document.getElementById("login-screen");
-  const as = document.getElementById("admin-screen");
-  if (user) {
-    ls.style.display = "none";
-    as.style.display = "block";
-    document.getElementById("admin-email-display").textContent = user.email;
-    startOrders();
-  } else {
-    ls.style.display = "flex";
-    as.style.display = "none";
-    if (unsub) { unsub(); unsub = null; }
-    updateAttempts();
+    ls.style.display="flex";as.style.display="none";
+    if(unsubOrders){unsubOrders();unsubOrders=null;}
+    if(unsubVisitors){unsubVisitors();unsubVisitors=null;}
+    updAttempts();
   }
 });
 
-// ── Orders listener ──────────────────────────────────────────────────────
-let prevCount = 0;
-function startOrders() {
-  unsub = onValue(ref(db,"orders"), snap => {
-    const data = snap.val();
-    const el   = document.getElementById("orders-display");
-    if (!data) {
-      el.innerHTML = "<div class='no-order'>⏳ En attente de nouvelles commandes…</div>";
-      setStats(0,0,0); return;
-    }
-    const list       = Object.entries(data).sort((a,b)=>b[1].timestamp-a[1].timestamp);
-    const isNew      = list.length > prevCount && prevCount > 0;
-    if (isNew) ping();
-    prevCount = list.length;
+// ── ORDERS ───────────────────────────────────────────────────────────────────
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function optTags(o){if(!o||typeof o!=="object")return"";return Object.entries(o).map(([k,v])=>{let c="opt-tag";if(k.toLowerCase()==="led")c+=" led";else if(k.toLowerCase()==="installation")c+=" install";return`<span class="${c}">${esc(k)}: ${esc(v)}</span>`;}).join("");}
+function renderOrder(id,o,i,isNew){
+  const c=o.customer||{},items=o.items||[],total=o.total||0,deposit=Math.round(total*.5),dt=new Date(o.timestamp);
+  const ih=items.map(it=>{const lt=(it.price||0)*(it.quantity||1);return`<div class="item-row"><div class="item-name">${esc(it.name||"—")}</div>${it.options?`<div class="item-options">${optTags(it.options)}</div>`:""}<div class="item-footer"><span class="qty">×${it.quantity||1} · ${(it.price||0).toLocaleString("fr-MA")} MAD</span><span class="item-price">${lt.toLocaleString("fr-MA")} MAD</span></div></div>`;}).join("");
+  return`<div class="order-card ${i===0&&isNew?"new-order":""}"><div class="order-head"><div class="order-id">#${id.slice(-6).toUpperCase()}</div><span class="order-status">En attente</span><div class="order-time">${dt.toLocaleDateString("fr-MA")} ${dt.toLocaleTimeString("fr-MA",{hour:"2-digit",minute:"2-digit"})}</div></div><div class="order-body"><div class="order-customer-col"><div class="customer-name">${esc(c.name||"—")}</div><div class="customer-row"><span>📞</span><span class="customer-phone">${esc(c.phone||"—")}</span></div><div class="customer-row"><span>📍</span><span>${esc(c.city||"—")}</span></div>${c.address?`<div class="customer-row"><span>🏠</span><span>${esc(c.address)}</span></div>`:""} ${c.email?`<div class="customer-row"><span>✉️</span><span>${esc(c.email)}</span></div>`:""}${c.notes?`<div class="customer-notes">💬 ${esc(c.notes)}</div>`:""}</div><div class="order-items-col">${ih}</div></div><div class="order-foot"><span class="foot-deposit">Acompte: ${deposit.toLocaleString("fr-MA")} MAD</span><span class="foot-label">Total:</span><span class="foot-total">${total.toLocaleString("fr-MA")} MAD</span></div></div>`;
+}
+let prevCount=0;
+function startOrders(){
+  unsubOrders=onValue(ref(db,"orders"),snap=>{
+    const data=snap.val(),el=document.getElementById("orders-display");
+    if(!data){el.innerHTML="<div class='no-order'>⏳ En attente de nouvelles commandes…</div>";setStats(0,0,0);return;}
+    const list=Object.entries(data).sort((a,b)=>b[1].timestamp-a[1].timestamp);
+    const isNew=list.length>prevCount&&prevCount>0;
+    if(isNew)ping();
+    prevCount=list.length;
+    const rev=list.reduce((s,[,o])=>s+(o.total||0),0);
+    const td=list.filter(([,o])=>new Date(o.timestamp).toDateString()===new Date().toDateString()).length;
+    setStats(list.length,rev,td);
+    el.innerHTML=list.map(([id,o],i)=>renderOrder(id,o,i,isNew)).join("");
+  });
+}
+function setStats(t,r,td){
+  document.getElementById("stat-total").textContent=t;
+  document.getElementById("stat-revenue").textContent=r.toLocaleString("fr-MA")+" MAD";
+  document.getElementById("stat-today").textContent=td;
+}
 
-    const revenue = list.reduce((s,[,o])=>s+(o.total||0),0);
-    const today   = list.filter(([,o])=>new Date(o.timestamp).toDateString()===new Date().toDateString()).length;
-    setStats(list.length, revenue, today);
-    el.innerHTML = list.map(([id,o],i)=>renderOrder(id,o,i,isNew)).join("");
+// ── VISITORS ─────────────────────────────────────────────────────────────────
+function startVisitors(){
+  unsubVisitors=onValue(ref(db,"online_visitors"),snap=>{
+    const data=snap.val()||{};
+    const visitors=Object.values(data);
+    const count=visitors.length;
+    const withCart=visitors.filter(v=>v.cartCount>0).length;
+
+    document.getElementById("stat-visitors").textContent=count;
+    document.getElementById("stat-cart").textContent=withCart;
+    document.getElementById("vis-count").textContent=count;
+
+    // Visitor list
+    const listEl=document.getElementById("vis-list");
+    if(!count){listEl.innerHTML="<div class='no-visitors'>Aucun visiteur en ce moment</div>";}
+    else{
+      const sorted=[...visitors].sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));
+      listEl.innerHTML=sorted.map(v=>{
+        const dur=v.duration?formatDur(v.duration):"";
+        const devClass=v.device==="Mobile"||v.device==="Tablette"?"mobile":"";
+        return`<div class="vis-row"><span class="vis-dot"></span><span class="vis-page">${esc(v.pageLabel||v.page||"—")}</span><span class="vis-device ${devClass}">${esc(v.device||"—")}</span><div class="vis-meta">${esc(v.browser||"")} · ${esc(v.referrer||"")}${dur?` · ${dur}`:""}</div></div>`;
+      }).join("");
+    }
+
+    // Pages chart
+    renderBarChart("vis-pages-chart", countBy(visitors,"pageLabel"), "#e8194b");
+    // Devices chart
+    renderBarChart("vis-devices-chart", countBy(visitors,"device"), "#4da6ff");
+    // Sources chart
+    renderBarChart("vis-sources-chart", countBy(visitors,"referrer"), "#00c853");
   });
 }
 
-function setStats(t,r,td){
-  document.getElementById("stat-total").textContent   = t;
-  document.getElementById("stat-revenue").textContent = r.toLocaleString("fr-MA")+" MAD";
-  document.getElementById("stat-today").textContent   = td;
+function countBy(arr,key){
+  const m={};
+  arr.forEach(v=>{const k=v[key]||"Autre";m[k]=(m[k]||0)+1;});
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,6);
 }
 
-// ── Render ────────────────────────────────────────────────────────────────
-function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-
-function optTags(opts){
-  if(!opts||typeof opts!=="object") return "";
-  return Object.entries(opts).map(([k,v])=>{
-    let c="opt-tag";
-    if(k.toLowerCase()==="led") c+=" led";
-    else if(k.toLowerCase()==="installation") c+=" install";
-    return `<span class="${c}">${esc(k)}: ${esc(v)}</span>`;
+function renderBarChart(elId,entries,color){
+  const el=document.getElementById(elId);if(!el)return;
+  if(!entries.length){el.innerHTML="<div style='padding:20px;color:#444;font-size:12px'>Pas de données</div>";return;}
+  const max=entries[0][1]||1;
+  el.innerHTML=entries.map(([label,val])=>{
+    const pct=Math.round((val/max)*100);
+    return`<div class="chart-bar-row"><div class="chart-bar-label" title="${esc(label)}">${esc(label)}</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${pct}%;background:${color}"></div></div><div class="chart-bar-val">${val}</div></div>`;
   }).join("");
 }
 
-function renderOrder(id,o,i,isNew){
-  const c=o.customer||{}, items=o.items||[], total=o.total||0;
-  const deposit=Math.round(total*.5), dt=new Date(o.timestamp);
-  const items_html=items.map(it=>{
-    const lt=(it.price||0)*(it.quantity||1);
-    return `<div class="item-row">
-      <div class="item-name">${esc(it.name||"—")}</div>
-      ${it.options?`<div class="item-options">${optTags(it.options)}</div>`:""}
-      <div class="item-footer">
-        <span class="qty">Qté: ${it.quantity||1} × ${(it.price||0).toLocaleString("fr-MA")} MAD</span>
-        <span class="item-price">${lt.toLocaleString("fr-MA")} MAD</span>
-      </div></div>`;
-  }).join("");
-
-  return `<div class="order-card ${i===0&&isNew?"new-order":""}">
-    <div class="order-head">
-      <div class="order-id">#${id.slice(-6).toUpperCase()}</div>
-      <span class="order-status">En attente</span>
-      <div class="order-time">${dt.toLocaleDateString("fr-MA")} ${dt.toLocaleTimeString("fr-MA",{hour:"2-digit",minute:"2-digit"})}</div>
-    </div>
-    <div class="order-body">
-      <div class="order-customer-col">
-        <div class="customer-name">${esc(c.name||"—")}</div>
-        <div class="customer-row"><span>📞</span><span class="customer-phone">${esc(c.phone||"—")}</span></div>
-        <div class="customer-row"><span>📍</span><span>${esc(c.city||"—")}</span></div>
-        ${c.address?`<div class="customer-row"><span>🏠</span><span>${esc(c.address)}</span></div>`:""}
-        ${c.notes?`<div class="customer-notes">💬 ${esc(c.notes)}</div>`:""}
-      </div>
-      <div class="order-items-col">${items_html}</div>
-    </div>
-    <div class="order-foot">
-      <span class="foot-deposit">Acompte 50%: ${deposit.toLocaleString("fr-MA")} MAD</span>
-      <span class="foot-label">Total:</span>
-      <span class="foot-total">${total.toLocaleString("fr-MA")} MAD</span>
-    </div>
-  </div>`;
-}
-
-function ping(){
-  try{ new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play().catch(()=>{}); }catch{}
-}
+function formatDur(s){if(s<60)return`${s}s`;const m=Math.floor(s/60);return`${m}min`;}
+function ping(){try{new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play().catch(()=>{});}catch{}}
 </script>
 </body>
 </html>

@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nova Style — Panier</title>
 <meta name="description" content="Votre panier Nova Style - Procédez à la commande">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://novastyle.ma/cart.html">
 <link rel="stylesheet" href="/assets/style.css">
 
 <style>
@@ -472,16 +474,14 @@
       </div>
       
       <div class="modal-actions">
-        <button class="btn-submit" onclick="submitOrder()">Envoyer la commande</button>
+        <button class="btn-submit" type="button" id="btn-submit-order" data-submit-order onclick="submitOrder()">Envoyer la commande</button>
         <button class="btn-cancel" onclick="closeOrderModal()">Annuler</button>
       </div>
     </div>
   </div>
 </div>
 
-<footer style="text-align: center; padding: 40px 20px; margin-top: 40px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--border);">
-  <p>© 2024 Nova Style · Casablanca · <a href="tel:+212707074748" style="color: var(--accent);">+212 70 70 74 748</a></p>
-</footer>
+<script src="/assets/footer.js"></script>
 
 <script type="module" src="/assets/cart.js"></script>
 <script>
@@ -589,10 +589,12 @@ function updateCheckoutButtons() {
     <a href="${whatsappUrl}" target="_blank" class="btn-checkout btn-whatsapp">
       💬 Acheter via WhatsApp
     </a>
-    <button onclick="openOrderModal()" class="btn-checkout btn-form">
-      📝 Remplir le formulaire
+    <button type="button" id="open-form-btn" class="btn-checkout btn-form" style="cursor:pointer">
+      📝 Remplir le formulaire de commande
     </button>
   `;
+  const _formBtn = document.getElementById('open-form-btn');
+  if (_formBtn) _formBtn.addEventListener('click', function(e){ e.stopPropagation(); openOrderModal(); });
 }
 
 function openOrderModal() {
@@ -609,77 +611,23 @@ function closeOrderModal() {
 }
 
 function submitOrder() {
-  const name = document.getElementById('form-name').value.trim();
-  const phone = document.getElementById('form-phone').value.trim();
-  const city = document.getElementById('form-city').value.trim();
+  const name    = document.getElementById('form-name').value.trim();
+  const phone   = document.getElementById('form-phone').value.trim();
+  const city    = document.getElementById('form-city').value.trim();
   const address = document.getElementById('form-address').value.trim();
-  const notes = document.getElementById('form-notes').value.trim();
-  
+  const notes   = document.getElementById('form-notes').value.trim();
+  const emailEl = document.getElementById('form-email');
+  const email   = emailEl ? emailEl.value.trim() : '';
+
   if (!name || !phone || !city || !address) {
     alert('Veuillez remplir tous les champs obligatoires');
     return;
   }
-  
-  const cart = getCart();
-  if (cart.length === 0) {
-    alert('Votre panier est vide');
+  if (typeof window.finalizeCheckout !== 'function') {
+    alert('Chargement en cours, réessayez dans 1 seconde.');
     return;
   }
-  
-  const total = getCartTotal();
-  
-  // Save order to admin dashboard
-  const order = {
-    id: Date.now(),
-    timestamp: Date.now(),
-    name: name,
-    phone: phone,
-    city: city,
-    address: address,
-    notes: notes,
-    items: cart.map(i => ({
-      name: i.name,
-      price: i.price,
-      quantity: i.quantity,
-      options: i.options
-    })),
-    itemCount: cart.reduce((sum, i) => sum + i.quantity, 0),
-    total: total
-  };
-  
-  // Save to admin orders
-  saveAdminOrder(order);
-  
-  // Clear form
-  document.getElementById('form-name').value = '';
-  document.getElementById('form-phone').value = '';
-  document.getElementById('form-city').value = '';
-  document.getElementById('form-address').value = '';
-  document.getElementById('form-notes').value = '';
-  
-  // Close modal
-  closeOrderModal();
-  
-  // Store order data in sessionStorage for confirmation page
-  sessionStorage.setItem('nova_confirmation_order', JSON.stringify(order));
-  
-  // Clear cart before redirecting
-  clearCart();
-  
-  // Redirect to confirmation page
-  window.location.href = '/confirmation.html';
-}
-
-function saveAdminOrder(order) {
-  try {
-    const orders = localStorage.getItem('nova_style_orders');
-    const allOrders = orders ? JSON.parse(orders) : [];
-    allOrders.push(order);
-    localStorage.setItem('nova_style_orders', JSON.stringify(allOrders));
-    console.log('✅ Commande sauvegardée:', order);
-  } catch (e) {
-    console.error('Error saving order:', e);
-  }
+  window.finalizeCheckout({ name, phone, city, address, notes, email });
 }
 
 function continueShopping() {
