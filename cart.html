@@ -1,48 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Style — Panier</title>
+<meta name="description" content="Votre panier Nova Style - Procédez à la commande">
+<link rel="stylesheet" href="/assets/style.css">
+
+<style>
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .cart-header h1 {
+    font-size: 28px;
+    margin: 0;
+  }
+  
+  .continue-btn {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  
+  .continue-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  
+  .checkout-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 30px;
+  }
+  
+  @media (max-width: 900px) {
+    .checkout-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .cart-items {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  
+  .cart-items h2 {
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  
+  .empty-cart {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  
+  .empty-cart-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 16px;
+  }
+  
+  .cart-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .cart-item:last-child {
+    border-bottom: none;
+  }
+  
+  .item-name {
+    font-weight: 500;
+  }
+  
+  .item-price {
+    color: var(--accent);
+    font-weight: 600;
+    min-width: 100px;
+    text-align: right;
+  }
+  
+  .item-qty {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 8px;
+  }
+  
+  .qty-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--text);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .qty-btn:hover {
+    background: var(--accent-dim);
+  }
+  
+  .qty-input {
+    width: 40px;
+    border: none;
+    background: none;
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  .remove-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: opacity 0.2s;
+  }
+  
+  .remove-btn:hover {
+    opacity: 0.8;
+  }
+  
+  .checkout-sidebar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .checkout-sidebar h3 {
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+  
+  .order-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  
+  .form-group input {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-dim);
+  }
+  
+  .summary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  
+  .summary-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  
+  .summary-line.total {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 6px;
+  }
+  
+  .checkout-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .btn-checkout {
+    padding: 12px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  
+  .btn-whatsapp {
+    background: var(--green);
+    color: white;
+  }
+  
+  .btn-whatsapp:hover {
+    opacity: 0.9;
+  }
+  
+  .btn-form {
+    background: var(--accent);
+    color: white;
+  }
+  
+  .btn-form:hover {
+    opacity: 0.9;
+  }
+  
+  .notification {
+    background: var(--red);
+    color: white;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .modal-overlay.active {
+    display: flex;
+  }
+  
+  .modal-content {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .modal-close {
+    float: right;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--muted);
+    margin-top: -8px;
+  }
+  
+  .modal-close:hover {
+    color: var(--text);
+  }
+  
+  .modal-form h2 {
+    clear: both;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .modal-form .form-group {
+    margin-bottom: 14px;
+  }
+  
+  .modal-form textarea {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+  }
+  
+  .modal-form textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-dim);
+  }
+  
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .modal-actions button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .btn-submit {
+    background: var(--green);
+    color: white;
+  }
+  
+  .btn-submit:hover {
+    opacity: 0.9;
+  }
+  
+  .btn-cancel {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  
+  .btn-cancel:hover {
+    background: var(--border);
+  }
+  
+  @media (max-width: 600px) {
+    .cart-item {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    
+    .item-price,
+    .item-qty,
+    .remove-btn {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
+</head>
+<body>
+
+<script src="/assets/header.js"></script>
+
+<div class="container">
+  <div class="cart-header">
+    <h1>Votre Panier</h1>
+    <button class="continue-btn" onclick="continueShopping()">← Continuer vos achats</button>
+  </div>
+  
+  <div class="checkout-grid">
+    <div class="cart-items" id="cart-items-container">
+      <!-- Cart items will be rendered here -->
+    </div>
+    
+    <div class="checkout-sidebar">
+      <h3>Résumé de commande</h3>
+      
+      <div class="summary">
+        <div class="summary-line">
+          <span>Sous-total:</span>
+          <span id="subtotal">0 MAD</span>
+        </div>
+        <div class="summary-line">
+          <span>Livraison:</span>
+          <span id="shipping">À déterminer</span>
+        </div>
+        <div class="summary-line total">
+          <span>Total:</span>
+          <span id="total">0 MAD</span>
+        </div>
+      </div>
+      
+      <div id="order-note" class="notification" style="display: none; background: var(--accent-dim); color: var(--text); border: 1px solid var(--accent);">
+        Note: Acompte de 50% sera demandé au premier contact
+      </div>
+      
+      <div class="checkout-actions" id="checkout-actions">
+        <!-- Buttons will be rendered here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for form-based order -->
+<div class="modal-overlay" id="form-modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeOrderModal()">×</button>
+    <div class="modal-form">
+      <h2>Formulaire de Commande</h2>
+      
+      <div class="form-group">
+        <label>Nom complet *</label>
+        <input type="text" id="form-name" placeholder="Votre nom">
+      </div>
+      
+      <div class="form-group">
+        <label>Numéro de téléphone *</label>
+        <input type="tel" id="form-phone" placeholder="Exemple: 0612345678">
+      </div>
+      
+      <div class="form-group">
+        <label>Ville *</label>
+        <input type="text" id="form-city" placeholder="Casablanca, Rabat, Marrakech...">
+      </div>
+      
+      <div class="form-group">
+        <label>Adresse *</label>
+        <textarea id="form-address" rows="3" placeholder="Rue, code postal..."></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Notes supplémentaires (optionnel)</label>
+        <textarea id="form-notes" rows="2" placeholder="Options, personnalisations..."></textarea>
+      </div>
+      
+      <div style="background: var(--bg-soft); padding: 12px; border-radius: 6px; margin: 16px 0; font-size: 14px;">
+        <strong>Total:</strong> <span id="modal-total">0 MAD</span>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="btn-submit" onclick="submitOrder()">Envoyer la commande</button>
+        <button class="btn-cancel" onclick="closeOrderModal()">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer style="text-align: center; padding: 40px 20px; margin-top: 40px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--border);">
+  <p>© 2024 Nova Style · Casablanca · <a href="tel:+212707074748" style="color: var(--accent);">+212 70 70 74 748</a></p>
+</footer>
+
 <script type="module" src="/assets/cart.js"></script>
 <script>
-// 1. Délégation d'événements (plus robuste que onclick)
-document.addEventListener('click', function(e) {
-  const btn = e.target.closest('button');
-  if (!btn) return;
-  
-  const key = btn.getAttribute('data-key');
-  if (!key) return;
-
-  if (btn.classList.contains('qty-plus')) {
-    const cart = getCart();
-    const item = cart.find(i => i.key === key);
-    if (item) {
-      item.quantity += 1;
-      saveCart(cart);
-      renderCart();
-    }
-  }
-
-  if (btn.classList.contains('qty-minus')) {
-    const cart = getCart();
-    const item = cart.find(i => i.key === key);
-    if (item && item.quantity > 1) {
-      item.quantity -= 1;
-      saveCart(cart);
-      renderCart();
-    }
-  }
-
-  if (btn.classList.contains('remove-btn')) {
-    if (confirm('Retirer cet article ?')) {
-      removeFromCart(key);
-      renderCart();
-    }
-  }
-});
-
 function renderCart() {
-  // On s'assure que les fonctions globales de cart.js sont prêtes
-  if (typeof getCart !== 'function') {
-    setTimeout(renderCart, 100);
-    return;
-  }
-
   const cart = getCart();
   const container = document.getElementById('cart-items-container');
   
@@ -57,10 +500,9 @@ function renderCart() {
     return;
   }
   
-  // Utilisation de guillemets simples pour data-key='' afin de ne pas casser le JSON interne
-  container.innerHTML = `
+  const cartHTML = `
     <h2>Articles dans votre panier (${cart.length})</h2>
-    ${cart.map((item) => `
+    ${cart.map((item, idx) => `
       <div class="cart-item">
         <div class="item-name">
           <div><strong>${item.name}</strong></div>
@@ -69,18 +511,20 @@ function renderCart() {
               ${Object.entries(item.options).map(([k, v]) => `<div>• ${k}: ${v}</div>`).join('')}
             </div>
           ` : ''}
+          <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">${formatPrice(item.price)} / unité</div>
         </div>
         <div class="item-qty">
-          <button class="qty-btn qty-minus" data-key='${item.key}'>−</button>
+          <button class="qty-btn" onclick="decreaseQty('${item.key}')">−</button>
           <input type="number" class="qty-input" value="${item.quantity}" readonly>
-          <button class="qty-btn qty-plus" data-key='${item.key}'>+</button>
+          <button class="qty-btn" onclick="increaseQty('${item.key}')">+</button>
         </div>
         <div class="item-price">${formatPrice(item.price * item.quantity)}</div>
-        <button class="remove-btn" data-key='${item.key}'>Retirer</button>
+        <button class="remove-btn" onclick="removeItem('${item.key}')">Retirer</button>
       </div>
     `).join('')}
   `;
   
+  container.innerHTML = cartHTML;
   updateSummary();
 }
 
@@ -88,10 +532,35 @@ function updateSummary() {
   const total = getCartTotal();
   document.getElementById('subtotal').textContent = formatPrice(total);
   document.getElementById('total').textContent = formatPrice(total);
-  if(document.getElementById('modal-total')) {
-    document.getElementById('modal-total').textContent = formatPrice(total);
-  }
+  document.getElementById('modal-total').textContent = formatPrice(total);
   updateCheckoutButtons();
+}
+
+function increaseQty(itemKey) {
+  const cart = getCart();
+  const item = cart.find(i => i.key === itemKey);
+  if (item) {
+    item.quantity += 1;
+    saveCart(cart);
+    renderCart();
+  }
+}
+
+function decreaseQty(itemKey) {
+  const cart = getCart();
+  const item = cart.find(i => i.key === itemKey);
+  if (item && item.quantity > 1) {
+    item.quantity -= 1;
+    saveCart(cart);
+    renderCart();
+  }
+}
+
+function removeItem(itemKey) {
+  if (confirm('Êtes-vous sûr de vouloir retirer cet article?')) {
+    removeFromCart(itemKey);
+    renderCart();
+  }
 }
 
 function updateCheckoutButtons() {
@@ -101,38 +570,140 @@ function updateCheckoutButtons() {
   
   if (cart.length === 0) {
     actionsDiv.innerHTML = '';
-    if(noteDiv) noteDiv.style.display = 'none';
+    noteDiv.style.display = 'none';
     return;
   }
   
-  if(noteDiv) noteDiv.style.display = 'block';
+  noteDiv.style.display = 'block';
   const total = getCartTotal();
-  const cartSummary = encodeURIComponent(cart.map(i => `${i.name} x${i.quantity}`).join('\n'));
-  const whatsappUrl = `https://wa.me/212707074748?text=Commande%20Nova%20Style:%0A${cartSummary}%0ATotal:%20${total}%20MAD`;
+  const cartSummary = encodeURIComponent(cart.map(i => {
+    let line = `${i.name} x${i.quantity}`;
+    if (i.options) {
+      line += ` (${Object.entries(i.options).map(([k, v]) => `${k}: ${v}`).join(', ')})`;
+    }
+    return line;
+  }).join('\n'));
+  const whatsappUrl = `https://wa.me/212707074748?text=Bonjour%2C%20j'aimerais%20commander%3A%0A${cartSummary}%0A%0ATotal:%20${formatPrice(total).replace(/\s/g, '%20')}`;
   
   actionsDiv.innerHTML = `
-    <a href="${whatsappUrl}" target="_blank" class="btn-checkout btn-whatsapp">💬 Acheter via WhatsApp</a>
-    <button onclick="openOrderModal()" class="btn-checkout btn-form">📝 Remplir le formulaire</button>
+    <a href="${whatsappUrl}" target="_blank" class="btn-checkout btn-whatsapp">
+      💬 Acheter via WhatsApp
+    </a>
+    <button onclick="openOrderModal()" class="btn-checkout btn-form">
+      📝 Remplir le formulaire
+    </button>
   `;
 }
 
-// Les fonctions de la modale restent identiques à ton code original...
-function openOrderModal() { document.getElementById('form-modal').classList.add('active'); }
-function closeOrderModal() { document.getElementById('form-modal').classList.remove('active'); }
+function openOrderModal() {
+  const cart = getCart();
+  if (cart.length === 0) {
+    alert('Votre panier est vide');
+    return;
+  }
+  document.getElementById('form-modal').classList.add('active');
+}
 
-window.submitOrder = function() {
-  const details = {
-    name: document.getElementById('form-name').value,
-    phone: document.getElementById('form-phone').value,
-    city: document.getElementById('form-city').value,
-    address: document.getElementById('form-address').value,
-    notes: document.getElementById('form-notes').value
+function closeOrderModal() {
+  document.getElementById('form-modal').classList.remove('active');
+}
+
+function submitOrder() {
+  const name = document.getElementById('form-name').value.trim();
+  const phone = document.getElementById('form-phone').value.trim();
+  const city = document.getElementById('form-city').value.trim();
+  const address = document.getElementById('form-address').value.trim();
+  const notes = document.getElementById('form-notes').value.trim();
+  
+  if (!name || !phone || !city || !address) {
+    alert('Veuillez remplir tous les champs obligatoires');
+    return;
+  }
+  
+  const cart = getCart();
+  if (cart.length === 0) {
+    alert('Votre panier est vide');
+    return;
+  }
+  
+  const total = getCartTotal();
+  
+  // Save order to admin dashboard
+  const order = {
+    id: Date.now(),
+    timestamp: Date.now(),
+    name: name,
+    phone: phone,
+    city: city,
+    address: address,
+    notes: notes,
+    items: cart.map(i => ({
+      name: i.name,
+      price: i.price,
+      quantity: i.quantity,
+      options: i.options
+    })),
+    itemCount: cart.reduce((sum, i) => sum + i.quantity, 0),
+    total: total
   };
   
-  if (window.finalizeCheckout) {
-    window.finalizeCheckout(details);
-  }
-};
+  // Save to admin orders
+  saveAdminOrder(order);
+  
+  // Clear form
+  document.getElementById('form-name').value = '';
+  document.getElementById('form-phone').value = '';
+  document.getElementById('form-city').value = '';
+  document.getElementById('form-address').value = '';
+  document.getElementById('form-notes').value = '';
+  
+  // Close modal
+  closeOrderModal();
+  
+  // Store order data in sessionStorage for confirmation page
+  sessionStorage.setItem('nova_confirmation_order', JSON.stringify(order));
+  
+  // Clear cart before redirecting
+  clearCart();
+  
+  // Redirect to confirmation page
+  window.location.href = '/confirmation.html';
+}
 
+function saveAdminOrder(order) {
+  try {
+    const orders = localStorage.getItem('nova_style_orders');
+    const allOrders = orders ? JSON.parse(orders) : [];
+    allOrders.push(order);
+    localStorage.setItem('nova_style_orders', JSON.stringify(allOrders));
+    console.log('✅ Commande sauvegardée:', order);
+  } catch (e) {
+    console.error('Error saving order:', e);
+  }
+}
+
+function continueShopping() {
+  window.location.href = '/categorie/sdb-premium/';
+}
+
+// Close modal when clicking outside
+document.getElementById('form-modal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeOrderModal();
+  }
+});
+
+// Prevent form from closing when clicking inside it
+const modalContent = document.querySelector('.modal-content');
+if (modalContent) {
+  modalContent.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+}
+
+// Render cart on load
 document.addEventListener('DOMContentLoaded', renderCart);
 </script>
+
+</body>
+</html>
