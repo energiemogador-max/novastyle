@@ -1327,7 +1327,7 @@ async function loadDraftProducts() {
             max: Number(v.price_max) || Number(v.price_min) || 0,
           },
           category: v.category || '',
-          image: v.images?.[0] || `/assets/images/${slug}/1.webp`,
+          image: v.images?.[0] || `/images/${slug}/1.webp`,
           // Preserve options/variants for option picker modal
           options: v.axes
             ? Object.fromEntries(
@@ -1362,8 +1362,8 @@ function renderDraftProductList(list) {
     const priceStr = p.price
       ? (p.price.min === p.price.max ? `${Number(p.price.min).toLocaleString('fr-MA')} MAD` : `${Number(p.price.min).toLocaleString('fr-MA')} – ${Number(p.price.max).toLocaleString('fr-MA')} MAD`)
       : 'Prix sur demande';
-    // Normalise legacy /images/slug/default.webp → /assets/images/slug/1.webp
-    const rawImg = p.image || `/assets/images/${p.id}/1.webp`;
+    // Normalise legacy /images/slug/default.webp → /images/slug/1.webp
+    const rawImg = p.image || `/images/${p.id}/1.webp`;
     const imgSrc = rawImg
       .replace(/^\/images\//, '/assets/images/')
       .replace(/\/default\.webp$/, '/1.webp');
@@ -1419,7 +1419,7 @@ window.draftPickProduct = async function(productId) {
       options: result.options,
       price: result.price || basePrice,
       quantity: 1,
-      image: `/assets/images/${productId}/1.webp`,
+      image: `/images/${productId}/1.webp`,
     });
   } else {
     addDraftItem({
@@ -1428,7 +1428,7 @@ window.draftPickProduct = async function(productId) {
       name: p.name,
       price: basePrice,
       quantity: 1,
-      image: `/assets/images/${productId}/1.webp`,
+      image: `/images/${productId}/1.webp`,
     });
   }
 };

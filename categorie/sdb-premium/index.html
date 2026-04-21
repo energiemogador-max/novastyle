@@ -186,7 +186,7 @@
       grid.innerHTML = products.map(function(p, i){
         var slug  = p.id || p.slug || '';
         var name  = p.name || '';
-        var img   = p.image || ('/assets/images/' + slug + '/1.webp');
+        var img   = p.image || ('/images/' + slug + '/1.webp');
         // Handle both {min,max} and scalar price
         var priceObj = p.price;
         var priceLabel = '';

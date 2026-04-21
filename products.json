@@ -1,164 +1,604 @@
 {
   "products": [
     {
-      "id": "miroir-anfa-essentiel",
-      "name": "Miroir Anfa Essentiel",
-      "price": {
-        "min": 1200,
-        "max": 1200
-      },
+      "id": "#U0645#U0631#U0623#U0629-#U0627#U0644#U062d#U0645#U0627#U0645-nova-style-miroir-anfa-half",
+      "name": "مرأة الحمام Nova Style : Miroir ANFA HALF",
+      "price": "460 MAD",
       "category": "Miroirs SDB",
-      "image": "/assets/images/miroir-anfa-essentiel/1.webp"
+      "image": "/images/مرأة-الحمام-nova-style-miroir-anfa-half/1.webp",
+      "url": "/produits/#U0645#U0631#U0623#U0629-#U0627#U0644#U062d#U0645#U0627#U0645-nova-style-miroir-anfa-half/"
     },
     {
-      "id": "nova-style-miroir-bloom",
-      "name": "Miroir Bloom LED",
-      "price": {
-        "min": 2500,
-        "max": 2500
-      },
-      "category": "Miroirs SDB Premium",
-      "image": "/assets/images/nova-style-miroir-bloom/1.webp"
-    },
-    {
-      "id": "nova-style-miroir-halo",
-      "name": "Miroir Halo LED Rétroéclairé",
-      "price": {
-        "min": 3200,
-        "max": 3200
-      },
-      "category": "Miroirs SDB Premium",
-      "image": "/assets/images/nova-style-miroir-halo/1.webp"
-    },
-    {
-      "id": "nova-style-miroir-pebble",
-      "name": "Miroir Pebble LED",
-      "price": {
-        "min": 2800,
-        "max": 2800
-      },
-      "category": "Miroirs SDB Premium",
-      "image": "/assets/images/nova-style-miroir-pebble/1.webp"
-    },
-    {
-      "id": "nova-style-miroir-vega",
-      "name": "Miroir Vega LED",
-      "price": {
-        "min": 2600,
-        "max": 2600
-      },
-      "category": "Miroirs SDB Premium",
-      "image": "/assets/images/nova-style-miroir-vega/1.webp"
-    },
-    {
-      "id": "miroir-eclipse-essentiel",
-      "name": "Miroir Eclipse Essentiel",
-      "price": {
-        "min": 1400,
-        "max": 1400
-      },
+      "id": "#U0645#U0631#U0627#U064a#U0627-#U062d#U0645#U0627#U0645-nova-style-miroir-pentagone",
+      "name": "مرايا حمام Nova Style : Miroir PENTAGONE",
+      "price": "460 MAD",
       "category": "Miroirs SDB",
-      "image": "/assets/images/miroir-eclipse-essentiel/1.webp"
+      "image": "/images/مرايا-حمام-nova-style-miroir-pentagone/1.webp",
+      "url": "/produits/#U0645#U0631#U0627#U064a#U0627-#U062d#U0645#U0627#U0645-nova-style-miroir-pentagone/"
     },
     {
-      "id": "nova-style-miroir-vortex",
-      "name": "Miroir Vortex Salon",
-      "price": {
-        "min": 1800,
-        "max": 1800
-      },
-      "category": "Salon & Dressing",
-      "image": "/assets/images/nova-style-miroir-vortex/1.webp"
-    },
-    {
-      "id": "deco-miroir-mural-nova-style-miroir-rital",
-      "name": "Miroir Rital Décoration",
-      "price": {
-        "min": 2200,
-        "max": 2200
-      },
-      "category": "Salon & Dressing",
-      "image": "/assets/images/deco-miroir-mural-nova-style-miroir-rital/1.webp"
+      "id": "#U0645#U0631#U0627#U064a#U0627-nova-style-miroir-elios",
+      "name": "مرايا Nova Style : Miroir ELIOS",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/مرايا-nova-style-miroir-elios/1.webp",
+      "url": "/produits/#U0645#U0631#U0627#U064a#U0627-nova-style-miroir-elios/"
     },
     {
       "id": "consol-et-miroir-nova-style-ensemble",
-      "name": "Console et Miroir Ensemble",
-      "price": {
-        "min": 3500,
-        "max": 3500
-      },
+      "name": "Consol et miroir NOVA STYLE : Élégance Stylish",
+      "price": "",
       "category": "Consoles & Entrée",
-      "image": "/assets/images/consol-et-miroir-nova-style-ensemble/1.webp"
+      "image": "/images/consol-et-miroir-nova-style-ensemble/1.webp",
+      "url": "/produits/consol-et-miroir-nova-style-ensemble/"
+    },
+    {
+      "id": "deco-miroir-mural-nova-style-miroir-rital",
+      "name": "Deco miroir mural Nova Style : Miroir RITAL",
+      "price": "650 MAD",
+      "category": "Salon & Dressing",
+      "image": "/images/deco-miroir-mural-nova-style-miroir-rital/1.webp",
+      "url": "/produits/deco-miroir-mural-nova-style-miroir-rital/"
     },
     {
       "id": "douche-italienne-en-forme-droite",
-      "name": "Douche Italienne Forme Droite",
-      "price": {
-        "min": 4200,
-        "max": 4200
-      },
+      "name": "Douche italienne en forme droite",
+      "price": "",
       "category": "Douches Italiennes",
-      "image": "/assets/images/douche-italienne-en-forme-droite/1.webp"
+      "image": "/images/douche-italienne-en-forme-droite/1.webp",
+      "url": "/produits/douche-italienne-en-forme-droite/"
     },
     {
       "id": "douche-italienne-en-l-verre-trempe",
-      "name": "Douche Italienne Forme L",
-      "price": {
-        "min": 5100,
-        "max": 5100
-      },
+      "name": "devis douche italienne en verre trempé TYPE L: Personnalisez votre douche à l&#3",
+      "price": "",
       "category": "Douches Italiennes",
-      "image": "/assets/images/douche-italienne-en-l-verre-trempe/1.webp"
+      "image": "/images/douche-italienne-en-l-verre-trempe/1.webp",
+      "url": "/produits/douche-italienne-en-l-verre-trempe/"
+    },
+    {
+      "id": "magasin-miroir-casablanca-nova-style-miroir-eclipse",
+      "name": "Magasin miroir casablanca nova Style : Miroir ÉCLIPSE",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/magasin-miroir-casablanca-nova-style-miroir-eclipse/1.webp",
+      "url": "/produits/magasin-miroir-casablanca-nova-style-miroir-eclipse/"
+    },
+    {
+      "id": "miroir-anfa-essentiel",
+      "name": "Miroir pas cher au maroc ANFA essentiel",
+      "price": "",
+      "category": "Miroirs SDB",
+      "image": "/images/miroir-anfa-essentiel/1.webp",
+      "url": "/produits/miroir-anfa-essentiel/"
     },
     {
       "id": "miroir-avec-cadre-nova-style-miroir-rectangulaire-cm",
-      "name": "Miroir Rectangulaire Cadre CM",
-      "price": {
-        "min": 1900,
-        "max": 1900
-      },
+      "name": "Miroir avec cadre nova Style : Miroir Rectangulaire CM",
+      "price": "460 MAD",
       "category": "Miroirs SDB",
-      "image": "/assets/images/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/1.webp"
+      "image": "/images/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/1.webp",
+      "url": "/produits/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/"
+    },
+    {
+      "id": "miroir-eclipse-essentiel",
+      "name": "Miroir pas cher avec led ECLIPSE essentiel",
+      "price": "",
+      "category": "Miroirs SDB",
+      "image": "/images/miroir-eclipse-essentiel/1.webp",
+      "url": "/produits/miroir-eclipse-essentiel/"
+    },
+    {
+      "id": "miroir-gale-salle-de-bain-led-antibuee-anticorrosion",
+      "name": "Miroir de salle de bain au Maroc - Galet Antibuée & Anticorrosion",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/1.webp",
+      "url": "/produits/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/"
+    },
+    {
+      "id": "miroir-magnum-essentiel",
+      "name": "Miroir pas cher MAGNUM essentiel",
+      "price": "",
+      "category": "Miroirs SDB",
+      "image": "/images/miroir-magnum-essentiel/1.webp",
+      "url": "/produits/miroir-magnum-essentiel/"
+    },
+    {
+      "id": "miroir-maroc-nova-style-miroir-anfa",
+      "name": "Miroir maroc nova style : Miroir ANFA",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/miroir-maroc-nova-style-miroir-anfa/1.webp",
+      "url": "/produits/miroir-maroc-nova-style-miroir-anfa/"
+    },
+    {
+      "id": "miroir-marrakech-nova-style-miroir-celia",
+      "name": "Miroir marrakech CELIA Nova Style",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/miroir-marrakech-nova-style-miroir-celia/1.webp",
+      "url": "/produits/miroir-marrakech-nova-style-miroir-celia/"
+    },
+    {
+      "id": "miroir-rectangulaire-bright-ii",
+      "name": "Miroir Rectangulaire Bright II",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/miroir-rectangulaire-bright-ii/1.webp",
+      "url": "/produits/miroir-rectangulaire-bright-ii/"
+    },
+    {
+      "id": "miroir-salle-de-bain-nova-style-miroir-pear-ii-cm",
+      "name": "miroir salle de bain Nova Style : Miroir PEAR II CM",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/1.webp",
+      "url": "/produits/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/"
     },
     {
       "id": "miroire-nova-style-miroir-horizon",
-      "name": "Miroir Horizon LED",
-      "price": {
-        "min": 2400,
-        "max": 2400
-      },
+      "name": "Miroire de nova Style : Miroir Horizon",
+      "price": "500 MAD",
       "category": "Miroirs SDB Premium",
-      "image": "/assets/images/miroire-nova-style-miroir-horizon/1.webp"
+      "image": "/images/miroire-nova-style-miroir-horizon/1.webp",
+      "url": "/produits/miroire-nova-style-miroir-horizon/"
     },
     {
-      "id": "nova-style-miroir-magnum",
-      "name": "Miroir Magnum Premium",
-      "price": {
-        "min": 3800,
-        "max": 3800
-      },
-      "category": "Miroirs SDB Premium",
-      "image": "/assets/images/nova-style-miroir-magnum/1.webp"
+      "id": "nova-style-deux-miroirs-anfa-medina",
+      "name": "miroir salle de bain avec led Nova Style : Deux Miroirs Anfa & Medina",
+      "price": "460 MAD",
+      "category": "Salon & Dressing",
+      "image": "/images/nova-style-deux-miroirs-anfa-medina/1.webp",
+      "url": "/produits/nova-style-deux-miroirs-anfa-medina/"
+    },
+    {
+      "id": "nova-style-deux-miroirs-triples",
+      "name": "Nova Style : Trois Miroirs TRIPLES",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-deux-miroirs-triples/1.webp",
+      "url": "/produits/nova-style-deux-miroirs-triples/"
+    },
+    {
+      "id": "nova-style-ensemble-console-et-miroir",
+      "name": "NOVA STYLE : Ensemble Console et Miroir",
+      "price": "",
+      "category": "Consoles & Entrée",
+      "image": "/images/nova-style-ensemble-console-et-miroir/1.webp",
+      "url": "/produits/nova-style-ensemble-console-et-miroir/"
+    },
+    {
+      "id": "nova-style-ensemble-meuble-et-miroir-retroeclaire",
+      "name": "Nova Style : Ensemble Meuble et Miroir rétroéclairé",
+      "price": "",
+      "category": "Consoles & Entrée",
+      "image": "/images/nova-style-ensemble-meuble-et-miroir-retroeclaire/1.webp",
+      "url": "/produits/nova-style-ensemble-meuble-et-miroir-retroeclaire/"
+    },
+    {
+      "id": "nova-style-miroir-anfa-cm",
+      "name": "Nova Style : Miroir ANFA CM - Miroir Salle de Bain avec Cadre",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-anfa-cm/1.webp",
+      "url": "/produits/nova-style-miroir-anfa-cm/"
+    },
+    {
+      "id": "nova-style-miroir-anfa-half-plus",
+      "name": "Nova Style : Miroir ANFA HALF PLUS",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-anfa-half-plus/1.webp",
+      "url": "/produits/nova-style-miroir-anfa-half-plus/"
+    },
+    {
+      "id": "nova-style-miroir-anfa-plus",
+      "name": "Nova Style : Miroir ANFA PLUS",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-anfa-plus/1.webp",
+      "url": "/produits/nova-style-miroir-anfa-plus/"
     },
     {
       "id": "nova-style-miroir-archway",
-      "name": "Miroir Archway Design",
-      "price": {
-        "min": 2700,
-        "max": 2700
-      },
+      "name": "Nova Style : Miroir ARCHWAY Grand miroir de salon et dressing",
+      "price": "650 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-archway/1.webp",
+      "url": "/produits/nova-style-miroir-archway/"
+    },
+    {
+      "id": "nova-style-miroir-asymetrique",
+      "name": "Nova Style : Miroir Asymétrique",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-asymetrique/1.webp",
+      "url": "/produits/nova-style-miroir-asymetrique/"
+    },
+    {
+      "id": "nova-style-miroir-azalee",
+      "name": "miroir salle de bain avec cadre de Nova Style : Miroir Azalée",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-azalee/1.webp",
+      "url": "/produits/nova-style-miroir-azalee/"
+    },
+    {
+      "id": "nova-style-miroir-bloom",
+      "name": "Salle de bain Nova Style : Miroir BLOOM",
+      "price": "460 MAD",
       "category": "Miroirs SDB Premium",
-      "image": "/assets/images/nova-style-miroir-archway/1.webp"
+      "image": "/images/nova-style-miroir-bloom/1.webp",
+      "url": "/produits/nova-style-miroir-bloom/"
+    },
+    {
+      "id": "nova-style-miroir-cloud",
+      "name": "Nova Style : Miroir CLOUD",
+      "price": "650 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-cloud/1.webp",
+      "url": "/produits/nova-style-miroir-cloud/"
+    },
+    {
+      "id": "nova-style-miroir-croissant-de-lune-ii-finition-noyer",
+      "name": "Nova Style : Miroir Croissant de lune II Finition Noyer",
+      "price": "650 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-croissant-de-lune-ii-finition-noyer/1.webp",
+      "url": "/produits/nova-style-miroir-croissant-de-lune-ii-finition-noyer/"
+    },
+    {
+      "id": "nova-style-miroir-croissant-de-lune-ii",
+      "name": "Nova Style : Miroir Croissant de lune II",
+      "price": "650 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-croissant-de-lune-ii/1.webp",
+      "url": "/produits/nova-style-miroir-croissant-de-lune-ii/"
+    },
+    {
+      "id": "nova-style-miroir-croissant-de-lune",
+      "name": "Nova Style : Miroir Croissant de lune",
+      "price": "650 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-croissant-de-lune/1.webp",
+      "url": "/produits/nova-style-miroir-croissant-de-lune/"
+    },
+    {
+      "id": "nova-style-miroir-double-cercle",
+      "name": "Nova Style : Miroir double cercle",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-double-cercle/1.webp",
+      "url": "/produits/nova-style-miroir-double-cercle/"
+    },
+    {
+      "id": "nova-style-miroir-drizzle",
+      "name": "Nova Style : Miroir DRIZZLE",
+      "price": "650 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-drizzle/1.webp",
+      "url": "/produits/nova-style-miroir-drizzle/"
+    },
+    {
+      "id": "nova-style-miroir-dunes",
+      "name": "Nova Style : Miroir DUNES",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-dunes/1.webp",
+      "url": "/produits/nova-style-miroir-dunes/"
+    },
+    {
+      "id": "nova-style-miroir-eclipse-bright",
+      "name": "Nova Style : Miroir ÉCLIPSE BRIGHT",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-eclipse-bright/1.webp",
+      "url": "/produits/nova-style-miroir-eclipse-bright/"
+    },
+    {
+      "id": "nova-style-miroir-eclipse-cm",
+      "name": "Nova Style : Miroir ÉCLIPSE CM",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-eclipse-cm/1.webp",
+      "url": "/produits/nova-style-miroir-eclipse-cm/"
+    },
+    {
+      "id": "nova-style-miroir-elvis-woody",
+      "name": "Nova Style : Miroir ELVIS WOODY",
+      "price": "650 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-elvis-woody/1.webp",
+      "url": "/produits/nova-style-miroir-elvis-woody/"
+    },
+    {
+      "id": "nova-style-miroir-elvis",
+      "name": "Nova Style : Miroir ELVIS",
+      "price": "650 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-elvis/1.webp",
+      "url": "/produits/nova-style-miroir-elvis/"
+    },
+    {
+      "id": "nova-style-miroir-emeraude",
+      "name": "Nova Style : Miroir Emeraude",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-emeraude/1.webp",
+      "url": "/produits/nova-style-miroir-emeraude/"
+    },
+    {
+      "id": "nova-style-miroir-galet-2",
+      "name": "Nova Style : Miroir GALET 2",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-galet-2/1.webp",
+      "url": "/produits/nova-style-miroir-galet-2/"
+    },
+    {
+      "id": "nova-style-miroir-galet-vertical",
+      "name": "Nova Style : Miroir Galet Vertical",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-galet-vertical/1.webp",
+      "url": "/produits/nova-style-miroir-galet-vertical/"
+    },
+    {
+      "id": "nova-style-miroir-halo",
+      "name": "Miroir de salle de bain Nova Style : Miroir HALO",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-halo/1.webp",
+      "url": "/produits/nova-style-miroir-halo/"
+    },
+    {
+      "id": "nova-style-miroir-havana",
+      "name": "Nova Style : Miroir HAVANA",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-havana/1.webp",
+      "url": "/produits/nova-style-miroir-havana/"
+    },
+    {
+      "id": "nova-style-miroir-hawaii-sdb",
+      "name": "Nova Style : Miroir HAWAII SDB",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-hawaii-sdb/1.webp",
+      "url": "/produits/nova-style-miroir-hawaii-sdb/"
+    },
+    {
+      "id": "nova-style-miroir-hawaii",
+      "name": "Nova Style : Miroir HAWAII",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-hawaii/1.webp",
+      "url": "/produits/nova-style-miroir-hawaii/"
+    },
+    {
+      "id": "nova-style-miroir-iceberg",
+      "name": "Nova Style : Miroir ICEBERG",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-iceberg/1.webp",
+      "url": "/produits/nova-style-miroir-iceberg/"
+    },
+    {
+      "id": "nova-style-miroir-lightning",
+      "name": "Nova Style : Miroir Lightning",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-lightning/1.webp",
+      "url": "/produits/nova-style-miroir-lightning/"
+    },
+    {
+      "id": "nova-style-miroir-luxalight",
+      "name": "Nova Style : Miroir LUXALIGHT",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-luxalight/1.webp",
+      "url": "/produits/nova-style-miroir-luxalight/"
+    },
+    {
+      "id": "nova-style-miroir-magnum-sdb",
+      "name": "Nova Style : Miroir MAGNUM SDB",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-magnum-sdb/1.webp",
+      "url": "/produits/nova-style-miroir-magnum-sdb/"
+    },
+    {
+      "id": "nova-style-miroir-magnum",
+      "name": "Nova Style : Miroir MAGNUM",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-magnum/1.webp",
+      "url": "/produits/nova-style-miroir-magnum/"
+    },
+    {
+      "id": "nova-style-miroir-octogonal",
+      "name": "Nova Style : Miroir OCTAGONAL",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-octogonal/1.webp",
+      "url": "/produits/nova-style-miroir-octogonal/"
+    },
+    {
+      "id": "nova-style-miroir-pear-ii",
+      "name": "Nova Style : Miroir PEAR II",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-pear-ii/1.webp",
+      "url": "/produits/nova-style-miroir-pear-ii/"
+    },
+    {
+      "id": "nova-style-miroir-pear",
+      "name": "Nova Style : Miroir PEAR",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-pear/1.webp",
+      "url": "/produits/nova-style-miroir-pear/"
+    },
+    {
+      "id": "nova-style-miroir-pebble",
+      "name": "Miroir salle de bain maroc Nova Style : PEBBLE",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-pebble/1.webp",
+      "url": "/produits/nova-style-miroir-pebble/"
+    },
+    {
+      "id": "nova-style-miroir-pentagone-2",
+      "name": "Nova Style : Miroir PENTAGONE 2",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-pentagone-2/1.webp",
+      "url": "/produits/nova-style-miroir-pentagone-2/"
+    },
+    {
+      "id": "nova-style-miroir-rectangulaire-1",
+      "name": "Nova Style : Miroir RECTANGULAIRE",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-rectangulaire-1/1.webp",
+      "url": "/produits/nova-style-miroir-rectangulaire-1/"
+    },
+    {
+      "id": "nova-style-miroir-rectangulaire-bright",
+      "name": "Nova Style : Miroir Rectangulaire Bright",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-rectangulaire-bright/1.webp",
+      "url": "/produits/nova-style-miroir-rectangulaire-bright/"
+    },
+    {
+      "id": "nova-style-miroir-rectangulaire",
+      "name": "Nova Style : Miroir RECTANGULAIRE",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-rectangulaire/1.webp",
+      "url": "/produits/nova-style-miroir-rectangulaire/"
+    },
+    {
+      "id": "nova-style-miroir-rond",
+      "name": "Nova Style : Miroir ROND",
+      "price": "650 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-rond/1.webp",
+      "url": "/produits/nova-style-miroir-rond/"
+    },
+    {
+      "id": "nova-style-miroir-split",
+      "name": "Nova Style : Miroir Split",
+      "price": "650 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-split/1.webp",
+      "url": "/produits/nova-style-miroir-split/"
+    },
+    {
+      "id": "nova-style-miroir-sunrise",
+      "name": "Nova Style : Miroir SUNRISE",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-sunrise/1.webp",
+      "url": "/produits/nova-style-miroir-sunrise/"
+    },
+    {
+      "id": "nova-style-miroir-totem",
+      "name": "Nova Style : Miroir TOTEM",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-totem/1.webp",
+      "url": "/produits/nova-style-miroir-totem/"
+    },
+    {
+      "id": "nova-style-miroir-upside-down",
+      "name": "Nova Style : Deux Miroirs Upside-Down",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-upside-down/1.webp",
+      "url": "/produits/nova-style-miroir-upside-down/"
+    },
+    {
+      "id": "nova-style-miroir-vega",
+      "name": "Miroir de salle de bain casablanca Miroir VEGA",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-vega/1.webp",
+      "url": "/produits/nova-style-miroir-vega/"
+    },
+    {
+      "id": "nova-style-miroir-victoria",
+      "name": "Nova Style : Miroir VICTORIA",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/nova-style-miroir-victoria/1.webp",
+      "url": "/produits/nova-style-miroir-victoria/"
+    },
+    {
+      "id": "nova-style-miroir-vortex",
+      "name": "Miroir de salon Casablanca Nova Style : Miroir Vortex",
+      "price": "1250 MAD",
+      "category": "Salon & Dressing",
+      "image": "/images/nova-style-miroir-vortex/1.webp",
+      "url": "/produits/nova-style-miroir-vortex/"
+    },
+    {
+      "id": "nova-style-miroir-zenith",
+      "name": "Nova Style : Miroir ZENITH",
+      "price": "460 MAD",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-zenith/1.webp",
+      "url": "/produits/nova-style-miroir-zenith/"
+    },
+    {
+      "id": "table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm",
+      "name": "Table de Séjour en Bois de Hêtre et Verre Trempé",
+      "price": "880 MAD",
+      "category": "Tables de Séjour",
+      "image": "/images/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm/1.webp",
+      "url": "/produits/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm/"
     },
     {
       "id": "table-basse-de-sejour-en-bois-mdf-et-verre-trempe",
-      "name": "Table Basse Bois & Verre MDF",
-      "price": {
-        "min": 2100,
-        "max": 2100
-      },
+      "name": "Table BAMBOU",
+      "price": "980 MAD",
       "category": "Tables de Séjour",
-      "image": "/assets/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/1.webp"
+      "image": "/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/1.webp",
+      "url": "/produits/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/"
+    },
+    {
+      "id": "table-de-sejour-en-bois-mdf-et-verre-trempe",
+      "name": "Table de Séjour en Bois MDF et Verre Trempé",
+      "price": "880 MAD",
+      "category": "Tables de Séjour",
+      "image": "/images/table-de-sejour-en-bois-mdf-et-verre-trempe/1.webp",
+      "url": "/produits/table-de-sejour-en-bois-mdf-et-verre-trempe/"
+    },
+    {
+      "id": "مرأة-الحمام-nova-style-miroir-anfa-half",
+      "name": "مرأة الحمام Nova Style : Miroir ANFA HALF",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/مرأة-الحمام-nova-style-miroir-anfa-half/1.jpg",
+      "url": "/produits/مرأة-الحمام-nova-style-miroir-anfa-half/"
+    },
+    {
+      "id": "مرايا-nova-style-miroir-elios",
+      "name": "مرايا Nova Style : Miroir ELIOS",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/مرايا-nova-style-miroir-elios/1.jpg",
+      "url": "/produits/مرايا-nova-style-miroir-elios/"
+    },
+    {
+      "id": "مرايا-حمام-nova-style-miroir-pentagone",
+      "name": "مرايا حمام Nova Style : Miroir PENTAGONE",
+      "price": "460 MAD",
+      "category": "Miroirs SDB",
+      "image": "/images/مرايا-حمام-nova-style-miroir-pentagone/1.jpg",
+      "url": "/produits/مرايا-حمام-nova-style-miroir-pentagone/"
     }
   ]
 }
