@@ -2156,15 +2156,39 @@
         const map = {};
         allCombos.forEach(combo => {
           const key = JSON.stringify(combo);
-          if (copied) { const match = copied.variants.find(v => axesConfig.axis_order.every(ax => v.axes[ax] === combo[ax])); map[key] = match ? match.price : 0; }
+          if (copied) {
+            // Try exact match first
+            let match = copied.variants.find(v => axesConfig.axis_order.every(ax => v.axes[ax] === combo[ax]));
+            // Try fuzzy match (matching other axes if Dimension differs)
+            if (!match) {
+              match = copied.variants.find(v => axesConfig.axis_order.every(ax => ax === "Dimension" || v.axes[ax] === combo[ax]));
+            }
+            map[key] = match ? match.price : 0;
+          }
           else map[key] = 0;
         });
         return map;
       };
+
       const [prices, setPrices] = useState(initPrices);
       const [bulkPercent, setBulkPercent] = useState(10);
 
       const updatePrice = (key, val) => { const n = parseFloat(val); setPrices(p => ({ ...p, [key]: isNaN(n) ? 0 : n })); };
+      
+      const smartFill = () => {
+        if (!copied) return;
+        setPrices(prev => {
+          const next = { ...prev };
+          allCombos.forEach(combo => {
+            const key = JSON.stringify(combo);
+            if (!next[key]) {
+              const match = copied.variants.find(v => axesConfig.axis_order.every(ax => ax === "Dimension" || v.axes[ax] === combo[ax]));
+              if (match) next[key] = match.price;
+            }
+          });
+          return next;
+        });
+      };
       
       const applyBulk = () => {
         setPrices(prev => {
@@ -2182,13 +2206,14 @@
 
       return (
         <div>
-          <div style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 10, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ fontSize: 11, color: "#666", fontWeight: 700, textTransform: "uppercase" }}>Mise à jour groupée :</div>
+          <div style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 10, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 11, color: "#666", fontWeight: 700, textTransform: "uppercase" }}>Actions :</div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <input type="number" style={{ background: "#111", border: "1px solid #333", color: "#fff", padding: "4px 8px", borderRadius: 6, width: 60, fontSize: 13 }} value={bulkPercent} onChange={e => setBulkPercent(+e.target.value)} />
               <span style={{ color: "#444", fontSize: 13 }}>%</span>
               <button onClick={applyBulk} style={{ background: "#333", color: "#eee", border: "1px solid #444", padding: "4px 12px", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Augmenter tout</button>
             </div>
+            {copied && <button onClick={smartFill} style={{ background: "#1a1a1a", color: "#e8194b", border: "1px solid #e8194b55", padding: "4px 12px", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>🪄 Remplir depuis référence</button>}
             <div style={{ marginLeft: "auto", fontSize: 10, color: "#444" }}>(Arrondi à 10 MAD)</div>
           </div>
 
