@@ -237,6 +237,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tab" data-tab="reviews">⭐ Avis<span class="tab-badge" id="reviews-tab-badge">0</span></div>
     <div class="tab" data-tab="products">🪞 Produits</div>
     <div class="tab" data-tab="import">🚀 Import</div>
+    <div class="tab" data-tab="nouveau">➕ Nouveau</div>
   </div>
 
   <!-- ═══ ORDERS ═══ -->
@@ -315,6 +316,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <option value="douches">Douches</option>
         </select>
         <span id="product-count" style="font-size:11px;color:#444;margin-left:auto"></span>
+        <button class="btn-primary" onclick="document.querySelector('.tab[data-tab=\'nouveau\']').click()" style="margin-left:12px;padding:6px 12px">➕ Nouveau</button>
       </div>
       <div id="product-grid" class="product-grid"><div class="reviews-loading">Chargement des produits…</div></div>
     </div>
@@ -359,11 +361,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
         <div id="reviews-stats" style="font-size:13px;color:#444">Cliquez Actualiser pour charger.</div>
       </div>
+    </div>
+  </div>
 
+  <!-- ═══ NOUVEAU PRODUIT ═══ -->
+  <div class="tab-panel" id="tab-nouveau">
+    <div id="nouveau-root">
+      <div class="reviews-loading">Initialisation du créateur de produit…</div>
     </div>
   </div>
 
 </div><!-- /admin-screen -->
+
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18",
+    "react-dom/client": "https://esm.sh/react-dom@18/client"
+  }
+}
+</script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
 <script type="module">
 import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -417,6 +435,7 @@ document.querySelectorAll(".tab").forEach(tab=>{
     tab.classList.add("active");
     document.getElementById("tab-"+tab.dataset.tab).classList.add("active");
     if(tab.dataset.tab==="products") loadProducts();
+    if(tab.dataset.tab==="nouveau") window.dispatchEvent(new CustomEvent("init-nouveau"));
   });
 });
 
@@ -843,5 +862,296 @@ async function loadImportStats(){
   }catch(e){el.innerHTML=`<span style="color:#e8194b">Erreur: ${esc(e.message)}</span>`;}
 }
 </script>
+<!-- React Mount Script -->
+<script type="text/babel">
+  const { useState, useCallback, useMemo, useEffect } = React;
+
+  // ─── Reference products ───────────────────────
+  const REFERENCE_PRODUCTS = {
+    "miroir-maroc-nova-style-miroir-anfa": {
+      label: "Miroir Anfa (SDB LED)",
+      axis_order: ["Dimension", "LED", "Installation"],
+      axes: {
+        Dimension: ["80 L x 140 H cm","80 L x 120 H cm","75 L x 130 H cm","60 L x 120 H cm","55 L x 110 H cm","50 L x 140 H cm","50 L x 100 H cm","45 L x 90 H cm"],
+        LED: ["Sans LED","6000K Blanc pur","4000K blanc lumière du jour","3000K Jaune","2000k Doré"],
+        Installation: ["Sans Installation","Avec Installation"]
+      },
+      variants: [
+        {axes:{Dimension:"80 L x 140 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:1050},
+        {axes:{Dimension:"80 L x 140 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1150},
+        {axes:{Dimension:"80 L x 140 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1150},
+        {axes:{Dimension:"80 L x 140 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1250},
+        {axes:{Dimension:"80 L x 140 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1150},
+        {axes:{Dimension:"80 L x 140 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1250},
+        {axes:{Dimension:"80 L x 140 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1150},
+        {axes:{Dimension:"80 L x 140 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1250},
+        {axes:{Dimension:"80 L x 140 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:1150},
+        {axes:{Dimension:"80 L x 140 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:1250},
+        {axes:{Dimension:"80 L x 120 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:950},
+        {axes:{Dimension:"80 L x 120 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1050},
+        {axes:{Dimension:"80 L x 120 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1050},
+        {axes:{Dimension:"80 L x 120 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1150},
+        {axes:{Dimension:"80 L x 120 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1050},
+        {axes:{Dimension:"80 L x 120 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1150},
+        {axes:{Dimension:"80 L x 120 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1050},
+        {axes:{Dimension:"80 L x 120 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1150},
+        {axes:{Dimension:"80 L x 120 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:1050},
+        {axes:{Dimension:"80 L x 120 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:1150},
+        {axes:{Dimension:"75 L x 130 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:900},
+        {axes:{Dimension:"75 L x 130 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1000},
+        {axes:{Dimension:"75 L x 130 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1000},
+        {axes:{Dimension:"75 L x 130 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1100},
+        {axes:{Dimension:"75 L x 130 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1000},
+        {axes:{Dimension:"75 L x 130 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1100},
+        {axes:{Dimension:"75 L x 130 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1000},
+        {axes:{Dimension:"75 L x 130 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1100},
+        {axes:{Dimension:"75 L x 130 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:1000},
+        {axes:{Dimension:"75 L x 130 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:1100}
+      ]
+    },
+    "nova-style-miroir-rectangulaire-bright": {
+      label: "Rectangulaire Bright (LED)",
+      axis_order: ["Dimension", "LED", "Installation"],
+      axes: {
+        Dimension: ["80 X 60 cm","80 X 80 cm","80 X 100 cm","120 X 80 cm","140 X 95 cm","150 X 100 cm","155 X 105 cm","160 X 110 cm","170 X 95 cm","200 X 110 cm"],
+        LED: ["6000K Blanc pur","4000K blanc lumière du jour","3000K Jaune","2000K Doré"],
+        Installation: ["Sans Installation","Avec Installation"]
+      },
+      variants: [
+        {axes:{Dimension:"80 X 60 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:800},
+        {axes:{Dimension:"80 X 60 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:900},
+        {axes:{Dimension:"120 X 80 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1200},
+        {axes:{Dimension:"120 X 80 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1300}
+      ]
+    },
+    "nova-style-deux-miroirs-anfa-medina": {
+      label: "Deux Miroirs Anfa & Medina",
+      axis_order: ["Dimension", "LED", "Installation"],
+      axes: {
+        Dimension: ["65 L cm x 125 H cm + 60 L cm x 125 H cm","60 L x 110 H cm +55 L x 110 H cm"],
+        LED: ["Sans LED","6000K Blanc pur","4000K blanc lumière du jour","3000K Jaune","2000K Doré"],
+        Installation: ["Sans Installation","Avec Installation"]
+      },
+      variants: [
+        {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:1250}
+      ]
+    }
+  };
+
+  const CATEGORIES = ["Miroirs SDB Premium","Miroirs SDB Essentiel","Salon & Dressing","Consoles & Entrée","Douches Italiennes","Tables de Séjour"];
+  const DB = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
+  const slug = (s) => s.toLowerCase().replace(/[àâä]/g,"a").replace(/[éèêë]/g,"e").replace(/[îï]/g,"i").replace(/[ôö]/g,"o").replace(/[ùûü]/g,"u").replace(/[ç]/g,"c").replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");
+
+  function generateAllVariants(axes, axis_order) {
+    if (!axis_order.length) return [];
+    const result = [{}];
+    for (const axis of axis_order) {
+      const opts = axes[axis] || [];
+      const next = [];
+      for (const combo of result) {
+        for (const opt of opts) {
+          next.push({ ...combo, [axis]: opt });
+        }
+      }
+      result.splice(0, result.length, ...next);
+    }
+    return result;
+  }
+
+  function Stepper({ current }) {
+    const steps = ["Info","Copier","Axes","Prix","Exporter"];
+    return (
+      <div style={{ display:"flex", alignItems:"center", gap:0, marginBottom:32 }}>
+        {steps.map((s, i) => (
+          <div key={s} style={{ display:"flex", alignItems:"center", flex: i < steps.length-1 ? 1 : "none" }}>
+            <div style={{
+              width:32, height:32, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center",
+              background: i < current ? "#e8194b" : i === current ? "#e8194b" : "#1a1a1a",
+              border: i === current ? "2px solid #e8194b" : i < current ? "2px solid #e8194b" : "2px solid #333",
+              color: i <= current ? "#fff" : "#555", fontSize:12, fontWeight:800, flexShrink:0
+            }}>{i < current ? "✓" : i+1}</div>
+            <span style={{ marginLeft:8, fontSize:11, fontWeight:700, color: i === current ? "#fff" : i < current ? "#e8194b" : "#555", textTransform:"uppercase", letterSpacing:1, flexShrink:0 }}>{s}</span>
+            {i < steps.length-1 && <div style={{ flex:1, height:2, background: i < current ? "#e8194b" : "#1e1e1e", margin:"0 12px" }} />}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  function StepInfo({ data, onChange, onNext }) {
+    const [name, setName] = useState(data.name || "");
+    const [slugVal, setSlug] = useState(data.slug || "");
+    const [category, setCategory] = useState(data.category || CATEGORIES[0]);
+    const [desc, setDesc] = useState(data.desc || "");
+    const [seoTitle, setSeoTitle] = useState(data.seoTitle || "");
+    const [seoDesc, setSeoDesc] = useState(data.seoDesc || "");
+    const [imageCount, setImageCount] = useState(data.imageCount || 3);
+    const [autoSlug, setAutoSlug] = useState(!data.slug);
+    useEffect(() => { if (autoSlug) setSlug("nova-style-" + slug(name)); }, [name, autoSlug]);
+    const valid = name.trim() && slugVal.trim();
+    const next = () => { onChange({ name, slug: slugVal, category, desc, seoTitle, seoDesc, imageCount }); onNext(); };
+    const inp = { background:"#111", border:"1px solid #2a2a2a", color:"#f0f0f0", padding:"10px 14px", borderRadius:8, fontSize:14, outline:"none", width:"100%", boxSizing:"border-box" };
+    const lbl = { fontSize:10, color:"#555", textTransform:"uppercase", letterSpacing:"1.2px", fontWeight:700, marginBottom:6, display:"block" };
+    return (
+      <div>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:16 }}>
+          <div><label style={lbl}>Nom du produit *</label><input style={inp} value={name} onChange={e => setName(e.target.value)} /></div>
+          <div><label style={lbl}>Slug (URL) *</label><input style={inp} value={slugVal} onChange={e => { setAutoSlug(false); setSlug(e.target.value); }} /></div>
+        </div>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:16 }}>
+          <div><label style={lbl}>Catégorie</label><select style={inp} value={category} onChange={e => setCategory(e.target.value)}>{CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}</select></div>
+          <div><label style={lbl}>Images</label><input style={inp} type="number" value={imageCount} onChange={e => setImageCount(+e.target.value)} /></div>
+        </div>
+        <div style={{ marginBottom:16 }}><label style={lbl}>Description</label><textarea style={{...inp, minHeight:80}} value={desc} onChange={e => setDesc(e.target.value)} /></div>
+        <button onClick={next} disabled={!valid} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"12px 24px", borderRadius:8, fontWeight:800, cursor: valid?"pointer":"not-allowed" }}>Suivant →</button>
+      </div>
+    );
+  }
+
+  function StepCopy({ onNext, onBack }) {
+    const [selected, setSelected] = useState("");
+    return (
+      <div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:12, marginBottom:20 }}>
+          {Object.entries(REFERENCE_PRODUCTS).map(([key, p]) => (
+            <div key={key} onClick={() => setSelected(key)} style={{ background: selected === key ? "#1a0a0e" : "#141414", border: selected === key ? "2px solid #e8194b" : "1px solid #2a2a2a", borderRadius:10, padding:12, cursor:"pointer" }}>
+              <div style={{ fontWeight:800, fontSize:12, color: selected === key ? "#e8194b" : "#eee" }}>{p.label}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display:"flex", gap:12 }}>
+          <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#555", padding:"10px 20px", borderRadius:8 }}>Retour</button>
+          <button onClick={() => onNext(selected ? REFERENCE_PRODUCTS[selected] : null)} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"10px 24px", borderRadius:8, fontWeight:800 }}>{selected ? "Copier →" : "Passer →"}</button>
+        </div>
+      </div>
+    );
+  }
+
+  function StepAxes({ copied, onNext, onBack }) {
+    const [axisOrder, setAxisOrder] = useState(copied?.axis_order || ["Dimension"]);
+    const [axes, setAxes] = useState(() => { if (copied) return JSON.parse(JSON.stringify(copied.axes)); return { Dimension: [""] }; });
+    const updateOption = (ax, i, val) => { setAxes(a => ({ ...a, [ax]: a[ax].map((v, j) => j===i ? val : v) })); };
+    const addOption = (ax) => setAxes(a => ({ ...a, [ax]: [...a[ax], ""] }));
+    const totalVariants = axisOrder.reduce((acc, ax) => acc * (axes[ax]?.filter(v=>v.trim()).length || 1), 1);
+    return (
+      <div>
+        {axisOrder.map(ax => (
+          <div key={ax} style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:10, padding:14, marginBottom:10 }}>
+            <div style={{ fontWeight:800, fontSize:12, color:"#888", marginBottom:10 }}>{ax}</div>
+            <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
+              {axes[ax].map((v, i) => <input key={i} style={{ background:"#111", border:"1px solid #222", color:"#ccc", padding:"6px 10px", borderRadius:5, width:150 }} value={v} onChange={e => updateOption(ax, i, e.target.value)} />)}
+              <button onClick={() => addOption(ax)} style={{ background:"#1a1a1a", color:"#555", border:"1px dashed #333", padding:"6px 12px", borderRadius:5 }}>+ Option</button>
+            </div>
+          </div>
+        ))}
+        <div style={{ display:"flex", gap:12, marginTop:20 }}>
+          <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#555", padding:"10px 20px", borderRadius:8 }}>Retour</button>
+          <button onClick={() => onNext({ axis_order: axisOrder, axes: Object.fromEntries(Object.entries(axes).map(([k,v]) => [k, v.filter(x=>x.trim())])) })} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"10px 24px", borderRadius:8, fontWeight:800 }}>Suivant ({totalVariants} variantes) →</button>
+        </div>
+      </div>
+    );
+  }
+
+  function StepPrix({ axesConfig, copied, onNext, onBack }) {
+    const allCombos = useMemo(() => generateAllVariants(axesConfig.axes, axesConfig.axis_order), [axesConfig]);
+    const initPrices = () => {
+      const map = {};
+      allCombos.forEach(combo => {
+        const key = JSON.stringify(combo);
+        if (copied) { const match = copied.variants.find(v => axesConfig.axis_order.every(ax => v.axes[ax] === combo[ax])); map[key] = match ? match.price : 0; }
+        else map[key] = 0;
+      });
+      return map;
+    };
+    const [prices, setPrices] = useState(initPrices);
+    const updatePrice = (key, val) => { const n = parseFloat(val); setPrices(p => ({ ...p, [key]: isNaN(n) ? 0 : n })); };
+    return (
+      <div>
+        <div style={{ maxHeight:400, overflowY:"auto", border:"1px solid #1e1e1e", borderRadius:10 }}>
+          <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12 }}>
+            <thead style={{ background:"#141414", position:"sticky", top:0 }}>
+              <tr>{axesConfig.axis_order.map(ax => <th key={ax} style={{ padding:10, textAlign:"left", color:"#555" }}>{ax}</th>)}<th style={{ padding:10, textAlign:"right", color:"#555" }}>Prix MAD</th></tr>
+            </thead>
+            <tbody>
+              {allCombos.map(combo => {
+                const key = JSON.stringify(combo);
+                return <tr key={key} style={{ borderBottom:"1px solid #1a1a1a" }}>
+                  {axesConfig.axis_order.map(ax => <td key={ax} style={{ padding:10 }}>{combo[ax]}</td>)}
+                  <td style={{ padding:6, textAlign:"right" }}><input type="number" style={{ background:"#111", border:"1px solid #222", color:"#e8194b", padding:6, width:80, textAlign:"right" }} value={prices[key]||""} onChange={e => updatePrice(key, e.target.value)} /></td>
+                </tr>
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div style={{ display:"flex", gap:12, marginTop:20 }}>
+          <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#555", padding:"10px 20px", borderRadius:8 }}>Retour</button>
+          <button onClick={() => onNext(prices, allCombos)} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"10px 24px", borderRadius:8, fontWeight:800 }}>Exporter →</button>
+        </div>
+      </div>
+    );
+  }
+
+  function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
+    const [saving, setSaving] = useState(false);
+    const [saved, setSaved] = useState(false);
+    const variants = allCombos.map(combo => ({ axes: combo, price: prices[JSON.stringify(combo)] || 0, sku: "" }));
+    const pm = Math.min(...variants.map(v=>v.price).filter(p=>p>0), 0);
+    const pX = Math.max(...variants.map(v=>v.price).filter(p=>p>0), 0);
+    const catalogEntry = JSON.stringify({ title: info.name, slug: info.slug, category: info.category, active: true, images: [`/assets/images/${info.slug}/1.webp`], price_min: pm, price_max: pX, axis_order: axesConfig.axis_order, axes: axesConfig.axes, variants, description: info.desc }, null, 2);
+    const save = async () => {
+      setSaving(true);
+      try {
+        const res = await fetch(`${DB}/catalog/${info.slug}.json`, { method: "PUT", body: catalogEntry });
+        if (res.ok) setSaved(true);
+      } catch(e) { alert(e.message); }
+      setSaving(false);
+    };
+    const box = { background:"#0a0a0a", border:"1px solid #1e1e1e", padding:12, borderRadius:8, fontSize:10, color:"#7ec8e3", whiteSpace:"pre-wrap", marginTop:10, maxHeight:150, overflowY:"auto" };
+    return (
+      <div>
+        <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:10, padding:16, marginBottom:16 }}>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+            <div><div style={{ fontWeight:800, color:"#00c853", fontSize:13 }}>Enregistrer dans Firebase</div><div style={{ fontSize:11, color:"#555" }}>Le produit sera actif immédiatement.</div></div>
+            <button onClick={save} disabled={saving||saved} style={{ background: saved?"#00c853":"#e8194b", color:"#fff", border:"none", padding:"10px 20px", borderRadius:8, fontWeight:800 }}>{saving?"Enregistrement...":saved?"Enregistré !":"Sauvegarder"}</button>
+          </div>
+        </div>
+        <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:10, padding:16 }}>
+          <div style={{ fontWeight:800, fontSize:12, color:"#eee" }}>JSON Catalogue</div>
+          <div style={box}>{catalogEntry}</div>
+          <button onClick={() => navigator.clipboard.writeText(catalogEntry)} style={{ background:"#1a1a1a", color:"#888", border:"1px solid #2a2a2a", padding:"6px 12px", borderRadius:5, marginTop:10, fontSize:11 }}>Copier JSON</button>
+        </div>
+        <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#555", padding:"10px 20px", borderRadius:8, marginTop:20 }}>Retour</button>
+      </div>
+    );
+  }
+
+  function App() {
+    const [step, setStep] = useState(0);
+    const [info, setInfo] = useState({});
+    const [copied, setCopied] = useState(null);
+    const [axesConfig, setAxesConfig] = useState(null);
+    const [prices, setPrices] = useState(null);
+    const [allCombos, setAllCombos] = useState(null);
+    return (
+      <div style={{ color:"#f0f0f0", padding:"20px 0" }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24 }}>
+          <h2 style={{ fontSize:16, fontWeight:800, color:"#e8194b" }}>Créateur de Produit</h2>
+          <div style={{ fontSize:10, color:"#555", background:"#111", padding:"4px 10px", borderRadius:10, border:"1px solid #1e1e1e" }}>Étape {step+1} / 5</div>
+        </div>
+        <Stepper current={step} />
+        {step === 0 && <StepInfo data={info} onChange={setInfo} onNext={() => setStep(1)} />}
+        {step === 1 && <StepCopy onBack={() => setStep(0)} onNext={(ref) => { setCopied(ref); setStep(2); }} />}
+        {step === 2 && <StepAxes copied={copied} onBack={() => setStep(1)} onNext={(cfg) => { setAxesConfig(cfg); setStep(3); }} />}
+        {step === 3 && <StepPrix axesConfig={axesConfig} copied={copied} onBack={() => setStep(2)} onNext={(p, combos) => { setPrices(p); setAllCombos(combos); setStep(4); }} />}
+        {step === 4 && <StepExport info={info} axesConfig={axesConfig} prices={prices} allCombos={allCombos} onBack={() => setStep(3)} />}
+      </div>
+    );
+  }
+
+  // Final Mount
+  const root = ReactDOM.createRoot(document.getElementById('nouveau-root'));
+  root.render(<App />);
+</script>
+
 </body>
 </html>
