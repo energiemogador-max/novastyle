@@ -371,16 +371,14 @@ window.printOrder = function(id, o) {
           Ce document fait office de bon de commande et de facture pro-forma.<br>
           ENERGIE MOGADOR — SARL AU au capital de 100.000 DH — RC 543343 Casablanca
         </div>
-
-        <script>
-          window.onload = function() {
-            setTimeout(() => { window.print(); }, 500);
-          };
-        <\/script>
       </body>
     </html>
   `);
   printWindow.document.close();
+  setTimeout(() => {
+    printWindow.focus();
+    printWindow.print();
+  }, 1000);
 }
 let prevCount=0;
 function startOrders(){
