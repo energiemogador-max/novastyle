@@ -770,12 +770,21 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
   const saveToFirebase = async () => {
     setSaving(true); setSaveErr(""); setSaved(false);
     try {
-      const res = await fetch(`${DB}/catalog/${info.slug}.json`, {
+      // Get Firebase auth token so the REST call passes the /catalog write rule
+      const fbAuth = window.__NOVA_FIREBASE__?.auth;
+      const currentUser = fbAuth?.currentUser;
+      if (!currentUser) throw new Error("Non authentifié — veuillez vous reconnecter.");
+      const token = await currentUser.getIdToken();
+
+      const res = await fetch(`${DB}/catalog/${info.slug}.json?auth=${token}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: catalogEntry
       });
-      if (!res.ok) throw new Error(`Firebase error ${res.status}`);
+      if (!res.ok) {
+        const msg = await res.text().catch(() => "");
+        throw new Error(`Firebase error ${res.status}${msg ? ": " + msg.slice(0, 120) : ""}`);
+      }
       setSaved(true);
     } catch(e) {
       setSaveErr(e.message);
