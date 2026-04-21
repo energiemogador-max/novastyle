@@ -111,6 +111,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .vis-device.mobile{color:#4da6ff;border-color:#4da6ff30}
 .vis-meta{font-size:10px;color:#444;white-space:nowrap;margin-left:auto}
 .no-visitors{padding:30px;text-align:center;color:#333;font-size:13px}
+.vis-location{font-size:10px;color:#4da6ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
+.vis-flag{margin-right:3px}
+.session-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.sess-card{background:#141414;border:1px solid #1e1e1e;border-radius:10px;padding:12px 14px;text-align:center}
+.sess-card .slbl{font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px;font-weight:700}
+.sess-card .sval{font-size:22px;font-weight:800;color:#4da6ff}
 .chart-wrap{padding:14px 16px}
 .chart-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .chart-bar-label{width:110px;font-size:11px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
@@ -256,6 +262,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <!-- ═══ VISITORS ═══ -->
   <div class="tab-panel" id="tab-visitors">
     <div class="container">
+
+      <!-- Session stats: daily / weekly / monthly -->
+      <div class="section-title" style="margin-bottom:10px">Sessions</div>
+      <div class="session-stats">
+        <div class="sess-card"><div class="slbl">Aujourd'hui</div><div class="sval" id="sess-daily">—</div></div>
+        <div class="sess-card"><div class="slbl">Cette semaine</div><div class="sval" id="sess-weekly">—</div></div>
+        <div class="sess-card"><div class="slbl">Ce mois</div><div class="sval" id="sess-monthly">—</div></div>
+      </div>
+
       <div class="visitors-grid">
         <div class="vis-panel">
           <div class="vis-panel-head"><span>Visiteurs actifs</span><span class="count" id="vis-count">0</span></div>
@@ -340,7 +355,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div style="font-size:12px;color:#888;line-height:1.7;margin-bottom:8px">
           Ouvrir <a href="https://console.firebase.google.com/project/nova-9ac76/database/nova-9ac76-default-rtdb/rules" target="_blank" style="color:#e8194b">Firebase Console → Realtime Database → Règles</a> et appliquer :
         </div>
-        <pre class="rules-pre" id="rules-code">{"rules":{".read":false,".write":false,"reviews":{".read":true,".write":"auth != null"},"pending_reviews":{".read":"auth != null",".write":true},"online_visitors":{".read":true,".write":true},"catalog":{".read":true,".write":"auth != null"},"products":{".read":true,".write":"auth != null"},"orders":{".read":"auth != null",".write":true}}}</pre>
+        <pre class="rules-pre" id="rules-code">{"rules":{".read":false,".write":false,"reviews":{".read":true,".write":"auth != null"},"pending_reviews":{".read":"auth != null",".write":true},"online_visitors":{".read":true,".write":true},"sessions":{".read":"auth != null",".write":true},"catalog":{".read":true,".write":"auth != null"},"products":{".read":true,".write":"auth != null"},"orders":{".read":"auth != null",".write":true}}}</pre>
         <button onclick="navigator.clipboard.writeText(document.getElementById('rules-code').textContent).then(()=>{this.textContent='✅ Copié !';setTimeout(()=>this.textContent='📋 Copier',2000)})"
           style="background:#1e1e1e;color:#aaa;border:1px solid #2a2a2a;padding:5px 12px;border-radius:5px;font-size:11px;cursor:pointer">📋 Copier</button>
       </div>
@@ -566,22 +581,85 @@ window.printOrder=function(id,o){
 
 // ── VISITORS ──────────────────────────────────────────────────────────────────
 function startVisitors(){
+  const STALE_MS=120000; // 2 minutes — remove entries that stopped heartbeating
   unsubVisitors=onValue(ref(db,"online_visitors"),snap=>{
-    const data=snap.val()||{},visitors=Object.values(data),count=visitors.length,withCart=visitors.filter(v=>v.cartCount>0).length;
+    const data=snap.val()||{};
+    const now=Date.now();
+    // Deduplicate: keyed by visitorId already in tracker, filter stale entries
+    const visitors=Object.values(data).filter(v=>v&&(now-(v.lastSeen||0))<STALE_MS);
+    const count=visitors.length;
+    const withCart=visitors.filter(v=>v.cartCount>0).length;
     document.getElementById("stat-visitors").textContent=count;
     document.getElementById("stat-cart").textContent=withCart;
     document.getElementById("vis-count").textContent=count;
     const listEl=document.getElementById("vis-list");
     if(!count){listEl.innerHTML="<div class='no-visitors'>Aucun visiteur en ce moment</div>";}
-    else{const sorted=[...visitors].sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));listEl.innerHTML=sorted.map(v=>`<div class="vis-row"><span class="vis-dot"></span><span class="vis-page">${esc(v.pageLabel||v.page||"—")}</span><span class="vis-device ${v.device==="Mobile"||v.device==="Tablette"?"mobile":""}">${esc(v.device||"—")}</span><div class="vis-meta">${esc(v.browser||"")} · ${esc(v.referrer||"")}${v.duration?` · ${formatDur(v.duration)}`:""}</div></div>`).join("");}
+    else{
+      const sorted=[...visitors].sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));
+      listEl.innerHTML=sorted.map(v=>{
+        const flagEmoji=v.country_code?String.fromCodePoint(...[...v.country_code.toUpperCase()].map(c=>127397+c.charCodeAt())):"";
+        const loc=v.city?`${flagEmoji} ${v.city}, ${v.country}`.trim():(v.country?`${flagEmoji} ${v.country}`.trim():"");
+        return `<div class="vis-row">
+          <span class="vis-dot"></span>
+          <span class="vis-page">${esc(v.pageLabel||v.page||"—")}</span>
+          ${loc?`<span class="vis-location" title="${esc(v.ip||"")}">${esc(loc)}</span>`:""}
+          <span class="vis-device ${v.device==="Mobile"||v.device==="Tablette"?"mobile":""}">${esc(v.device||"—")}</span>
+          <div class="vis-meta">${esc(v.browser||"")} · ${esc(v.referrer||"")}${v.duration?` · ${formatDur(v.duration)}`:""}</div>
+        </div>`;
+      }).join("");
+    }
     renderBarChart("vis-pages-chart",countBy(visitors,"pageLabel"),"#e8194b");
     renderBarChart("vis-devices-chart",countBy(visitors,"device"),"#4da6ff");
     renderBarChart("vis-sources-chart",countBy(visitors,"referrer"),"#00c853");
   },(err)=>{
-    // Visitors panel is non-critical; keep UI but surface error in console-like box
     const listEl=document.getElementById("vis-list");
     if(listEl) listEl.innerHTML=`<div class="no-visitors">Erreur Firebase: ${esc(err?.message||String(err))}</div>`;
   });
+
+  // ── Session stats (daily / weekly / monthly) ──
+  loadSessionStats();
+}
+
+async function loadSessionStats(){
+  try{
+    const now=new Date();
+    const todayStr=now.toISOString().slice(0,10);
+    // Fetch all session date keys (shallow)
+    const keysRes=await fetch(`${DB_REST}/sessions.json?shallow=true`);
+    if(!keysRes.ok) return;
+    const keys=await keysRes.json();
+    if(!keys) return;
+
+    const allDates=Object.keys(keys).sort();
+    const todayDate=new Date(todayStr);
+
+    // Daily: count sessions for today
+    let daily=0;
+    try{const r=await fetch(`${DB_REST}/sessions/${todayStr}.json?shallow=true`);if(r.ok){const d=await r.json();daily=d?Object.keys(d).length:0;}}catch{}
+
+    // Weekly: Mon–today
+    const dayOfWeek=todayDate.getDay();
+    const mondayOffset=dayOfWeek===0?6:dayOfWeek-1;
+    const weekStart=new Date(todayDate);weekStart.setDate(weekStart.getDate()-mondayOffset);
+    const weekStartStr=weekStart.toISOString().slice(0,10);
+    const weekDates=allDates.filter(d=>d>=weekStartStr&&d<=todayStr);
+    let weekly=0;
+    await Promise.all(weekDates.map(async d=>{
+      try{const r=await fetch(`${DB_REST}/sessions/${d}.json?shallow=true`);if(r.ok){const j=await r.json();weekly+=j?Object.keys(j).length:0;}}catch{}
+    }));
+
+    // Monthly: 1st of month to today
+    const monthStartStr=todayStr.slice(0,8)+"01";
+    const monthDates=allDates.filter(d=>d>=monthStartStr&&d<=todayStr);
+    let monthly=0;
+    await Promise.all(monthDates.map(async d=>{
+      try{const r=await fetch(`${DB_REST}/sessions/${d}.json?shallow=true`);if(r.ok){const j=await r.json();monthly+=j?Object.keys(j).length:0;}}catch{}
+    }));
+
+    document.getElementById("sess-daily").textContent=daily;
+    document.getElementById("sess-weekly").textContent=weekly;
+    document.getElementById("sess-monthly").textContent=monthly;
+  }catch(e){console.warn("Session stats error",e);}
 }
 
 // ── REVIEWS MODERATION ────────────────────────────────────────────────────────
