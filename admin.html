@@ -2162,9 +2162,36 @@
         return map;
       };
       const [prices, setPrices] = useState(initPrices);
+      const [bulkPercent, setBulkPercent] = useState(10);
+
       const updatePrice = (key, val) => { const n = parseFloat(val); setPrices(p => ({ ...p, [key]: isNaN(n) ? 0 : n })); };
+      
+      const applyBulk = () => {
+        setPrices(prev => {
+          const next = { ...prev };
+          Object.keys(next).forEach(k => {
+            const val = next[k] || 0;
+            if (val > 0) {
+              const newVal = val * (1 + bulkPercent / 100);
+              next[k] = Math.round(newVal / 10) * 10; // Round to nearest 10
+            }
+          });
+          return next;
+        });
+      };
+
       return (
         <div>
+          <div style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 10, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ fontSize: 11, color: "#666", fontWeight: 700, textTransform: "uppercase" }}>Mise à jour groupée :</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <input type="number" style={{ background: "#111", border: "1px solid #333", color: "#fff", padding: "4px 8px", borderRadius: 6, width: 60, fontSize: 13 }} value={bulkPercent} onChange={e => setBulkPercent(+e.target.value)} />
+              <span style={{ color: "#444", fontSize: 13 }}>%</span>
+              <button onClick={applyBulk} style={{ background: "#333", color: "#eee", border: "1px solid #444", padding: "4px 12px", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Augmenter tout</button>
+            </div>
+            <div style={{ marginLeft: "auto", fontSize: 10, color: "#444" }}>(Arrondi à 10 MAD)</div>
+          </div>
+
           <div style={{ maxHeight: 400, overflowY: "auto", border: "1px solid #1e1e1e", borderRadius: 10 }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
               <thead style={{ background: "#141414", position: "sticky", top: 0 }}>
