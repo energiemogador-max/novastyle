@@ -340,7 +340,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div style="font-size:12px;color:#888;line-height:1.7;margin-bottom:8px">
           Ouvrir <a href="https://console.firebase.google.com/project/nova-9ac76/database/nova-9ac76-default-rtdb/rules" target="_blank" style="color:#e8194b">Firebase Console → Realtime Database → Règles</a> et appliquer :
         </div>
-        <pre class="rules-pre" id="rules-code">{"rules":{".read":false,".write":false,"reviews":{".read":true,".write":"auth != null"},"pending_reviews":{".read":false,".write":true},"online_visitors":{".read":true,".write":true},"catalog":{".read":true,".write":"auth != null"},"products":{".read":true,".write":"auth != null"},"orders":{".read":false,".write":true}}}</pre>
+        <pre class="rules-pre" id="rules-code">{"rules":{".read":false,".write":false,"reviews":{".read":true,".write":"auth != null"},"pending_reviews":{".read":"auth != null",".write":true},"online_visitors":{".read":true,".write":true},"catalog":{".read":true,".write":"auth != null"},"products":{".read":true,".write":"auth != null"},"orders":{".read":"auth != null",".write":true}}}</pre>
         <button onclick="navigator.clipboard.writeText(document.getElementById('rules-code').textContent).then(()=>{this.textContent='✅ Copié !';setTimeout(()=>this.textContent='📋 Copier',2000)})"
           style="background:#1e1e1e;color:#aaa;border:1px solid #2a2a2a;padding:5px 12px;border-radius:5px;font-size:11px;cursor:pointer">📋 Copier</button>
       </div>
@@ -383,12 +383,24 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPe
 
 const firebaseConfig={apiKey:"AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",authDomain:"nova-9ac76.firebaseapp.com",projectId:"nova-9ac76",databaseURL:"https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app",storageBucket:"nova-9ac76.firebasestorage.app",messagingSenderId:"645613145752",appId:"1:645613145752:web:775e6f8ffce64ae12c4aed"};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
-await setPersistence(auth,browserSessionPersistence);
+// Avoid top-level await (some browsers/environments fail silently and the page appears stuck on "Connexion Firebase…")
+setPersistence(auth,browserSessionPersistence).catch(()=>{});
 
 const DB_REST="https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
 
 // Expose minimal Firebase helpers for the Babel/React tab
 window.__NOVA_FIREBASE__={db,ref,set,update,remove,get};
+
+// Show a visible error if the module fails after load
+window.addEventListener("error",(e)=>{
+  const el=document.getElementById("orders-display");
+  if(el && el.textContent.includes("Connexion Firebase")) el.innerHTML=`<div class="reviews-empty">Erreur JS: ${esc(e.message||"Script error")}</div>`;
+});
+window.addEventListener("unhandledrejection",(e)=>{
+  const el=document.getElementById("orders-display");
+  const msg=(e && e.reason && e.reason.message)?e.reason.message:String(e.reason||"Promise rejected");
+  if(el && el.textContent.includes("Connexion Firebase")) el.innerHTML=`<div class="reviews-empty">Erreur: ${esc(msg)}</div>`;
+});
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
@@ -524,6 +536,9 @@ function startOrders(){
     setStats(allOrders.length,rev,td);
     prevCount=allOrders.length;
     renderOrders(allOrders);
+  },(err)=>{
+    const el=document.getElementById("orders-display");
+    if(el) el.innerHTML=`<div class="reviews-empty">Erreur Firebase (orders): ${esc(err?.message||String(err))}</div>`;
   });
 }
 document.getElementById("order-search").addEventListener("input",()=>renderOrders(allOrders));
@@ -562,6 +577,10 @@ function startVisitors(){
     renderBarChart("vis-pages-chart",countBy(visitors,"pageLabel"),"#e8194b");
     renderBarChart("vis-devices-chart",countBy(visitors,"device"),"#4da6ff");
     renderBarChart("vis-sources-chart",countBy(visitors,"referrer"),"#00c853");
+  },(err)=>{
+    // Visitors panel is non-critical; keep UI but surface error in console-like box
+    const listEl=document.getElementById("vis-list");
+    if(listEl) listEl.innerHTML=`<div class="no-visitors">Erreur Firebase: ${esc(err?.message||String(err))}</div>`;
   });
 }
 
@@ -584,6 +603,12 @@ function watchPendingReviews(){
     statEl.textContent=count;
     // Also update filter count if reviews are loaded
     updateFilterCounts();
+  },(err)=>{
+    const badge=document.getElementById("reviews-tab-badge");
+    const statEl=document.getElementById("stat-pending-reviews");
+    if(badge){badge.textContent="!";badge.classList.add("show");}
+    if(statEl) statEl.textContent="!";
+    console.error(err);
   });
 }
 

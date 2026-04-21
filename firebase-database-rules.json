@@ -16,7 +16,7 @@
       }
     },
     "pending_reviews": {
-      ".read": false,
+      ".read": "auth != null",
       ".write": true
     },
     "online_visitors": {
@@ -32,7 +32,7 @@
       ".write": "auth != null"
     },
     "orders": {
-      ".read": false,
+      ".read": "auth != null",
       ".write": true
     }
   }
