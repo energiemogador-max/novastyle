@@ -2108,18 +2108,40 @@
 
     function StepCopy({ onNext, onBack }) {
       const [selected, setSelected] = useState("");
+      const [loading, setLoading] = useState(false);
+
+      const handleCopy = async () => {
+        if (!selected) { onNext(null); return; }
+        setLoading(true);
+        try {
+          // Fetch the full product data from Firebase to get REAL prices for ALL variants
+          const res = await fetch(`${DB}/catalog/${selected}.json`);
+          if (!res.ok) throw new Error("Erreur de chargement");
+          const data = await res.json();
+          onNext(data);
+        } catch (e) {
+          console.error(e);
+          // Fallback to hardcoded reference if fetch fails (unlikely)
+          onNext(REFERENCE_PRODUCTS[selected]);
+        }
+        setLoading(false);
+      };
+
       return (
         <div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 12, marginBottom: 20 }}>
             {Object.entries(REFERENCE_PRODUCTS).map(([key, p]) => (
               <div key={key} onClick={() => setSelected(key)} style={{ background: selected === key ? "#1a0a0e" : "#141414", border: selected === key ? "2px solid #e8194b" : "1px solid #2a2a2a", borderRadius: 10, padding: 12, cursor: "pointer" }}>
                 <div style={{ fontWeight: 800, fontSize: 12, color: selected === key ? "#e8194b" : "#eee" }}>{p.label}</div>
+                <div style={{ fontSize: 9, color: "#444", marginTop: 4 }}>ID: {key}</div>
               </div>
             ))}
           </div>
           <div style={{ display: "flex", gap: 12 }}>
             <button onClick={onBack} style={{ background: "none", border: "1px solid #2a2a2a", color: "#555", padding: "10px 20px", borderRadius: 8 }}>Retour</button>
-            <button onClick={() => onNext(selected ? REFERENCE_PRODUCTS[selected] : null)} style={{ background: "#e8194b", color: "#fff", border: "none", padding: "10px 24px", borderRadius: 8, fontWeight: 800 }}>{selected ? "Copier →" : "Passer →"}</button>
+            <button onClick={handleCopy} disabled={loading} style={{ background: "#e8194b", color: "#fff", border: "none", padding: "10px 24px", borderRadius: 8, fontWeight: 800 }}>
+              {loading ? "Chargement..." : selected ? "Copier les prix réels →" : "Passer →"}
+            </button>
           </div>
         </div>
       );
