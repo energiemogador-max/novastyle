@@ -23,6 +23,10 @@
       ".read": true,
       ".write": true
     },
+    "catalog": {
+      ".read": true,
+      ".write": "auth != null"
+    },
     "products": {
       ".read": true,
       ".write": "auth != null"
