@@ -395,10 +395,12 @@
     }
   }
 </style>
+<link rel="preconnect" href="https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 </head>
 <body>
 
-<script src="/assets/header.js"></script>
+<script src="/assets/header.js" defer></script>
 
 <div class="container">
   <div class="cart-header">
@@ -489,7 +491,7 @@
   </div>
 </div>
 
-<script src="/assets/footer.js"></script>
+<script src="/assets/footer.js" defer></script>
 
 <script type="module" src="/assets/cart.js"></script>
 <!-- cart.js exposes globals after the module executes; we poll until ready -->
