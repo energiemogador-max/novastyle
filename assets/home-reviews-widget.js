@@ -21,9 +21,21 @@ class NSHomeReviewsWidget extends HTMLElement {
         let flatReviews = [];
         // Flatten the structure: { productId: { reviewId: { ... } } }
         for (const [productId, reviews] of Object.entries(data)) {
-          for (const [reviewId, review] of Object.entries(reviews)) {
-            if (review.rating === 5 && review.approved !== false) {
-              flatReviews.push({ productId, reviewId, ...review });
+          if (typeof reviews !== 'object' || reviews === null) continue;
+          
+          for (const [reviewId, r] of Object.entries(reviews)) {
+            if (typeof r !== 'object' || r === null) continue;
+            
+            const rating = Number(r.rating) || 0;
+            if (rating === 5 && r.approved !== false) {
+              flatReviews.push({ 
+                productId, 
+                reviewId, 
+                name: r.name || "Client",
+                text: r.text || "",
+                date: r.date || new Date().toISOString(),
+                rating: rating
+              });
             }
           }
         }

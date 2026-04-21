@@ -22,9 +22,21 @@ class NSReviewsWidget extends HTMLElement {
       const data = await response.json();
       if (data) {
         // Convert object to array and sort by date descending
-        this.reviews = Object.keys(data).map(key => ({ id: key, ...data[key] }))
-          .filter(r => r.approved !== false)
-          .sort((a, b) => new Date(b.date) - new Date(a.date));
+        this.reviews = Object.keys(data).map(key => {
+          const r = data[key];
+          // Defensive check if r is an object
+          if (typeof r !== 'object' || r === null) return null;
+          return {
+            id: key,
+            name: r.name || "Client Anonyme",
+            rating: Number(r.rating) || 5,
+            text: r.text || "",
+            date: r.date || new Date().toISOString(),
+            approved: r.approved !== false
+          };
+        }).filter(r => r !== null && r.approved);
+        
+        this.reviews.sort((a, b) => new Date(b.date) - new Date(a.date));
       }
     } catch (error) {
       console.error("Error fetching reviews:", error);
@@ -33,16 +45,15 @@ class NSReviewsWidget extends HTMLElement {
 
   renderSkeleton() {
     this.innerHTML = `
-      <div class="ns-reviews-container">
-        <h2 style="font-size: 24px; color: #cc2366; margin-bottom: 20px;">Avis Clients</h2>
-        <p>Chargement des avis...</p>
+      <div class="ns-reviews-container" style="max-width: 1200px; margin: 40px auto; padding: 20px; text-align: center;">
+        <p style="color: #888;">Chargement des avis...</p>
       </div>
     `;
   }
 
   getAverageRating() {
     if (this.reviews.length === 0) return 0;
-    const sum = this.reviews.reduce((acc, curr) => acc + curr.rating, 0);
+    const sum = this.reviews.reduce((acc, curr) => acc + (Number(curr.rating) || 0), 0);
     return (sum / this.reviews.length).toFixed(1);
   }
 
