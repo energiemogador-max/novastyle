@@ -376,17 +376,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tab" data-tab="reviews">⭐ Avis<span class="tab-badge" id="reviews-tab-badge">0</span></div>
     <div class="tab" data-tab="products">🪞 Produits</div>
     <div class="tab" data-tab="newproduct">✨ Nouveau Produit</div>
-    <div class="tab" data-tab="draftorder">🛍️ Brouillon<span class="tab-badge" id="draft-tab-badge">0</span></div>
     <div class="tab" data-tab="import">🚀 Import</div>
   </div>
 
   <!-- ═══ ORDERS ═══ -->
   <div class="tab-panel active" id="tab-orders">
     <div class="container">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
         <div class="section-title">Commandes</div>
-        <div style="display:flex;gap:8px">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <input class="search-input" id="order-search" placeholder="🔍 Rechercher client, ville…" style="width:200px">
+          <button onclick="window.toggleAddOrderPanel()" style="background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px">
+            ➕ Ajouter une commande
+            <span id="draft-tab-badge" class="tab-badge" style="position:relative;top:0;right:0;background:rgba(255,255,255,.3);color:#fff;font-size:9px"></span>
+          </button>
         </div>
       </div>
       <div id="orders-display"><div class="loading">Connexion Firebase…</div></div>
@@ -480,15 +483,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 
-  <!-- ═══ DRAFT ORDERS ═══ -->
-  <div class="tab-panel" id="tab-draftorder">
+  <!-- ═══ DRAFT ORDERS (inline panel — triggered from orders tab) ═══ -->
+  <div id="tab-draftorder" style="display:none"><!-- kept for JS compat --></div>
+  <div id="inline-draft-panel" style="display:none;position:fixed;inset:0;z-index:200;overflow-y:auto;background:var(--bg);padding:20px 0">
     <div class="container" style="max-width:1200px">
 
       <!-- Top bar -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-        <div class="section-title" style="margin:0">Brouillon de commande</div>
+        <div class="section-title" style="margin:0">Ajouter une commande</div>
         <div style="display:flex;gap:8px">
           <button class="btn-secondary" id="btn-new-draft" onclick="window.startNewDraft()">+ Nouveau brouillon</button>
+          <button onclick="window.toggleAddOrderPanel()" style="background:#f3f4f6;color:#6b7280;border:1.5px solid #e5e7eb;padding:8px 14px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer">✕ Fermer</button>
         </div>
       </div>
 
@@ -503,6 +508,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <div class="draft-panel">
               <div class="draft-panel-head">
                 <span class="draft-panel-title">Ajouter des produits</span>
+                <button onclick="window.refreshDraftProducts()" title="Actualiser le catalogue" style="background:none;border:none;cursor:pointer;color:var(--text4);font-size:14px;padding:2px 4px" title="Actualiser">🔄</button>
               </div>
               <div class="draft-search-wrap">
                 <span class="draft-search-icon">🔍</span>
@@ -645,7 +651,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div style="font-size:12px;color:#6b7280;line-height:1.7;margin-bottom:8px">
           Ouvrir <a href="https://console.firebase.google.com/project/nova-9ac76/database/nova-9ac76-default-rtdb/rules" target="_blank" style="color:#e8194b">Firebase Console → Realtime Database → Règles</a> et appliquer :
         </div>
-        <pre class="rules-pre" id="rules-code">{"rules":{".read":false,".write":false,"reviews":{".read":true,".write":"auth != null"},"pending_reviews":{".read":"auth != null",".write":true},"online_visitors":{".read":true,".write":true},"sessions":{".read":"auth != null",".write":true},"catalog":{".read":true,".write":"auth != null"},"products":{".read":true,".write":"auth != null"},"orders":{".read":"auth != null",".write":true}}}</pre>
+        <pre class="rules-pre" id="rules-code">{"rules":{".read":false,".write":false,"reviews":{".read":true,".write":"auth != null"},"pending_reviews":{".read":"auth != null",".write":true},"online_visitors":{".read":true,".write":true},"sessions":{".read":"auth != null",".write":true},"catalog":{".read":true,".write":"auth != null"},"products":{".read":true,".write":"auth != null"},"orders":{".read":"auth != null",".write":true},"drafts":{".read":"auth != null",".write":"auth != null"}}}</pre>
         <button onclick="navigator.clipboard.writeText(document.getElementById('rules-code').textContent).then(()=>{this.textContent='✅ Copié !';setTimeout(()=>this.textContent='📋 Copier',2000)})"
           style="background:#f9fafb;color:#374151;border:1.5px solid #e5e7eb;padding:5px 12px;border-radius:5px;font-size:11px;cursor:pointer">📋 Copier</button>
       </div>
@@ -694,7 +700,7 @@ setPersistence(auth,browserSessionPersistence).catch(()=>{});
 const DB_REST="https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
 
 // Expose minimal Firebase helpers for the Babel/React tab
-window.__NOVA_FIREBASE__={db,ref,set,update,remove,get};
+window.__NOVA_FIREBASE__={db,ref,set,update,remove,get,auth};
 
 // Show a visible error if the module fails after load
 window.addEventListener("error",(e)=>{
@@ -749,7 +755,6 @@ document.querySelectorAll(".tab").forEach(tab=>{
     document.getElementById("tab-"+tab.dataset.tab).classList.add("active");
     if(tab.dataset.tab==="products") loadProducts();
     if(tab.dataset.tab==="newproduct") window.__mountNouveauProduit__?.();
-    if(tab.dataset.tab==="draftorder") window.initDraftTab?.();
   });
 });
 
@@ -1261,21 +1266,78 @@ let allDrafts = [];           // saved drafts list
 let optModalResolve = null;   // promise resolver for option picker
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+// ── Toggle inline add-order panel ────────────────────────────────────────────
+window.toggleAddOrderPanel = function() {
+  const panel = document.getElementById('inline-draft-panel');
+  const isOpen = panel.style.display !== 'none';
+  if (!isOpen) {
+    panel.style.display = 'block';
+    window.initDraftTab?.();
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    panel.style.display = 'none';
+  }
+};
+
 window.initDraftTab = async function() {
   await loadDraftProducts();
   loadDraftList();
 };
 
-// ── Load product catalog ──────────────────────────────────────────────────────
+// ── Load product catalog (static + Firebase /catalog merged) ─────────────────
 async function loadDraftProducts() {
   if (draftProducts.length) { renderDraftProductList(draftProducts); return; }
+  const listEl = document.getElementById('draft-product-list');
+  listEl.innerHTML = `<div class="draft-empty-items" style="padding:16px">Chargement des produits…</div>`;
   try {
-    const res = await fetch('/products.json');
-    const data = await res.json();
-    draftProducts = data.products || [];
+    // Load both sources in parallel
+    const [staticRes, fbRes] = await Promise.allSettled([
+      fetch('/products.json').then(r => r.json()),
+      fetch(`${DB_REST}/catalog.json`).then(r => r.json()),
+    ]);
+
+    // Static products.json products
+    const staticProducts = (staticRes.status === 'fulfilled')
+      ? (staticRes.value.products || [])
+      : [];
+
+    // Firebase /catalog products — normalize to same shape as products.json
+    let fbProducts = [];
+    if (fbRes.status === 'fulfilled' && fbRes.value && typeof fbRes.value === 'object') {
+      fbProducts = Object.entries(fbRes.value)
+        .filter(([, v]) => v && v.active !== false)
+        .map(([slug, v]) => ({
+          id: v.slug || slug,
+          name: v.title || slug,
+          price: {
+            min: Number(v.price_min) || 0,
+            max: Number(v.price_max) || Number(v.price_min) || 0,
+          },
+          category: v.category || '',
+          image: v.images?.[0] || `/assets/images/${slug}/1.webp`,
+          // Preserve options/variants for option picker modal
+          options: v.axes
+            ? Object.fromEntries(
+                (v.axes || []).map(ax => [ax.label || ax.name, (ax.values || ax.options || []).map(vv => vv.label || vv)])
+              )
+            : undefined,
+          variants: v.variants || undefined,
+          _fromFirebase: true,
+        }));
+    }
+
+    // Merge: Firebase entries take priority (more up-to-date), dedup by id
+    const merged = [...fbProducts];
+    const fbIds = new Set(fbProducts.map(p => p.id));
+    staticProducts.forEach(p => { if (!fbIds.has(p.id)) merged.push(p); });
+
+    // Sort alphabetically
+    merged.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'fr'));
+
+    draftProducts = merged;
     renderDraftProductList(draftProducts);
   } catch(e) {
-    document.getElementById('draft-product-list').innerHTML =
+    listEl.innerHTML =
       `<div class="draft-empty-items">Erreur chargement catalogue: ${esc(e.message)}</div>`;
   }
 }
@@ -1285,18 +1347,28 @@ function renderDraftProductList(list) {
   if (!list.length) { el.innerHTML = `<div class="draft-empty-items">Aucun produit trouvé.</div>`; return; }
   el.innerHTML = list.map(p => {
     const priceStr = p.price
-      ? (p.price.min === p.price.max ? `${p.price.min} MAD` : `${p.price.min} – ${p.price.max} MAD`)
+      ? (p.price.min === p.price.max ? `${Number(p.price.min).toLocaleString('fr-MA')} MAD` : `${Number(p.price.min).toLocaleString('fr-MA')} – ${Number(p.price.max).toLocaleString('fr-MA')} MAD`)
       : 'Prix sur demande';
+    const imgSrc = p.image || `/assets/images/${p.id}/1.webp`;
+    const badge = p._fromFirebase
+      ? `<span style="font-size:9px;background:#fef3c7;color:#d97706;border-radius:3px;padding:1px 5px;font-weight:700;margin-left:4px">Firebase</span>`
+      : '';
     return `<div class="draft-product-row" onclick="window.draftPickProduct('${esc(p.id)}')">
-      <img class="dpr-img" src="/assets/images/${esc(p.id)}/1.webp" onerror="this.style.display='none'" alt="">
+      <img class="dpr-img" src="${esc(imgSrc)}" onerror="this.style.display='none'" alt="">
       <div class="dpr-info">
-        <div class="dpr-name" title="${esc(p.name)}">${esc(p.name)}</div>
+        <div class="dpr-name" title="${esc(p.name)}">${esc(p.name)}${badge}</div>
         <div class="dpr-price">${esc(priceStr)}</div>
       </div>
       <button class="dpr-add" onclick="event.stopPropagation();window.draftPickProduct('${esc(p.id)}')">+ Ajouter</button>
     </div>`;
   }).join('');
 }
+
+// Allow forcing a catalog refresh (clears cache)
+window.refreshDraftProducts = function() {
+  draftProducts = [];
+  loadDraftProducts();
+};
 
 window.filterDraftProducts = function(q) {
   const lq = q.toLowerCase();
@@ -1311,8 +1383,8 @@ window.draftPickProduct = async function(productId) {
   const p = draftProducts.find(x => x.id === productId);
   if (!p) return;
 
-  // Determine base price
-  const basePrice = p.price ? p.price.min : 0;
+  // Determine base price — guard against undefined min/max
+  const basePrice = p.price ? (Number(p.price.min) || Number(p.price.max) || 0) : 0;
 
   // Check if product has options/variants in its page (fetch JSON quickly)
   // We'll show a simple modal for common option types: size, color, led, etc.
@@ -1553,6 +1625,11 @@ function closeDraftEditor() {
   document.getElementById('draft-editor').style.display = 'none';
   document.getElementById('draft-list-section').style.display = 'block';
 }
+// Hide inline panel and go back to orders list
+function closeInlineDraftPanel() {
+  const panel = document.getElementById('inline-draft-panel');
+  if (panel) panel.style.display = 'none';
+}
 
 // ── Read customer form ────────────────────────────────────────────────────────
 function readCustomer() {
@@ -1574,9 +1651,22 @@ window.saveDraft = async function() {
   const discVal  = parseFloat(document.getElementById('ds-discount-val')?.value) || 0;
   const discType = document.getElementById('ds-discount-type')?.value || 'fixed';
 
+  // Sanitize items — Firebase rejects undefined values
+  const sanitizedItems = draftItems.map(i => ({
+    id: i.id || '',
+    name: i.name || '',
+    price: (i.price != null && !isNaN(Number(i.price))) ? Number(i.price) : 0,
+    quantity: i.quantity || 1,
+    ...(i.productId ? { productId: i.productId } : {}),
+    ...(i.variantLabel ? { variantLabel: i.variantLabel } : {}),
+    ...(i.options && Object.keys(i.options).length ? { options: i.options } : {}),
+    ...(i.image ? { image: i.image } : {}),
+    ...(i.custom ? { custom: true } : {}),
+  }));
+
   const draftData = {
     customer,
-    items: draftItems,
+    items: sanitizedItems,
     subtotal, discount, discountValue: discVal, discountType: discType, total,
     status: 'draft',
     timestamp: Date.now(),
@@ -1636,6 +1726,7 @@ window.convertDraftToOrder = async function() {
     loadDraftList();
     closeDraftEditor();
     // Switch to orders tab
+    closeInlineDraftPanel();
     document.querySelector('.tab[data-tab="orders"]')?.click();
     ping();
   } catch(e) {
@@ -1752,6 +1843,7 @@ window.quickConfirmDraft = async function(id) {
     await fbRemove(fbRef(fbDb, `drafts/${id}`));
     loadDraftList();
     ping();
+    closeInlineDraftPanel();
     document.querySelector('.tab[data-tab="orders"]')?.click();
   } catch(e) { alert('Erreur: ' + e.message); }
 };
