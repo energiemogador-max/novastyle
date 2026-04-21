@@ -1,0 +1,27 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "reviews": {
+      ".read": true,
+      ".write": true,
+      "$productId": {
+        ".read": true,
+        ".write": true,
+        "$reviewId": {
+          ".read": true,
+          ".write": true,
+          ".validate": "newData.hasChildren(['name','rating','text','date'])"
+        }
+      }
+    },
+    "visitors": {
+      ".read": false,
+      ".write": true
+    },
+    "orders": {
+      ".read": false,
+      ".write": true
+    }
+  }
+}

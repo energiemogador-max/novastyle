@@ -162,6 +162,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="tab-bar">
     <div class="tab active" data-tab="orders">📦 Commandes</div>
     <div class="tab" data-tab="visitors">👥 Visiteurs live</div>
+    <div class="tab" data-tab="reviews">⭐ Avis & Import</div>
   </div>
 
   <!-- ORDERS TAB -->
@@ -202,6 +203,57 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
     </div>
   </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ REVIEWS TAB -->
+  <div class="tab-panel" id="tab-reviews">
+    <div class="container" style="max-width:860px;">
+
+      <!-- RULES BANNER -->
+      <div style="background:#1a1200;border:1px solid #664400;border-radius:10px;padding:18px 20px;margin-bottom:22px;">
+        <div style="font-weight:700;color:#ffb400;margin-bottom:8px;font-size:14px;">⚠️ Étape 1 — Activer les écritures Firebase (si pas encore fait)</div>
+        <div style="font-size:12px;color:#999;line-height:1.8;margin-bottom:10px;">
+          Ouvrir <a href="https://console.firebase.google.com/project/nova-9ac76/database/nova-9ac76-default-rtdb/rules" target="_blank" style="color:#e8194b;">Firebase Console → Realtime Database → Règles</a>
+          et remplacer le contenu par :
+        </div>
+        <pre id="rules-code" style="background:#0d0d0d;border:1px solid #2a2a2a;border-radius:6px;padding:12px;font-size:11px;color:#7ec8e3;margin:0 0 10px;overflow-x:auto;">{"rules":{".read":false,".write":false,"reviews":{".read":true,".write":true},"visitors":{".read":false,".write":true},"orders":{".read":false,".write":true}}}</pre>
+        <button onclick="navigator.clipboard.writeText(document.getElementById('rules-code').textContent).then(()=>{this.textContent='✅ Copié !';setTimeout(()=>this.textContent='📋 Copier',2000)})"
+          style="background:#2a2a2a;color:#ccc;border:1px solid #444;padding:6px 14px;border-radius:5px;font-size:12px;cursor:pointer;margin-right:8px;">📋 Copier</button>
+        <span style="font-size:11px;color:#555;">Puis cliquer <strong style="color:#fff;">Publier</strong> dans Firebase</span>
+      </div>
+
+      <!-- IMPORT TOOL -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:22px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#f0f0f0;">Étape 2 — Importer les avis</div>
+            <div style="font-size:12px;color:#555;margin-top:3px;">72 produits × 10 avis = 720 avis depuis reviews_import.json</div>
+          </div>
+          <button id="btn-import" style="background:#e8194b;color:#fff;border:none;padding:10px 20px;border-radius:7px;font-weight:700;font-size:13px;cursor:pointer;">🚀 Lancer l'import</button>
+        </div>
+        <div id="import-wrap" style="display:none;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#777;margin-bottom:5px;">
+            <span id="import-status">Chargement…</span>
+            <span id="import-pct">0%</span>
+          </div>
+          <div style="background:#2a2a2a;border-radius:4px;height:7px;overflow:hidden;margin-bottom:10px;">
+            <div id="import-bar" style="height:100%;background:#e8194b;width:0%;transition:width .3s;border-radius:4px;"></div>
+          </div>
+          <div id="import-log" style="background:#0d0d0d;border-radius:6px;padding:10px;font-size:11px;color:#555;max-height:150px;overflow-y:auto;font-family:monospace;"></div>
+        </div>
+      </div>
+
+      <!-- LIVE STATS -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:22px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <div style="font-size:15px;font-weight:700;color:#f0f0f0;">Avis en base Firebase</div>
+          <button id="btn-reload-stats" style="background:#2a2a2a;color:#aaa;border:1px solid #333;padding:7px 14px;border-radius:6px;font-size:12px;cursor:pointer;">🔄 Actualiser</button>
+        </div>
+        <div id="reviews-stats" style="font-size:13px;color:#555;">Cliquez Actualiser pour charger les statistiques.</div>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
 <script type="module">
@@ -452,6 +504,139 @@ function renderBarChart(elId,entries,color){
 
 function formatDur(s){if(s<60)return`${s}s`;const m=Math.floor(s/60);return`${m}min`;}
 function ping(){try{new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play().catch(()=>{});}catch{}}
+
+// ── REVIEWS TAB ───────────────────────────────────────────────────────────────
+const DB_REST = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
+
+document.getElementById("btn-import")?.addEventListener("click", runImport);
+document.getElementById("btn-reload-stats")?.addEventListener("click", loadReviewStats);
+
+async function runImport() {
+  const btn    = document.getElementById("btn-import");
+  const wrap   = document.getElementById("import-wrap");
+  const status = document.getElementById("import-status");
+  const pctEl  = document.getElementById("import-pct");
+  const bar    = document.getElementById("import-bar");
+  const log    = document.getElementById("import-log");
+
+  btn.disabled = true; btn.textContent = "⏳ Import en cours…";
+  wrap.style.display = "block";
+  log.innerHTML = "";
+
+  const addLog = (msg, color="#666") => {
+    log.innerHTML += `<div style="color:${color}">${esc(msg)}</div>`;
+    log.scrollTop = log.scrollHeight;
+  };
+
+  try {
+    status.textContent = "Chargement de reviews_import.json…";
+    const data = await fetch("/reviews_import.json").then(r => {
+      if (!r.ok) throw new Error("reviews_import.json introuvable");
+      return r.json();
+    });
+
+    const products = Object.entries(data);
+    let done = 0, errors = 0;
+
+    for (const [prodId, reviews] of products) {
+      const reviewEntries = Object.entries(reviews);
+      for (const [revId, review] of reviewEntries) {
+        try {
+          const url = `${DB_REST}/reviews/${encodeURIComponent(prodId)}/${encodeURIComponent(revId)}.json`;
+          const res = await fetch(url, {
+            method : "PUT",
+            headers: { "Content-Type": "application/json" },
+            body   : JSON.stringify(review)
+          });
+          if (!res.ok) {
+            const txt = await res.text();
+            if (res.status === 401 || res.status === 403) throw new Error("Permission refusée (403) — Vérifiez vos règles Firebase");
+            throw new Error(`HTTP ${res.status}: ${txt.slice(0,80)}`);
+          }
+        } catch (e) {
+          errors++;
+          addLog(`✗ ${prodId}/${revId}: ${e.message}`, "#e8194b");
+          if (e.message.includes("Permission")) {
+            status.textContent = "❌ Erreur de permission";
+            bar.style.background = "#e8194b";
+            btn.disabled = false; btn.textContent = "🚀 Réessayer";
+            return;
+          }
+        }
+      }
+      done++;
+      const pct = Math.round(done / products.length * 100);
+      bar.style.width   = pct + "%";
+      pctEl.textContent = pct + "%";
+      status.textContent = `${done} / ${products.length} produits traités…`;
+      addLog(`✓ ${prodId} (${reviewEntries.length} avis)`, "#4CAF50");
+    }
+
+    bar.style.background  = "#4CAF50";
+    bar.style.width       = "100%";
+    status.textContent    = `✅ Import terminé — ${done} produits, ${errors} erreurs`;
+    pctEl.textContent     = "100%";
+    btn.textContent       = "✅ Import terminé";
+    addLog(`\n🎉 Import complet ! ${done} produits importés.`, "#ffb400");
+    setTimeout(loadReviewStats, 1000);
+
+  } catch(e) {
+    status.textContent = "❌ " + e.message;
+    addLog(e.message, "#e8194b");
+    btn.disabled = false; btn.textContent = "🚀 Lancer l'import";
+  }
+}
+
+async function loadReviewStats() {
+  const el = document.getElementById("reviews-stats");
+  if (!el) return;
+  el.innerHTML = `<span style="color:#555">Chargement…</span>`;
+  try {
+    const res  = await fetch(`${DB_REST}/reviews.json?shallow=true`);
+    if (!res.ok) {
+      if (res.status === 401 || res.status === 403) throw new Error("Permission refusée — Appliquez d'abord les règles Firebase");
+      throw new Error(`HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    if (!data) { el.innerHTML = `<span style="color:#555">Aucun avis en base. Lancez l'import.</span>`; return; }
+    const prods = Object.keys(data).length;
+    // Load counts per product
+    const res2   = await fetch(`${DB_REST}/reviews.json`);
+    const full   = await res2.json();
+    const counts = Object.entries(full || {}).map(([k, v]) => [k, typeof v==='object' ? Object.keys(v).length : 0]);
+    counts.sort((a,b) => b[1]-a[1]);
+    const total  = counts.reduce((s,[,c])=>s+c,0);
+    const minC   = Math.min(...counts.map(([,c])=>c));
+    const maxC   = Math.max(...counts.map(([,c])=>c));
+    el.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px;">
+        <div style="background:#141414;border:1px solid #2a2a2a;border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:28px;font-weight:800;color:#e8194b;">${total}</div>
+          <div style="font-size:11px;color:#555;margin-top:4px;">Avis total</div>
+        </div>
+        <div style="background:#141414;border:1px solid #2a2a2a;border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:28px;font-weight:800;color:#ffb400;">${prods}</div>
+          <div style="font-size:11px;color:#555;margin-top:4px;">Produits</div>
+        </div>
+        <div style="background:#141414;border:1px solid #2a2a2a;border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:28px;font-weight:800;color:#4CAF50;">${minC}–${maxC}</div>
+          <div style="font-size:11px;color:#555;margin-top:4px;">Avis par produit</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:#444;margin-bottom:8px;">Top 10 produits par nombre d'avis :</div>
+      <div style="display:grid;gap:6px;">
+        ${counts.slice(0,10).map(([k,c])=>`
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;font-size:11px;color:#777;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(k)}">${esc(k)}</div>
+            <div style="background:#e8194b;border-radius:3px;height:6px;width:${Math.round(c/maxC*80)+20}px;min-width:20px;"></div>
+            <div style="font-size:11px;color:#aaa;width:20px;text-align:right;">${c}</div>
+          </div>`).join('')}
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<span style="color:#e8194b">Erreur : ${esc(e.message)}</span>`;
+  }
+}
+
 </script>
 </body>
 </html>
