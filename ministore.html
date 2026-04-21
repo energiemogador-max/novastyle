@@ -275,7 +275,7 @@ function renderModal() {
     <div class="modal-images">
       <div class="main-img"><img id="main-img" src="${p.image}" alt=""></div>
       ${p.images.length > 1 ? `<div class="thumbs">${p.images.map((img, i) =>
-        `<img src="${img}" onclick="swapImage('${escapeAttr(img)}', this)" class="${i===0?'active':''}">`
+        `<img src="${img}" alt="Image produit" onclick="swapImage('${escapeAttr(img)}', this)" class="${i===0?'active':''}">`
       ).join("")}</div>` : ""}
     </div>
     <div class="modal-info">
