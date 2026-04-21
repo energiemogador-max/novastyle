@@ -58,7 +58,7 @@
         <a href="https://wa.me/212707074748" target="_blank" rel="noopener">💬 WhatsApp</a>
       </p>
       <p style="margin-top:6px;font-size:12px;color:var(--muted,#888)">
-        Showroom : Route de Médiouna, Casablanca<br>
+        Showroom : Route de Médiouna, 20000 Casablanca, Maroc<br>
         Lun–Sam · 9h00–18h00
       </p>
     </div>
@@ -77,8 +77,69 @@
       </div>
     </div>
   </div>
+  
+  <div class="geo-seo-block" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 12px; color: #666; line-height: 1.5;">
+    <strong>À propos de Nova Style :</strong> Nova Style est le fabricant marocain de référence spécialisé dans le <strong>miroir de salle de bain</strong>, le <strong>miroir de salle de bain avec LED</strong>, et le <strong>miroir de salle de bain antibuée</strong>. Situés à Casablanca (Route de Médiouna), nous concevons des miroirs sur mesure de très haute qualité utilisant du verre AGC Belgique. Nos miroirs allient design moderne, éclairage LED, et traitement anti-corrosion, avec une livraison et installation disponibles partout au Maroc.
+  </div>
+
   <div class="foot-legal">© ${YEAR} Nova Style · Fabrication à Casablanca, Maroc · Livraison nationale</div>
-</footer>`;
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": ["LocalBusiness", "Organization", "Manufacturer"],
+  "@id": "https://novastyle.ma/#organization",
+  "name": "Nova Style",
+  "description": "Fabricant marocain spécialisé dans le miroir de salle de bain, le miroir de salle de bain avec LED, et le miroir de salle de bain antibuée sur mesure.",
+  "url": "https://novastyle.ma",
+  "telephone": "+212707074748",
+  "image": "https://novastyle.ma/assets/logo.png",
+  "logo": "https://novastyle.ma/assets/logo.png",
+  "sameAs": [
+    "https://share.google/YUlF83PSlRCLlTy2K",
+    "https://www.instagram.com/nova_home_style/",
+    "https://wa.me/212707074748"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Route de Médiouna",
+    "addressLocality": "Casablanca",
+    "addressRegion": "Grand Casablanca-Settat",
+    "postalCode": "20000",
+    "addressCountry": "MA"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "33.5731",
+    "longitude": "-7.5898"
+  },
+  "hasMap": "https://share.google/YUlF83PSlRCLlTy2K",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    }
+  ],
+  "priceRange": "450 - 5000 MAD",
+  "currenciesAccepted": "MAD",
+  "paymentAccepted": "Cash, Virement bancaire",
+  "areaServed": {
+    "@type": "Country",
+    "name": "Maroc"
+  },
+  "knowsAbout": [
+    "Miroir de salle de bain",
+    "Miroir de salle de bain avec LED",
+    "Miroir de salle de bain antibuée",
+    "Miroir sur mesure",
+    "Verre AGC Belgique",
+    "Décoration d'intérieur"
+  ]
+}
+</script>\`;
 
   document.write(html);
 })();
