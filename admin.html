@@ -1,686 +1,1756 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nova Style — Admin</title>
-<meta name="robots" content="noindex, nofollow">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#f0f0f0;min-height:100vh}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova Style — Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Libraries for Product Creator -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-/* LOGIN */
-#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;background:radial-gradient(ellipse at top,#1a0a0e 0%,#0f0f0f 70%)}
-.login-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:16px;padding:40px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-.login-logo{text-align:center;margin-bottom:28px}
-.login-logo .brand{font-size:26px;font-weight:800;color:#e8194b;letter-spacing:-1px}
-.login-logo .sub{font-size:12px;color:#444;margin-top:4px;letter-spacing:2px;text-transform:uppercase}
-.lf{margin-bottom:16px}
-.lf label{display:block;font-size:10px;color:#555;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
-.lf input{width:100%;padding:12px 14px;background:#111;border:1px solid #2a2a2a;border-radius:8px;color:#f0f0f0;font-size:15px;outline:none;transition:border-color .2s}
-.lf input:focus{border-color:#e8194b}
-.btn-login{width:100%;padding:13px;background:#e8194b;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity .2s;letter-spacing:.3px}
-.btn-login:hover{opacity:.88}.btn-login:disabled{opacity:.4;cursor:not-allowed}
-#login-error{color:#e8194b;font-size:13px;text-align:center;margin-top:12px;min-height:18px}
-#login-attempts{font-size:12px;color:#555;text-align:center;margin-top:8px}
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
 
-/* HEADER */
-#admin-screen{display:none}
-.admin-header{background:#141414;border-bottom:2px solid #e8194b;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:100}
-.admin-header h1{font-size:17px;color:#e8194b;font-weight:800;letter-spacing:-0.5px}
-.hright{display:flex;align-items:center;gap:12px}
-.admin-email{font-size:11px;color:#444}
-.live-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#00c853;background:#091509;border:1px solid #00c85330;padding:3px 10px;border-radius:20px}
-.live-dot{width:6px;height:6px;background:#00c853;border-radius:50%;animation:pdot 1.5s infinite}
-@keyframes pdot{0%,100%{opacity:1}50%{opacity:.2}}
-.btn-sm{background:none;border:1px solid #2a2a2a;color:#666;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;transition:all .2s}
-.btn-sm:hover{border-color:#e8194b;color:#e8194b}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #f0f0f0;
+      min-height: 100vh
+    }
 
-/* STATS BAR */
-.stats-bar{display:flex;gap:10px;padding:14px 24px;background:#111;border-bottom:1px solid #1a1a1a;flex-wrap:wrap}
-.stat-card{background:#1a1a1a;border:1px solid #222;border-radius:10px;padding:11px 16px;min-width:110px;flex:1;cursor:default}
-.stat-card .lbl{font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px;font-weight:700}
-.stat-card .val{font-size:20px;font-weight:800;color:#e8194b}
-.stat-card .val.green{color:#00c853}.stat-card .val.blue{color:#4da6ff}.stat-card .val.amber{color:#ffb300}
+    /* LOGIN */
+    #login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: radial-gradient(ellipse at top, #1a0a0e 0%, #0f0f0f 70%)
+    }
 
-/* TABS */
-.tab-bar{display:flex;background:#111;border-bottom:1px solid #1a1a1a;padding:0 24px;overflow-x:auto}
-.tab{padding:11px 18px;font-size:12px;font-weight:700;color:#444;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;position:relative;letter-spacing:.3px;text-transform:uppercase}
-.tab.active{color:#e8194b;border-bottom-color:#e8194b;background:#0a0a0a}
-.tab:hover:not(.active){color:#888;background:#0d0d0d}
-.tab-badge{position:absolute;top:6px;right:6px;background:#e8194b;color:#fff;font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:8px;display:none;align-items:center;justify-content:center;padding:0 4px}
-.tab-badge.show{display:inline-flex}
-.tab-panel{display:none}.tab-panel.active{display:block}
+    .login-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .6)
+    }
 
-/* CONTAINER */
-.container{padding:20px 24px;max-width:1300px;margin:0 auto}
-.section-title{font-size:10px;font-weight:800;color:#444;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px}
+    .login-logo {
+      text-align: center;
+      margin-bottom: 28px
+    }
 
-/* ORDERS */
-#orders-display{display:flex;flex-direction:column;gap:12px}
-.no-order{text-align:center;padding:50px 20px;color:#333;background:#141414;border-radius:12px;border:1px dashed #222;font-size:14px}
-.loading{text-align:center;padding:40px;color:#333;font-size:13px}
-.order-card{background:#141414;border:1px solid #222;border-left:3px solid #e8194b;border-radius:10px;overflow:hidden;transition:background .2s}
-.order-card:hover{background:#161616}
-.order-card.status-confirmed{border-left-color:#00c853}
-.order-card.status-delivered{border-left-color:#4da6ff}
-.order-card.new-order{animation:flash 1s ease 3;border-left-color:#00c853}
-@keyframes flash{0%,100%{background:#141414}50%{background:#091509}}
-.order-head{display:flex;align-items:center;gap:8px;padding:9px 14px;flex-wrap:wrap;border-bottom:1px solid #1e1e1e}
-.order-id{font-family:monospace;font-size:11px;color:#e8194b;font-weight:700;background:#1e0a0a;padding:2px 7px;border-radius:4px}
-.order-status-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;cursor:pointer;transition:opacity .2s}
-.order-status-badge:hover{opacity:.8}
-.order-status-badge.pending{background:#1a1400;color:#ffb300;border:1px solid #ffb30030}
-.order-status-badge.confirmed{background:#091509;color:#00c853;border:1px solid #00c85330}
-.order-status-badge.delivered{background:#0a1520;color:#4da6ff;border:1px solid #4da6ff30}
-.order-status-badge.cancelled{background:#1a0a0a;color:#e8194b;border:1px solid #e8194b30}
-.order-time{font-size:10px;color:#444;margin-left:auto}
-.order-body{display:grid;grid-template-columns:200px 1fr}
-.order-customer-col{padding:12px 14px;border-right:1px solid #1e1e1e;display:flex;flex-direction:column;gap:5px}
-.customer-name{font-size:13px;font-weight:700;color:#f0f0f0}
-.customer-row{display:flex;gap:5px;font-size:11px;color:#666;line-height:1.5}
-.customer-phone{color:#e8194b;font-weight:600;font-size:12px}
-.customer-notes{font-size:10px;color:#555;font-style:italic;padding:4px 7px;background:#111;border-radius:4px;border-left:2px solid #2a2a2a;margin-top:2px}
-.order-items-col{padding:12px 14px;display:flex;flex-direction:column;gap:6px}
-.item-row{background:#111;border:1px solid #1e1e1e;border-radius:6px;padding:8px 10px}
-.item-name{font-size:12px;font-weight:600;color:#e0e0e0;margin-bottom:4px}
-.item-options{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px}
-.opt-tag{font-size:10px;padding:2px 7px;border-radius:4px;background:#1e1e1e;color:#888;border:1px solid #2a2a2a}
-.opt-tag.led{background:#1a1200;color:#ffb300;border-color:#ffb30030}
-.opt-tag.install{background:#091509;color:#4CAF50;border-color:#4CAF5030}
-.item-footer{display:flex;justify-content:space-between;align-items:center}
-.qty{font-size:11px;color:#555}
-.item-price{font-size:12px;font-weight:700;color:#e8194b}
-.order-foot{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#111;border-top:1px solid #1a1a1a;flex-wrap:wrap}
-.foot-deposit{font-size:12px;color:#555;margin-right:auto}
-.foot-label{font-size:11px;color:#444}
-.foot-total{font-size:16px;font-weight:800;color:#e8194b}
-.status-select{background:#1a1a1a;border:1px solid #2a2a2a;color:#888;padding:4px 8px;border-radius:5px;font-size:11px;cursor:pointer}
+    .login-logo .brand {
+      font-size: 26px;
+      font-weight: 800;
+      color: #e8194b;
+      letter-spacing: -1px
+    }
 
-/* VISITORS */
-.visitors-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.vis-panel{background:#141414;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden}
-.vis-panel-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #1e1e1e;font-size:12px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:1px}
-.vis-panel-head .count{background:#e8194b;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px}
-.vis-list{max-height:260px;overflow-y:auto}
-.vis-row{padding:10px 16px;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;gap:8px;font-size:12px}
-.vis-row:last-child{border-bottom:none}
-.vis-dot{width:7px;height:7px;background:#00c853;border-radius:50%;flex-shrink:0;box-shadow:0 0 6px #00c853}
-.vis-page{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ccc}
-.vis-device{font-size:10px;color:#555;padding:1px 6px;border:1px solid #2a2a2a;border-radius:4px;white-space:nowrap}
-.vis-device.mobile{color:#4da6ff;border-color:#4da6ff30}
-.vis-meta{font-size:10px;color:#444;white-space:nowrap;margin-left:auto}
-.no-visitors{padding:30px;text-align:center;color:#333;font-size:13px}
-.chart-wrap{padding:14px 16px}
-.chart-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.chart-bar-label{width:110px;font-size:11px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
-.chart-bar-track{flex:1;background:#1a1a1a;border-radius:3px;height:6px;overflow:hidden}
-.chart-bar-fill{height:100%;border-radius:3px;transition:width .5s ease}
-.chart-bar-val{font-size:11px;color:#555;width:20px;text-align:right;flex-shrink:0}
+    .login-logo .sub {
+      font-size: 12px;
+      color: #444;
+      margin-top: 4px;
+      letter-spacing: 2px;
+      text-transform: uppercase
+    }
 
-/* ── REVIEWS ─────────────────────────────────────────────────────── */
-.review-filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.review-filter-btn{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid #2a2a2a;background:#1a1a1a;color:#555;transition:all .15s}
-.review-filter-btn.active{background:#e8194b;color:#fff;border-color:#e8194b}
-.review-grid{display:flex;flex-direction:column;gap:10px}
-.review-card{background:#141414;border:1px solid #222;border-radius:10px;overflow:hidden}
-.review-card.pending{border-left:3px solid #ffb300}
-.review-card.approved{border-left:3px solid #00c853}
-.review-card.rejected{border-left:3px solid #444;opacity:.6}
-.review-head{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #1a1a1a;flex-wrap:wrap}
-.review-product{font-size:10px;color:#e8194b;font-family:monospace;background:#1e0a0a;padding:2px 7px;border-radius:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px}
-.review-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.review-status-dot.pending{background:#ffb300}
-.review-status-dot.approved{background:#00c853}
-.review-status-dot.rejected{background:#444}
-.review-stars{color:#ffb300;font-size:13px;letter-spacing:1px}
-.review-date{font-size:10px;color:#444;margin-left:auto}
-.review-body{padding:12px 14px;display:grid;grid-template-columns:160px 1fr;gap:14px}
-.review-author{display:flex;flex-direction:column;gap:4px}
-.review-name{font-size:13px;font-weight:700;color:#e0e0e0}
-.review-text{font-size:13px;color:#999;line-height:1.6;font-style:italic}
-.review-actions{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#111;border-top:1px solid #1a1a1a;flex-wrap:wrap}
-.btn-approve{background:#091509;color:#00c853;border:1px solid #00c85340;padding:5px 14px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
-.btn-approve:hover{background:#00c853;color:#000}
-.btn-reject{background:#1a0a0a;color:#e8194b;border:1px solid #e8194b30;padding:5px 14px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
-.btn-reject:hover{background:#e8194b;color:#fff}
-.btn-delete{background:#1a1a1a;color:#555;border:1px solid #2a2a2a;padding:5px 14px;border-radius:5px;font-size:11px;cursor:pointer;transition:all .15s;margin-left:auto}
-.btn-delete:hover{color:#e8194b;border-color:#e8194b30}
-.reviews-empty{text-align:center;padding:40px;color:#333;font-size:13px;background:#141414;border-radius:12px;border:1px dashed #1e1e1e}
-.reviews-loading{text-align:center;padding:30px;color:#444;font-size:13px}
+    .lf {
+      margin-bottom: 16px
+    }
 
-/* IMPORT TOOL */
-.tool-card{background:#141414;border:1px solid #1e1e1e;border-radius:12px;padding:20px;margin-bottom:16px}
-.tool-card-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
-.tool-card-title{font-size:14px;font-weight:700;color:#f0f0f0}
-.tool-card-sub{font-size:11px;color:#444;margin-top:2px}
-.btn-primary{background:#e8194b;color:#fff;border:none;padding:9px 18px;border-radius:7px;font-weight:700;font-size:12px;cursor:pointer;transition:opacity .2s;white-space:nowrap}
-.btn-primary:hover{opacity:.85}.btn-primary:disabled{opacity:.4;cursor:not-allowed}
-.btn-secondary{background:#1e1e1e;color:#aaa;border:1px solid #2a2a2a;padding:7px 14px;border-radius:7px;font-size:12px;cursor:pointer;transition:all .15s}
-.btn-secondary:hover{border-color:#e8194b;color:#e8194b}
-.progress-wrap{display:none}
-.progress-row{display:flex;justify-content:space-between;font-size:11px;color:#555;margin-bottom:5px}
-.progress-track{background:#1e1e1e;border-radius:4px;height:6px;overflow:hidden;margin-bottom:10px}
-.progress-bar{height:100%;background:#e8194b;width:0%;transition:width .3s;border-radius:4px}
-.import-log{background:#0a0a0a;border-radius:6px;padding:10px;font-size:10px;color:#444;max-height:140px;overflow-y:auto;font-family:monospace;line-height:1.6}
+    .lf label {
+      display: block;
+      font-size: 10px;
+      color: #555;
+      margin-bottom: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px
+    }
 
-/* FIREBASE RULES */
-.rules-banner{background:#0d0800;border:1px solid #3a2000;border-radius:10px;padding:16px 18px;margin-bottom:16px}
-.rules-title{font-weight:700;color:#ffb300;margin-bottom:8px;font-size:13px}
-.rules-pre{background:#0a0a0a;border:1px solid #1e1e1e;border-radius:6px;padding:10px;font-size:10px;color:#7ec8e3;margin:8px 0;overflow-x:auto;font-family:monospace;line-height:1.5}
+    .lf input {
+      width: 100%;
+      padding: 12px 14px;
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      color: #f0f0f0;
+      font-size: 15px;
+      outline: none;
+      transition: border-color .2s
+    }
 
-/* PRODUCTS TAB */
-.products-toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
-.search-input{background:#1a1a1a;border:1px solid #2a2a2a;color:#f0f0f0;padding:8px 14px;border-radius:7px;font-size:13px;outline:none;width:240px;transition:border-color .2s}
-.search-input:focus{border-color:#e8194b}
-.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.product-mini-card{background:#141414;border:1px solid #1e1e1e;border-radius:10px;overflow:hidden;transition:border-color .2s}
-.product-mini-card:hover{border-color:#e8194b30}
-.pmc-img{width:100%;aspect-ratio:1;object-fit:cover;background:#1a1a1a;display:block}
-.pmc-body{padding:12px}
-.pmc-title{font-size:12px;font-weight:700;color:#e0e0e0;margin-bottom:4px;line-height:1.3}
-.pmc-handle{font-size:10px;color:#444;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:8px}
-.pmc-price{font-size:14px;font-weight:800;color:#e8194b}
-.pmc-cat{font-size:10px;padding:2px 8px;border-radius:10px;background:#1e1e1e;color:#555;border:1px solid #2a2a2a;display:inline-block;margin-top:6px}
+    .lf input:focus {
+      border-color: #e8194b
+    }
 
-/* RESPONSIVE */
-@media(max-width:700px){
-  .order-body{grid-template-columns:1fr}
-  .order-customer-col{border-right:none;border-bottom:1px solid #1e1e1e}
-  .visitors-grid{grid-template-columns:1fr}
-  .review-body{grid-template-columns:1fr}
-  .stats-bar .stat-card{min-width:80px}
-}
-</style>
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: #e8194b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity .2s;
+      letter-spacing: .3px
+    }
+
+    .btn-login:hover {
+      opacity: .88
+    }
+
+    .btn-login:disabled {
+      opacity: .4;
+      cursor: not-allowed
+    }
+
+    #login-error {
+      color: #e8194b;
+      font-size: 13px;
+      text-align: center;
+      margin-top: 12px;
+      min-height: 18px
+    }
+
+    #login-attempts {
+      font-size: 12px;
+      color: #555;
+      text-align: center;
+      margin-top: 8px
+    }
+
+    /* HEADER */
+    #admin-screen {
+      display: none
+    }
+
+    .admin-header {
+      background: #141414;
+      border-bottom: 2px solid #e8194b;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 100
+    }
+
+    .admin-header h1 {
+      font-size: 17px;
+      color: #e8194b;
+      font-weight: 800;
+      letter-spacing: -0.5px
+    }
+
+    .hright {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .admin-email {
+      font-size: 11px;
+      color: #444
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #00c853;
+      background: #091509;
+      border: 1px solid #00c85330;
+      padding: 3px 10px;
+      border-radius: 20px
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: #00c853;
+      border-radius: 50%;
+      animation: pdot 1.5s infinite
+    }
+
+    @keyframes pdot {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .2
+      }
+    }
+
+    .btn-sm {
+      background: none;
+      border: 1px solid #2a2a2a;
+      color: #666;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all .2s
+    }
+
+    .btn-sm:hover {
+      border-color: #e8194b;
+      color: #e8194b
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      display: flex;
+      gap: 10px;
+      padding: 14px 24px;
+      background: #111;
+      border-bottom: 1px solid #1a1a1a;
+      flex-wrap: wrap
+    }
+
+    .stat-card {
+      background: #1a1a1a;
+      border: 1px solid #222;
+      border-radius: 10px;
+      padding: 11px 16px;
+      min-width: 110px;
+      flex: 1;
+      cursor: default
+    }
+
+    .stat-card .lbl {
+      font-size: 9px;
+      color: #444;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 4px;
+      font-weight: 700
+    }
+
+    .stat-card .val {
+      font-size: 20px;
+      font-weight: 800;
+      color: #e8194b
+    }
+
+    .stat-card .val.green {
+      color: #00c853
+    }
+
+    .stat-card .val.blue {
+      color: #4da6ff
+    }
+
+    .stat-card .val.amber {
+      color: #ffb300
+    }
+
+    /* TABS */
+    .tab-bar {
+      display: flex;
+      background: #111;
+      border-bottom: 1px solid #1a1a1a;
+      padding: 0 24px;
+      overflow-x: auto
+    }
+
+    .tab {
+      padding: 11px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #444;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all .15s;
+      white-space: nowrap;
+      position: relative;
+      letter-spacing: .3px;
+      text-transform: uppercase
+    }
+
+    .tab.active {
+      color: #e8194b;
+      border-bottom-color: #e8194b;
+      background: #0a0a0a
+    }
+
+    .tab:hover:not(.active) {
+      color: #888;
+      background: #0d0d0d
+    }
+
+    .tab-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #e8194b;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px
+    }
+
+    .tab-badge.show {
+      display: inline-flex
+    }
+
+    .tab-panel {
+      display: none
+    }
+
+    .tab-panel.active {
+      display: block
+    }
+
+    /* CONTAINER */
+    .container {
+      padding: 20px 24px;
+      max-width: 1300px;
+      margin: 0 auto
+    }
+
+    .section-title {
+      font-size: 10px;
+      font-weight: 800;
+      color: #444;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 14px
+    }
+
+    /* ORDERS */
+    #orders-display {
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .no-order {
+      text-align: center;
+      padding: 50px 20px;
+      color: #333;
+      background: #141414;
+      border-radius: 12px;
+      border: 1px dashed #222;
+      font-size: 14px
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #333;
+      font-size: 13px
+    }
+
+    .order-card {
+      background: #141414;
+      border: 1px solid #222;
+      border-left: 3px solid #e8194b;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: background .2s
+    }
+
+    .order-card:hover {
+      background: #161616
+    }
+
+    .order-card.status-confirmed {
+      border-left-color: #00c853
+    }
+
+    .order-card.status-delivered {
+      border-left-color: #4da6ff
+    }
+
+    .order-card.new-order {
+      animation: flash 1s ease 3;
+      border-left-color: #00c853
+    }
+
+    @keyframes flash {
+
+      0%,
+      100% {
+        background: #141414
+      }
+
+      50% {
+        background: #091509
+      }
+    }
+
+    .order-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #1e1e1e
+    }
+
+    .order-id {
+      font-family: monospace;
+      font-size: 11px;
+      color: #e8194b;
+      font-weight: 700;
+      background: #1e0a0a;
+      padding: 2px 7px;
+      border-radius: 4px
+    }
+
+    .order-status-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .2s
+    }
+
+    .order-status-badge:hover {
+      opacity: .8
+    }
+
+    .order-status-badge.pending {
+      background: #1a1400;
+      color: #ffb300;
+      border: 1px solid #ffb30030
+    }
+
+    .order-status-badge.confirmed {
+      background: #091509;
+      color: #00c853;
+      border: 1px solid #00c85330
+    }
+
+    .order-status-badge.delivered {
+      background: #0a1520;
+      color: #4da6ff;
+      border: 1px solid #4da6ff30
+    }
+
+    .order-status-badge.cancelled {
+      background: #1a0a0a;
+      color: #e8194b;
+      border: 1px solid #e8194b30
+    }
+
+    .order-time {
+      font-size: 10px;
+      color: #444;
+      margin-left: auto
+    }
+
+    .order-body {
+      display: grid;
+      grid-template-columns: 200px 1fr
+    }
+
+    .order-customer-col {
+      padding: 12px 14px;
+      border-right: 1px solid #1e1e1e;
+      display: flex;
+      flex-direction: column;
+      gap: 5px
+    }
+
+    .customer-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f0f0f0
+    }
+
+    .customer-row {
+      display: flex;
+      gap: 5px;
+      font-size: 11px;
+      color: #666;
+      line-height: 1.5
+    }
+
+    .customer-phone {
+      color: #e8194b;
+      font-weight: 600;
+      font-size: 12px
+    }
+
+    .customer-notes {
+      font-size: 10px;
+      color: #555;
+      font-style: italic;
+      padding: 4px 7px;
+      background: #111;
+      border-radius: 4px;
+      border-left: 2px solid #2a2a2a;
+      margin-top: 2px
+    }
+
+    .order-items-col {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .item-row {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 6px;
+      padding: 8px 10px
+    }
+
+    .item-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #e0e0e0;
+      margin-bottom: 4px
+    }
+
+    .item-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 5px
+    }
+
+    .opt-tag {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: #1e1e1e;
+      color: #888;
+      border: 1px solid #2a2a2a
+    }
+
+    .opt-tag.led {
+      background: #1a1200;
+      color: #ffb300;
+      border-color: #ffb30030
+    }
+
+    .opt-tag.install {
+      background: #091509;
+      color: #4CAF50;
+      border-color: #4CAF5030
+    }
+
+    .item-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .qty {
+      font-size: 11px;
+      color: #555
+    }
+
+    .item-price {
+      font-size: 12px;
+      font-weight: 700;
+      color: #e8194b
+    }
+
+    .order-foot {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      background: #111;
+      border-top: 1px solid #1a1a1a;
+      flex-wrap: wrap
+    }
+
+    .foot-deposit {
+      font-size: 12px;
+      color: #555;
+      margin-right: auto
+    }
+
+    .foot-label {
+      font-size: 11px;
+      color: #444
+    }
+
+    .foot-total {
+      font-size: 16px;
+      font-weight: 800;
+      color: #e8194b
+    }
+
+    .status-select {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #888;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 11px;
+      cursor: pointer
+    }
+
+    /* VISITORS */
+    .visitors-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px
+    }
+
+    .vis-panel {
+      background: #141414;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      overflow: hidden
+    }
+
+    .vis-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid #1e1e1e;
+      font-size: 12px;
+      font-weight: 700;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1px
+    }
+
+    .vis-panel-head .count {
+      background: #e8194b;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 10px
+    }
+
+    .vis-list {
+      max-height: 260px;
+      overflow-y: auto
+    }
+
+    .vis-row {
+      padding: 10px 16px;
+      border-bottom: 1px solid #1a1a1a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px
+    }
+
+    .vis-row:last-child {
+      border-bottom: none
+    }
+
+    .vis-dot {
+      width: 7px;
+      height: 7px;
+      background: #00c853;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 6px #00c853
+    }
+
+    .vis-page {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #ccc
+    }
+
+    .vis-device {
+      font-size: 10px;
+      color: #555;
+      padding: 1px 6px;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      white-space: nowrap
+    }
+
+    .vis-device.mobile {
+      color: #4da6ff;
+      border-color: #4da6ff30
+    }
+
+    .vis-meta {
+      font-size: 10px;
+      color: #444;
+      white-space: nowrap;
+      margin-left: auto
+    }
+
+    .no-visitors {
+      padding: 30px;
+      text-align: center;
+      color: #333;
+      font-size: 13px
+    }
+
+    .chart-wrap {
+      padding: 14px 16px
+    }
+
+    .chart-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px
+    }
+
+    .chart-bar-label {
+      width: 110px;
+      font-size: 11px;
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-shrink: 0
+    }
+
+    .chart-bar-track {
+      flex: 1;
+      background: #1a1a1a;
+      border-radius: 3px;
+      height: 6px;
+      overflow: hidden
+    }
+
+    .chart-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width .5s ease
+    }
+
+    .chart-bar-val {
+      font-size: 11px;
+      color: #555;
+      width: 20px;
+      text-align: right;
+      flex-shrink: 0
+    }
+
+    /* ── REVIEWS ─────────────────────────────────────────────────────── */
+    .review-filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap
+    }
+
+    .review-filter-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid #2a2a2a;
+      background: #1a1a1a;
+      color: #555;
+      transition: all .15s
+    }
+
+    .review-filter-btn.active {
+      background: #e8194b;
+      color: #fff;
+      border-color: #e8194b
+    }
+
+    .review-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .review-card {
+      background: #141414;
+      border: 1px solid #222;
+      border-radius: 10px;
+      overflow: hidden
+    }
+
+    .review-card.pending {
+      border-left: 3px solid #ffb300
+    }
+
+    .review-card.approved {
+      border-left: 3px solid #00c853
+    }
+
+    .review-card.rejected {
+      border-left: 3px solid #444;
+      opacity: .6
+    }
+
+    .review-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #1a1a1a;
+      flex-wrap: wrap
+    }
+
+    .review-product {
+      font-size: 10px;
+      color: #e8194b;
+      font-family: monospace;
+      background: #1e0a0a;
+      padding: 2px 7px;
+      border-radius: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 260px
+    }
+
+    .review-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    .review-status-dot.pending {
+      background: #ffb300
+    }
+
+    .review-status-dot.approved {
+      background: #00c853
+    }
+
+    .review-status-dot.rejected {
+      background: #444
+    }
+
+    .review-stars {
+      color: #ffb300;
+      font-size: 13px;
+      letter-spacing: 1px
+    }
+
+    .review-date {
+      font-size: 10px;
+      color: #444;
+      margin-left: auto
+    }
+
+    .review-body {
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 14px
+    }
+
+    .review-author {
+      display: flex;
+      flex-direction: column;
+      gap: 4px
+    }
+
+    .review-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #e0e0e0
+    }
+
+    .review-text {
+      font-size: 13px;
+      color: #999;
+      line-height: 1.6;
+      font-style: italic
+    }
+
+    .review-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: #111;
+      border-top: 1px solid #1a1a1a;
+      flex-wrap: wrap
+    }
+
+    .btn-approve {
+      background: #091509;
+      color: #00c853;
+      border: 1px solid #00c85340;
+      padding: 5px 14px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .btn-approve:hover {
+      background: #00c853;
+      color: #000
+    }
+
+    .btn-reject {
+      background: #1a0a0a;
+      color: #e8194b;
+      border: 1px solid #e8194b30;
+      padding: 5px 14px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .btn-reject:hover {
+      background: #e8194b;
+      color: #fff
+    }
+
+    .btn-delete {
+      background: #1a1a1a;
+      color: #555;
+      border: 1px solid #2a2a2a;
+      padding: 5px 14px;
+      border-radius: 5px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all .15s;
+      margin-left: auto
+    }
+
+    .btn-delete:hover {
+      color: #e8194b;
+      border-color: #e8194b30
+    }
+
+    .reviews-empty {
+      text-align: center;
+      padding: 40px;
+      color: #333;
+      font-size: 13px;
+      background: #141414;
+      border-radius: 12px;
+      border: 1px dashed #1e1e1e
+    }
+
+    .reviews-loading {
+      text-align: center;
+      padding: 30px;
+      color: #444;
+      font-size: 13px
+    }
+
+    /* IMPORT TOOL */
+    .tool-card {
+      background: #141414;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px
+    }
+
+    .tool-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px
+    }
+
+    .tool-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f0f0f0
+    }
+
+    .tool-card-sub {
+      font-size: 11px;
+      color: #444;
+      margin-top: 2px
+    }
+
+    .btn-primary {
+      background: #e8194b;
+      color: #fff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 7px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: opacity .2s;
+      white-space: nowrap
+    }
+
+    .btn-primary:hover {
+      opacity: .85
+    }
+
+    .btn-primary:disabled {
+      opacity: .4;
+      cursor: not-allowed
+    }
+
+    .btn-secondary {
+      background: #1e1e1e;
+      color: #aaa;
+      border: 1px solid #2a2a2a;
+      padding: 7px 14px;
+      border-radius: 7px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .btn-secondary:hover {
+      border-color: #e8194b;
+      color: #e8194b
+    }
+
+    .progress-wrap {
+      display: none
+    }
+
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #555;
+      margin-bottom: 5px
+    }
+
+    .progress-track {
+      background: #1e1e1e;
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+      margin-bottom: 10px
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #e8194b;
+      width: 0%;
+      transition: width .3s;
+      border-radius: 4px
+    }
+
+    .import-log {
+      background: #0a0a0a;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 10px;
+      color: #444;
+      max-height: 140px;
+      overflow-y: auto;
+      font-family: monospace;
+      line-height: 1.6
+    }
+
+    /* FIREBASE RULES */
+    .rules-banner {
+      background: #0d0800;
+      border: 1px solid #3a2000;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 16px
+    }
+
+    .rules-title {
+      font-weight: 700;
+      color: #ffb300;
+      margin-bottom: 8px;
+      font-size: 13px
+    }
+
+    .rules-pre {
+      background: #0a0a0a;
+      border: 1px solid #1e1e1e;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 10px;
+      color: #7ec8e3;
+      margin: 8px 0;
+      overflow-x: auto;
+      font-family: monospace;
+      line-height: 1.5
+    }
+
+    /* PRODUCTS TAB */
+    .products-toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .search-input {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #f0f0f0;
+      padding: 8px 14px;
+      border-radius: 7px;
+      font-size: 13px;
+      outline: none;
+      width: 240px;
+      transition: border-color .2s
+    }
+
+    .search-input:focus {
+      border-color: #e8194b
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px
+    }
+
+    .product-mini-card {
+      background: #141414;
+      border: 1px solid #1e1e1e;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color .2s
+    }
+
+    .product-mini-card:hover {
+      border-color: #e8194b30
+    }
+
+    .pmc-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background: #1a1a1a;
+      display: block
+    }
+
+    .pmc-body {
+      padding: 12px
+    }
+
+    .pmc-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #e0e0e0;
+      margin-bottom: 4px;
+      line-height: 1.3
+    }
+
+    .pmc-handle {
+      font-size: 10px;
+      color: #444;
+      font-family: monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 8px
+    }
+
+    .pmc-price {
+      font-size: 14px;
+      font-weight: 800;
+      color: #e8194b
+    }
+
+    .pmc-cat {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: #1e1e1e;
+      color: #555;
+      border: 1px solid #2a2a2a;
+      display: inline-block;
+      margin-top: 6px
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:700px) {
+      .order-body {
+        grid-template-columns: 1fr
+      }
+
+      .order-customer-col {
+        border-right: none;
+        border-bottom: 1px solid #1e1e1e
+      }
+
+      .visitors-grid {
+        grid-template-columns: 1fr
+      }
+
+      .review-body {
+        grid-template-columns: 1fr
+      }
+
+      .stats-bar .stat-card {
+        min-width: 80px
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-card">
-    <div class="login-logo">
-      <div class="brand">Nova Style</div>
-      <div class="sub">Administration</div>
-    </div>
-    <div class="lf"><label>Email</label><input type="email" id="login-email" autocomplete="username" placeholder="admin@novastyle.ma"></div>
-    <div class="lf"><label>Mot de passe</label><input type="password" id="login-password" autocomplete="current-password" placeholder="••••••••"></div>
-    <button class="btn-login" id="btn-login">Se connecter</button>
-    <div id="login-error"></div>
-    <div id="login-attempts"></div>
-  </div>
-</div>
-
-<!-- ADMIN -->
-<div id="admin-screen">
-
-  <div class="admin-header">
-    <h1>⬡ Nova Style Admin</h1>
-    <div class="hright">
-      <div class="live-badge"><span class="live-dot"></span>Live</div>
-      <span class="admin-email" id="admin-email-display"></span>
-      <button class="btn-sm" id="btn-logout">Déconnexion</button>
+  <!-- LOGIN -->
+  <div id="login-screen">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="brand">Nova Style</div>
+        <div class="sub">Administration</div>
+      </div>
+      <div class="lf"><label>Email</label><input type="email" id="login-email" autocomplete="username"
+          placeholder="admin@novastyle.ma"></div>
+      <div class="lf"><label>Mot de passe</label><input type="password" id="login-password"
+          autocomplete="current-password" placeholder="••••••••"></div>
+      <button class="btn-login" id="btn-login">Se connecter</button>
+      <div id="login-error"></div>
+      <div id="login-attempts"></div>
     </div>
   </div>
 
-  <div class="stats-bar">
-    <div class="stat-card"><div class="lbl">Commandes</div><div class="val" id="stat-total">—</div></div>
-    <div class="stat-card"><div class="lbl">Aujourd'hui</div><div class="val green" id="stat-today">—</div></div>
-    <div class="stat-card"><div class="lbl">Chiffre d'affaires</div><div class="val" id="stat-revenue">—</div></div>
-    <div class="stat-card"><div class="lbl">Visiteurs live</div><div class="val green" id="stat-visitors">0</div></div>
-    <div class="stat-card"><div class="lbl">Avec panier</div><div class="val blue" id="stat-cart">0</div></div>
-    <div class="stat-card"><div class="lbl">Avis en attente</div><div class="val amber" id="stat-pending-reviews">—</div></div>
-  </div>
+  <!-- ADMIN -->
+  <div id="admin-screen">
 
-  <div class="tab-bar">
-    <div class="tab active" data-tab="orders">📦 Commandes</div>
-    <div class="tab" data-tab="visitors">👥 Visiteurs</div>
-    <div class="tab" data-tab="reviews">⭐ Avis<span class="tab-badge" id="reviews-tab-badge">0</span></div>
-    <div class="tab" data-tab="products">🪞 Produits</div>
-    <div class="tab" data-tab="import">🚀 Import</div>
-    <div class="tab" data-tab="nouveau">➕ Nouveau</div>
-  </div>
-
-  <!-- ═══ ORDERS ═══ -->
-  <div class="tab-panel active" id="tab-orders">
-    <div class="container">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-        <div class="section-title">Commandes</div>
-        <div style="display:flex;gap:8px">
-          <input class="search-input" id="order-search" placeholder="🔍 Rechercher client, ville…" style="width:200px">
-        </div>
-      </div>
-      <div id="orders-display"><div class="loading">Connexion Firebase…</div></div>
-    </div>
-  </div>
-
-  <!-- ═══ VISITORS ═══ -->
-  <div class="tab-panel" id="tab-visitors">
-    <div class="container">
-      <div class="visitors-grid">
-        <div class="vis-panel">
-          <div class="vis-panel-head"><span>Visiteurs actifs</span><span class="count" id="vis-count">0</span></div>
-          <div class="vis-list" id="vis-list"><div class="no-visitors">Aucun visiteur en ce moment</div></div>
-        </div>
-        <div class="vis-panel">
-          <div class="vis-panel-head"><span>Pages populaires</span></div>
-          <div class="chart-wrap" id="vis-pages-chart"></div>
-        </div>
-      </div>
-      <div class="visitors-grid">
-        <div class="vis-panel">
-          <div class="vis-panel-head"><span>Appareils</span></div>
-          <div class="chart-wrap" id="vis-devices-chart"></div>
-        </div>
-        <div class="vis-panel">
-          <div class="vis-panel-head"><span>Sources de trafic</span></div>
-          <div class="chart-wrap" id="vis-sources-chart"></div>
-        </div>
+    <div class="admin-header">
+      <h1>⬡ Nova Style Admin</h1>
+      <div class="hright">
+        <div class="live-badge"><span class="live-dot"></span>Live</div>
+        <span class="admin-email" id="admin-email-display"></span>
+        <button class="btn-sm" id="btn-logout">Déconnexion</button>
       </div>
     </div>
-  </div>
 
-  <!-- ═══ REVIEWS ═══ -->
-  <div class="tab-panel" id="tab-reviews">
-    <div class="container">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-        <div class="section-title" style="margin:0">Modération des avis</div>
-        <button class="btn-secondary" id="btn-refresh-reviews">🔄 Actualiser</button>
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="lbl">Commandes</div>
+        <div class="val" id="stat-total">—</div>
       </div>
-
-      <div class="review-filters">
-        <button class="review-filter-btn active" data-filter="pending">⏳ En attente <span id="filter-count-pending" style="opacity:.6"></span></button>
-        <button class="review-filter-btn" data-filter="approved">✅ Approuvés <span id="filter-count-approved" style="opacity:.6"></span></button>
-        <button class="review-filter-btn" data-filter="rejected">❌ Rejetés <span id="filter-count-rejected" style="opacity:.6"></span></button>
-        <button class="review-filter-btn" data-filter="all">Tous</button>
+      <div class="stat-card">
+        <div class="lbl">Aujourd'hui</div>
+        <div class="val green" id="stat-today">—</div>
       </div>
-
-      <div id="reviews-grid" class="review-grid">
-        <div class="reviews-loading">Cliquez Actualiser pour charger les avis.</div>
+      <div class="stat-card">
+        <div class="lbl">Chiffre d'affaires</div>
+        <div class="val" id="stat-revenue">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="lbl">Visiteurs live</div>
+        <div class="val green" id="stat-visitors">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="lbl">Avec panier</div>
+        <div class="val blue" id="stat-cart">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="lbl">Avis en attente</div>
+        <div class="val amber" id="stat-pending-reviews">—</div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══ PRODUCTS ═══ -->
-  <div class="tab-panel" id="tab-products">
-    <div class="container">
-      <div class="products-toolbar">
-        <div class="section-title" style="margin:0">Catalogue produits</div>
-        <input class="search-input" id="product-search" placeholder="🔍 Rechercher produit…">
-        <select id="product-cat-filter" class="search-input" style="width:180px">
-          <option value="">Toutes catégories</option>
-          <option value="sdb-premium">SDB Premium</option>
-          <option value="sdb-essentiel">SDB Essentiel</option>
-          <option value="salon">Salon</option>
-          <option value="consoles">Consoles</option>
-          <option value="tables">Tables</option>
-          <option value="douches">Douches</option>
-        </select>
-        <span id="product-count" style="font-size:11px;color:#444;margin-left:auto"></span>
-        <button class="btn-primary" onclick="document.querySelector('.tab[data-tab=\'nouveau\']').click()" style="margin-left:12px;padding:6px 12px">➕ Nouveau</button>
-      </div>
-      <div id="product-grid" class="product-grid"><div class="reviews-loading">Chargement des produits…</div></div>
+    <div class="tab-bar">
+      <div class="tab active" data-tab="orders">📦 Commandes</div>
+      <div class="tab" data-tab="visitors">👥 Visiteurs</div>
+      <div class="tab" data-tab="reviews">⭐ Avis<span class="tab-badge" id="reviews-tab-badge">0</span></div>
+      <div class="tab" data-tab="products">🪞 Produits</div>
+      <div class="tab" data-tab="import">🚀 Import</div>
+      <div class="tab" data-tab="nouveau">➕ Nouveau</div>
     </div>
-  </div>
 
-  <!-- ═══ IMPORT ═══ -->
-  <div class="tab-panel" id="tab-import">
-    <div class="container" style="max-width:800px">
-
-      <div class="rules-banner">
-        <div class="rules-title">⚠️ Règles Firebase Realtime Database</div>
-        <div style="font-size:12px;color:#888;line-height:1.7;margin-bottom:8px">
-          Ouvrir <a href="https://console.firebase.google.com/project/nova-9ac76/database/nova-9ac76-default-rtdb/rules" target="_blank" style="color:#e8194b">Firebase Console → Realtime Database → Règles</a> et appliquer :
-        </div>
-        <pre class="rules-pre" id="rules-code">{"rules":{".read":false,".write":false,"reviews":{".read":true,".write":true},"pending_reviews":{".read":false,".write":true},"visitors":{".read":false,".write":true},"orders":{".read":false,".write":true}}}</pre>
-        <button onclick="navigator.clipboard.writeText(document.getElementById('rules-code').textContent).then(()=>{this.textContent='✅ Copié !';setTimeout(()=>this.textContent='📋 Copier',2000)})"
-          style="background:#1e1e1e;color:#aaa;border:1px solid #2a2a2a;padding:5px 12px;border-radius:5px;font-size:11px;cursor:pointer">📋 Copier</button>
-      </div>
-
-      <div class="tool-card">
-        <div class="tool-card-head">
-          <div>
-            <div class="tool-card-title">Import des avis</div>
-            <div class="tool-card-sub">Importer reviews_import.json vers Firebase (avis approuvés)</div>
+    <!-- ═══ ORDERS ═══ -->
+    <div class="tab-panel active" id="tab-orders">
+      <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div class="section-title">Commandes</div>
+          <div style="display:flex;gap:8px">
+            <input class="search-input" id="order-search" placeholder="🔍 Rechercher client, ville…"
+              style="width:200px">
           </div>
-          <button class="btn-primary" id="btn-import">🚀 Lancer l'import</button>
         </div>
-        <div class="progress-wrap" id="import-wrap">
-          <div class="progress-row"><span id="import-status">Chargement…</span><span id="import-pct">0%</span></div>
-          <div class="progress-track"><div class="progress-bar" id="import-bar"></div></div>
-          <div class="import-log" id="import-log"></div>
+        <div id="orders-display">
+          <div class="loading">Connexion Firebase…</div>
         </div>
       </div>
+    </div>
 
-      <div class="tool-card">
-        <div class="tool-card-head">
-          <div>
-            <div class="tool-card-title">Statistiques avis Firebase</div>
-            <div class="tool-card-sub">Vue globale du contenu en base</div>
+    <!-- ═══ VISITORS ═══ -->
+    <div class="tab-panel" id="tab-visitors">
+      <div class="container">
+        <div class="visitors-grid">
+          <div class="vis-panel">
+            <div class="vis-panel-head"><span>Visiteurs actifs</span><span class="count" id="vis-count">0</span></div>
+            <div class="vis-list" id="vis-list">
+              <div class="no-visitors">Aucun visiteur en ce moment</div>
+            </div>
           </div>
-          <button class="btn-secondary" id="btn-reload-stats">🔄 Actualiser</button>
+          <div class="vis-panel">
+            <div class="vis-panel-head"><span>Pages populaires</span></div>
+            <div class="chart-wrap" id="vis-pages-chart"></div>
+          </div>
         </div>
-        <div id="reviews-stats" style="font-size:13px;color:#444">Cliquez Actualiser pour charger.</div>
+        <div class="visitors-grid">
+          <div class="vis-panel">
+            <div class="vis-panel-head"><span>Appareils</span></div>
+            <div class="chart-wrap" id="vis-devices-chart"></div>
+          </div>
+          <div class="vis-panel">
+            <div class="vis-panel-head"><span>Sources de trafic</span></div>
+            <div class="chart-wrap" id="vis-sources-chart"></div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══ NOUVEAU PRODUIT ═══ -->
-  <div class="tab-panel" id="tab-nouveau">
-    <div id="nouveau-root">
-      <div class="reviews-loading">Initialisation du créateur de produit…</div>
+    <!-- ═══ REVIEWS ═══ -->
+    <div class="tab-panel" id="tab-reviews">
+      <div class="container">
+        <div
+          style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div class="section-title" style="margin:0">Modération des avis</div>
+          <button class="btn-secondary" id="btn-refresh-reviews">🔄 Actualiser</button>
+        </div>
+
+        <div class="review-filters">
+          <button class="review-filter-btn active" data-filter="pending">⏳ En attente <span id="filter-count-pending"
+              style="opacity:.6"></span></button>
+          <button class="review-filter-btn" data-filter="approved">✅ Approuvés <span id="filter-count-approved"
+              style="opacity:.6"></span></button>
+          <button class="review-filter-btn" data-filter="rejected">❌ Rejetés <span id="filter-count-rejected"
+              style="opacity:.6"></span></button>
+          <button class="review-filter-btn" data-filter="all">Tous</button>
+        </div>
+
+        <div id="reviews-grid" class="review-grid">
+          <div class="reviews-loading">Cliquez Actualiser pour charger les avis.</div>
+        </div>
+      </div>
     </div>
-  </div>
 
-</div><!-- /admin-screen -->
+    <!-- ═══ PRODUCTS ═══ -->
+    <div class="tab-panel" id="tab-products">
+      <div class="container">
+        <div class="products-toolbar">
+          <div class="section-title" style="margin:0">Catalogue produits</div>
+          <input class="search-input" id="product-search" placeholder="🔍 Rechercher produit…">
+          <select id="product-cat-filter" class="search-input" style="width:180px">
+            <option value="">Toutes catégories</option>
+            <option value="sdb-premium">SDB Premium</option>
+            <option value="sdb-essentiel">SDB Essentiel</option>
+            <option value="salon">Salon</option>
+            <option value="consoles">Consoles</option>
+            <option value="tables">Tables</option>
+            <option value="douches">Douches</option>
+          </select>
+          <span id="product-count" style="font-size:11px;color:#444;margin-left:auto"></span>
+          <button class="btn-primary" onclick="document.querySelector('.tab[data-tab=\'nouveau\']').click()"
+            style="margin-left:12px;padding:6px 12px">➕ Nouveau</button>
+        </div>
+        <div id="product-grid" class="product-grid">
+          <div class="reviews-loading">Chargement des produits…</div>
+        </div>
+      </div>
+    </div>
 
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18",
-    "react-dom/client": "https://esm.sh/react-dom@18/client"
-  }
-}
-</script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- ═══ IMPORT ═══ -->
+    <div class="tab-panel" id="tab-import">
+      <div class="container" style="max-width:800px">
 
-<script type="module">
-import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, update, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        <div class="rules-banner">
+          <div class="rules-title">⚠️ Règles Firebase Realtime Database</div>
+          <div style="font-size:12px;color:#888;line-height:1.7;margin-bottom:8px">
+            Ouvrir <a
+              href="https://console.firebase.google.com/project/nova-9ac76/database/nova-9ac76-default-rtdb/rules"
+              target="_blank" style="color:#e8194b">Firebase Console → Realtime Database → Règles</a> et appliquer :
+          </div>
+          <pre class="rules-pre"
+            id="rules-code">{"rules":{".read":false,".write":false,"reviews":{".read":true,".write":true},"pending_reviews":{".read":false,".write":true},"visitors":{".read":false,".write":true},"orders":{".read":false,".write":true}}}</pre>
+          <button
+            onclick="navigator.clipboard.writeText(document.getElementById('rules-code').textContent).then(()=>{this.textContent='✅ Copié !';setTimeout(()=>this.textContent='📋 Copier',2000)})"
+            style="background:#1e1e1e;color:#aaa;border:1px solid #2a2a2a;padding:5px 12px;border-radius:5px;font-size:11px;cursor:pointer">📋
+            Copier</button>
+        </div>
 
-const firebaseConfig={apiKey:"AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",authDomain:"nova-9ac76.firebaseapp.com",projectId:"nova-9ac76",databaseURL:"https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app",storageBucket:"nova-9ac76.firebasestorage.app",messagingSenderId:"645613145752",appId:"1:645613145752:web:775e6f8ffce64ae12c4aed"};
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
-await setPersistence(auth,browserSessionPersistence);
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <div>
+              <div class="tool-card-title">Import des avis</div>
+              <div class="tool-card-sub">Importer reviews_import.json vers Firebase (avis approuvés)</div>
+            </div>
+            <button class="btn-primary" id="btn-import">🚀 Lancer l'import</button>
+          </div>
+          <div class="progress-wrap" id="import-wrap">
+            <div class="progress-row"><span id="import-status">Chargement…</span><span id="import-pct">0%</span></div>
+            <div class="progress-track">
+              <div class="progress-bar" id="import-bar"></div>
+            </div>
+            <div class="import-log" id="import-log"></div>
+          </div>
+        </div>
 
-const DB_REST="https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <div>
+              <div class="tool-card-title">Statistiques avis Firebase</div>
+              <div class="tool-card-sub">Vue globale du contenu en base</div>
+            </div>
+            <button class="btn-secondary" id="btn-reload-stats">🔄 Actualiser</button>
+          </div>
+          <div id="reviews-stats" style="font-size:13px;color:#444">Cliquez Actualiser pour charger.</div>
+        </div>
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-function stars(n){return"★".repeat(Math.max(0,Math.min(5,n||0)))+"☆".repeat(Math.max(0,5-(n||0)));}
-function fmtDate(iso){try{return new Date(iso).toLocaleDateString("fr-MA",{day:"numeric",month:"short",year:"numeric"});}catch{return iso||"";}}
-function ping(){try{new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play().catch(()=>{});}catch{}}
-function countBy(arr,key){const m={};arr.forEach(v=>{const k=v[key]||"Autre";m[k]=(m[k]||0)+1;});return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,6);}
-function renderBarChart(elId,entries,color){const el=document.getElementById(elId);if(!el)return;if(!entries.length){el.innerHTML="<div style='padding:20px;color:#333;font-size:11px'>Pas de données</div>";return;}const max=entries[0][1]||1;el.innerHTML=entries.map(([l,v])=>{const p=Math.round((v/max)*100);return`<div class="chart-bar-row"><div class="chart-bar-label" title="${esc(l)}">${esc(l)}</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${p}%;background:${color}"></div></div><div class="chart-bar-val">${v}</div></div>`;}).join("");}
-function formatDur(s){if(s<60)return`${s}s`;return`${Math.floor(s/60)}min`;}
-function optTags(o){if(!o||typeof o!=="object")return"";return Object.entries(o).map(([k,v])=>{let c="opt-tag";if(k.toLowerCase()==="led")c+=" led";else if(k.toLowerCase()==="installation")c+=" install";return`<span class="${c}">${esc(k)}: ${esc(v)}</span>`;}).join("");}
+        <div class="tool-card" style="background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%); border-color: #2a2a2a;">
+          <div class="tool-card-head">
+            <div>
+              <div class="tool-card-title" style="display:flex;align-items:center;gap:8px">📊 Meta Business Catalog</div>
+              <div class="tool-card-sub">Générer le flux CSV pour Facebook & Instagram Shopping</div>
+            </div>
+            <button class="btn-primary" onclick="downloadMetaCatalog()" style="background:#0081ff;border-color:#0081ff">📥 Télécharger</button>
+          </div>
+          <p style="font-size:12px;color:#666;margin-top:10px;line-height:1.5">Cet outil génère un fichier CSV formaté pour Meta (ID, Titre, Prix MAD, Lien, Image). Téléchargez-le et uploadez-le dans votre Commerce Manager.</p>
+        </div>
 
-// ── Lockout ───────────────────────────────────────────────────────────────────
-const FK="nva_af";
-function getFS(){try{return JSON.parse(sessionStorage.getItem(FK)||"{}");}catch{return{};}}
-function setFS(s){sessionStorage.setItem(FK,JSON.stringify(s));}
-function isLocked(){const s=getFS();if(!s.n||s.n<5)return false;if(Date.now()-s.t>900000){setFS({});return false;}return true;}
-function recFail(){const s=getFS();setFS({n:(s.n||0)+1,t:Date.now()});updAttempts();}
-function clrFails(){setFS({});}
-function updAttempts(){const el=document.getElementById("login-attempts");if(!el)return;const s=getFS();if(!s.n){el.textContent="";return;}if(isLocked()){const m=Math.ceil((900000-(Date.now()-s.t))/60000);el.textContent=`🔒 Bloqué ${m} min`;}else{const r=5-s.n;el.textContent=r>0?`${r} tentative${r>1?"s":""} restante${r>1?"s":""}`:"";}};
+      </div>
+    </div>
 
-// ── Login ─────────────────────────────────────────────────────────────────────
-async function doLogin(){
-  const em=document.getElementById("login-email"),pw=document.getElementById("login-password"),er=document.getElementById("login-error"),bt=document.getElementById("btn-login");
-  er.textContent="";
-  if(isLocked()){updAttempts();return;}
-  if(!em.value.trim()||!pw.value){er.textContent="Remplissez tous les champs.";return;}
-  bt.disabled=true;bt.textContent="Connexion…";
-  try{await signInWithEmailAndPassword(auth,em.value.trim(),pw.value);clrFails();pw.value="";}
-  catch{recFail();bt.disabled=false;bt.textContent="Se connecter";er.textContent="Email ou mot de passe incorrect.";}
-}
-document.getElementById("btn-login").addEventListener("click",doLogin);
-["login-password","login-email"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>e.key==="Enter"&&doLogin()));
-document.getElementById("btn-logout").addEventListener("click",()=>signOut(auth));
+    <!-- ═══ NOUVEAU PRODUIT ═══ -->
+    <div class="tab-panel" id="tab-nouveau">
+      <div id="nouveau-root">
+        <div class="reviews-loading">Initialisation du créateur de produit…</div>
+      </div>
+    </div>
 
-// ── Tabs ──────────────────────────────────────────────────────────────────────
-document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click",()=>{
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
-    tab.classList.add("active");
-    document.getElementById("tab-"+tab.dataset.tab).classList.add("active");
-    if(tab.dataset.tab==="products") loadProducts();
-    if(tab.dataset.tab==="nouveau") window.dispatchEvent(new CustomEvent("init-nouveau"));
-  });
-});
+  </div><!-- /admin-screen -->
 
-// ── Auth router ───────────────────────────────────────────────────────────────
-let unsubOrders=null,unsubVisitors=null,unsubPending=null;
-onAuthStateChanged(auth,user=>{
-  const ls=document.getElementById("login-screen"),as=document.getElementById("admin-screen");
-  if(user){
-    ls.style.display="none";as.style.display="block";
-    document.getElementById("admin-email-display").textContent=user.email;
-    startOrders();startVisitors();watchPendingReviews();
-  }else{
-    ls.style.display="flex";as.style.display="none";
-    [unsubOrders,unsubVisitors,unsubPending].forEach(u=>u&&u());
-    unsubOrders=unsubVisitors=unsubPending=null;
-    updAttempts();
-  }
-});
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, onValue, set, update, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// ── ORDERS ────────────────────────────────────────────────────────────────────
-let allOrders=[];
-let prevCount=0;
+    const firebaseConfig = { apiKey: "AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc", authDomain: "nova-9ac76.firebaseapp.com", projectId: "nova-9ac76", databaseURL: "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app", storageBucket: "nova-9ac76.firebasestorage.app", messagingSenderId: "645613145752", appId: "1:645613145752:web:775e6f8ffce64ae12c4aed" };
+    const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getDatabase(app);
+    await setPersistence(auth, browserSessionPersistence);
 
-function statusLabel(s){
-  const map={pending:"En attente",confirmed:"Confirmée",delivered:"Livrée",cancelled:"Annulée"};
-  return map[s]||"En attente";
-}
+    const DB_REST = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
 
-function renderOrder(id,o,isNew){
-  const c=o.customer||{},items=o.items||[],total=o.total||0,deposit=Math.round(total*.5),dt=new Date(o.timestamp);
-  const st=o.status||"pending";
-  const ih=items.map(it=>{const lt=(it.price||0)*(it.quantity||1);return`<div class="item-row"><div class="item-name">${esc(it.name||"—")}</div>${it.options?`<div class="item-options">${optTags(it.options)}</div>`:""}<div class="item-footer"><span class="qty">×${it.quantity||1} · ${(it.price||0).toLocaleString("fr-MA")} MAD</span><span class="item-price">${lt.toLocaleString("fr-MA")} MAD</span></div></div>`;}).join("");
-  return`<div class="order-card status-${st} ${isNew?"new-order":""}">
+    // ── Helpers ──────────────────────────────────────────────────────────────────
+    function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+    function stars(n) { return "★".repeat(Math.max(0, Math.min(5, n || 0))) + "☆".repeat(Math.max(0, 5 - (n || 0))); }
+    function fmtDate(iso) { try { return new Date(iso).toLocaleDateString("fr-MA", { day: "numeric", month: "short", year: "numeric" }); } catch { return iso || ""; } }
+    function ping() { try { new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play().catch(() => { }); } catch { } }
+    function countBy(arr, key) { const m = {}; arr.forEach(v => { const k = v[key] || "Autre"; m[k] = (m[k] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 6); }
+    function renderBarChart(elId, entries, color) { const el = document.getElementById(elId); if (!el) return; if (!entries.length) { el.innerHTML = "<div style='padding:20px;color:#333;font-size:11px'>Pas de données</div>"; return; } const max = entries[0][1] || 1; el.innerHTML = entries.map(([l, v]) => { const p = Math.round((v / max) * 100); return `<div class="chart-bar-row"><div class="chart-bar-label" title="${esc(l)}">${esc(l)}</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${p}%;background:${color}"></div></div><div class="chart-bar-val">${v}</div></div>`; }).join(""); }
+    function formatDur(s) { if (s < 60) return `${s}s`; return `${Math.floor(s / 60)}min`; }
+    function optTags(o) { if (!o || typeof o !== "object") return ""; return Object.entries(o).map(([k, v]) => { let c = "opt-tag"; if (k.toLowerCase() === "led") c += " led"; else if (k.toLowerCase() === "installation") c += " install"; return `<span class="${c}">${esc(k)}: ${esc(v)}</span>`; }).join(""); }
+
+    // ── Lockout ───────────────────────────────────────────────────────────────────
+    const FK = "nva_af";
+    function getFS() { try { return JSON.parse(sessionStorage.getItem(FK) || "{}"); } catch { return {}; } }
+    function setFS(s) { sessionStorage.setItem(FK, JSON.stringify(s)); }
+    function isLocked() { const s = getFS(); if (!s.n || s.n < 5) return false; if (Date.now() - s.t > 900000) { setFS({}); return false; } return true; }
+    function recFail() { const s = getFS(); setFS({ n: (s.n || 0) + 1, t: Date.now() }); updAttempts(); }
+    function clrFails() { setFS({}); }
+    function updAttempts() { const el = document.getElementById("login-attempts"); if (!el) return; const s = getFS(); if (!s.n) { el.textContent = ""; return; } if (isLocked()) { const m = Math.ceil((900000 - (Date.now() - s.t)) / 60000); el.textContent = `🔒 Bloqué ${m} min`; } else { const r = 5 - s.n; el.textContent = r > 0 ? `${r} tentative${r > 1 ? "s" : ""} restante${r > 1 ? "s" : ""}` : ""; } };
+
+    // ── Login ─────────────────────────────────────────────────────────────────────
+    async function doLogin() {
+      const em = document.getElementById("login-email"), pw = document.getElementById("login-password"), er = document.getElementById("login-error"), bt = document.getElementById("btn-login");
+      er.textContent = "";
+      if (isLocked()) { updAttempts(); return; }
+      if (!em.value.trim() || !pw.value) { er.textContent = "Remplissez tous les champs."; return; }
+      bt.disabled = true; bt.textContent = "Connexion…";
+      try { await signInWithEmailAndPassword(auth, em.value.trim(), pw.value); clrFails(); pw.value = ""; }
+      catch { recFail(); bt.disabled = false; bt.textContent = "Se connecter"; er.textContent = "Email ou mot de passe incorrect."; }
+    }
+    document.getElementById("btn-login").addEventListener("click", doLogin);
+    ["login-password", "login-email"].forEach(id => document.getElementById(id).addEventListener("keydown", e => e.key === "Enter" && doLogin()));
+    document.getElementById("btn-logout").addEventListener("click", () => signOut(auth));
+
+    // ── Tabs ──────────────────────────────────────────────────────────────────────
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById("tab-" + tab.dataset.tab).classList.add("active");
+        if (tab.dataset.tab === "products") loadProducts();
+        if (tab.dataset.tab === "nouveau") window.dispatchEvent(new CustomEvent("init-nouveau"));
+      });
+    });
+
+    // ── Auth router ───────────────────────────────────────────────────────────────
+    let unsubOrders = null, unsubVisitors = null, unsubPending = null;
+    onAuthStateChanged(auth, user => {
+      const ls = document.getElementById("login-screen"), as = document.getElementById("admin-screen");
+      if (user) {
+        ls.style.display = "none"; as.style.display = "block";
+        document.getElementById("admin-email-display").textContent = user.email;
+        startOrders(); startVisitors(); watchPendingReviews();
+      } else {
+        ls.style.display = "flex"; as.style.display = "none";
+        [unsubOrders, unsubVisitors, unsubPending].forEach(u => u && u());
+        unsubOrders = unsubVisitors = unsubPending = null;
+        updAttempts();
+      }
+    });
+
+    // ── ORDERS ────────────────────────────────────────────────────────────────────
+    let allOrders = [];
+    let prevCount = 0;
+
+    function statusLabel(s) {
+      const map = { pending: "En attente", confirmed: "Confirmée", delivered: "Livrée", cancelled: "Annulée" };
+      return map[s] || "En attente";
+    }
+
+    function renderOrder(id, o, isNew) {
+      const c = o.customer || {}, items = o.items || [], total = o.total || 0, deposit = Math.round(total * .5), dt = new Date(o.timestamp);
+      const st = o.status || "pending";
+      const ih = items.map(it => { const lt = (it.price || 0) * (it.quantity || 1); return `<div class="item-row"><div class="item-name">${esc(it.name || "—")}</div>${it.options ? `<div class="item-options">${optTags(it.options)}</div>` : ""}<div class="item-footer"><span class="qty">×${it.quantity || 1} · ${(it.price || 0).toLocaleString("fr-MA")} MAD</span><span class="item-price">${lt.toLocaleString("fr-MA")} MAD</span></div></div>`; }).join("");
+      return `<div class="order-card status-${st} ${isNew ? "new-order" : ""}">
     <div class="order-head">
       <div class="order-id">#${id.slice(-6).toUpperCase()}</div>
       <select class="order-status-badge ${st}" onchange="window.updateOrderStatus('${id}',this.value,this)">
-        <option value="pending"   ${st==="pending"   ?"selected":""}>⏳ En attente</option>
-        <option value="confirmed" ${st==="confirmed" ?"selected":""}>✅ Confirmée</option>
-        <option value="delivered" ${st==="delivered" ?"selected":""}>📦 Livrée</option>
-        <option value="cancelled" ${st==="cancelled" ?"selected":""}>❌ Annulée</option>
+        <option value="pending"   ${st === "pending" ? "selected" : ""}>⏳ En attente</option>
+        <option value="confirmed" ${st === "confirmed" ? "selected" : ""}>✅ Confirmée</option>
+        <option value="delivered" ${st === "delivered" ? "selected" : ""}>📦 Livrée</option>
+        <option value="cancelled" ${st === "cancelled" ? "selected" : ""}>❌ Annulée</option>
       </select>
-      <div class="order-time">${dt.toLocaleDateString("fr-MA")} ${dt.toLocaleTimeString("fr-MA",{hour:"2-digit",minute:"2-digit"})}</div>
+      <div class="order-time">${dt.toLocaleDateString("fr-MA")} ${dt.toLocaleTimeString("fr-MA", { hour: "2-digit", minute: "2-digit" })}</div>
     </div>
     <div class="order-body">
       <div class="order-customer-col">
-        <div class="customer-name">${esc(c.name||"—")}</div>
-        <div class="customer-row"><span>📞</span><span class="customer-phone">${esc(c.phone||"—")}</span></div>
-        <div class="customer-row"><span>📍</span><span>${esc(c.city||"—")}</span></div>
-        ${c.address?`<div class="customer-row"><span>🏠</span><span>${esc(c.address)}</span></div>`:""}
-        ${c.email?`<div class="customer-row"><span>✉️</span><span>${esc(c.email)}</span></div>`:""}
-        ${c.notes?`<div class="customer-notes">💬 ${esc(c.notes)}</div>`:""}
+        <div class="customer-name">${esc(c.name || "—")}</div>
+        <div class="customer-row"><span>📞</span><span class="customer-phone">${esc(c.phone || "—")}</span></div>
+        <div class="customer-row"><span>📍</span><span>${esc(c.city || "—")}</span></div>
+        ${c.address ? `<div class="customer-row"><span>🏠</span><span>${esc(c.address)}</span></div>` : ""}
+        ${c.email ? `<div class="customer-row"><span>✉️</span><span>${esc(c.email)}</span></div>` : ""}
+        ${c.notes ? `<div class="customer-notes">💬 ${esc(c.notes)}</div>` : ""}
       </div>
       <div class="order-items-col">${ih}</div>
     </div>
     <div class="order-foot">
-      <button class="btn-sm" onclick='window.printOrder("${id}",${JSON.stringify(o).replace(/'/g,"&apos;")})' style="border-color:#e8194b;color:#e8194b">🖨️ Imprimer</button>
+      <button class="btn-sm" onclick='window.printOrder("${id}",${JSON.stringify(o).replace(/'/g, "&apos;")})' style="border-color:#e8194b;color:#e8194b">🖨️ Imprimer</button>
       <span class="foot-deposit">Acompte: ${deposit.toLocaleString("fr-MA")} MAD</span>
       <span class="foot-label">Total:</span>
       <span class="foot-total">${total.toLocaleString("fr-MA")} MAD</span>
     </div>
   </div>`;
-}
+    }
 
-window.updateOrderStatus=async function(id,newStatus,selectEl){
-  try{
-    await update(ref(db,`orders/${id}`),{status:newStatus});
-    selectEl.className=`order-status-badge ${newStatus}`;
-    selectEl.closest(".order-card").className=`order-card status-${newStatus}`;
-  }catch(e){alert("Erreur: "+e.message);selectEl.value=selectEl.dataset.prev||"pending";}
-};
+    window.updateOrderStatus = async function (id, newStatus, selectEl) {
+      try {
+        await update(ref(db, `orders/${id}`), { status: newStatus });
+        selectEl.className = `order-status-badge ${newStatus}`;
+        selectEl.closest(".order-card").className = `order-card status-${newStatus}`;
+      } catch (e) { alert("Erreur: " + e.message); selectEl.value = selectEl.dataset.prev || "pending"; }
+    };
 
-function renderOrders(list){
-  const q=(document.getElementById("order-search").value||"").toLowerCase();
-  const filtered=q?list.filter(([,o])=>{const c=o.customer||{};return(c.name||"").toLowerCase().includes(q)||(c.phone||"").toLowerCase().includes(q)||(c.city||"").toLowerCase().includes(q);}):list;
-  const el=document.getElementById("orders-display");
-  if(!filtered.length){el.innerHTML="<div class='no-order'>Aucune commande trouvée.</div>";return;}
-  el.innerHTML=filtered.map(([id,o],i)=>renderOrder(id,o,i===0&&filtered.length>prevCount)).join("");
-}
+    function renderOrders(list) {
+      const q = (document.getElementById("order-search").value || "").toLowerCase();
+      const filtered = q ? list.filter(([, o]) => { const c = o.customer || {}; return (c.name || "").toLowerCase().includes(q) || (c.phone || "").toLowerCase().includes(q) || (c.city || "").toLowerCase().includes(q); }) : list;
+      const el = document.getElementById("orders-display");
+      if (!filtered.length) { el.innerHTML = "<div class='no-order'>Aucune commande trouvée.</div>"; return; }
+      el.innerHTML = filtered.map(([id, o], i) => renderOrder(id, o, i === 0 && filtered.length > prevCount)).join("");
+    }
 
-function startOrders(){
-  unsubOrders=onValue(ref(db,"orders"),snap=>{
-    const data=snap.val();
-    const el=document.getElementById("orders-display");
-    if(!data){el.innerHTML="<div class='no-order'>⏳ En attente de nouvelles commandes…</div>";setStats(0,0,0);return;}
-    allOrders=Object.entries(data).sort((a,b)=>b[1].timestamp-a[1].timestamp);
-    const isNew=allOrders.length>prevCount&&prevCount>0;
-    if(isNew)ping();
-    const rev=allOrders.reduce((s,[,o])=>s+(o.total||0),0);
-    const td=allOrders.filter(([,o])=>new Date(o.timestamp).toDateString()===new Date().toDateString()).length;
-    setStats(allOrders.length,rev,td);
-    prevCount=allOrders.length;
-    renderOrders(allOrders);
-  });
-}
-document.getElementById("order-search").addEventListener("input",()=>renderOrders(allOrders));
+    function startOrders() {
+      unsubOrders = onValue(ref(db, "orders"), snap => {
+        const data = snap.val();
+        const el = document.getElementById("orders-display");
+        if (!data) { el.innerHTML = "<div class='no-order'>⏳ En attente de nouvelles commandes…</div>"; setStats(0, 0, 0); return; }
+        allOrders = Object.entries(data).sort((a, b) => b[1].timestamp - a[1].timestamp);
+        const isNew = allOrders.length > prevCount && prevCount > 0;
+        if (isNew) ping();
+        const rev = allOrders.reduce((s, [, o]) => s + (o.total || 0), 0);
+        const td = allOrders.filter(([, o]) => new Date(o.timestamp).toDateString() === new Date().toDateString()).length;
+        setStats(allOrders.length, rev, td);
+        prevCount = allOrders.length;
+        renderOrders(allOrders);
+      });
+    }
+    document.getElementById("order-search").addEventListener("input", () => renderOrders(allOrders));
 
-function setStats(t,r,td){
-  document.getElementById("stat-total").textContent=t;
-  document.getElementById("stat-revenue").textContent=r.toLocaleString("fr-MA")+" MAD";
-  document.getElementById("stat-today").textContent=td;
-}
+    function setStats(t, r, td) {
+      document.getElementById("stat-total").textContent = t;
+      document.getElementById("stat-revenue").textContent = r.toLocaleString("fr-MA") + " MAD";
+      document.getElementById("stat-today").textContent = td;
+    }
 
-// ── ORDER PRINT ───────────────────────────────────────────────────────────────
-window.printOrder=function(id,o){
-  const c=o.customer||{},items=o.items||[],total=o.total||0,deposit=Math.round(total*.5),dt=new Date(o.timestamp);
-  const ih=items.map(it=>{const lt=(it.price||0)*(it.quantity||1);const opts=it.options?Object.entries(it.options).map(([k,v])=>`<span style="background:#eee;padding:2px 6px;border-radius:3px;font-size:10px;margin-right:4px">${k}: ${v}</span>`).join(""):"";return`<tr><td style="padding:12px;border-bottom:1px solid #eee"><strong>${it.name}</strong><div style="margin-top:5px">${opts}</div></td><td style="text-align:center;padding:12px;border-bottom:1px solid #eee">${it.quantity}</td><td style="text-align:right;padding:12px;border-bottom:1px solid #eee">${(it.price||0).toLocaleString("fr-MA")} MAD</td><td style="text-align:right;padding:12px;border-bottom:1px solid #eee;font-weight:700">${lt.toLocaleString("fr-MA")} MAD</td></tr>`;}).join("");
-  const w=window.open("","_blank");
-  w.document.write(`<!DOCTYPE html><html><head><title>Bon #${id.slice(-6).toUpperCase()}</title><style>body{font-family:system-ui,sans-serif;color:#222;padding:40px}.header{display:flex;justify-content:space-between;border-bottom:3px solid #e8194b;padding-bottom:20px;margin-bottom:30px}.brand{font-size:22px;font-weight:900;color:#e8194b}.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:40px}.info-box{border:1px solid #eee;border-radius:8px;padding:18px;background:#fafafa}.info-box h3{margin:0 0 10px;font-size:11px;text-transform:uppercase;color:#e8194b;letter-spacing:1px}table{width:100%;border-collapse:collapse;margin-bottom:30px}th{background:#f5f5f5;padding:12px;text-align:left;font-size:11px;text-transform:uppercase;border-bottom:2px solid #ddd}.totals{width:300px;margin-left:auto}.tr{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}.grand{border-top:2px solid #e8194b;margin-top:8px;padding-top:8px;font-size:18px;font-weight:900;color:#e8194b}.legal{margin-top:50px;font-size:10px;color:#999;text-align:center;border-top:1px solid #eee;padding-top:16px}</style></head><body>
+    // ── ORDER PRINT ───────────────────────────────────────────────────────────────
+    window.printOrder = function (id, o) {
+      const c = o.customer || {}, items = o.items || [], total = o.total || 0, deposit = Math.round(total * .5), dt = new Date(o.timestamp);
+      const ih = items.map(it => { const lt = (it.price || 0) * (it.quantity || 1); const opts = it.options ? Object.entries(it.options).map(([k, v]) => `<span style="background:#eee;padding:2px 6px;border-radius:3px;font-size:10px;margin-right:4px">${k}: ${v}</span>`).join("") : ""; return `<tr><td style="padding:12px;border-bottom:1px solid #eee"><strong>${it.name}</strong><div style="margin-top:5px">${opts}</div></td><td style="text-align:center;padding:12px;border-bottom:1px solid #eee">${it.quantity}</td><td style="text-align:right;padding:12px;border-bottom:1px solid #eee">${(it.price || 0).toLocaleString("fr-MA")} MAD</td><td style="text-align:right;padding:12px;border-bottom:1px solid #eee;font-weight:700">${lt.toLocaleString("fr-MA")} MAD</td></tr>`; }).join("");
+      const w = window.open("", "_blank");
+      w.document.write(`<!DOCTYPE html><html><head><title>Bon #${id.slice(-6).toUpperCase()}</title><style>body{font-family:system-ui,sans-serif;color:#222;padding:40px}.header{display:flex;justify-content:space-between;border-bottom:3px solid #e8194b;padding-bottom:20px;margin-bottom:30px}.brand{font-size:22px;font-weight:900;color:#e8194b}.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:40px}.info-box{border:1px solid #eee;border-radius:8px;padding:18px;background:#fafafa}.info-box h3{margin:0 0 10px;font-size:11px;text-transform:uppercase;color:#e8194b;letter-spacing:1px}table{width:100%;border-collapse:collapse;margin-bottom:30px}th{background:#f5f5f5;padding:12px;text-align:left;font-size:11px;text-transform:uppercase;border-bottom:2px solid #ddd}.totals{width:300px;margin-left:auto}.tr{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}.grand{border-top:2px solid #e8194b;margin-top:8px;padding-top:8px;font-size:18px;font-weight:900;color:#e8194b}.legal{margin-top:50px;font-size:10px;color:#999;text-align:center;border-top:1px solid #eee;padding-top:16px}</style></head><body>
   <div class="header"><div><div class="brand">Nova Style</div><div style="font-size:12px;color:#555;margin-top:4px">Route de Médiouna · 20000 Casablanca<br>Tél: 07 07 07 47 48 · energiemogador@gmail.com</div></div><div style="text-align:right"><h1 style="font-size:24px;margin:0">BON DE COMMANDE</h1><div style="margin-top:8px">Réf: <strong>#${id.slice(-6).toUpperCase()}</strong></div><div style="color:#666;font-size:13px">${dt.toLocaleDateString("fr-MA")}</div></div></div>
-  <div class="meta-grid"><div class="info-box"><h3>Client</h3><div style="font-size:15px;font-weight:700">${c.name}</div><div style="font-size:13px;margin-top:6px">📞 ${c.phone}</div><div style="font-size:12px;color:#666;margin-top:4px">📍 ${c.city}${c.address?`<br>${c.address}`:""}</div></div><div class="info-box"><h3>Notes</h3><div style="font-size:12px;color:#555">${c.notes||"Aucune note."}</div></div></div>
+  <div class="meta-grid"><div class="info-box"><h3>Client</h3><div style="font-size:15px;font-weight:700">${c.name}</div><div style="font-size:13px;margin-top:6px">📞 ${c.phone}</div><div style="font-size:12px;color:#666;margin-top:4px">📍 ${c.city}${c.address ? `<br>${c.address}` : ""}</div></div><div class="info-box"><h3>Notes</h3><div style="font-size:12px;color:#555">${c.notes || "Aucune note."}</div></div></div>
   <table><thead><tr><th>Désignation</th><th style="text-align:center">Qté</th><th style="text-align:right">P.U.</th><th style="text-align:right">Total</th></tr></thead><tbody>${ih}</tbody></table>
-  <div class="totals"><div class="tr"><span>Sous-total</span><span>${total.toLocaleString("fr-MA")} MAD</span></div><div class="tr grand"><span>TOTAL TTC</span><span>${total.toLocaleString("fr-MA")} MAD</span></div><div class="tr" style="margin-top:10px;color:#666"><span>Acompte (50%)</span><span>${deposit.toLocaleString("fr-MA")} MAD</span></div><div class="tr" style="font-weight:700"><span>Reste à régler</span><span>${(total-deposit).toLocaleString("fr-MA")} MAD</span></div></div>
+  <div class="totals"><div class="tr"><span>Sous-total</span><span>${total.toLocaleString("fr-MA")} MAD</span></div><div class="tr grand"><span>TOTAL TTC</span><span>${total.toLocaleString("fr-MA")} MAD</span></div><div class="tr" style="margin-top:10px;color:#666"><span>Acompte (50%)</span><span>${deposit.toLocaleString("fr-MA")} MAD</span></div><div class="tr" style="font-weight:700"><span>Reste à régler</span><span>${(total - deposit).toLocaleString("fr-MA")} MAD</span></div></div>
   <div class="legal">ENERGIE MOGADOR — SARL AU · ICE: 003070820000065 · RC: 543343 · IF: 52466738</div>
   </body></html>`);
-  w.document.close();setTimeout(()=>{w.focus();w.print();},800);
-};
+      w.document.close(); setTimeout(() => { w.focus(); w.print(); }, 800);
+    };
 
-// ── VISITORS ──────────────────────────────────────────────────────────────────
-function startVisitors(){
-  unsubVisitors=onValue(ref(db,"online_visitors"),snap=>{
-    const data=snap.val()||{},visitors=Object.values(data),count=visitors.length,withCart=visitors.filter(v=>v.cartCount>0).length;
-    document.getElementById("stat-visitors").textContent=count;
-    document.getElementById("stat-cart").textContent=withCart;
-    document.getElementById("vis-count").textContent=count;
-    const listEl=document.getElementById("vis-list");
-    if(!count){listEl.innerHTML="<div class='no-visitors'>Aucun visiteur en ce moment</div>";}
-    else{const sorted=[...visitors].sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));listEl.innerHTML=sorted.map(v=>`<div class="vis-row"><span class="vis-dot"></span><span class="vis-page">${esc(v.pageLabel||v.page||"—")}</span><span class="vis-device ${v.device==="Mobile"||v.device==="Tablette"?"mobile":""}">${esc(v.device||"—")}</span><div class="vis-meta">${esc(v.browser||"")} · ${esc(v.referrer||"")}${v.duration?` · ${formatDur(v.duration)}`:""}</div></div>`).join("");}
-    renderBarChart("vis-pages-chart",countBy(visitors,"pageLabel"),"#e8194b");
-    renderBarChart("vis-devices-chart",countBy(visitors,"device"),"#4da6ff");
-    renderBarChart("vis-sources-chart",countBy(visitors,"referrer"),"#00c853");
-  });
-}
-
-// ── REVIEWS MODERATION ────────────────────────────────────────────────────────
-let allReviewsFlat=[];
-let currentFilter="pending";
-
-// Live watcher — updates the badge counter from pending_reviews node
-function watchPendingReviews(){
-  unsubPending=onValue(ref(db,"pending_reviews"),snap=>{
-    const data=snap.val()||{};
-    let count=0;
-    for(const productReviews of Object.values(data)){
-      if(typeof productReviews==="object") count+=Object.keys(productReviews).length;
+    // ── VISITORS ──────────────────────────────────────────────────────────────────
+    function startVisitors() {
+      unsubVisitors = onValue(ref(db, "online_visitors"), snap => {
+        const data = snap.val() || {}, visitors = Object.values(data), count = visitors.length, withCart = visitors.filter(v => v.cartCount > 0).length;
+        document.getElementById("stat-visitors").textContent = count;
+        document.getElementById("stat-cart").textContent = withCart;
+        document.getElementById("vis-count").textContent = count;
+        const listEl = document.getElementById("vis-list");
+        if (!count) { listEl.innerHTML = "<div class='no-visitors'>Aucun visiteur en ce moment</div>"; }
+        else { const sorted = [...visitors].sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0)); listEl.innerHTML = sorted.map(v => `<div class="vis-row"><span class="vis-dot"></span><span class="vis-page">${esc(v.pageLabel || v.page || "—")}</span><span class="vis-device ${v.device === "Mobile" || v.device === "Tablette" ? "mobile" : ""}">${esc(v.device || "—")}</span><div class="vis-meta">${esc(v.browser || "")} · ${esc(v.referrer || "")}${v.duration ? ` · ${formatDur(v.duration)}` : ""}</div></div>`).join(""); }
+        renderBarChart("vis-pages-chart", countBy(visitors, "pageLabel"), "#e8194b");
+        renderBarChart("vis-devices-chart", countBy(visitors, "device"), "#4da6ff");
+        renderBarChart("vis-sources-chart", countBy(visitors, "referrer"), "#00c853");
+      });
     }
-    const badge=document.getElementById("reviews-tab-badge");
-    const statEl=document.getElementById("stat-pending-reviews");
-    badge.textContent=count;
-    badge.classList.toggle("show",count>0);
-    statEl.textContent=count;
-    // Also update filter count if reviews are loaded
-    updateFilterCounts();
-  });
-}
 
-async function loadReviews(){
-  const grid=document.getElementById("reviews-grid");
-  grid.innerHTML=`<div class="reviews-loading">Chargement…</div>`;
-  allReviewsFlat=[];
-  try{
-    // Load both pending_reviews (unmoderated) and reviews (approved/rejected)
-    const [pendingSnap,approvedSnap]=await Promise.all([
-      get(ref(db,"pending_reviews")),
-      get(ref(db,"reviews"))
-    ]);
+    // ── REVIEWS MODERATION ────────────────────────────────────────────────────────
+    let allReviewsFlat = [];
+    let currentFilter = "pending";
 
-    // Pending reviews (submitted by customers, not yet moderated)
-    const pendingData=pendingSnap.val()||{};
-    for(const[productId,revs] of Object.entries(pendingData)){
-      if(!revs||typeof revs!=="object") continue;
-      for(const[revId,r] of Object.entries(revs)){
-        if(!r) continue;
-        allReviewsFlat.push({
-          _productId:productId,_revId:revId,_node:"pending_reviews",
-          status:"pending",
-          name:r.name||"Client",text:r.text||"",
-          rating:Number(r.rating)||5,date:r.date||new Date().toISOString(),
+    // Live watcher — updates the badge counter from pending_reviews node
+    function watchPendingReviews() {
+      unsubPending = onValue(ref(db, "pending_reviews"), snap => {
+        const data = snap.val() || {};
+        let count = 0;
+        for (const productReviews of Object.values(data)) {
+          if (typeof productReviews === "object") count += Object.keys(productReviews).length;
+        }
+        const badge = document.getElementById("reviews-tab-badge");
+        const statEl = document.getElementById("stat-pending-reviews");
+        badge.textContent = count;
+        badge.classList.toggle("show", count > 0);
+        statEl.textContent = count;
+        // Also update filter count if reviews are loaded
+        updateFilterCounts();
+      });
+    }
+
+    async function loadReviews() {
+      const grid = document.getElementById("reviews-grid");
+      grid.innerHTML = `<div class="reviews-loading">Chargement…</div>`;
+      allReviewsFlat = [];
+      try {
+        // Load both pending_reviews (unmoderated) and reviews (approved/rejected)
+        const [pendingSnap, approvedSnap] = await Promise.all([
+          get(ref(db, "pending_reviews")),
+          get(ref(db, "reviews"))
+        ]);
+
+        // Pending reviews (submitted by customers, not yet moderated)
+        const pendingData = pendingSnap.val() || {};
+        for (const [productId, revs] of Object.entries(pendingData)) {
+          if (!revs || typeof revs !== "object") continue;
+          for (const [revId, r] of Object.entries(revs)) {
+            if (!r) continue;
+            allReviewsFlat.push({
+              _productId: productId, _revId: revId, _node: "pending_reviews",
+              status: "pending",
+              name: r.name || "Client", text: r.text || "",
+              rating: Number(r.rating) || 5, date: r.date || new Date().toISOString(),
+            });
+          }
+        }
+
+        // Approved reviews (already in public reviews node)
+        const approvedData = approvedSnap.val() || {};
+        for (const [productId, revs] of Object.entries(approvedData)) {
+          if (!revs || typeof revs !== "object") continue;
+          for (const [revId, r] of Object.entries(revs)) {
+            if (!r) continue;
+            // Only show explicitly moderated ones (has 'moderated' flag) or all
+            const status = r.rejected === true ? "rejected" : "approved";
+            allReviewsFlat.push({
+              _productId: productId, _revId: revId, _node: "reviews",
+              status,
+              name: r.name || "Client", text: r.text || "",
+              rating: Number(r.rating) || 5, date: r.date || new Date().toISOString(),
+              approved: r.approved,
+            });
+          }
+        }
+
+        // Sort: pending first, then by date desc
+        allReviewsFlat.sort((a, b) => {
+          if (a.status === "pending" && b.status !== "pending") return -1;
+          if (b.status === "pending" && a.status !== "pending") return 1;
+          return new Date(b.date) - new Date(a.date);
         });
+
+        updateFilterCounts();
+        renderReviews();
+      } catch (e) {
+        grid.innerHTML = `<div class="reviews-empty">Erreur: ${esc(e.message)}</div>`;
       }
     }
 
-    // Approved reviews (already in public reviews node)
-    const approvedData=approvedSnap.val()||{};
-    for(const[productId,revs] of Object.entries(approvedData)){
-      if(!revs||typeof revs!=="object") continue;
-      for(const[revId,r] of Object.entries(revs)){
-        if(!r) continue;
-        // Only show explicitly moderated ones (has 'moderated' flag) or all
-        const status=r.rejected===true?"rejected":"approved";
-        allReviewsFlat.push({
-          _productId:productId,_revId:revId,_node:"reviews",
-          status,
-          name:r.name||"Client",text:r.text||"",
-          rating:Number(r.rating)||5,date:r.date||new Date().toISOString(),
-          approved:r.approved,
-        });
-      }
+    function updateFilterCounts() {
+      const counts = { pending: 0, approved: 0, rejected: 0 };
+      allReviewsFlat.forEach(r => counts[r.status] = (counts[r.status] || 0) + 1);
+      document.getElementById("filter-count-pending").textContent = counts.pending ? `(${counts.pending})` : "";
+      document.getElementById("filter-count-approved").textContent = counts.approved ? `(${counts.approved})` : "";
+      document.getElementById("filter-count-rejected").textContent = counts.rejected ? `(${counts.rejected})` : "";
     }
 
-    // Sort: pending first, then by date desc
-    allReviewsFlat.sort((a,b)=>{
-      if(a.status==="pending"&&b.status!=="pending") return -1;
-      if(b.status==="pending"&&a.status!=="pending") return 1;
-      return new Date(b.date)-new Date(a.date);
-    });
+    function renderReviews() {
+      const grid = document.getElementById("reviews-grid");
+      const filtered = currentFilter === "all" ? allReviewsFlat : allReviewsFlat.filter(r => r.status === currentFilter);
+      if (!filtered.length) {
+        const msgs = { pending: "✅ Aucun avis en attente de modération.", approved: "Aucun avis approuvé.", rejected: "Aucun avis rejeté.", all: "Aucun avis dans la base." };
+        grid.innerHTML = `<div class="reviews-empty">${msgs[currentFilter] || "Aucun avis."}</div>`; return;
+      }
+      grid.innerHTML = filtered.map(r => renderReviewCard(r)).join("");
+    }
 
-    updateFilterCounts();
-    renderReviews();
-  }catch(e){
-    grid.innerHTML=`<div class="reviews-empty">Erreur: ${esc(e.message)}</div>`;
-  }
-}
-
-function updateFilterCounts(){
-  const counts={pending:0,approved:0,rejected:0};
-  allReviewsFlat.forEach(r=>counts[r.status]=(counts[r.status]||0)+1);
-  document.getElementById("filter-count-pending").textContent=counts.pending?`(${counts.pending})`:"";
-  document.getElementById("filter-count-approved").textContent=counts.approved?`(${counts.approved})`:"";
-  document.getElementById("filter-count-rejected").textContent=counts.rejected?`(${counts.rejected})`:"";
-}
-
-function renderReviews(){
-  const grid=document.getElementById("reviews-grid");
-  const filtered=currentFilter==="all"?allReviewsFlat:allReviewsFlat.filter(r=>r.status===currentFilter);
-  if(!filtered.length){
-    const msgs={pending:"✅ Aucun avis en attente de modération.",approved:"Aucun avis approuvé.",rejected:"Aucun avis rejeté.",all:"Aucun avis dans la base."};
-    grid.innerHTML=`<div class="reviews-empty">${msgs[currentFilter]||"Aucun avis."}</div>`;return;
-  }
-  grid.innerHTML=filtered.map(r=>renderReviewCard(r)).join("");
-}
-
-function renderReviewCard(r){
-  const statusLabel={pending:"⏳ En attente",approved:"✅ Approuvé",rejected:"❌ Rejeté"}[r.status]||r.status;
-  const actions=r.status==="pending"?`
+    function renderReviewCard(r) {
+      const statusLabel = { pending: "⏳ En attente", approved: "✅ Approuvé", rejected: "❌ Rejeté" }[r.status] || r.status;
+      const actions = r.status === "pending" ? `
     <button class="btn-approve" onclick="window.approveReview('${r._productId}','${r._revId}')">✅ Approuver</button>
     <button class="btn-reject"  onclick="window.rejectReview('${r._productId}','${r._revId}')">❌ Rejeter</button>
     <button class="btn-delete"  onclick="window.deleteReview('${r._productId}','${r._revId}','${r._node}')">🗑️ Supprimer</button>
-  `:r.status==="approved"?`
+  `: r.status === "approved" ? `
     <button class="btn-reject"  onclick="window.rejectReview('${r._productId}','${r._revId}')">❌ Rejeter</button>
     <button class="btn-delete"  onclick="window.deleteReview('${r._productId}','${r._revId}','${r._node}')">🗑️ Supprimer</button>
-  `:`
+  `: `
     <button class="btn-approve" onclick="window.approveReview('${r._productId}','${r._revId}')">✅ Réapprouver</button>
     <button class="btn-delete"  onclick="window.deleteReview('${r._productId}','${r._revId}','${r._node}')">🗑️ Supprimer</button>
   `;
-  return`<div class="review-card ${r.status}" id="rcard-${r._productId}-${r._revId}">
+      return `<div class="review-card ${r.status}" id="rcard-${r._productId}-${r._revId}">
     <div class="review-head">
       <span class="review-status-dot ${r.status}"></span>
       <span class="review-product" title="${esc(r._productId)}">${esc(r._productId)}</span>
@@ -690,468 +1760,500 @@ function renderReviewCard(r){
     </div>
     <div class="review-body">
       <div class="review-author">
-        <div style="width:36px;height:36px;background:#e8194b22;color:#e8194b;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;margin-bottom:6px">${esc((r.name||"?").charAt(0).toUpperCase())}</div>
+        <div style="width:36px;height:36px;background:#e8194b22;color:#e8194b;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;margin-bottom:6px">${esc((r.name || "?").charAt(0).toUpperCase())}</div>
         <div class="review-name">${esc(r.name)}</div>
         <div style="font-size:10px;color:#444;margin-top:2px">${fmtDate(r.date)}</div>
       </div>
-      <div class="review-text">"${esc(r.text.length>300?r.text.slice(0,300)+"…":r.text)}"</div>
+      <div class="review-text">"${esc(r.text.length > 300 ? r.text.slice(0, 300) + "…" : r.text)}"</div>
     </div>
     <div class="review-actions">${actions}</div>
   </div>`;
-}
-
-// Approve: move from pending_reviews → reviews with approved:true
-window.approveReview=async function(productId,revId){
-  const r=allReviewsFlat.find(x=>x._productId===productId&&x._revId===revId);
-  if(!r) return;
-  try{
-    const reviewData={name:r.name,text:r.text,rating:r.rating,date:r.date,approved:true};
-    await set(ref(db,`reviews/${productId}/${revId}`),reviewData);
-    // Remove from pending if it was there
-    if(r._node==="pending_reviews"){
-      await remove(ref(db,`pending_reviews/${productId}/${revId}`));
-    }else{
-      await update(ref(db,`reviews/${productId}/${revId}`),{approved:true,rejected:false});
     }
-    r.status="approved";r._node="reviews";
-    updateFilterCounts();renderReviews();
-  }catch(e){alert("Erreur: "+e.message);}
-};
 
-// Reject: keep in reviews but mark approved:false, rejected:true
-window.rejectReview=async function(productId,revId){
-  const r=allReviewsFlat.find(x=>x._productId===productId&&x._revId===revId);
-  if(!r) return;
-  try{
-    if(r._node==="pending_reviews"){
-      // Move to reviews with rejected flag
-      await set(ref(db,`reviews/${productId}/${revId}`),{name:r.name,text:r.text,rating:r.rating,date:r.date,approved:false,rejected:true});
-      await remove(ref(db,`pending_reviews/${productId}/${revId}`));
-    }else{
-      await update(ref(db,`reviews/${productId}/${revId}`),{approved:false,rejected:true});
+    // Approve: move from pending_reviews → reviews with approved:true
+    window.approveReview = async function (productId, revId) {
+      const r = allReviewsFlat.find(x => x._productId === productId && x._revId === revId);
+      if (!r) return;
+      try {
+        const reviewData = { name: r.name, text: r.text, rating: r.rating, date: r.date, approved: true };
+        await set(ref(db, `reviews/${productId}/${revId}`), reviewData);
+        // Remove from pending if it was there
+        if (r._node === "pending_reviews") {
+          await remove(ref(db, `pending_reviews/${productId}/${revId}`));
+        } else {
+          await update(ref(db, `reviews/${productId}/${revId}`), { approved: true, rejected: false });
+        }
+        r.status = "approved"; r._node = "reviews";
+        updateFilterCounts(); renderReviews();
+      } catch (e) { alert("Erreur: " + e.message); }
+    };
+
+    // Reject: keep in reviews but mark approved:false, rejected:true
+    window.rejectReview = async function (productId, revId) {
+      const r = allReviewsFlat.find(x => x._productId === productId && x._revId === revId);
+      if (!r) return;
+      try {
+        if (r._node === "pending_reviews") {
+          // Move to reviews with rejected flag
+          await set(ref(db, `reviews/${productId}/${revId}`), { name: r.name, text: r.text, rating: r.rating, date: r.date, approved: false, rejected: true });
+          await remove(ref(db, `pending_reviews/${productId}/${revId}`));
+        } else {
+          await update(ref(db, `reviews/${productId}/${revId}`), { approved: false, rejected: true });
+        }
+        r.status = "rejected"; r._node = "reviews";
+        updateFilterCounts(); renderReviews();
+      } catch (e) { alert("Erreur: " + e.message); }
+    };
+
+    // Delete permanently
+    window.deleteReview = async function (productId, revId, node) {
+      if (!confirm("Supprimer définitivement cet avis ?")) return;
+      try {
+        await remove(ref(db, `${node}/${productId}/${revId}`));
+        allReviewsFlat = allReviewsFlat.filter(x => !(x._productId === productId && x._revId === revId));
+        updateFilterCounts(); renderReviews();
+      } catch (e) { alert("Erreur: " + e.message); }
+    };
+
+    // Filter buttons
+    document.querySelectorAll(".review-filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".review-filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentFilter = btn.dataset.filter;
+        renderReviews();
+      });
+    });
+    document.getElementById("btn-refresh-reviews").addEventListener("click", loadReviews);
+
+    // Auto-load when reviews tab is clicked
+    document.querySelectorAll(".tab").forEach(tab => {
+      if (tab.dataset.tab === "reviews") tab.addEventListener("click", () => { if (!allReviewsFlat.length) loadReviews(); });
+    });
+
+    // ── PRODUCTS TAB ──────────────────────────────────────────────────────────────
+    let allProducts = [];
+    async function loadProducts() {
+      if (allProducts.length) return;
+      const grid = document.getElementById("product-grid");
+      grid.innerHTML = `<div class="reviews-loading">Chargement…</div>`;
+      try {
+        const res = await fetch("/products.json");
+        const data = await res.json();
+        allProducts = (data.products || []);
+        renderProducts();
+      } catch (e) { grid.innerHTML = `<div class="reviews-empty">Erreur: ${esc(e.message)}</div>`; }
     }
-    r.status="rejected";r._node="reviews";
-    updateFilterCounts();renderReviews();
-  }catch(e){alert("Erreur: "+e.message);}
-};
-
-// Delete permanently
-window.deleteReview=async function(productId,revId,node){
-  if(!confirm("Supprimer définitivement cet avis ?")) return;
-  try{
-    await remove(ref(db,`${node}/${productId}/${revId}`));
-    allReviewsFlat=allReviewsFlat.filter(x=>!(x._productId===productId&&x._revId===revId));
-    updateFilterCounts();renderReviews();
-  }catch(e){alert("Erreur: "+e.message);}
-};
-
-// Filter buttons
-document.querySelectorAll(".review-filter-btn").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll(".review-filter-btn").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    currentFilter=btn.dataset.filter;
-    renderReviews();
-  });
-});
-document.getElementById("btn-refresh-reviews").addEventListener("click",loadReviews);
-
-// Auto-load when reviews tab is clicked
-document.querySelectorAll(".tab").forEach(tab=>{
-  if(tab.dataset.tab==="reviews") tab.addEventListener("click",()=>{if(!allReviewsFlat.length)loadReviews();});
-});
-
-// ── PRODUCTS TAB ──────────────────────────────────────────────────────────────
-let allProducts=[];
-async function loadProducts(){
-  if(allProducts.length) return;
-  const grid=document.getElementById("product-grid");
-  grid.innerHTML=`<div class="reviews-loading">Chargement…</div>`;
-  try{
-    const res=await fetch("/products.json");
-    const data=await res.json();
-    allProducts=(data.products||[]);
-    renderProducts();
-  }catch(e){grid.innerHTML=`<div class="reviews-empty">Erreur: ${esc(e.message)}</div>`;}
-}
-function renderProducts(){
-  const q=(document.getElementById("product-search").value||"").toLowerCase();
-  const cat=document.getElementById("product-cat-filter").value;
-  const filtered=allProducts.filter(p=>{
-    const matchQ=!q||(p.name||"").toLowerCase().includes(q)||(p.id||"").toLowerCase().includes(q);
-    const matchCat=!cat||p.category===cat;
-    return matchQ&&matchCat;
-  });
-  document.getElementById("product-count").textContent=`${filtered.length} produit${filtered.length!==1?"s":""}`;
-  if(!filtered.length){document.getElementById("product-grid").innerHTML=`<div class="reviews-empty" style="grid-column:1/-1">Aucun produit trouvé.</div>`;return;}
-  document.getElementById("product-grid").innerHTML=filtered.map(p=>{
-    const img=`/images/${p.id}/1.webp`;
-    const priceStr=p.price?(p.price.min===p.price.max?`${p.price.min} MAD`:`${p.price.min} – ${p.price.max} MAD`):"Prix sur demande";
-    return`<div class="product-mini-card">
+    function renderProducts() {
+      const q = (document.getElementById("product-search").value || "").toLowerCase();
+      const cat = document.getElementById("product-cat-filter").value;
+      const filtered = allProducts.filter(p => {
+        const matchQ = !q || (p.name || "").toLowerCase().includes(q) || (p.id || "").toLowerCase().includes(q);
+        const matchCat = !cat || p.category === cat;
+        return matchQ && matchCat;
+      });
+      document.getElementById("product-count").textContent = `${filtered.length} produit${filtered.length !== 1 ? "s" : ""}`;
+      if (!filtered.length) { document.getElementById("product-grid").innerHTML = `<div class="reviews-empty" style="grid-column:1/-1">Aucun produit trouvé.</div>`; return; }
+      document.getElementById("product-grid").innerHTML = filtered.map(p => {
+        const img = `/images/${p.id}/1.webp`;
+        const priceStr = p.price ? (p.price.min === p.price.max ? `${p.price.min} MAD` : `${p.price.min} – ${p.price.max} MAD`) : "Prix sur demande";
+        return `<div class="product-mini-card">
       <img class="pmc-img" src="${esc(img)}" alt="${esc(p.name)}" onerror="this.style.display='none'">
       <div class="pmc-body">
         <div class="pmc-title">${esc(p.name)}</div>
         <div class="pmc-handle">${esc(p.id)}</div>
         <div class="pmc-price">${esc(priceStr)}</div>
-        <div class="pmc-cat">${esc(p.category||"—")}</div>
+        <div class="pmc-cat">${esc(p.category || "—")}</div>
       </div>
     </div>`;
-  }).join("");
-}
-document.getElementById("product-search").addEventListener("input",renderProducts);
-document.getElementById("product-cat-filter").addEventListener("change",renderProducts);
-
-// ── IMPORT TOOL ───────────────────────────────────────────────────────────────
-document.getElementById("btn-import")?.addEventListener("click",runImport);
-document.getElementById("btn-reload-stats")?.addEventListener("click",loadImportStats);
-
-async function runImport(){
-  const btn=document.getElementById("btn-import"),wrap=document.getElementById("import-wrap"),
-    status=document.getElementById("import-status"),pctEl=document.getElementById("import-pct"),
-    bar=document.getElementById("import-bar"),log=document.getElementById("import-log");
-  btn.disabled=true;btn.textContent="⏳ Import en cours…";
-  wrap.style.display="block";log.innerHTML="";
-  const addLog=(msg,color="#555")=>{log.innerHTML+=`<div style="color:${color}">${esc(msg)}</div>`;log.scrollTop=log.scrollHeight;};
-  try{
-    status.textContent="Chargement de reviews_import.json…";
-    const data=await fetch("/reviews_import.json").then(r=>{if(!r.ok)throw new Error("reviews_import.json introuvable");return r.json();});
-    const products=Object.entries(data);let done=0,errors=0;
-    for(const[prodId,reviews] of products){
-      const entries=Object.entries(reviews);
-      for(const[revId,review] of entries){
-        try{
-          const url=`${DB_REST}/reviews/${encodeURIComponent(prodId)}/${encodeURIComponent(revId)}.json`;
-          // Mark imported reviews as approved:true
-          const r=await fetch(url,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({...review,approved:true})});
-          if(!r.ok){const t=await r.text();if(r.status===401||r.status===403)throw new Error("Permission refusée (403)");throw new Error(`HTTP ${r.status}: ${t.slice(0,60)}`);}
-        }catch(e){errors++;addLog(`✗ ${prodId}/${revId}: ${e.message}`,"#e8194b");if(e.message.includes("Permission")){status.textContent="❌ Erreur de permission";bar.style.background="#e8194b";btn.disabled=false;btn.textContent="🚀 Réessayer";return;}}
-      }
-      done++;
-      const pct=Math.round(done/products.length*100);
-      bar.style.width=pct+"%";pctEl.textContent=pct+"%";status.textContent=`${done}/${products.length} produits…`;
-      addLog(`✓ ${prodId} (${entries.length} avis)`,"#4CAF50");
+      }).join("");
     }
-    bar.style.background="#4CAF50";bar.style.width="100%";status.textContent=`✅ ${done} produits, ${errors} erreurs`;pctEl.textContent="100%";btn.textContent="✅ Terminé";
-    addLog(`🎉 Import complet !`,"#ffb400");
-    setTimeout(loadImportStats,800);
-  }catch(e){status.textContent="❌ "+e.message;addLog(e.message,"#e8194b");btn.disabled=false;btn.textContent="🚀 Lancer l'import";}
-}
+    document.getElementById("product-search").addEventListener("input", renderProducts);
+    document.getElementById("product-cat-filter").addEventListener("change", renderProducts);
 
-async function loadImportStats(){
-  const el=document.getElementById("reviews-stats");if(!el)return;
-  el.innerHTML=`<span style="color:#444">Chargement…</span>`;
-  try{
-    const res=await fetch(`${DB_REST}/reviews.json?shallow=true`);
-    if(!res.ok)throw new Error(`HTTP ${res.status}`);
-    const data=await res.json();
-    if(!data){el.innerHTML=`<span style="color:#444">Aucun avis en base.</span>`;return;}
-    const prods=Object.keys(data).length;
-    const res2=await fetch(`${DB_REST}/reviews.json`);
-    const full=await res2.json();
-    const counts=Object.entries(full||{}).map(([k,v])=>[k,typeof v==="object"?Object.keys(v).length:0]);
-    counts.sort((a,b)=>b[1]-a[1]);
-    const total=counts.reduce((s,[,c])=>s+c,0);
-    const approved=Object.values(full||{}).flatMap(pr=>Object.values(pr||{})).filter(r=>r&&r.approved===true).length;
-    el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px">
-      ${[["Avis total",total,"#e8194b"],["Approuvés",approved,"#00c853"],["Produits",prods,"#ffb300"]].map(([l,v,c])=>`<div style="background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:12px;text-align:center"><div style="font-size:24px;font-weight:800;color:${c}">${v}</div><div style="font-size:10px;color:#444;margin-top:4px">${l}</div></div>`).join("")}
-    </div>
-    <div style="font-size:11px;color:#444;margin-bottom:8px">Top 10 produits :</div>
-    <div style="display:flex;flex-direction:column;gap:5px">
-      ${counts.slice(0,10).map(([k,c])=>`<div style="display:flex;align-items:center;gap:8px"><div style="flex:1;font-size:10px;color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(k)}">${esc(k)}</div><div style="background:#e8194b;border-radius:2px;height:5px;width:${Math.round(c/counts[0][1]*80)+10}px"></div><div style="font-size:10px;color:#444;width:16px;text-align:right">${c}</div></div>`).join("")}
-    </div>`;
-  }catch(e){el.innerHTML=`<span style="color:#e8194b">Erreur: ${esc(e.message)}</span>`;}
-}
-</script>
-<!-- React Mount Script -->
-<script type="text/babel">
-  const { useState, useCallback, useMemo, useEffect } = React;
+    // ── IMPORT TOOL ───────────────────────────────────────────────────────────────
+    document.getElementById("btn-import")?.addEventListener("click", runImport);
+    document.getElementById("btn-reload-stats")?.addEventListener("click", loadImportStats);
 
-  // ─── Reference products ───────────────────────
-  const REFERENCE_PRODUCTS = {
-    "miroir-maroc-nova-style-miroir-anfa": {
-      label: "Miroir Anfa (SDB LED)",
-      axis_order: ["Dimension", "LED", "Installation"],
-      axes: {
-        Dimension: ["80 L x 140 H cm","80 L x 120 H cm","75 L x 130 H cm","60 L x 120 H cm","55 L x 110 H cm","50 L x 140 H cm","50 L x 100 H cm","45 L x 90 H cm"],
-        LED: ["Sans LED","6000K Blanc pur","4000K blanc lumière du jour","3000K Jaune","2000k Doré"],
-        Installation: ["Sans Installation","Avec Installation"]
-      },
-      variants: [
-        {axes:{Dimension:"80 L x 140 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:1050},
-        {axes:{Dimension:"80 L x 140 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1150},
-        {axes:{Dimension:"80 L x 140 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1150},
-        {axes:{Dimension:"80 L x 140 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1250},
-        {axes:{Dimension:"80 L x 140 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1150},
-        {axes:{Dimension:"80 L x 140 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1250},
-        {axes:{Dimension:"80 L x 140 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1150},
-        {axes:{Dimension:"80 L x 140 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1250},
-        {axes:{Dimension:"80 L x 140 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:1150},
-        {axes:{Dimension:"80 L x 140 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:1250},
-        {axes:{Dimension:"80 L x 120 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:950},
-        {axes:{Dimension:"80 L x 120 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1050},
-        {axes:{Dimension:"80 L x 120 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1050},
-        {axes:{Dimension:"80 L x 120 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1150},
-        {axes:{Dimension:"80 L x 120 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1050},
-        {axes:{Dimension:"80 L x 120 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1150},
-        {axes:{Dimension:"80 L x 120 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1050},
-        {axes:{Dimension:"80 L x 120 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1150},
-        {axes:{Dimension:"80 L x 120 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:1050},
-        {axes:{Dimension:"80 L x 120 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:1150},
-        {axes:{Dimension:"75 L x 130 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:900},
-        {axes:{Dimension:"75 L x 130 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1000},
-        {axes:{Dimension:"75 L x 130 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1000},
-        {axes:{Dimension:"75 L x 130 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1100},
-        {axes:{Dimension:"75 L x 130 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1000},
-        {axes:{Dimension:"75 L x 130 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1100},
-        {axes:{Dimension:"75 L x 130 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1000},
-        {axes:{Dimension:"75 L x 130 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1100},
-        {axes:{Dimension:"75 L x 130 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:1000},
-        {axes:{Dimension:"75 L x 130 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:1100}
-      ]
-    },
-    "nova-style-miroir-rectangulaire-bright": {
-      label: "Rectangulaire Bright (LED)",
-      axis_order: ["Dimension", "LED", "Installation"],
-      axes: {
-        Dimension: ["80 X 60 cm","80 X 80 cm","80 X 100 cm","120 X 80 cm","140 X 95 cm","150 X 100 cm","155 X 105 cm","160 X 110 cm","170 X 95 cm","200 X 110 cm"],
-        LED: ["6000K Blanc pur","4000K blanc lumière du jour","3000K Jaune","2000K Doré"],
-        Installation: ["Sans Installation","Avec Installation"]
-      },
-      variants: [
-        {axes:{Dimension:"80 X 60 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:800},
-        {axes:{Dimension:"80 X 60 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:900},
-        {axes:{Dimension:"120 X 80 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1200},
-        {axes:{Dimension:"120 X 80 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1300}
-      ]
-    },
-    "nova-style-deux-miroirs-anfa-medina": {
-      label: "Deux Miroirs Anfa & Medina",
-      axis_order: ["Dimension", "LED", "Installation"],
-      axes: {
-        Dimension: ["65 L cm x 125 H cm + 60 L cm x 125 H cm","60 L x 110 H cm +55 L x 110 H cm"],
-        LED: ["Sans LED","6000K Blanc pur","4000K blanc lumière du jour","3000K Jaune","2000K Doré"],
-        Installation: ["Sans Installation","Avec Installation"]
-      },
-      variants: [
-        {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:1250}
-      ]
-    }
-  };
-
-  const CATEGORIES = ["Miroirs SDB Premium","Miroirs SDB Essentiel","Salon & Dressing","Consoles & Entrée","Douches Italiennes","Tables de Séjour"];
-  const DB = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
-  const slug = (s) => s.toLowerCase().replace(/[àâä]/g,"a").replace(/[éèêë]/g,"e").replace(/[îï]/g,"i").replace(/[ôö]/g,"o").replace(/[ùûü]/g,"u").replace(/[ç]/g,"c").replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");
-
-  function generateAllVariants(axes, axis_order) {
-    if (!axis_order.length) return [];
-    const result = [{}];
-    for (const axis of axis_order) {
-      const opts = axes[axis] || [];
-      const next = [];
-      for (const combo of result) {
-        for (const opt of opts) {
-          next.push({ ...combo, [axis]: opt });
+    async function runImport() {
+      const btn = document.getElementById("btn-import"), wrap = document.getElementById("import-wrap"),
+        status = document.getElementById("import-status"), pctEl = document.getElementById("import-pct"),
+        bar = document.getElementById("import-bar"), log = document.getElementById("import-log");
+      btn.disabled = true; btn.textContent = "⏳ Import en cours…";
+      wrap.style.display = "block"; log.innerHTML = "";
+      const addLog = (msg, color = "#555") => { log.innerHTML += `<div style="color:${color}">${esc(msg)}</div>`; log.scrollTop = log.scrollHeight; };
+      try {
+        status.textContent = "Chargement de reviews_import.json…";
+        const data = await fetch("/reviews_import.json").then(r => { if (!r.ok) throw new Error("reviews_import.json introuvable"); return r.json(); });
+        const products = Object.entries(data); let done = 0, errors = 0;
+        for (const [prodId, reviews] of products) {
+          const entries = Object.entries(reviews);
+          for (const [revId, review] of entries) {
+            try {
+              const url = `${DB_REST}/reviews/${encodeURIComponent(prodId)}/${encodeURIComponent(revId)}.json`;
+              // Mark imported reviews as approved:true
+              const r = await fetch(url, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...review, approved: true }) });
+              if (!r.ok) { const t = await r.text(); if (r.status === 401 || r.status === 403) throw new Error("Permission refusée (403)"); throw new Error(`HTTP ${r.status}: ${t.slice(0, 60)}`); }
+            } catch (e) { errors++; addLog(`✗ ${prodId}/${revId}: ${e.message}`, "#e8194b"); if (e.message.includes("Permission")) { status.textContent = "❌ Erreur de permission"; bar.style.background = "#e8194b"; btn.disabled = false; btn.textContent = "🚀 Réessayer"; return; } }
+          }
+          done++;
+          const pct = Math.round(done / products.length * 100);
+          bar.style.width = pct + "%"; pctEl.textContent = pct + "%"; status.textContent = `${done}/${products.length} produits…`;
+          addLog(`✓ ${prodId} (${entries.length} avis)`, "#4CAF50");
         }
-      }
-      result.splice(0, result.length, ...next);
+        bar.style.background = "#4CAF50"; bar.style.width = "100%"; status.textContent = `✅ ${done} produits, ${errors} erreurs`; pctEl.textContent = "100%"; btn.textContent = "✅ Terminé";
+        addLog(`🎉 Import complet !`, "#ffb400");
+        setTimeout(loadImportStats, 800);
+      } catch (e) { status.textContent = "❌ " + e.message; addLog(e.message, "#e8194b"); btn.disabled = false; btn.textContent = "🚀 Lancer l'import"; }
     }
-    return result;
-  }
 
-  function Stepper({ current }) {
-    const steps = ["Info","Copier","Axes","Prix","Exporter"];
-    return (
-      <div style={{ display:"flex", alignItems:"center", gap:0, marginBottom:32 }}>
-        {steps.map((s, i) => (
-          <div key={s} style={{ display:"flex", alignItems:"center", flex: i < steps.length-1 ? 1 : "none" }}>
-            <div style={{
-              width:32, height:32, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center",
-              background: i < current ? "#e8194b" : i === current ? "#e8194b" : "#1a1a1a",
-              border: i === current ? "2px solid #e8194b" : i < current ? "2px solid #e8194b" : "2px solid #333",
-              color: i <= current ? "#fff" : "#555", fontSize:12, fontWeight:800, flexShrink:0
-            }}>{i < current ? "✓" : i+1}</div>
-            <span style={{ marginLeft:8, fontSize:11, fontWeight:700, color: i === current ? "#fff" : i < current ? "#e8194b" : "#555", textTransform:"uppercase", letterSpacing:1, flexShrink:0 }}>{s}</span>
-            {i < steps.length-1 && <div style={{ flex:1, height:2, background: i < current ? "#e8194b" : "#1e1e1e", margin:"0 12px" }} />}
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  function StepInfo({ data, onChange, onNext }) {
-    const [name, setName] = useState(data.name || "");
-    const [slugVal, setSlug] = useState(data.slug || "");
-    const [category, setCategory] = useState(data.category || CATEGORIES[0]);
-    const [desc, setDesc] = useState(data.desc || "");
-    const [seoTitle, setSeoTitle] = useState(data.seoTitle || "");
-    const [seoDesc, setSeoDesc] = useState(data.seoDesc || "");
-    const [imageCount, setImageCount] = useState(data.imageCount || 3);
-    const [autoSlug, setAutoSlug] = useState(!data.slug);
-    useEffect(() => { if (autoSlug) setSlug("nova-style-" + slug(name)); }, [name, autoSlug]);
-    const valid = name.trim() && slugVal.trim();
-    const next = () => { onChange({ name, slug: slugVal, category, desc, seoTitle, seoDesc, imageCount }); onNext(); };
-    const inp = { background:"#111", border:"1px solid #2a2a2a", color:"#f0f0f0", padding:"10px 14px", borderRadius:8, fontSize:14, outline:"none", width:"100%", boxSizing:"border-box" };
-    const lbl = { fontSize:10, color:"#555", textTransform:"uppercase", letterSpacing:"1.2px", fontWeight:700, marginBottom:6, display:"block" };
-    return (
-      <div>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:16 }}>
-          <div><label style={lbl}>Nom du produit *</label><input style={inp} value={name} onChange={e => setName(e.target.value)} /></div>
-          <div><label style={lbl}>Slug (URL) *</label><input style={inp} value={slugVal} onChange={e => { setAutoSlug(false); setSlug(e.target.value); }} /></div>
+    async function loadImportStats() {
+      const el = document.getElementById("reviews-stats"); if (!el) return;
+      el.innerHTML = `<span style="color:#444">Chargement…</span>`;
+      try {
+        const res = await fetch(`${DB_REST}/reviews.json`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const full = await res.json();
+        if (!full) { el.innerHTML = `<span style="color:#444">Aucun avis en base.</span>`; return; }
+        
+        const counts = Object.entries(full).map(([k, v]) => [k, typeof v === "object" ? Object.keys(v).length : 0]);
+        counts.sort((a, b) => b[1] - a[1]);
+        const prods = counts.length;
+        const total = counts.reduce((s, [, c]) => s + c, 0);
+        const approved = Object.values(full).flatMap(pr => Object.values(pr || {})).filter(r => r && r.approved === true).length;
+        
+        el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px">
+          ${[["Avis total", total, "#e8194b"], ["Approuvés", approved, "#00c853"], ["Produits", prods, "#ffb300"]].map(([l, v, c]) => `<div style="background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:12px;text-align:center"><div style="font-size:24px;font-weight:800;color:${c}">${v}</div><div style="font-size:10px;color:#444;margin-top:4px">${l}</div></div>`).join("")}
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:16 }}>
-          <div><label style={lbl}>Catégorie</label><select style={inp} value={category} onChange={e => setCategory(e.target.value)}>{CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}</select></div>
-          <div><label style={lbl}>Images</label><input style={inp} type="number" value={imageCount} onChange={e => setImageCount(+e.target.value)} /></div>
-        </div>
-        <div style={{ marginBottom:16 }}><label style={lbl}>Description</label><textarea style={{...inp, minHeight:80}} value={desc} onChange={e => setDesc(e.target.value)} /></div>
-        <button onClick={next} disabled={!valid} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"12px 24px", borderRadius:8, fontWeight:800, cursor: valid?"pointer":"not-allowed" }}>Suivant →</button>
-      </div>
-    );
-  }
+        <div style="font-size:11px;color:#444;margin-bottom:8px">Top 10 produits :</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          ${counts.slice(0, 10).map(([k, c]) => `<div style="display:flex;align-items:center;gap:8px"><div style="flex:1;font-size:10px;color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(k)}">${esc(k)}</div><div style="background:#e8194b;border-radius:2px;height:5px;width:${Math.round(c / counts[0][1] * 80) + 10}px"></div><div style="font-size:10px;color:#444;width:16px;text-align:right">${c}</div></div>`).join("")}
+        </div>`;
+      } catch (e) { el.textContent = "Erreur: " + e.message; }
+    }
 
-  function StepCopy({ onNext, onBack }) {
-    const [selected, setSelected] = useState("");
-    return (
-      <div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:12, marginBottom:20 }}>
-          {Object.entries(REFERENCE_PRODUCTS).map(([key, p]) => (
-            <div key={key} onClick={() => setSelected(key)} style={{ background: selected === key ? "#1a0a0e" : "#141414", border: selected === key ? "2px solid #e8194b" : "1px solid #2a2a2a", borderRadius:10, padding:12, cursor:"pointer" }}>
-              <div style={{ fontWeight:800, fontSize:12, color: selected === key ? "#e8194b" : "#eee" }}>{p.label}</div>
+    // ═══ META CATALOG GENERATOR ═══
+    window.downloadMetaCatalog = async function() {
+      try {
+        const res = await fetch('products.json');
+        if(!res.ok) throw new Error("Impossible de charger products.json");
+        const data = await res.json();
+        const products = data.products || [];
+        let descriptions = {};
+        try {
+          const dRes = await fetch('descriptions_enhanced.json');
+          if(dRes.ok) descriptions = await dRes.json();
+        } catch(e) {}
+        const headers = ['id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand', 'google_product_category'];
+        let csvContent = headers.join(',') + '\n';
+        products.forEach(p => {
+          const desc = descriptions[p.id]?.enhanced || `Découvrez le ${p.name} par Nova Style. Qualité premium, verre AGC Belgique.`;
+          const row = [p.id, `"${p.name.replace(/"/g, '""')}"`, `"${desc.replace(/"/g, '""').substring(0, 4000)}"`, 'in stock', 'new', `"${p.price} MAD"`, `"https://novastyle.ma/produits/${p.id}/"`, `"https://novastyle.ma/assets/images/${p.id}/1.webp"`, '"Nova Style"', '631'];
+          csvContent += row.join(',') + '\n';
+        });
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "meta_catalog_novastyle.csv");
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch(e) { alert("Erreur: " + e.message); }
+    }
+  </script>
+  <!-- React Mount Script -->
+  <script type="text/babel">
+    const { useState, useCallback, useMemo, useEffect } = React;
+
+    // ─── Reference products ───────────────────────
+    const REFERENCE_PRODUCTS = {
+      "miroir-maroc-nova-style-miroir-anfa": {
+        label: "Miroir Anfa (SDB LED)",
+        axis_order: ["Dimension", "LED", "Installation"],
+        axes: {
+          Dimension: ["80 L x 140 H cm", "80 L x 120 H cm", "75 L x 130 H cm", "60 L x 120 H cm", "55 L x 110 H cm", "50 L x 140 H cm", "50 L x 100 H cm", "45 L x 90 H cm"],
+          LED: ["Sans LED", "6000K Blanc pur", "4000K blanc lumière du jour", "3000K Jaune", "2000k Doré"],
+          Installation: ["Sans Installation", "Avec Installation"]
+        },
+        variants: [
+          { axes: { Dimension: "80 L x 140 H cm", LED: "Sans LED", Installation: "Sans Installation" }, price: 1050 },
+          { axes: { Dimension: "80 L x 140 H cm", LED: "Sans LED", Installation: "Avec Installation" }, price: 1150 },
+          { axes: { Dimension: "80 L x 140 H cm", LED: "6000K Blanc pur", Installation: "Sans Installation" }, price: 1150 },
+          { axes: { Dimension: "80 L x 140 H cm", LED: "6000K Blanc pur", Installation: "Avec Installation" }, price: 1250 },
+          { axes: { Dimension: "80 L x 140 H cm", LED: "4000K blanc lumière du jour", Installation: "Sans Installation" }, price: 1150 },
+          { axes: { Dimension: "80 L x 140 H cm", LED: "4000K blanc lumière du jour", Installation: "Avec Installation" }, price: 1250 },
+          { axes: { Dimension: "80 L x 140 H cm", LED: "3000K Jaune", Installation: "Sans Installation" }, price: 1150 },
+          { axes: { Dimension: "80 L x 140 H cm", LED: "3000K Jaune", Installation: "Avec Installation" }, price: 1250 },
+          { axes: { Dimension: "80 L x 140 H cm", LED: "2000k Doré", Installation: "Sans Installation" }, price: 1150 },
+          { axes: { Dimension: "80 L x 140 H cm", LED: "2000k Doré", Installation: "Avec Installation" }, price: 1250 },
+          { axes: { Dimension: "80 L x 120 H cm", LED: "Sans LED", Installation: "Sans Installation" }, price: 950 },
+          { axes: { Dimension: "80 L x 120 H cm", LED: "Sans LED", Installation: "Avec Installation" }, price: 1050 },
+          { axes: { Dimension: "80 L x 120 H cm", LED: "6000K Blanc pur", Installation: "Sans Installation" }, price: 1050 },
+          { axes: { Dimension: "80 L x 120 H cm", LED: "6000K Blanc pur", Installation: "Avec Installation" }, price: 1150 },
+          { axes: { Dimension: "80 L x 120 H cm", LED: "4000K blanc lumière du jour", Installation: "Sans Installation" }, price: 1050 },
+          { axes: { Dimension: "80 L x 120 H cm", LED: "4000K blanc lumière du jour", Installation: "Avec Installation" }, price: 1150 },
+          { axes: { Dimension: "80 L x 120 H cm", LED: "3000K Jaune", Installation: "Sans Installation" }, price: 1050 },
+          { axes: { Dimension: "80 L x 120 H cm", LED: "3000K Jaune", Installation: "Avec Installation" }, price: 1150 },
+          { axes: { Dimension: "80 L x 120 H cm", LED: "2000k Doré", Installation: "Sans Installation" }, price: 1050 },
+          { axes: { Dimension: "80 L x 120 H cm", LED: "2000k Doré", Installation: "Avec Installation" }, price: 1150 },
+          { axes: { Dimension: "75 L x 130 H cm", LED: "Sans LED", Installation: "Sans Installation" }, price: 900 },
+          { axes: { Dimension: "75 L x 130 H cm", LED: "Sans LED", Installation: "Avec Installation" }, price: 1000 },
+          { axes: { Dimension: "75 L x 130 H cm", LED: "6000K Blanc pur", Installation: "Sans Installation" }, price: 1000 },
+          { axes: { Dimension: "75 L x 130 H cm", LED: "6000K Blanc pur", Installation: "Avec Installation" }, price: 1100 },
+          { axes: { Dimension: "75 L x 130 H cm", LED: "4000K blanc lumière du jour", Installation: "Sans Installation" }, price: 1000 },
+          { axes: { Dimension: "75 L x 130 H cm", LED: "4000K blanc lumière du jour", Installation: "Avec Installation" }, price: 1100 },
+          { axes: { Dimension: "75 L x 130 H cm", LED: "3000K Jaune", Installation: "Sans Installation" }, price: 1000 },
+          { axes: { Dimension: "75 L x 130 H cm", LED: "3000K Jaune", Installation: "Avec Installation" }, price: 1100 },
+          { axes: { Dimension: "75 L x 130 H cm", LED: "2000k Doré", Installation: "Sans Installation" }, price: 1000 },
+          { axes: { Dimension: "75 L x 130 H cm", LED: "2000k Doré", Installation: "Avec Installation" }, price: 1100 }
+        ]
+      },
+      "nova-style-miroir-rectangulaire-bright": {
+        label: "Rectangulaire Bright (LED)",
+        axis_order: ["Dimension", "LED", "Installation"],
+        axes: {
+          Dimension: ["80 X 60 cm", "80 X 80 cm", "80 X 100 cm", "120 X 80 cm", "140 X 95 cm", "150 X 100 cm", "155 X 105 cm", "160 X 110 cm", "170 X 95 cm", "200 X 110 cm"],
+          LED: ["6000K Blanc pur", "4000K blanc lumière du jour", "3000K Jaune", "2000K Doré"],
+          Installation: ["Sans Installation", "Avec Installation"]
+        },
+        variants: [
+          { axes: { Dimension: "80 X 60 cm", LED: "6000K Blanc pur", Installation: "Sans Installation" }, price: 800 },
+          { axes: { Dimension: "80 X 60 cm", LED: "6000K Blanc pur", Installation: "Avec Installation" }, price: 900 },
+          { axes: { Dimension: "120 X 80 cm", LED: "6000K Blanc pur", Installation: "Sans Installation" }, price: 1200 },
+          { axes: { Dimension: "120 X 80 cm", LED: "6000K Blanc pur", Installation: "Avec Installation" }, price: 1300 }
+        ]
+      },
+      "nova-style-deux-miroirs-anfa-medina": {
+        label: "Deux Miroirs Anfa & Medina",
+        axis_order: ["Dimension", "LED", "Installation"],
+        axes: {
+          Dimension: ["65 L cm x 125 H cm + 60 L cm x 125 H cm", "60 L x 110 H cm +55 L x 110 H cm"],
+          LED: ["Sans LED", "6000K Blanc pur", "4000K blanc lumière du jour", "3000K Jaune", "2000K Doré"],
+          Installation: ["Sans Installation", "Avec Installation"]
+        },
+        variants: [
+          { axes: { Dimension: "65 L cm x 125 H cm + 60 L cm x 125 H cm", LED: "Sans LED", Installation: "Sans Installation" }, price: 1250 }
+        ]
+      }
+    };
+
+    const CATEGORIES = ["Miroirs SDB Premium", "Miroirs SDB Essentiel", "Salon & Dressing", "Consoles & Entrée", "Douches Italiennes", "Tables de Séjour"];
+    const DB = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
+    const slug = (s) => s.toLowerCase().replace(/[àâä]/g, "a").replace(/[éèêë]/g, "e").replace(/[îï]/g, "i").replace(/[ôö]/g, "o").replace(/[ùûü]/g, "u").replace(/[ç]/g, "c").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+
+    function generateAllVariants(axes, axis_order) {
+      if (!axis_order.length) return [];
+      const result = [{}];
+      for (const axis of axis_order) {
+        const opts = axes[axis] || [];
+        const next = [];
+        for (const combo of result) {
+          for (const opt of opts) {
+            next.push({ ...combo, [axis]: opt });
+          }
+        }
+        result.splice(0, result.length, ...next);
+      }
+      return result;
+    }
+
+    function Stepper({ current }) {
+      const steps = ["Info", "Copier", "Axes", "Prix", "Exporter"];
+      return (
+        <div style={{ display: "flex", alignItems: "center", gap: 0, marginBottom: 32 }}>
+          {steps.map((s, i) => (
+            <div key={s} style={{ display: "flex", alignItems: "center", flex: i < steps.length - 1 ? 1 : "none" }}>
+              <div style={{
+                width: 32, height: 32, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+                background: i < current ? "#e8194b" : i === current ? "#e8194b" : "#1a1a1a",
+                border: i === current ? "2px solid #e8194b" : i < current ? "2px solid #e8194b" : "2px solid #333",
+                color: i <= current ? "#fff" : "#555", fontSize: 12, fontWeight: 800, flexShrink: 0
+              }}>{i < current ? "✓" : i + 1}</div>
+              <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, color: i === current ? "#fff" : i < current ? "#e8194b" : "#555", textTransform: "uppercase", letterSpacing: 1, flexShrink: 0 }}>{s}</span>
+              {i < steps.length - 1 && <div style={{ flex: 1, height: 2, background: i < current ? "#e8194b" : "#1e1e1e", margin: "0 12px" }} />}
             </div>
           ))}
         </div>
-        <div style={{ display:"flex", gap:12 }}>
-          <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#555", padding:"10px 20px", borderRadius:8 }}>Retour</button>
-          <button onClick={() => onNext(selected ? REFERENCE_PRODUCTS[selected] : null)} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"10px 24px", borderRadius:8, fontWeight:800 }}>{selected ? "Copier →" : "Passer →"}</button>
-        </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  function StepAxes({ copied, onNext, onBack }) {
-    const [axisOrder, setAxisOrder] = useState(copied?.axis_order || ["Dimension"]);
-    const [axes, setAxes] = useState(() => { if (copied) return JSON.parse(JSON.stringify(copied.axes)); return { Dimension: [""] }; });
-    const updateOption = (ax, i, val) => { setAxes(a => ({ ...a, [ax]: a[ax].map((v, j) => j===i ? val : v) })); };
-    const addOption = (ax) => setAxes(a => ({ ...a, [ax]: [...a[ax], ""] }));
-    const totalVariants = axisOrder.reduce((acc, ax) => acc * (axes[ax]?.filter(v=>v.trim()).length || 1), 1);
-    return (
-      <div>
-        {axisOrder.map(ax => (
-          <div key={ax} style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:10, padding:14, marginBottom:10 }}>
-            <div style={{ fontWeight:800, fontSize:12, color:"#888", marginBottom:10 }}>{ax}</div>
-            <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
-              {axes[ax].map((v, i) => <input key={i} style={{ background:"#111", border:"1px solid #222", color:"#ccc", padding:"6px 10px", borderRadius:5, width:150 }} value={v} onChange={e => updateOption(ax, i, e.target.value)} />)}
-              <button onClick={() => addOption(ax)} style={{ background:"#1a1a1a", color:"#555", border:"1px dashed #333", padding:"6px 12px", borderRadius:5 }}>+ Option</button>
+    function StepInfo({ data, onChange, onNext }) {
+      const [name, setName] = useState(data.name || "");
+      const [slugVal, setSlug] = useState(data.slug || "");
+      const [category, setCategory] = useState(data.category || CATEGORIES[0]);
+      const [desc, setDesc] = useState(data.desc || "");
+      const [seoTitle, setSeoTitle] = useState(data.seoTitle || "");
+      const [seoDesc, setSeoDesc] = useState(data.seoDesc || "");
+      const [imageCount, setImageCount] = useState(data.imageCount || 3);
+      const [autoSlug, setAutoSlug] = useState(!data.slug);
+      useEffect(() => { if (autoSlug) setSlug("nova-style-" + slug(name)); }, [name, autoSlug]);
+      const valid = name.trim() && slugVal.trim();
+      const next = () => { onChange({ name, slug: slugVal, category, desc, seoTitle, seoDesc, imageCount }); onNext(); };
+      const inp = { background: "#111", border: "1px solid #2a2a2a", color: "#f0f0f0", padding: "10px 14px", borderRadius: 8, fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" };
+      const lbl = { fontSize: 10, color: "#555", textTransform: "uppercase", letterSpacing: "1.2px", fontWeight: 700, marginBottom: 6, display: "block" };
+      return (
+        <div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
+            <div><label style={lbl}>Nom du produit *</label><input style={inp} value={name} onChange={e => setName(e.target.value)} /></div>
+            <div><label style={lbl}>Slug (URL) *</label><input style={inp} value={slugVal} onChange={e => { setAutoSlug(false); setSlug(e.target.value); }} /></div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
+            <div><label style={lbl}>Catégorie</label><select style={inp} value={category} onChange={e => setCategory(e.target.value)}>{CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}</select></div>
+            <div><label style={lbl}>Images</label><input style={inp} type="number" value={imageCount} onChange={e => setImageCount(+e.target.value)} /></div>
+          </div>
+          <div style={{ marginBottom: 16 }}><label style={lbl}>Description</label><textarea style={{ ...inp, minHeight: 80 }} value={desc} onChange={e => setDesc(e.target.value)} /></div>
+          <button onClick={next} disabled={!valid} style={{ background: "#e8194b", color: "#fff", border: "none", padding: "12px 24px", borderRadius: 8, fontWeight: 800, cursor: valid ? "pointer" : "not-allowed" }}>Suivant →</button>
+        </div>
+      );
+    }
+
+    function StepCopy({ onNext, onBack }) {
+      const [selected, setSelected] = useState("");
+      return (
+        <div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 12, marginBottom: 20 }}>
+            {Object.entries(REFERENCE_PRODUCTS).map(([key, p]) => (
+              <div key={key} onClick={() => setSelected(key)} style={{ background: selected === key ? "#1a0a0e" : "#141414", border: selected === key ? "2px solid #e8194b" : "1px solid #2a2a2a", borderRadius: 10, padding: 12, cursor: "pointer" }}>
+                <div style={{ fontWeight: 800, fontSize: 12, color: selected === key ? "#e8194b" : "#eee" }}>{p.label}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 12 }}>
+            <button onClick={onBack} style={{ background: "none", border: "1px solid #2a2a2a", color: "#555", padding: "10px 20px", borderRadius: 8 }}>Retour</button>
+            <button onClick={() => onNext(selected ? REFERENCE_PRODUCTS[selected] : null)} style={{ background: "#e8194b", color: "#fff", border: "none", padding: "10px 24px", borderRadius: 8, fontWeight: 800 }}>{selected ? "Copier →" : "Passer →"}</button>
+          </div>
+        </div>
+      );
+    }
+
+    function StepAxes({ copied, onNext, onBack }) {
+      const [axisOrder, setAxisOrder] = useState(copied?.axis_order || ["Dimension"]);
+      const [axes, setAxes] = useState(() => { if (copied) return JSON.parse(JSON.stringify(copied.axes)); return { Dimension: [""] }; });
+      const updateOption = (ax, i, val) => { setAxes(a => ({ ...a, [ax]: a[ax].map((v, j) => j === i ? val : v) })); };
+      const addOption = (ax) => setAxes(a => ({ ...a, [ax]: [...a[ax], ""] }));
+      const totalVariants = axisOrder.reduce((acc, ax) => acc * (axes[ax]?.filter(v => v.trim()).length || 1), 1);
+      return (
+        <div>
+          {axisOrder.map(ax => (
+            <div key={ax} style={{ background: "#141414", border: "1px solid #1e1e1e", borderRadius: 10, padding: 14, marginBottom: 10 }}>
+              <div style={{ fontWeight: 800, fontSize: 12, color: "#888", marginBottom: 10 }}>{ax}</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {axes[ax].map((v, i) => <input key={i} style={{ background: "#111", border: "1px solid #222", color: "#ccc", padding: "6px 10px", borderRadius: 5, width: 150 }} value={v} onChange={e => updateOption(ax, i, e.target.value)} />)}
+                <button onClick={() => addOption(ax)} style={{ background: "#1a1a1a", color: "#555", border: "1px dashed #333", padding: "6px 12px", borderRadius: 5 }}>+ Option</button>
+              </div>
+            </div>
+          ))}
+          <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
+            <button onClick={onBack} style={{ background: "none", border: "1px solid #2a2a2a", color: "#555", padding: "10px 20px", borderRadius: 8 }}>Retour</button>
+            <button onClick={() => onNext({ axis_order: axisOrder, axes: Object.fromEntries(Object.entries(axes).map(([k, v]) => [k, v.filter(x => x.trim())])) })} style={{ background: "#e8194b", color: "#fff", border: "none", padding: "10px 24px", borderRadius: 8, fontWeight: 800 }}>Suivant ({totalVariants} variantes) →</button>
+          </div>
+        </div>
+      );
+    }
+
+    function StepPrix({ axesConfig, copied, onNext, onBack }) {
+      const allCombos = useMemo(() => generateAllVariants(axesConfig.axes, axesConfig.axis_order), [axesConfig]);
+      const initPrices = () => {
+        const map = {};
+        allCombos.forEach(combo => {
+          const key = JSON.stringify(combo);
+          if (copied) { const match = copied.variants.find(v => axesConfig.axis_order.every(ax => v.axes[ax] === combo[ax])); map[key] = match ? match.price : 0; }
+          else map[key] = 0;
+        });
+        return map;
+      };
+      const [prices, setPrices] = useState(initPrices);
+      const updatePrice = (key, val) => { const n = parseFloat(val); setPrices(p => ({ ...p, [key]: isNaN(n) ? 0 : n })); };
+      return (
+        <div>
+          <div style={{ maxHeight: 400, overflowY: "auto", border: "1px solid #1e1e1e", borderRadius: 10 }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+              <thead style={{ background: "#141414", position: "sticky", top: 0 }}>
+                <tr>{axesConfig.axis_order.map(ax => <th key={ax} style={{ padding: 10, textAlign: "left", color: "#555" }}>{ax}</th>)}<th style={{ padding: 10, textAlign: "right", color: "#555" }}>Prix MAD</th></tr>
+              </thead>
+              <tbody>
+                {allCombos.map(combo => {
+                  const key = JSON.stringify(combo);
+                  return <tr key={key} style={{ borderBottom: "1px solid #1a1a1a" }}>
+                    {axesConfig.axis_order.map(ax => <td key={ax} style={{ padding: 10 }}>{combo[ax]}</td>)}
+                    <td style={{ padding: 6, textAlign: "right" }}><input type="number" style={{ background: "#111", border: "1px solid #222", color: "#e8194b", padding: 6, width: 80, textAlign: "right" }} value={prices[key] || ""} onChange={e => updatePrice(key, e.target.value)} /></td>
+                  </tr>
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
+            <button onClick={onBack} style={{ background: "none", border: "1px solid #2a2a2a", color: "#555", padding: "10px 20px", borderRadius: 8 }}>Retour</button>
+            <button onClick={() => onNext(prices, allCombos)} style={{ background: "#e8194b", color: "#fff", border: "none", padding: "10px 24px", borderRadius: 8, fontWeight: 800 }}>Exporter →</button>
+          </div>
+        </div>
+      );
+    }
+
+    function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
+      const [saving, setSaving] = useState(false);
+      const [saved, setSaved] = useState(false);
+      const variants = allCombos.map(combo => ({ axes: combo, price: prices[JSON.stringify(combo)] || 0, sku: "" }));
+      const pm = Math.min(...variants.map(v => v.price).filter(p => p > 0), 0);
+      const pX = Math.max(...variants.map(v => v.price).filter(p => p > 0), 0);
+      const catalogEntry = JSON.stringify({ title: info.name, slug: info.slug, category: info.category, active: true, images: [`/assets/images/${info.slug}/1.webp`], price_min: pm, price_max: pX, axis_order: axesConfig.axis_order, axes: axesConfig.axes, variants, description: info.desc }, null, 2);
+      const save = async () => {
+        setSaving(true);
+        try {
+          const res = await fetch(`${DB}/catalog/${info.slug}.json`, { method: "PUT", body: catalogEntry });
+          if (res.ok) setSaved(true);
+        } catch (e) { alert(e.message); }
+        setSaving(false);
+      };
+      const box = { background: "#0a0a0a", border: "1px solid #1e1e1e", padding: 12, borderRadius: 8, fontSize: 10, color: "#7ec8e3", whiteSpace: "pre-wrap", marginTop: 10, maxHeight: 150, overflowY: "auto" };
+      return (
+        <div>
+          <div style={{ background: "#141414", border: "1px solid #1e1e1e", borderRadius: 10, padding: 16, marginBottom: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div><div style={{ fontWeight: 800, color: "#00c853", fontSize: 13 }}>Enregistrer dans Firebase</div><div style={{ fontSize: 11, color: "#555" }}>Le produit sera actif immédiatement.</div></div>
+              <button onClick={save} disabled={saving || saved} style={{ background: saved ? "#00c853" : "#e8194b", color: "#fff", border: "none", padding: "10px 20px", borderRadius: 8, fontWeight: 800 }}>{saving ? "Enregistrement..." : saved ? "Enregistré !" : "Sauvegarder"}</button>
             </div>
           </div>
-        ))}
-        <div style={{ display:"flex", gap:12, marginTop:20 }}>
-          <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#555", padding:"10px 20px", borderRadius:8 }}>Retour</button>
-          <button onClick={() => onNext({ axis_order: axisOrder, axes: Object.fromEntries(Object.entries(axes).map(([k,v]) => [k, v.filter(x=>x.trim())])) })} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"10px 24px", borderRadius:8, fontWeight:800 }}>Suivant ({totalVariants} variantes) →</button>
-        </div>
-      </div>
-    );
-  }
-
-  function StepPrix({ axesConfig, copied, onNext, onBack }) {
-    const allCombos = useMemo(() => generateAllVariants(axesConfig.axes, axesConfig.axis_order), [axesConfig]);
-    const initPrices = () => {
-      const map = {};
-      allCombos.forEach(combo => {
-        const key = JSON.stringify(combo);
-        if (copied) { const match = copied.variants.find(v => axesConfig.axis_order.every(ax => v.axes[ax] === combo[ax])); map[key] = match ? match.price : 0; }
-        else map[key] = 0;
-      });
-      return map;
-    };
-    const [prices, setPrices] = useState(initPrices);
-    const updatePrice = (key, val) => { const n = parseFloat(val); setPrices(p => ({ ...p, [key]: isNaN(n) ? 0 : n })); };
-    return (
-      <div>
-        <div style={{ maxHeight:400, overflowY:"auto", border:"1px solid #1e1e1e", borderRadius:10 }}>
-          <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12 }}>
-            <thead style={{ background:"#141414", position:"sticky", top:0 }}>
-              <tr>{axesConfig.axis_order.map(ax => <th key={ax} style={{ padding:10, textAlign:"left", color:"#555" }}>{ax}</th>)}<th style={{ padding:10, textAlign:"right", color:"#555" }}>Prix MAD</th></tr>
-            </thead>
-            <tbody>
-              {allCombos.map(combo => {
-                const key = JSON.stringify(combo);
-                return <tr key={key} style={{ borderBottom:"1px solid #1a1a1a" }}>
-                  {axesConfig.axis_order.map(ax => <td key={ax} style={{ padding:10 }}>{combo[ax]}</td>)}
-                  <td style={{ padding:6, textAlign:"right" }}><input type="number" style={{ background:"#111", border:"1px solid #222", color:"#e8194b", padding:6, width:80, textAlign:"right" }} value={prices[key]||""} onChange={e => updatePrice(key, e.target.value)} /></td>
-                </tr>
-              })}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ display:"flex", gap:12, marginTop:20 }}>
-          <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#555", padding:"10px 20px", borderRadius:8 }}>Retour</button>
-          <button onClick={() => onNext(prices, allCombos)} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"10px 24px", borderRadius:8, fontWeight:800 }}>Exporter →</button>
-        </div>
-      </div>
-    );
-  }
-
-  function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
-    const [saving, setSaving] = useState(false);
-    const [saved, setSaved] = useState(false);
-    const variants = allCombos.map(combo => ({ axes: combo, price: prices[JSON.stringify(combo)] || 0, sku: "" }));
-    const pm = Math.min(...variants.map(v=>v.price).filter(p=>p>0), 0);
-    const pX = Math.max(...variants.map(v=>v.price).filter(p=>p>0), 0);
-    const catalogEntry = JSON.stringify({ title: info.name, slug: info.slug, category: info.category, active: true, images: [`/assets/images/${info.slug}/1.webp`], price_min: pm, price_max: pX, axis_order: axesConfig.axis_order, axes: axesConfig.axes, variants, description: info.desc }, null, 2);
-    const save = async () => {
-      setSaving(true);
-      try {
-        const res = await fetch(`${DB}/catalog/${info.slug}.json`, { method: "PUT", body: catalogEntry });
-        if (res.ok) setSaved(true);
-      } catch(e) { alert(e.message); }
-      setSaving(false);
-    };
-    const box = { background:"#0a0a0a", border:"1px solid #1e1e1e", padding:12, borderRadius:8, fontSize:10, color:"#7ec8e3", whiteSpace:"pre-wrap", marginTop:10, maxHeight:150, overflowY:"auto" };
-    return (
-      <div>
-        <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:10, padding:16, marginBottom:16 }}>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-            <div><div style={{ fontWeight:800, color:"#00c853", fontSize:13 }}>Enregistrer dans Firebase</div><div style={{ fontSize:11, color:"#555" }}>Le produit sera actif immédiatement.</div></div>
-            <button onClick={save} disabled={saving||saved} style={{ background: saved?"#00c853":"#e8194b", color:"#fff", border:"none", padding:"10px 20px", borderRadius:8, fontWeight:800 }}>{saving?"Enregistrement...":saved?"Enregistré !":"Sauvegarder"}</button>
+          <div style={{ background: "#141414", border: "1px solid #1e1e1e", borderRadius: 10, padding: 16 }}>
+            <div style={{ fontWeight: 800, fontSize: 12, color: "#eee" }}>JSON Catalogue</div>
+            <div style={box}>{catalogEntry}</div>
+            <button onClick={() => navigator.clipboard.writeText(catalogEntry)} style={{ background: "#1a1a1a", color: "#888", border: "1px solid #2a2a2a", padding: "6px 12px", borderRadius: 5, marginTop: 10, fontSize: 11 }}>Copier JSON</button>
           </div>
+          <button onClick={onBack} style={{ background: "none", border: "1px solid #2a2a2a", color: "#555", padding: "10px 20px", borderRadius: 8, marginTop: 20 }}>Retour</button>
         </div>
-        <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:10, padding:16 }}>
-          <div style={{ fontWeight:800, fontSize:12, color:"#eee" }}>JSON Catalogue</div>
-          <div style={box}>{catalogEntry}</div>
-          <button onClick={() => navigator.clipboard.writeText(catalogEntry)} style={{ background:"#1a1a1a", color:"#888", border:"1px solid #2a2a2a", padding:"6px 12px", borderRadius:5, marginTop:10, fontSize:11 }}>Copier JSON</button>
-        </div>
-        <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#555", padding:"10px 20px", borderRadius:8, marginTop:20 }}>Retour</button>
-      </div>
-    );
-  }
+      );
+    }
 
-  function App() {
-    const [step, setStep] = useState(0);
-    const [info, setInfo] = useState({});
-    const [copied, setCopied] = useState(null);
-    const [axesConfig, setAxesConfig] = useState(null);
-    const [prices, setPrices] = useState(null);
-    const [allCombos, setAllCombos] = useState(null);
-    return (
-      <div style={{ color:"#f0f0f0", padding:"20px 0" }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24 }}>
-          <h2 style={{ fontSize:16, fontWeight:800, color:"#e8194b" }}>Créateur de Produit</h2>
-          <div style={{ fontSize:10, color:"#555", background:"#111", padding:"4px 10px", borderRadius:10, border:"1px solid #1e1e1e" }}>Étape {step+1} / 5</div>
+    function App() {
+      const [step, setStep] = useState(0);
+      const [info, setInfo] = useState({});
+      const [copied, setCopied] = useState(null);
+      const [axesConfig, setAxesConfig] = useState(null);
+      const [prices, setPrices] = useState(null);
+      const [allCombos, setAllCombos] = useState(null);
+      return (
+        <div style={{ color: "#f0f0f0", padding: "20px 0" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+            <h2 style={{ fontSize: 16, fontWeight: 800, color: "#e8194b" }}>Créateur de Produit</h2>
+            <div style={{ fontSize: 10, color: "#555", background: "#111", padding: "4px 10px", borderRadius: 10, border: "1px solid #1e1e1e" }}>Étape {step + 1} / 5</div>
+          </div>
+          <Stepper current={step} />
+          {step === 0 && <StepInfo data={info} onChange={setInfo} onNext={() => setStep(1)} />}
+          {step === 1 && <StepCopy onBack={() => setStep(0)} onNext={(ref) => { setCopied(ref); setStep(2); }} />}
+          {step === 2 && <StepAxes copied={copied} onBack={() => setStep(1)} onNext={(cfg) => { setAxesConfig(cfg); setStep(3); }} />}
+          {step === 3 && <StepPrix axesConfig={axesConfig} copied={copied} onBack={() => setStep(2)} onNext={(p, combos) => { setPrices(p); setAllCombos(combos); setStep(4); }} />}
+          {step === 4 && <StepExport info={info} axesConfig={axesConfig} prices={prices} allCombos={allCombos} onBack={() => setStep(3)} />}
         </div>
-        <Stepper current={step} />
-        {step === 0 && <StepInfo data={info} onChange={setInfo} onNext={() => setStep(1)} />}
-        {step === 1 && <StepCopy onBack={() => setStep(0)} onNext={(ref) => { setCopied(ref); setStep(2); }} />}
-        {step === 2 && <StepAxes copied={copied} onBack={() => setStep(1)} onNext={(cfg) => { setAxesConfig(cfg); setStep(3); }} />}
-        {step === 3 && <StepPrix axesConfig={axesConfig} copied={copied} onBack={() => setStep(2)} onNext={(p, combos) => { setPrices(p); setAllCombos(combos); setStep(4); }} />}
-        {step === 4 && <StepExport info={info} axesConfig={axesConfig} prices={prices} allCombos={allCombos} onBack={() => setStep(3)} />}
-      </div>
-    );
-  }
+      );
+    }
 
-  // Final Mount
-  const root = ReactDOM.createRoot(document.getElementById('nouveau-root'));
-  root.render(<App />);
-</script>
+    // Final Mount
+    const root = ReactDOM.createRoot(document.getElementById('nouveau-root'));
+    root.render(<App />);
+  </script>
 
 </body>
+
 </html>

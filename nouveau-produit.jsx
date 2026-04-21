@@ -900,7 +900,7 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
 }
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
-export default function App() {
+export default function App({ isEmbedded }) {
   const [step, setStep] = useState(0);
   const [info, setInfo] = useState({});
   const [copied, setCopied] = useState(null);
@@ -909,17 +909,27 @@ export default function App() {
   const [allCombos, setAllCombos] = useState(null);
 
   return (
-    <div style={{ background:"#0f0f0f", minHeight:"100vh", color:"#f0f0f0", fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", padding:"0 0 60px" }}>
+    <div style={{ background: isEmbedded ? "transparent" : "#0f0f0f", minHeight: isEmbedded ? "auto" : "100vh", color:"#f0f0f0", fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", padding: isEmbedded ? "0" : "0 0 60px" }}>
       {/* Header */}
-      <div style={{ background:"#141414", borderBottom:"2px solid #e8194b", padding:"14px 24px", display:"flex", alignItems:"center", gap:16, marginBottom:32 }}>
-        <span style={{ fontSize:20, fontWeight:900, color:"#e8194b", letterSpacing:-1 }}>NOVA STYLE</span>
-        <span style={{ fontSize:10, color:"#333", letterSpacing:3, textTransform:"uppercase", marginTop:2 }}>Nouveau Produit</span>
-        <div style={{ marginLeft:"auto", fontSize:11, color:"#555", background:"#111", padding:"4px 12px", borderRadius:12, border:"1px solid #1e1e1e" }}>
-          Étape {step+1} / {steps.length}
+      {!isEmbedded && (
+        <div style={{ background:"#141414", borderBottom:"2px solid #e8194b", padding:"14px 24px", display:"flex", alignItems:"center", gap:16, marginBottom:32 }}>
+          <span style={{ fontSize:20, fontWeight:900, color:"#e8194b", letterSpacing:-1 }}>NOVA STYLE</span>
+          <span style={{ fontSize:10, color:"#333", letterSpacing:3, textTransform:"uppercase", marginTop:2 }}>Nouveau Produit</span>
+          <div style={{ marginLeft:"auto", fontSize:11, color:"#555", background:"#111", padding:"4px 12px", borderRadius:12, border:"1px solid #1e1e1e" }}>
+            Étape {step+1} / {steps.length}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div style={{ maxWidth:900, margin:"0 auto", padding:"0 24px" }}>
+      <div style={{ maxWidth:900, margin:"0 auto", padding: isEmbedded ? "20px 0" : "0 24px" }}>
+        {isEmbedded && (
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:24 }}>
+            <h2 style={{ fontSize:16, fontWeight:800, color:"#e8194b" }}>Créateur de Produit</h2>
+            <div style={{ fontSize:11, color:"#555", background:"#111", padding:"4px 12px", borderRadius:12, border:"1px solid #1e1e1e" }}>
+              Étape {step+1} / {steps.length}
+            </div>
+          </div>
+        )}
         <Stepper current={step} />
 
         {step === 0 && <StepInfo data={info} onChange={setInfo} onNext={() => setStep(1)} />}
