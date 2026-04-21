@@ -920,8 +920,14 @@ async function loadSessionStats(){
   try{
     const now=new Date();
     const todayStr=now.toISOString().slice(0,10);
+
+    // Get Firebase auth token so reads pass the "auth != null" rule
+    const token=await auth.currentUser?.getIdToken().catch(()=>null);
+    if(!token){console.warn("loadSessionStats: not authenticated");return;}
+    const authSuffix=`?auth=${token}`;
+
     // Fetch all session date keys (shallow)
-    const keysRes=await fetch(`${DB_REST}/sessions.json?shallow=true`);
+    const keysRes=await fetch(`${DB_REST}/sessions.json${authSuffix}&shallow=true`);
     if(!keysRes.ok) return;
     const keys=await keysRes.json();
     if(!keys) return;
@@ -929,9 +935,20 @@ async function loadSessionStats(){
     const allDates=Object.keys(keys).sort();
     const todayDate=new Date(todayStr);
 
-    // Daily: count sessions for today
-    let daily=0;
-    try{const r=await fetch(`${DB_REST}/sessions/${todayStr}.json?shallow=true`);if(r.ok){const d=await r.json();daily=d?Object.keys(d).length:0;}}catch{}
+    // Schema: each day node is { count: N } (set by visitor-tracker increment)
+    const dayCount=async(d)=>{
+      try{
+        const r=await fetch(`${DB_REST}/sessions/${d}.json${authSuffix}`);
+        if(!r.ok) return 0;
+        const j=await r.json();
+        // Support both {count:N} schema (new) and legacy object-of-keys schema
+        if(j && typeof j==='object') return Number(j.count)||Object.keys(j).filter(k=>k!=='count').length||0;
+        return 0;
+      }catch{return 0;}
+    };
+
+    // Daily
+    const daily=await dayCount(todayStr);
 
     // Weekly: Mon–today
     const dayOfWeek=todayDate.getDay();
@@ -939,22 +956,18 @@ async function loadSessionStats(){
     const weekStart=new Date(todayDate);weekStart.setDate(weekStart.getDate()-mondayOffset);
     const weekStartStr=weekStart.toISOString().slice(0,10);
     const weekDates=allDates.filter(d=>d>=weekStartStr&&d<=todayStr);
-    let weekly=0;
-    await Promise.all(weekDates.map(async d=>{
-      try{const r=await fetch(`${DB_REST}/sessions/${d}.json?shallow=true`);if(r.ok){const j=await r.json();weekly+=j?Object.keys(j).length:0;}}catch{}
-    }));
+    const weekCounts=await Promise.all(weekDates.map(dayCount));
+    const weekly=weekCounts.reduce((s,n)=>s+n,0);
 
     // Monthly: 1st of month to today
     const monthStartStr=todayStr.slice(0,8)+"01";
     const monthDates=allDates.filter(d=>d>=monthStartStr&&d<=todayStr);
-    let monthly=0;
-    await Promise.all(monthDates.map(async d=>{
-      try{const r=await fetch(`${DB_REST}/sessions/${d}.json?shallow=true`);if(r.ok){const j=await r.json();monthly+=j?Object.keys(j).length:0;}}catch{}
-    }));
+    const monthCounts=await Promise.all(monthDates.map(dayCount));
+    const monthly=monthCounts.reduce((s,n)=>s+n,0);
 
-    document.getElementById("sess-daily").textContent=daily;
-    document.getElementById("sess-weekly").textContent=weekly;
-    document.getElementById("sess-monthly").textContent=monthly;
+    document.getElementById("sess-daily").textContent=daily.toLocaleString("fr-MA");
+    document.getElementById("sess-weekly").textContent=weekly.toLocaleString("fr-MA");
+    document.getElementById("sess-monthly").textContent=monthly.toLocaleString("fr-MA");
   }catch(e){console.warn("Session stats error",e);}
 }
 
@@ -1349,7 +1362,11 @@ function renderDraftProductList(list) {
     const priceStr = p.price
       ? (p.price.min === p.price.max ? `${Number(p.price.min).toLocaleString('fr-MA')} MAD` : `${Number(p.price.min).toLocaleString('fr-MA')} – ${Number(p.price.max).toLocaleString('fr-MA')} MAD`)
       : 'Prix sur demande';
-    const imgSrc = p.image || `/assets/images/${p.id}/1.webp`;
+    // Normalise legacy /images/slug/default.webp → /assets/images/slug/1.webp
+    const rawImg = p.image || `/assets/images/${p.id}/1.webp`;
+    const imgSrc = rawImg
+      .replace(/^\/images\//, '/assets/images/')
+      .replace(/\/default\.webp$/, '/1.webp');
     const badge = p._fromFirebase
       ? `<span style="font-size:9px;background:#fef3c7;color:#d97706;border-radius:3px;padding:1px 5px;font-weight:700;margin-left:4px">Firebase</span>`
       : '';
