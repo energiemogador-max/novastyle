@@ -276,7 +276,111 @@ function optTags(o){if(!o||typeof o!=="object")return"";return Object.entries(o)
 function renderOrder(id,o,i,isNew){
   const c=o.customer||{},items=o.items||[],total=o.total||0,deposit=Math.round(total*.5),dt=new Date(o.timestamp);
   const ih=items.map(it=>{const lt=(it.price||0)*(it.quantity||1);return`<div class="item-row"><div class="item-name">${esc(it.name||"—")}</div>${it.options?`<div class="item-options">${optTags(it.options)}</div>`:""}<div class="item-footer"><span class="qty">×${it.quantity||1} · ${(it.price||0).toLocaleString("fr-MA")} MAD</span><span class="item-price">${lt.toLocaleString("fr-MA")} MAD</span></div></div>`;}).join("");
-  return`<div class="order-card ${i===0&&isNew?"new-order":""}"><div class="order-head"><div class="order-id">#${id.slice(-6).toUpperCase()}</div><span class="order-status">En attente</span><div class="order-time">${dt.toLocaleDateString("fr-MA")} ${dt.toLocaleTimeString("fr-MA",{hour:"2-digit",minute:"2-digit"})}</div></div><div class="order-body"><div class="order-customer-col"><div class="customer-name">${esc(c.name||"—")}</div><div class="customer-row"><span>📞</span><span class="customer-phone">${esc(c.phone||"—")}</span></div><div class="customer-row"><span>📍</span><span>${esc(c.city||"—")}</span></div>${c.address?`<div class="customer-row"><span>🏠</span><span>${esc(c.address)}</span></div>`:""} ${c.email?`<div class="customer-row"><span>✉️</span><span>${esc(c.email)}</span></div>`:""}${c.notes?`<div class="customer-notes">💬 ${esc(c.notes)}</div>`:""}</div><div class="order-items-col">${ih}</div></div><div class="order-foot"><span class="foot-deposit">Acompte: ${deposit.toLocaleString("fr-MA")} MAD</span><span class="foot-label">Total:</span><span class="foot-total">${total.toLocaleString("fr-MA")} MAD</span></div></div>`;
+  return`<div class="order-card ${i===0&&isNew?"new-order":""}"><div class="order-head"><div class="order-id">#${id.slice(-6).toUpperCase()}</div><span class="order-status">En attente</span><div class="order-time">${dt.toLocaleDateString("fr-MA")} ${dt.toLocaleTimeString("fr-MA",{hour:"2-digit",minute:"2-digit"})}</div></div><div class="order-body"><div class="order-customer-col"><div class="customer-name">${esc(c.name||"—")}</div><div class="customer-row"><span>📞</span><span class="customer-phone">${esc(c.phone||"—")}</span></div><div class="customer-row"><span>📍</span><span>${esc(c.city||"—")}</span></div>${c.address?`<div class="customer-row"><span>🏠</span><span>${esc(c.address)}</span></div>`:""} ${c.email?`<div class="customer-row"><span>✉️</span><span>${esc(c.email)}</span></div>`:""}${c.notes?`<div class="customer-notes">💬 ${esc(c.notes)}</div>`:""}</div><div class="order-items-col">${ih}</div></div><div class="order-foot"><button class="btn-logout" onclick='window.printOrder("${id}", ${JSON.stringify(o).replace(/'/g,"&apos;")})' style="margin-right:auto; border-color:#e8194b; color:#e8194b;">🖨️ Imprimer</button><span class="foot-deposit">Acompte: ${deposit.toLocaleString("fr-MA")} MAD</span><span class="foot-label">Total:</span><span class="foot-total">${total.toLocaleString("fr-MA")} MAD</span></div></div>`;
+}
+
+window.printOrder = function(id, o) {
+  const c = o.customer || {};
+  const items = o.items || [];
+  const total = o.total || 0;
+  const deposit = Math.round(total * 0.5);
+  const dt = new Date(o.timestamp);
+  
+  const printWindow = window.open('', '_blank');
+  const itemsHtml = items.map(it => {
+    const lt = (it.price || 0) * (it.quantity || 1);
+    const opts = it.options ? Object.entries(it.options).map(([k,v]) => `<span style="background:#eee;padding:2px 5px;border-radius:3px;margin-right:5px;font-size:10px">${k}: ${v}</span>`).join('') : '';
+    return `<tr><td style="padding:12px;border-bottom:1px solid #eee;"><strong>${it.name}</strong><div style="margin-top:5px">${opts}</div></td><td style="text-align:center;padding:12px;border-bottom:1px solid #eee;">${it.quantity}</td><td style="text-align:right;padding:12px;border-bottom:1px solid #eee;">${(it.price||0).toLocaleString('fr-MA')} MAD</td><td style="text-align:right;padding:12px;border-bottom:1px solid #eee;font-weight:bold;">${lt.toLocaleString('fr-MA')} MAD</td></tr>`;
+  }).join('');
+
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Bon de Commande #${id.slice(-6).toUpperCase()}</title>
+        <style>
+          body { font-family: 'Segoe UI', system-ui, sans-serif; color: #222; margin: 0; padding: 40px; line-height: 1.4; }
+          .header { display: flex; justify-content: space-between; align-items: start; border-bottom: 3px solid #e8194b; padding-bottom: 20px; margin-bottom: 30px; }
+          .logo { height: 70px; }
+          .company-details { text-align: right; }
+          .company-name { font-size: 22px; font-weight: 900; color: #e8194b; margin-bottom: 5px; }
+          .company-text { font-size: 11px; color: #555; }
+          .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+          .info-box { border: 1px solid #eee; border-radius: 10px; padding: 20px; background: #fafafa; }
+          .info-box h3 { margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase; color: #e8194b; letter-spacing: 1px; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+          th { background: #f5f5f5; padding: 12px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #ddd; }
+          .totals-table { width: 320px; margin-left: auto; }
+          .total-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; }
+          .grand-total { border-top: 2px solid #e8194b; margin-top: 10px; padding-top: 10px; font-size: 18px; font-weight: 900; color: #e8194b; }
+          .legal { margin-top: 60px; font-size: 10px; color: #999; text-align: center; border-top: 1px solid #eee; padding-top: 20px; }
+          @media print { .no-print { display: none; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <img src="https://novastyle.ma/assets/logo.png" class="logo">
+          <div class="company-details">
+            <div class="company-name">ENERGIE MOGADOR CASABLANCA SARL AU</div>
+            <div class="company-text">26 Av Mers sultan 1 er étage Appt 3, 20660 CASABLANCA</div>
+            <div class="company-text">ICE: 003070820000065 · RC: 543343 · IF: 52466738</div>
+            <div class="company-text">Tél: 07 07 07 47 48 · Email: energiemogador@gmail.com</div>
+          </div>
+        </div>
+
+        <div class="meta-grid">
+          <div class="info-box">
+            <h3>Destinataire</h3>
+            <div style="font-size: 16px; font-weight: 700; margin-bottom: 5px;">${c.name}</div>
+            <div style="font-size: 14px; color: #444;">📞 ${c.phone}</div>
+            <div style="font-size: 13px; color: #666; margin-top: 8px;">📍 ${c.city}<br>${c.address || ''}</div>
+          </div>
+          <div style="text-align: right;">
+            <h1 style="margin: 0; font-size: 28px; color: #222;">BON DE COMMANDE</h1>
+            <div style="margin-top: 10px; font-size: 15px;">Référence: <strong>#${id.slice(-6).toUpperCase()}</strong></div>
+            <div style="color: #666; font-size: 13px;">Date d'émission: ${dt.toLocaleDateString("fr-MA")}</div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Désignation du produit</th>
+              <th style="text-align:center">Qté</th>
+              <th style="text-align:right">Prix Unitaire</th>
+              <th style="text-align:right">Montant Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHtml}
+          </tbody>
+        </table>
+
+        <div class="totals-table">
+          <div class="total-row"><span>Total HT</span><span>${(total/1.2).toLocaleString('fr-MA', {minimumFractionDigits:2})} MAD</span></div>
+          <div class="total-row"><span>TVA (20%)</span><span>${(total - (total/1.2)).toLocaleString('fr-MA', {minimumFractionDigits:2})} MAD</span></div>
+          <div class="total-row grand-total"><span>TOTAL TTC</span><span>${total.toLocaleString('fr-MA')} MAD</span></div>
+          <div class="total-row" style="margin-top:15px; color:#666"><span>Acompte (50%)</span><span>${deposit.toLocaleString('fr-MA')} MAD</span></div>
+          <div class="total-row" style="font-weight:700"><span>Reste à régler</span><span>${(total-deposit).toLocaleString('fr-MA')} MAD</span></div>
+        </div>
+
+        <div style="margin-top: 40px; font-size: 12px;">
+          <strong>Notes :</strong> ${c.notes || 'Aucune note particulière.'}
+        </div>
+
+        <div class="legal">
+          Ce document fait office de bon de commande et de facture pro-forma.<br>
+          ENERGIE MOGADOR — SARL AU au capital de 100.000 DH — RC 543343 Casablanca
+        </div>
+
+        <script>
+          window.onload = function() {
+            setTimeout(() => { window.print(); }, 500);
+          };
+        </script>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
 }
 let prevCount=0;
 function startOrders(){
