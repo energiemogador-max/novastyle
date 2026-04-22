@@ -79,6 +79,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tab-badge.show{display:inline-flex}
 .tab-panel{display:none}.tab-panel.active{display:block}
 
+/* ── SUB-TABS (inside Orders) ────────────────────────────────────── */
+.sub-tab-bar{display:flex;background:var(--surface2);border-bottom:1px solid var(--border);padding:0 24px;gap:0}
+.sub-tab{padding:11px 18px;font-size:11.5px;font-weight:700;color:var(--text4);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;white-space:nowrap;letter-spacing:.3px;display:flex;align-items:center;gap:6px}
+.sub-tab.active{color:var(--red);border-bottom-color:var(--red)}
+.sub-tab:hover:not(.active){color:var(--text2);background:var(--surface)}
+.sub-panel{display:none}.sub-panel.active{display:block}
+
 /* ── CONTAINER ───────────────────────────────────────────────────── */
 .container{padding:24px;max-width:1300px;margin:0 auto}
 .section-title{font-size:11px;font-weight:800;color:var(--text4);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
@@ -330,6 +337,55 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn-opt-cancel:hover{border-color:var(--red);color:var(--red);background:var(--red-light)}
 .btn-opt-add{flex:2;background:var(--red);border:none;color:#fff;padding:11px;border-radius:var(--radius-sm);font-size:13px;font-weight:800;cursor:pointer;transition:opacity .2s,transform .1s}
 .btn-opt-add:hover{opacity:.9;transform:translateY(-1px)}
+
+/* ── SIDEBAR LAYOUT ───────────────────────────────────────────────── */
+.admin-body{display:flex;height:calc(100vh - 56px);overflow:hidden}
+.sidebar{width:220px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.sidebar-brand{padding:18px 18px 14px;font-size:16px;font-weight:900;color:var(--red);letter-spacing:-0.7px;border-bottom:1px solid var(--border2)}
+.sidebar-nav{flex:1;padding:6px 0}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;transition:all .15s;border-left:3px solid transparent;user-select:none}
+.sidebar-item:hover{background:var(--surface2);color:var(--text2)}
+.sidebar-item.active{background:var(--red-light);color:var(--red);border-left-color:var(--red);font-weight:700}
+.sidebar-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sidebar-badge{background:var(--red);color:#fff;font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;padding:0 4px;margin-left:auto}
+.sidebar-footer{padding:12px 14px;border-top:1px solid var(--border2)}
+.sidebar-email{font-size:11px;color:var(--text4);display:block;margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sidebar-logout{width:100%;background:var(--surface2);border:1.5px solid var(--border);color:var(--text3);padding:7px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.sidebar-logout:hover{border-color:var(--red);color:var(--red);background:var(--red-light)}
+.main-content{flex:1;overflow-y:auto;overflow-x:hidden}
+
+/* ── HOME PAGE ────────────────────────────────────────────────────── */
+.home-wrap{padding:24px;max-width:1400px;margin:0 auto}
+.home-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.home-title{font-size:18px;font-weight:900;color:var(--text);letter-spacing:-0.5px}
+.period-selector{display:flex;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:3px;gap:2px}
+.period-btn{padding:5px 13px;border-radius:4px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.period-btn.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow);font-weight:700}
+.period-btn:hover:not(.active){color:var(--text2)}
+
+/* KPI row */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow)}
+.kpi-lbl{font-size:10px;color:var(--text4);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-bottom:8px}
+.kpi-val{font-size:26px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-1px}
+.kpi-val.amber{color:var(--amber)}
+
+/* Live visitors section */
+.live-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:18px;box-shadow:var(--shadow)}
+.live-section-head{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--border2);background:var(--surface2);flex-wrap:wrap}
+.live-section-title{font-size:12px;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:.8px;flex:1}
+.live-online-count{font-size:12px;font-weight:700;color:var(--green);background:var(--green-light);border:1px solid #bbf7d0;padding:3px 10px;border-radius:99px}
+.live-grid{display:grid;grid-template-columns:1fr 1fr}
+.live-feed-col{border-right:1px solid var(--border2);max-height:280px;overflow-y:auto}
+.live-charts-col{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.live-chart-title{font-size:10px;font-weight:800;color:var(--text4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+
+/* Home bottom grid */
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.h-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.h-panel-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border2);background:var(--surface2)}
+.h-panel-title{font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+.h-panel-body{padding:14px 16px}
 </style>
 </head>
 <body>
@@ -356,44 +412,166 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <h1>⬡ Nova Style Admin</h1>
     <div class="hright">
       <div class="live-badge"><span class="live-dot"></span>Live</div>
-      <span class="admin-email" id="admin-email-display"></span>
-      <button class="btn-sm" id="btn-logout">Déconnexion</button>
     </div>
   </div>
 
-  <div class="stats-bar">
-    <div class="stat-card"><div class="lbl">Commandes</div><div class="val" id="stat-total">—</div></div>
-    <div class="stat-card"><div class="lbl">Aujourd'hui</div><div class="val green" id="stat-today">—</div></div>
-    <div class="stat-card"><div class="lbl">Chiffre d'affaires</div><div class="val" id="stat-revenue">—</div></div>
-    <div class="stat-card"><div class="lbl">Visiteurs live</div><div class="val green" id="stat-visitors">0</div></div>
-    <div class="stat-card"><div class="lbl">Avec panier</div><div class="val blue" id="stat-cart">0</div></div>
-    <div class="stat-card"><div class="lbl">Avis en attente</div><div class="val amber" id="stat-pending-reviews">—</div></div>
-  </div>
+  <div class="admin-body">
 
-  <div class="tab-bar">
-    <div class="tab active" data-tab="orders">📦 Commandes</div>
-    <div class="tab" data-tab="visitors">👥 Visiteurs</div>
-    <div class="tab" data-tab="reviews">⭐ Avis<span class="tab-badge" id="reviews-tab-badge">0</span></div>
-    <div class="tab" data-tab="products">🪞 Produits</div>
-    <div class="tab" data-tab="newproduct">✨ Nouveau Produit</div>
-    <div class="tab" data-tab="import">🚀 Import</div>
-  </div>
+    <!-- ══ SIDEBAR ══ -->
+    <nav class="sidebar">
+      <div class="sidebar-brand">Nova Style</div>
+      <div class="sidebar-nav">
+        <div class="sidebar-item active" data-tab="home"><span class="sidebar-icon">🏠</span>Accueil</div>
+        <div class="sidebar-item" data-tab="orders"><span class="sidebar-icon">📦</span>Commandes</div>
+        <div class="sidebar-item" data-tab="products"><span class="sidebar-icon">🪞</span>Produits</div>
+        <div class="sidebar-item" data-tab="newproduct"><span class="sidebar-icon">✨</span>Ajouter produit</div>
+        <div class="sidebar-item" data-tab="customers"><span class="sidebar-icon">👥</span>Clients</div>
+        <div class="sidebar-item" data-tab="reviews"><span class="sidebar-icon">⭐</span>Avis<span class="sidebar-badge" id="reviews-tab-badge" style="display:none">0</span></div>
+        <div class="sidebar-item" data-tab="import"><span class="sidebar-icon">🚀</span>Import</div>
+      </div>
+      <div class="sidebar-footer">
+        <span class="sidebar-email" id="admin-email-display"></span>
+        <button class="sidebar-logout" id="btn-logout">Déconnexion</button>
+      </div>
+    </nav>
+
+    <!-- ══ MAIN CONTENT ══ -->
+    <div class="main-content">
+
+    <!-- ═══ HOME ═══ -->
+    <div class="tab-panel active" id="tab-home">
+      <div class="home-wrap">
+
+        <!-- Header + period selector -->
+        <div class="home-header">
+          <div class="home-title">Aperçu</div>
+          <div class="period-selector">
+            <button class="period-btn active" data-period="today">Aujourd'hui</button>
+            <button class="period-btn" data-period="24h">24h</button>
+            <button class="period-btn" data-period="week">Semaine</button>
+            <button class="period-btn" data-period="month">Mois</button>
+            <button class="period-btn" data-period="3months">3 Mois</button>
+          </div>
+        </div>
+
+        <!-- KPI row -->
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-lbl">Sessions</div>
+            <div class="kpi-val" id="kpi-sessions">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Commandes</div>
+            <div class="kpi-val" id="kpi-orders">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Chiffre d'affaires</div>
+            <div class="kpi-val" id="kpi-revenue">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Avis en attente</div>
+            <div class="kpi-val amber" id="kpi-pending">—</div>
+          </div>
+        </div>
+
+        <!-- Hidden compat elements (written by existing JS) -->
+        <span id="stat-total" style="display:none"></span>
+        <span id="stat-today" style="display:none"></span>
+        <span id="stat-revenue" style="display:none"></span>
+        <span id="stat-pending-reviews" style="display:none"></span>
+        <span id="stat-visitors" style="display:none"></span>
+        <span id="stat-cart" style="display:none"></span>
+        <span id="sess-daily" style="display:none"></span>
+        <span id="sess-weekly" style="display:none"></span>
+        <span id="sess-monthly" style="display:none"></span>
+
+        <!-- Live visitors -->
+        <div class="live-section">
+          <div class="live-section-head">
+            <div class="live-badge"><span class="live-dot"></span>Live</div>
+            <div class="live-section-title">Visiteurs sur votre boutique</div>
+            <div class="live-online-count"><span id="vis-count">0</span> en ligne</div>
+          </div>
+          <div class="live-grid">
+            <div class="live-feed-col">
+              <div id="vis-list"><div class="no-visitors">Aucun visiteur en ce moment</div></div>
+            </div>
+            <div class="live-charts-col">
+              <div>
+                <div class="live-chart-title">Sources de trafic</div>
+                <div id="vis-sources-chart"></div>
+              </div>
+              <div>
+                <div class="live-chart-title">Appareils</div>
+                <div id="vis-devices-chart"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sessions chart + Recent orders -->
+        <div class="home-grid">
+          <div class="h-panel">
+            <div class="h-panel-head">
+              <span class="h-panel-title">Sessions</span>
+              <span id="home-period-label" style="font-size:11px;color:var(--text4);font-weight:500"></span>
+            </div>
+            <div class="h-panel-body">
+              <div id="home-sessions-chart" style="min-height:90px"><div style="color:var(--text4);font-size:12px;text-align:center;padding:20px">Chargement…</div></div>
+            </div>
+          </div>
+          <div class="h-panel">
+            <div class="h-panel-head"><span class="h-panel-title">Commandes récentes</span></div>
+            <div class="h-panel-body" style="padding:0 16px">
+              <div id="home-recent-orders"><div style="color:var(--text4);font-size:12px;text-align:center;padding:20px">Chargement…</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══ CUSTOMERS (placeholder) ═══ -->
+    <div class="tab-panel" id="tab-customers">
+      <div class="container">
+        <div class="section-title" style="margin-bottom:16px">Clients</div>
+        <div class="no-order">👥 Module Clients — en cours de développement.</div>
+      </div>
+    </div>
 
   <!-- ═══ ORDERS ═══ -->
-  <div class="tab-panel active" id="tab-orders">
-    <div class="container">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-        <div class="section-title">Commandes</div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <input class="search-input" id="order-search" placeholder="🔍 Rechercher client, ville…" style="width:200px">
-          <button onclick="window.toggleAddOrderPanel()" style="background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px">
-            ➕ Ajouter une commande
-            <span id="draft-tab-badge" class="tab-badge" style="position:relative;top:0;right:0;background:rgba(255,255,255,.3);color:#fff;font-size:9px"></span>
+  <div class="tab-panel" id="tab-orders">
+
+    <!-- Sub-tab bar -->
+    <div class="sub-tab-bar">
+      <div class="sub-tab active" data-sub="active">📦 Commandes actives</div>
+      <div class="sub-tab" data-sub="drafts">📝 Brouillons <span id="draft-tab-badge" class="tab-badge" style="position:relative;top:0;right:0;background:var(--amber);font-size:9px">0</span></div>
+    </div>
+
+    <!-- ── Active Orders sub-panel ── -->
+    <div class="sub-panel active" id="sub-active">
+      <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <div class="section-title">Commandes actives</div>
+          <input class="search-input" id="order-search" placeholder="🔍 Rechercher client, ville…" style="width:220px">
+        </div>
+        <div id="orders-display"><div class="loading">Connexion Firebase…</div></div>
+      </div>
+    </div>
+
+    <!-- ── Drafts sub-panel ── -->
+    <div class="sub-panel" id="sub-drafts">
+      <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <div class="section-title" style="display:flex;align-items:center;gap:8px">Brouillons <span id="draft-count-label" style="font-size:11px;font-weight:500;color:var(--text4);text-transform:none;letter-spacing:0"></span></div>
+          <button onclick="window.toggleAddOrderPanel()" style="background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:800;cursor:pointer">
+            ➕ Nouveau brouillon
           </button>
         </div>
+        <div id="orders-draft-list"><div class="loading">Chargement des brouillons…</div></div>
       </div>
-      <div id="orders-display"><div class="loading">Connexion Firebase…</div></div>
     </div>
+
   </div>
 
   <!-- ═══ VISITORS ═══ -->
@@ -684,6 +862,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
     </div>
   </div>
+    </div><!-- /main-content -->
+  </div><!-- /admin-body -->
 
 </div><!-- /admin-screen -->
 
@@ -746,15 +926,30 @@ document.getElementById("btn-login").addEventListener("click",doLogin);
 ["login-password","login-email"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>e.key==="Enter"&&doLogin()));
 document.getElementById("btn-logout").addEventListener("click",()=>signOut(auth));
 
-// ── Tabs ──────────────────────────────────────────────────────────────────────
-document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click",()=>{
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+// ── Sidebar navigation ────────────────────────────────────────────────────────
+document.querySelectorAll(".sidebar-item").forEach(item=>{
+  item.addEventListener("click",()=>{
+    const tab=item.dataset.tab;
+    document.querySelectorAll(".sidebar-item").forEach(i=>i.classList.remove("active"));
     document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
-    tab.classList.add("active");
-    document.getElementById("tab-"+tab.dataset.tab).classList.add("active");
-    if(tab.dataset.tab==="products") loadProducts();
-    if(tab.dataset.tab==="newproduct") window.__mountNouveauProduit__?.();
+    item.classList.add("active");
+    const panel=document.getElementById("tab-"+tab);
+    if(panel) panel.classList.add("active");
+    if(tab==="products") loadProducts();
+    if(tab==="newproduct") window.__mountNouveauProduit__?.();
+    if(tab==="reviews"&&!allReviewsFlat.length) loadReviews();
+    if(tab==="home") applyPeriod(currentPeriod);
+  });
+});
+
+// ── Sub-tabs (Orders: Active | Drafts) ───────────────────────────────────────
+document.querySelectorAll(".sub-tab").forEach(st=>{
+  st.addEventListener("click",()=>{
+    document.querySelectorAll(".sub-tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".sub-panel").forEach(p=>p.classList.remove("active"));
+    st.classList.add("active");
+    document.getElementById("sub-"+st.dataset.sub).classList.add("active");
+    if(st.dataset.sub==="drafts") loadDraftList();
   });
 });
 
@@ -847,6 +1042,9 @@ function startOrders(){
     setStats(allOrders.length,rev,td);
     prevCount=allOrders.length;
     renderOrders(allOrders);
+    // Refresh home KPIs with current period
+    if(document.getElementById("tab-home").classList.contains("active")) applyPeriod(currentPeriod);
+    else applyPeriod(currentPeriod); // always update so home is ready
   },(err)=>{
     const el=document.getElementById("orders-display");
     if(el) el.innerHTML=`<div class="reviews-empty">Erreur Firebase (orders): ${esc(err?.message||String(err))}</div>`;
@@ -858,7 +1056,125 @@ function setStats(t,r,td){
   document.getElementById("stat-total").textContent=t;
   document.getElementById("stat-revenue").textContent=r.toLocaleString("fr-MA")+" MAD";
   document.getElementById("stat-today").textContent=td;
+  // Also update home KPI orders with full count on load
+  if(document.getElementById("kpi-orders").textContent==="—") applyPeriod(currentPeriod);
 }
+
+// ── HOME PAGE ─────────────────────────────────────────────────────────────────
+let currentPeriod="today";
+
+function getPeriodRange(p){
+  const now=Date.now();
+  const tod=new Date();tod.setHours(0,0,0,0);
+  if(p==="today") return{start:tod.getTime(),end:now};
+  if(p==="24h") return{start:now-86400000,end:now};
+  if(p==="week"){const w=new Date(tod);w.setDate(w.getDate()-6);return{start:w.getTime(),end:now};}
+  if(p==="month"){const m=new Date(tod.getFullYear(),tod.getMonth(),1);return{start:m.getTime(),end:now};}
+  if(p==="3months") return{start:now-(90*86400000),end:now};
+  return{start:tod.getTime(),end:now};
+}
+
+function getPeriodDates(p){
+  const toStr=d=>d.toISOString().slice(0,10);
+  const today=new Date();
+  if(p==="today") return[toStr(today)];
+  if(p==="24h"){const y=new Date(Date.now()-86400000);return[...new Set([toStr(y),toStr(today)])];}
+  const dates=[];
+  const days={week:6,month:today.getDate()-1,"3months":89}[p]||0;
+  for(let i=days;i>=0;i--){const d=new Date(Date.now()-i*86400000);dates.push(toStr(d));}
+  return dates;
+}
+
+async function applyPeriod(period){
+  currentPeriod=period;
+  document.querySelectorAll(".period-btn").forEach(b=>b.classList.toggle("active",b.dataset.period===period));
+  const periodLabels={today:"Aujourd'hui","24h":"Dernières 24h",week:"7 derniers jours",month:"Ce mois","3months":"3 derniers mois"};
+  const lbl=document.getElementById("home-period-label");
+  if(lbl) lbl.textContent=periodLabels[period]||"";
+
+  const range=getPeriodRange(period);
+  const dates=getPeriodDates(period);
+
+  // Orders KPIs
+  const pOrders=allOrders.filter(([,o])=>o.timestamp>=range.start&&o.timestamp<=range.end);
+  const pRevenue=pOrders.reduce((s,[,o])=>s+(o.total||0),0);
+  document.getElementById("kpi-orders").textContent=pOrders.length;
+  document.getElementById("kpi-revenue").textContent=pRevenue.toLocaleString("fr-MA")+" MAD";
+
+  // Recent orders
+  renderHomeRecentOrders(pOrders.slice(0,5));
+
+  // Sessions (async)
+  await loadHomeSessions(dates,range);
+}
+
+async function loadHomeSessions(dates,range){
+  const{db:fbDb,ref:fbRef,get:fbGet}=window.__NOVA_FIREBASE__;
+  try{
+    const snaps=await Promise.all(dates.map(d=>fbGet(fbRef(fbDb,`sessions/${d}`)).catch(()=>null)));
+    let total=0;
+    const sources={},devices={};
+    const dayCounts=dates.map((date,i)=>{
+      const snap=snaps[i];if(!snap)return{date,count:0};
+      const data=snap.val();if(!data)return{date,count:0};
+      let c=0;
+      Object.values(data).forEach(sess=>{
+        if(!sess)return;
+        if(sess.startedAt&&(sess.startedAt<range.start||sess.startedAt>range.end))return;
+        c++;total++;
+        const r=sess.referrer||"Direct";sources[r]=(sources[r]||0)+1;
+        const dv=sess.device||"Autre";devices[dv]=(devices[dv]||0)+1;
+      });
+      return{date,count:c};
+    });
+    document.getElementById("kpi-sessions").textContent=total.toLocaleString("fr-MA");
+    renderHomeSessionsChart(dayCounts);
+  }catch(e){console.warn("loadHomeSessions:",e);}
+}
+
+function renderHomeSessionsChart(dayCounts){
+  const el=document.getElementById("home-sessions-chart");if(!el)return;
+  const max=Math.max(...dayCounts.map(d=>d.count),1);
+  const showLabels=dayCounts.length<=14;
+  el.innerHTML=`<div style="display:flex;align-items:flex-end;gap:3px;height:90px;padding:0 2px">
+    ${dayCounts.map(({date,count})=>{
+      const h=Math.max(Math.round((count/max)*70),count?4:2);
+      const lbl=showLabels?new Date(date+"T12:00:00").toLocaleDateString("fr-MA",{day:"numeric",month:"short"}):"";
+      return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0">
+        <div style="font-size:9px;color:var(--text4);line-height:1">${count||""}</div>
+        <div style="width:100%;height:${h}px;background:var(--red);border-radius:3px 3px 0 0;opacity:.75;min-width:4px" title="${date}: ${count}"></div>
+        <div style="font-size:8px;color:var(--text4);white-space:nowrap;overflow:hidden;max-width:100%;text-align:center">${showLabels?lbl:""}</div>
+      </div>`;
+    }).join("")}
+  </div>`;
+}
+
+function renderHomeRecentOrders(orders){
+  const el=document.getElementById("home-recent-orders");if(!el)return;
+  if(!orders.length){el.innerHTML=`<div style="padding:20px;color:var(--text4);font-size:12px;text-align:center">Aucune commande sur cette période</div>`;return;}
+  const stC={pending:"var(--amber)",confirmed:"var(--green)",delivered:"var(--blue)",cancelled:"var(--red)"};
+  const stL={pending:"En attente",confirmed:"Confirmée",delivered:"Livrée",cancelled:"Annulée"};
+  el.innerHTML=orders.map(([id,o])=>{
+    const c=o.customer||{};const st=o.status||"pending";
+    return`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border2)">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.name||"—")}</div>
+        <div style="font-size:10px;color:var(--text4);margin-top:1px">#${id.slice(-6).toUpperCase()} · ${esc(c.city||"—")}</div>
+      </div>
+      <div style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:${stC[st]}22;color:${stC[st]};white-space:nowrap">${stL[st]||st}</div>
+      <div style="font-size:13px;font-weight:800;color:var(--text);white-space:nowrap">${(o.total||0).toLocaleString("fr-MA")} MAD</div>
+    </div>`;
+  }).join("");
+}
+
+// Period selector buttons
+document.querySelectorAll(".period-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>applyPeriod(btn.dataset.period));
+});
+
+// Patch watchPendingReviews to also update home KPI
+const _origWatchPending=watchPendingReviews;
+
 
 // ── ORDER PRINT ───────────────────────────────────────────────────────────────
 window.printOrder=function(id,o){
@@ -982,8 +1298,10 @@ function watchPendingReviews(){
     const badge=document.getElementById("reviews-tab-badge");
     const statEl=document.getElementById("stat-pending-reviews");
     badge.textContent=count;
-    badge.classList.toggle("show",count>0);
-    statEl.textContent=count;
+    badge.style.display=count>0?"inline-flex":"none";
+    if(statEl) statEl.textContent=count;
+    const kpiPending=document.getElementById("kpi-pending");
+    if(kpiPending) kpiPending.textContent=count;
     // Also update filter count if reviews are loaded
     updateFilterCounts();
   },(err)=>{
