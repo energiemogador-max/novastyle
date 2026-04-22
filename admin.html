@@ -108,8 +108,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .order-status-badge.confirmed{background:var(--green-light);color:var(--green);border-color:#bbf7d0}
 .order-status-badge.delivered{background:var(--blue-light);color:var(--blue);border-color:#bfdbfe}
 .order-status-badge.cancelled{background:var(--red-light);color:var(--red);border-color:var(--red-mid)}
-.order-status-badge.paid{background:#ede9fe;color:#7c3aed;border-color:#c4b5fd}
-.order-card.status-paid{border-left-color:#7c3aed}
 .order-time{font-size:10px;color:var(--text4);margin-left:auto;font-weight:500}
 .order-body{display:grid;grid-template-columns:210px 1fr}
 .order-customer-col{padding:14px 16px;border-right:1px solid var(--border2);display:flex;flex-direction:column;gap:6px}
@@ -990,7 +988,6 @@ function renderOrder(id,o,isNew){
       <select class="order-status-badge ${st}" onchange="window.updateOrderStatus('${id}',this.value,this)">
         <option value="pending"   ${st==="pending"   ?"selected":""}>⏳ En attente</option>
         <option value="confirmed" ${st==="confirmed" ?"selected":""}>✅ Confirmée</option>
-        <option value="paid"      ${st==="paid"      ?"selected":""}>💜 Payée</option>
         <option value="delivered" ${st==="delivered" ?"selected":""}>📦 Livrée</option>
         <option value="cancelled" ${st==="cancelled" ?"selected":""}>❌ Annulée</option>
       </select>
@@ -1009,7 +1006,7 @@ function renderOrder(id,o,isNew){
     </div>
     <div class="order-foot">
       <button class="btn-sm" onclick='window.printOrder("${id}",${JSON.stringify(o).replace(/'/g,"&apos;")})' style="border-color:#e8194b;color:#e8194b">🖨️ Imprimer</button>
-      ${st==="paid"?`<span style="background:#ede9fe;color:#7c3aed;border:1.5px solid #c4b5fd;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700">💜 Paiement reçu</span>`:`<span class="foot-deposit">Acompte: ${deposit.toLocaleString("fr-MA")} MAD</span>`}
+      <span class="foot-deposit">Acompte: ${deposit.toLocaleString("fr-MA")} MAD</span>
       <span class="foot-label">Total:</span>
       <span class="foot-total">${total.toLocaleString("fr-MA")} MAD</span>
     </div>
@@ -1378,7 +1375,6 @@ function updateFilterCounts(){
   const counts={pending:0,approved:0,rejected:0};
   allReviewsFlat.forEach(r=>counts[r.status]=(counts[r.status]||0)+1);
   document.getElementById("filter-count-pending").textContent=counts.pending?`(${counts.pending})`:"";
-  const fpaid=document.getElementById("filter-count-paid");if(fpaid)fpaid.textContent=counts.paid?`(${counts.paid})`:""
   document.getElementById("filter-count-approved").textContent=counts.approved?`(${counts.approved})`:"";
   document.getElementById("filter-count-rejected").textContent=counts.rejected?`(${counts.rejected})`:"";
 }
@@ -1658,16 +1654,9 @@ async function loadDraftProducts() {
     }
 
     // Normalize axes -> options for option modal compatibility
-    // Also normalize price string "1250 MAD" -> { min: 1250, max: 1250 }
     staticProducts.forEach(p => {
       if (p.axes && !p.options) {
         p.options = p.axes; // axes is already {axisName: [values]} format
-      }
-      if (typeof p.price === 'string') {
-        const num = parseFloat(p.price.replace(/[^0-9.]/g, '')) || 0;
-        p.price = { min: num, max: num };
-      } else if (typeof p.price === 'number') {
-        p.price = { min: p.price, max: p.price };
       }
     });
 
