@@ -711,19 +711,33 @@ function StepPrix({ axesConfig, copied, onNext, onBack }) {
 // GitHub API helpers
 // ─────────────────────────────────────────────────────────────────────────────
 const GH_TOKEN_KEY = "nova_gh_pat";
-const GH_REPO      = "novastyle-main";   // repo name  ← adjust if different
+const GH_REPO_KEY  = "nova_gh_repo";
+const GH_REPO_DEFAULT = "novastyle-main";
 
 function getGhToken() { return localStorage.getItem(GH_TOKEN_KEY) || ""; }
 function setGhToken(t){ localStorage.setItem(GH_TOKEN_KEY, t.trim()); }
+function getGhRepo()  { return localStorage.getItem(GH_REPO_KEY)  || GH_REPO_DEFAULT; }
+function setGhRepo(r) { localStorage.setItem(GH_REPO_KEY, r.trim()); }
 
-// Resolve "owner/repo" from the token once (GET /user/repos is authenticated)
-async function detectRepo(token) {
+// Resolve "owner/repo" from the token + supplied repo name
+async function detectRepo(token, repoName) {
   const r = await fetch("https://api.github.com/user", {
     headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" }
   });
   if (!r.ok) throw new Error("Token GitHub invalide ou expiré (HTTP " + r.status + ")");
   const u = await r.json();
-  return u.login + "/" + GH_REPO;
+  const name = (repoName || "").trim() || GH_REPO_DEFAULT;
+  return u.login + "/" + name;
+}
+
+// Fetch all repos accessible to the token (for auto-detect picker)
+async function fetchUserRepos(token) {
+  const headers = { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" };
+  // Fine-grained tokens: /user/repos  |  Classic tokens: also works
+  const r = await fetch("https://api.github.com/user/repos?per_page=100&sort=updated", { headers });
+  if (!r.ok) throw new Error("Impossible de lister les dépôts (HTTP " + r.status + ")");
+  const repos = await r.json();
+  return repos.map(repo => repo.full_name); // "owner/repo"
 }
 
 // Commit (create or update) a single file via GitHub Contents API
@@ -968,7 +982,10 @@ window.addProductToCart=function(){
 // ─── StepExport component ─────────────────────────────────────────────────────
 function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
   const [ghToken,  setGhTokenState] = useState(getGhToken);
+  const [ghRepo,   setGhRepoState]  = useState(getGhRepo);
   const [tokenSaved, setTokenSaved] = useState(!!getGhToken());
+  const [repoList,   setRepoList]   = useState([]);
+  const [detecting,  setDetecting]  = useState(false);
 
   // Per-action status: "idle" | "running" | "done" | "error"
   const [status, setStatus] = useState({
@@ -1018,7 +1035,30 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
 
   const handleSaveToken = () => {
     setGhToken(ghToken);
+    setGhRepo(ghRepo);
     setTokenSaved(true);
+  };
+
+  const handleDetectRepos = async () => {
+    if (!ghToken.trim()) { alert("Entrez votre token GitHub d'abord."); return; }
+    setDetecting(true);
+    setRepoList([]);
+    try {
+      const repos = await fetchUserRepos(ghToken);
+      setRepoList(repos);
+    } catch(e) {
+      alert("Erreur: " + e.message);
+    } finally {
+      setDetecting(false);
+    }
+  };
+
+  const handlePickRepo = (fullName) => {
+    const repoName = fullName.split("/")[1];
+    setGhRepoState(repoName);
+    setGhRepo(repoName);
+    setTokenSaved(false);
+    setRepoList([]);
   };
 
   const handlePublish = async () => {
@@ -1050,7 +1090,7 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
     // Resolve repo owner once
     setSt("productsJson", "running");
     try {
-      repo = await detectRepo(ghToken);
+      repo = await detectRepo(ghToken, ghRepo);
     } catch(e) {
       // Mark all GitHub steps as errored
       ["productsJson","productPage","imageFolder"].forEach(k => {
@@ -1145,22 +1185,39 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
         </div>
       </div>
 
-      {/* GitHub Token */}
+      {/* GitHub Token + Repo */}
       <div style={{ background:"#0d0d14", border:"1px solid #1e2a3a", borderRadius:12, padding:16, marginBottom:20 }}>
-        <div style={{ fontWeight:800, fontSize:13, color:"#4da6ff", marginBottom:8 }}>🔑 Token GitHub (requis une seule fois)</div>
-        <div style={{ fontSize:11, color:"#555", marginBottom:10 }}>
-          Token personnel avec scope <code style={{color:"#4da6ff"}}>contents:write</code> sur ce dépôt.{" "}
-          Stocké localement dans votre navigateur, jamais envoyé ailleurs.
-        </div>
-        <div style={{ display:"flex", gap:8 }}>
+        <div style={{ fontWeight:800, fontSize:13, color:"#4da6ff", marginBottom:8 }}>🔑 Configuration GitHub</div>
+
+        {/* Token */}
+        <div style={{ fontSize:10, color:"#3a3a5a", marginBottom:4, textTransform:"uppercase", letterSpacing:1.5, fontWeight:700 }}>Token personnel</div>
+        <div style={{ display:"flex", gap:8, marginBottom:12 }}>
           <input
             type="password"
             placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
             value={ghToken}
-            onChange={e => { setGhTokenState(e.target.value); setTokenSaved(false); }}
+            onChange={e => { setGhTokenState(e.target.value); setTokenSaved(false); setRepoList([]); }}
             style={{ flex:1, background:"#111", border:"1px solid #2a2a2a", color:"#e0e0e0",
               padding:"9px 12px", borderRadius:6, fontFamily:"monospace", fontSize:12, outline:"none" }}
           />
+        </div>
+
+        {/* Repo name + auto-detect */}
+        <div style={{ fontSize:10, color:"#3a3a5a", marginBottom:4, textTransform:"uppercase", letterSpacing:1.5, fontWeight:700 }}>Nom du dépôt GitHub</div>
+        <div style={{ display:"flex", gap:8, marginBottom: repoList.length ? 8 : 12 }}>
+          <input
+            type="text"
+            placeholder="novastyle-main"
+            value={ghRepo}
+            onChange={e => { setGhRepoState(e.target.value); setTokenSaved(false); }}
+            style={{ flex:1, background:"#111", border:"1px solid #2a2a2a", color:"#e0e0e0",
+              padding:"9px 12px", borderRadius:6, fontFamily:"monospace", fontSize:12, outline:"none" }}
+          />
+          <button onClick={handleDetectRepos} disabled={detecting}
+            style={{ background:"#1a1a2e", border:"1px solid #4da6ff44", color: detecting ? "#555" : "#4da6ff",
+              padding:"9px 14px", borderRadius:6, fontSize:11, fontWeight:700, cursor: detecting ? "not-allowed" : "pointer", whiteSpace:"nowrap" }}>
+            {detecting ? "⏳ Chargement…" : "🔍 Détecter"}
+          </button>
           <button onClick={handleSaveToken}
             style={{ background: tokenSaved ? "#091509" : "#1e1e1e",
               border: tokenSaved ? "1px solid #00c85340" : "1px solid #2a2a2a",
@@ -1169,8 +1226,30 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
             {tokenSaved ? "✓ Sauvé" : "Sauvegarder"}
           </button>
         </div>
-        <div style={{ fontSize:10, color:"#444", marginTop:8 }}>
-          💡 Créer sur github.com → Settings → Developer settings → Personal access tokens → Fine-grained → Repository permissions → Contents: Read & Write
+
+        {/* Repo picker dropdown */}
+        {repoList.length > 0 && (
+          <div style={{ background:"#111", border:"1px solid #2a2a2a", borderRadius:6, marginBottom:12, maxHeight:180, overflowY:"auto" }}>
+            <div style={{ fontSize:10, color:"#555", padding:"6px 12px", borderBottom:"1px solid #1e1e1e", fontWeight:700, textTransform:"uppercase", letterSpacing:1 }}>
+              {repoList.length} dépôt{repoList.length > 1 ? "s" : ""} trouvé{repoList.length > 1 ? "s" : ""} — cliquez pour sélectionner
+            </div>
+            {repoList.map(fullName => (
+              <div key={fullName} onClick={() => handlePickRepo(fullName)}
+                style={{ padding:"9px 12px", fontSize:12, color: fullName.endsWith("/" + ghRepo) ? "#00c853" : "#ccc",
+                  background: fullName.endsWith("/" + ghRepo) ? "#091509" : "transparent",
+                  borderBottom:"1px solid #1a1a1a", cursor:"pointer", fontFamily:"monospace",
+                  transition:"background .1s" }}
+                onMouseEnter={e => e.currentTarget.style.background = fullName.endsWith("/" + ghRepo) ? "#0b1e0b" : "#1a1a1a"}
+                onMouseLeave={e => e.currentTarget.style.background = fullName.endsWith("/" + ghRepo) ? "#091509" : "transparent"}>
+                {fullName.endsWith("/" + ghRepo) ? "✓ " : ""}{fullName}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div style={{ fontSize:10, color:"#444", marginTop:4 }}>
+          💡 Token → github.com › Settings › Developer settings › Fine-grained tokens › Contents: Read &amp; Write &nbsp;|&nbsp;
+          Cliquez <strong style={{color:"#4da6ff"}}>Détecter</strong> pour lister vos dépôts automatiquement.
         </div>
       </div>
 
