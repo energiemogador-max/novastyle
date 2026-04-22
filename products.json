@@ -24262,15 +24262,81 @@
         "Couleur"
       ]
     },
+{
+  "id": "nova-style-miroir-rotin-irregulier-bois-nova-style",
+  "name": "Miroir Rotin Irrégulier & Bois - Nova Style",
+  "price": {
+    "min": 991,
+    "max": 2695
+  },
+  "category": "Salon & Dressing",
+  "image": "/assets/images/nova-style-miroir-rotin-irregulier-bois-nova-style/1.webp",
+  "url": "/produits/nova-style-miroir-rotin-irregulier-bois-nova-style/",
+  "variants": [
     {
-      "id": "nova-style-miroir-rotin-irregulier-bois-nova-style",
-      "name": "Miroir Rotin Irrégulier & Bois - Nova Style",
-      "price": {
-        "min": 708,
-        "max": 1925
+      "axes": {
+        "Dimension": "80 L x 120 H cm",
+        "Installation": "Sans Installation"
       },
-      "category": "Salon & Dressing",
-      "image": "/assets/images/nova-style-miroir-rotin-irregulier-bois-nova-style/1.webp"
+      "price": 2555,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80 L x 120 H cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 2695,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 L x 100 H cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 1820,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 L x 100 H cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 1960,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "45 L x 70 H cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 991,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "45 L x 70 H cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 1131,
+      "sku": ""
     }
+  ],
+  "axes": {
+    "Dimension": [
+      "80 L x 120 H cm",
+      "60 L x 100 H cm",
+      "45 L x 70 H cm"
+    ],
+    "Installation": [
+      "Sans Installation",
+      "Avec Installation"
+    ]
+  },
+  "axis_order": [
+    "Dimension",
+    "Installation"
+  ]
+}
   ]
 }
