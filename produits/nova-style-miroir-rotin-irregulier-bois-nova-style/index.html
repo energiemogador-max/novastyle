@@ -961,10 +961,18 @@
   let SELECTION = {};
 
   function fmtPrice(v){ return v==null?"":Math.round(v).toLocaleString('fr-FR')+" MAD"; }
+  function computePriceRange(){
+    var prices=(PRODUCT.variants||[]).map(function(v){return v.price;}).filter(function(p){return p!=null&&p>0;});
+    if(!prices.length) return {min:0,max:0};
+    return {min:Math.min.apply(null,prices),max:Math.max.apply(null,prices)};
+  }
   function priceRange(){
-  if(!PRODUCT.price_min) return "";
-  if(PRODUCT.price_min===PRODUCT.price_max||!PRODUCT.price_max) return fmtPrice(PRODUCT.price_min);
-  return fmtPrice(PRODUCT.price_min)+" – "+fmtPrice(PRODUCT.price_max);
+    var min=PRODUCT.price_min;
+    var max=PRODUCT.price_max;
+    if(!min){var r=computePriceRange();min=r.min;max=r.max;}
+    if(!min) return "";
+    if(min===max||!max) return fmtPrice(min);
+    return fmtPrice(min)+" – "+fmtPrice(max);
   }
   function getVariant(){
   return PRODUCT.variants.find(v=>
@@ -999,15 +1007,19 @@
   </div>';
   }).join('');
   }
-  function updatePrice(){
+  function updateUI(){
   var v=getVariant();
   var el=document.getElementById("current-price");
-  if(el) el.textContent=v&&v.price?fmtPrice(v.price):priceRange();
+  if(el) el.textContent=v&&v.price!=null?fmtPrice(v.price):priceRange();
   }
+  window.updateUI=updateUI;
+  window.findMatchingVariant=getVariant;
+  window.PRODUCT=PRODUCT;
+  window.SELECTION=SELECTION;
   for(var axis of PRODUCT.axis_order){
   if(PRODUCT.axes[axis]&&PRODUCT.axes[axis].length) SELECTION[axis]=PRODUCT.axes[axis][0];
   }
-  renderAxes(); updatePrice();
+  renderAxes(); updateUI();
 
   window.addProductToCart=function(){
   var v=getVariant();

@@ -916,16 +916,33 @@ const WHATSAPP = "212707074748";
 let SELECTION = {};
 
 function fmtPrice(v){ return v==null?"":Math.round(v).toLocaleString('fr-FR')+" MAD"; }
+
+// Compute min/max directly from variants (robust fallback when price_min/max is 0 or missing)
+function computePriceRange(){
+  var prices=(PRODUCT.variants||[]).map(function(v){return v.price;}).filter(function(p){return p!=null&&p>0;});
+  if(!prices.length) return {min:0,max:0};
+  return {min:Math.min.apply(null,prices),max:Math.max.apply(null,prices)};
+}
+
 function priceRange(){
-  if(!PRODUCT.price_min) return "";
-  if(PRODUCT.price_min===PRODUCT.price_max||!PRODUCT.price_max) return fmtPrice(PRODUCT.price_min);
-  return fmtPrice(PRODUCT.price_min)+" – "+fmtPrice(PRODUCT.price_max);
+  // Prefer stored price_min/max, fall back to computing from variants
+  var min=PRODUCT.price_min;
+  var max=PRODUCT.price_max;
+  if(!min){
+    var r=computePriceRange();
+    min=r.min; max=r.max;
+  }
+  if(!min) return "";
+  if(min===max||!max) return fmtPrice(min);
+  return fmtPrice(min)+" – "+fmtPrice(max);
 }
 function getVariant(){
   return PRODUCT.variants.find(v=>
     PRODUCT.axis_order.every(a=>v.axes[a]===SELECTION[a])
   );
 }
+// Expose for product-qty.js compatibility (it patches window.findMatchingVariant)
+window.findMatchingVariant=getVariant;
 function hasVariant(axis,val){
   return PRODUCT.variants.some(v=>
     v.axes[axis]===val&&PRODUCT.axis_order.filter(a=>a!==axis).every(a=>v.axes[a]===SELECTION[a])
@@ -941,7 +958,7 @@ function renderAxes(){
       +'<div style="display:flex;flex-wrap:wrap;gap:8px">'+opts.map(function(opt){
         var active=SELECTION[axis]===opt;
         var avail=hasVariant(axis,opt);
-        return '<button onclick="SELECTION[\''+axis.replace(/'/g,"\\'")+'\']=\''+opt.replace(/'/g,"\\'")+'\';renderAxes();updatePrice();" '
+        return '<button onclick="SELECTION[\''+axis.replace(/'/g,"\\'")+'\']=\''+opt.replace(/'/g,"\\'")+'\';renderAxes();updateUI();" '
           +'style="padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:'+(avail?'pointer':'not-allowed')+';'
           +'border:1px solid '+(active?'#e8194b':'#2a2a2a')+';'
           +'background:'+(active?'#e8194b20':'#1a1a1a')+';'
@@ -950,20 +967,27 @@ function renderAxes(){
       }).join('')+'</div></div>';
   }).join('');
 }
-function updatePrice(){
+function updateUI(){
   var v=getVariant();
   var el=document.getElementById("current-price");
-  if(el) el.textContent=v&&v.price?fmtPrice(v.price):priceRange();
+  if(el) el.textContent=v&&v.price!=null?fmtPrice(v.price):priceRange();
 }
+// Alias so product-qty.js (which patches window.updateUI) works on new product pages
+window.updateUI=updateUI;
+// Also expose PRODUCT and SELECTION globally for product-qty.js quantity patching
+window.PRODUCT=PRODUCT;
+window.SELECTION=SELECTION;
 for(var axis of PRODUCT.axis_order){
   if(PRODUCT.axes[axis]&&PRODUCT.axes[axis].length) SELECTION[axis]=PRODUCT.axes[axis][0];
 }
-renderAxes(); updatePrice();
+renderAxes(); updateUI();
 
 window.addProductToCart=function(){
   var v=getVariant();
   if(PRODUCT.axis_order.length&&!v){alert("Veuillez sélectionner toutes les options.");return;}
-  var item={id:"${slug}",name:PRODUCT.title,price:v?v.price:PRODUCT.price_min,axes:Object.assign({},SELECTION),image:"${imgArr[0]}",quantity:1};
+  // Determine best price: matched variant → computed min → stored price_min
+  var fallbackPrice=PRODUCT.price_min||computePriceRange().min||0;
+  var item={id:"${slug}",name:PRODUCT.title,price:v?v.price:fallbackPrice,axes:Object.assign({},SELECTION),image:"${imgArr[0]}",quantity:1};
   var cart=JSON.parse(localStorage.getItem("nova_style_cart")||"[]");
   var key=JSON.stringify({id:item.id,axes:item.axes});
   var idx=cart.findIndex(function(c){return JSON.stringify({id:c.id,axes:c.axes})===key;});
