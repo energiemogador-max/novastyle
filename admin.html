@@ -921,27 +921,24 @@ async function loadSessionStats(){
     const now=new Date();
     const todayStr=now.toISOString().slice(0,10);
 
-    // Get Firebase auth token so reads pass the "auth != null" rule
-    const token=await auth.currentUser?.getIdToken().catch(()=>null);
-    if(!token){console.warn("loadSessionStats: not authenticated");return;}
-    const authSuffix=`?auth=${token}`;
+    if(!auth.currentUser){console.warn("loadSessionStats: not authenticated");return;}
 
-    // Fetch all session date keys (shallow)
-    const keysRes=await fetch(`${DB_REST}/sessions.json${authSuffix}&shallow=true`);
-    if(!keysRes.ok) return;
-    const keys=await keysRes.json();
+    // Use Firebase SDK instead of REST API to avoid 401 token issues
+    const { db: fbDb, ref: fbRef, get: fbGet } = window.__NOVA_FIREBASE__;
+
+    // Fetch all session date keys
+    const keysSnap = await fbGet(fbRef(fbDb, 'sessions'));
+    const keys = keysSnap.val();
     if(!keys) return;
 
     const allDates=Object.keys(keys).sort();
     const todayDate=new Date(todayStr);
 
-    // Schema: each day node is { count: N } (set by visitor-tracker increment)
+    // Schema: each day node is { count: N }
     const dayCount=async(d)=>{
       try{
-        const r=await fetch(`${DB_REST}/sessions/${d}.json${authSuffix}`);
-        if(!r.ok) return 0;
-        const j=await r.json();
-        // Support both {count:N} schema (new) and legacy object-of-keys schema
+        const snap = await fbGet(fbRef(fbDb, `sessions/${d}`));
+        const j = snap.val();
         if(j && typeof j==='object') return Number(j.count)||Object.keys(j).filter(k=>k!=='count').length||0;
         return 0;
       }catch{return 0;}
@@ -1339,6 +1336,13 @@ async function loadDraftProducts() {
         }));
     }
 
+    // Normalize axes -> options for option modal compatibility
+    staticProducts.forEach(p => {
+      if (p.axes && !p.options) {
+        p.options = p.axes; // axes is already {axisName: [values]} format
+      }
+    });
+
     // Merge: Firebase entries take priority (more up-to-date), dedup by id
     const merged = [...fbProducts];
     const fbIds = new Set(fbProducts.map(p => p.id));
@@ -1365,7 +1369,6 @@ function renderDraftProductList(list) {
     // Normalise legacy /images/slug/default.webp → /images/slug/1.webp
     const rawImg = p.image || `/images/${p.id}/1.webp`;
     const imgSrc = rawImg
-      .replace(/^\/images\//, '/assets/images/')
       .replace(/\/default\.webp$/, '/1.webp');
     const badge = p._fromFirebase
       ? `<span style="font-size:9px;background:#fef3c7;color:#d97706;border-radius:3px;padding:1px 5px;font-weight:700;margin-left:4px">Firebase</span>`
@@ -1492,6 +1495,19 @@ function showOptionModal(p) {
       document.querySelectorAll(`.opt-chip[data-group="${group}"]`).forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
       selectedOptions[group] = val;
+      // Try to find matching variant price
+      if (p.variants && p.variants.length) {
+        const match = p.variants.find(v =>
+          Object.entries({...selectedOptions, [group]: val}).every(([k, vv]) => v.axes[k] === vv)
+        );
+        if (match && match.price != null) {
+          currentPrice = match.price;
+          const priceEl = document.getElementById('opt-modal-price');
+          if (priceEl) priceEl.textContent = Number(match.price).toLocaleString('fr-MA') + ' MAD';
+          const finalEl = document.getElementById('opt-final-price');
+          if (finalEl) finalEl.value = match.price;
+        }
+      }
     };
     window.__optCancel = function() {
       document.getElementById('opt-modal-overlay')?.remove();

@@ -34,6 +34,14 @@
     "orders": {
       ".read": "auth != null",
       ".write": true
+    },
+    "drafts": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "sessions": {
+      ".read": "auth != null",
+      ".write": "auth != null"
     }
   }
 }
