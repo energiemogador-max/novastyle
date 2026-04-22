@@ -224,6 +224,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .pmc-handle{font-size:10px;color:var(--text4);font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:8px}
 .pmc-price{font-size:15px;font-weight:900;color:var(--red)}
 .pmc-cat{font-size:10px;padding:3px 9px;border-radius:99px;background:var(--surface2);color:var(--text3);border:1.5px solid var(--border);display:inline-block;margin-top:6px;font-weight:700}
+.pmc-footer{padding:8px 14px;border-top:1px solid var(--border2);background:var(--surface2);display:flex;justify-content:flex-end}
+.btn-edit-cat{background:var(--blue-light);color:var(--blue);border:1.5px solid #bfdbfe;padding:5px 12px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.btn-edit-cat:hover{background:var(--blue);color:#fff}
+
+/* ── CATEGORY MODAL ──────────────────────────────────────────────── */
+#cat-modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.45);align-items:center;justify-content:center;padding:20px}
+#cat-modal-overlay.open{display:flex}
+#cat-modal{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:26px;width:100%;max-width:400px;box-shadow:var(--shadow-lg)}
+#cat-modal h3{font-size:15px;font-weight:800;color:var(--text);margin-bottom:3px}
+#cat-modal .cm-sub{font-size:11px;color:var(--text4);font-family:monospace;margin-bottom:18px}
+.cat-option{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:7px;cursor:pointer;transition:all .15s;font-size:13px;font-weight:600;color:var(--text2)}
+.cat-option:hover{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.cat-option.selected{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.cat-option input[type=radio]{accent-color:var(--red);cursor:pointer}
+#cat-modal-status{font-size:12px;margin:12px 0 4px;min-height:16px;font-weight:500}
+.cat-modal-btns{display:flex;gap:8px;justify-content:flex-end}
+.btn-cat-cancel{background:var(--surface2);border:1.5px solid var(--border);color:var(--text3);padding:9px 18px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.btn-cat-cancel:hover{border-color:var(--red);color:var(--red)}
+.btn-cat-save{background:var(--red);color:#fff;border:none;padding:9px 20px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.btn-cat-save:disabled{opacity:.4;cursor:not-allowed}
 
 /* ── RESPONSIVE ──────────────────────────────────────────────────── */
 @media(max-width:700px){
@@ -864,6 +884,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
     </div><!-- /main-content -->
   </div><!-- /admin-body -->
+
+<!-- ═══ CATEGORY EDIT MODAL ═══ -->
+<div id="cat-modal-overlay">
+  <div id="cat-modal">
+    <h3>✏️ Modifier la catégorie</h3>
+    <div class="cm-sub" id="cat-modal-slug"></div>
+    <div id="cat-options-list"></div>
+    <div id="cat-modal-status"></div>
+    <div class="cat-modal-btns">
+      <button class="btn-cat-cancel" onclick="window.closeCatModal()">Annuler</button>
+      <button class="btn-cat-save" id="btn-cat-save" onclick="window.saveCatModal()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
 
 </div><!-- /admin-screen -->
 
@@ -1507,7 +1541,7 @@ function renderProducts(){
   document.getElementById("product-count").textContent=`${filtered.length} produit${filtered.length!==1?"s":""}`;
   if(!filtered.length){document.getElementById("product-grid").innerHTML=`<div class="reviews-empty" style="grid-column:1/-1">Aucun produit trouvé.</div>`;return;}
   document.getElementById("product-grid").innerHTML=filtered.map(p=>{
-    const img=`/images/${p.id}/1.webp`;
+    const img=`/assets/images/${p.id}/1.webp`;
     const priceStr=p.price?(p.price.min===p.price.max?`${p.price.min} MAD`:`${p.price.min} – ${p.price.max} MAD`):"Prix sur demande";
     return`<div class="product-mini-card">
       <img class="pmc-img" src="${esc(img)}" alt="${esc(p.name)}" onerror="this.style.display='none'">
@@ -1515,13 +1549,145 @@ function renderProducts(){
         <div class="pmc-title">${esc(p.name)}</div>
         <div class="pmc-handle">${esc(p.id)}</div>
         <div class="pmc-price">${esc(priceStr)}</div>
-        <div class="pmc-cat">${esc(p.category||"—")}</div>
+        <div class="pmc-cat" id="pmc-cat-${esc(p.id)}">${esc(p.category||"—")}</div>
+      </div>
+      <div class="pmc-footer">
+        <button class="btn-edit-cat" onclick="window.openCatModal('${esc(p.id)}','${esc(p.name)}','${esc(p.category||'')}')">✏️ Catégorie</button>
       </div>
     </div>`;
   }).join("");
 }
 document.getElementById("product-search").addEventListener("input",renderProducts);
 document.getElementById("product-cat-filter").addEventListener("change",renderProducts);
+
+// ── CATEGORY EDIT MODAL ───────────────────────────────────────────────────────
+const PRODUCT_CATEGORIES = [
+  "Miroirs SDB Premium",
+  "Miroirs SDB Essentiel",
+  "Salon & Dressing",
+  "Consoles & Entrée",
+  "Douches Italiennes",
+  "Tables de Séjour"
+];
+
+let catModal = { productId: "", productName: "", currentCat: "", selectedCat: "" };
+
+window.openCatModal = function(id, name, currentCat) {
+  catModal = { productId: id, productName: name, currentCat, selectedCat: currentCat };
+  document.getElementById("cat-modal-slug").textContent = id;
+  document.getElementById("cat-modal-status").textContent = "";
+  document.getElementById("btn-cat-save").disabled = false;
+  document.getElementById("cat-options-list").innerHTML = PRODUCT_CATEGORIES.map(c => `
+    <label class="cat-option${c === currentCat ? " selected" : ""}" id="catopt-${c.replace(/\s|&/g,'_')}">
+      <input type="radio" name="cat-pick" value="${esc(c)}" ${c === currentCat ? "checked" : ""}
+        onchange="window.selectCatOption('${esc(c)}')">
+      ${esc(c)}
+    </label>`).join("");
+  document.getElementById("cat-modal-overlay").classList.add("open");
+};
+
+window.selectCatOption = function(val) {
+  catModal.selectedCat = val;
+  document.querySelectorAll(".cat-option").forEach(el => el.classList.remove("selected"));
+  const id = "catopt-" + val.replace(/\s|&/g,'_');
+  document.getElementById(id)?.classList.add("selected");
+};
+
+window.closeCatModal = function() {
+  document.getElementById("cat-modal-overlay").classList.remove("open");
+};
+
+window.saveCatModal = async function() {
+  const { productId, selectedCat } = catModal;
+  if (!selectedCat) { alert("Sélectionnez une catégorie."); return; }
+  const statusEl = document.getElementById("cat-modal-status");
+  const saveBtn  = document.getElementById("btn-cat-save");
+  saveBtn.disabled = true;
+
+  // ① Firebase /catalog
+  statusEl.style.color = "var(--amber)";
+  statusEl.textContent = "⏳ Mise à jour Firebase…";
+  try {
+    const fbAuth = window.__NOVA_FIREBASE__?.auth;
+    const token  = await fbAuth?.currentUser?.getIdToken();
+    const DB_REST = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
+    const r = await fetch(`${DB_REST}/catalog/${productId}/category.json?auth=${token}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(selectedCat)
+    });
+    if (!r.ok) throw new Error(`Firebase HTTP ${r.status}`);
+  } catch(e) {
+    statusEl.style.color = "var(--red)";
+    statusEl.textContent = "❌ Firebase: " + e.message;
+    saveBtn.disabled = false;
+    return;
+  }
+
+  // ② GitHub products.json
+  statusEl.textContent = "⏳ Mise à jour GitHub products.json…";
+  try {
+    const ghToken = localStorage.getItem("nova_gh_pat") || "";
+    const ghRepo  = localStorage.getItem("nova_gh_repo") || "novastyle";
+    if (!ghToken) throw new Error("Token GitHub non configuré — ouvrez l'onglet Nouveau Produit pour le saisir.");
+
+    // Get GitHub username
+    const userRes = await fetch("https://api.github.com/user", {
+      headers: { Authorization: "Bearer " + ghToken, Accept: "application/vnd.github+json" }
+    });
+    if (!userRes.ok) throw new Error(`Token GitHub invalide (HTTP ${userRes.status})`);
+    const ghUser = await userRes.json();
+    const fullRepo = ghUser.login + "/" + ghRepo;
+
+    // Read current products.json
+    const apiUrl = `https://api.github.com/repos/${fullRepo}/contents/products.json`;
+    const ghHeaders = { Authorization: "Bearer " + ghToken, Accept: "application/vnd.github+json" };
+    const getRes = await fetch(apiUrl, { headers: ghHeaders });
+    if (!getRes.ok) throw new Error(`Lecture products.json (HTTP ${getRes.status})`);
+    const fileData = await getRes.json();
+    const decoded  = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\n/g,"")))));
+
+    // Patch category
+    const idx = decoded.products.findIndex(p => (p.id || p.slug) === productId);
+    if (idx === -1) throw new Error(`Produit "${productId}" non trouvé dans products.json`);
+    decoded.products[idx].category = selectedCat;
+
+    // Commit
+    const putRes = await fetch(apiUrl, {
+      method: "PUT",
+      headers: { ...ghHeaders, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: `produit: changer catégorie de ${productId} → ${selectedCat}`,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(decoded, null, 2)))),
+        sha: fileData.sha
+      })
+    });
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}));
+      throw new Error(`Commit GitHub (HTTP ${putRes.status}): ${err.message || ""}`);
+    }
+  } catch(e) {
+    statusEl.style.color = "var(--amber)";
+    statusEl.textContent = "⚠️ Firebase OK — GitHub: " + e.message;
+    // Still update local state + UI
+    const p = allProducts.find(x => x.id === productId);
+    if (p) p.category = selectedCat;
+    const catEl = document.getElementById(`pmc-cat-${productId}`);
+    if (catEl) catEl.textContent = selectedCat;
+    saveBtn.disabled = false;
+    return;
+  }
+
+  // ③ Update local cache + card UI instantly
+  const p = allProducts.find(x => x.id === productId);
+  if (p) p.category = selectedCat;
+  const catEl = document.getElementById(`pmc-cat-${productId}`);
+  if (catEl) catEl.textContent = selectedCat;
+
+  statusEl.style.color = "var(--green)";
+  statusEl.textContent = "✅ Catégorie mise à jour partout !";
+  setTimeout(() => window.closeCatModal(), 1200);
+};
 
 // ── IMPORT TOOL ───────────────────────────────────────────────────────────────
 document.getElementById("btn-import")?.addEventListener("click",runImport);
