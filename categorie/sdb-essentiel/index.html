@@ -41,29 +41,11 @@
 </section>
 
 <section class="products-list">
-  <h2>3 produits dans cette catégorie</h2>
-  <div class="grid">
-<a class="product-card" href="/produits/miroir-anfa-essentiel/">
-  <div class="card-img"><img src="/images/miroir-anfa-essentiel/1.webp" alt="Miroir pas cher au maroc ANFA essentiel" loading="eager" fetchpriority="high"></div>
-  <div class="card-info">
-    <div class="card-name">Miroir pas cher au maroc ANFA essentiel</div>
-    
+  <h2 id="category-count"></h2>
+  <div id="products-grid" data-category-id="miroirs-sdb">
+    <p class="loading-products">Chargement des produits…</p>
   </div>
-</a>
-<a class="product-card" href="/produits/miroir-eclipse-essentiel/">
-  <div class="card-img"><img src="/images/miroir-eclipse-essentiel/1.webp" alt="Miroir pas cher avec led ECLIPSE essentiel" loading="lazy"></div>
-  <div class="card-info">
-    <div class="card-name">Miroir pas cher avec led ECLIPSE essentiel</div>
-    
-  </div>
-</a>
-<a class="product-card" href="/produits/miroir-magnum-essentiel/">
-  <div class="card-img"><img src="/images/miroir-magnum-essentiel/1.webp" alt="Miroir pas cher MAGNUM essentiel" loading="lazy"></div>
-  <div class="card-info">
-    <div class="card-name">Miroir pas cher MAGNUM essentiel</div>
-    
-  </div>
-</a></div>
+
 </section>
 
 <section class="city-section">
@@ -101,4 +83,5 @@
   <a class="wa" href="https://wa.me/212707074748" target="_blank">💬 WhatsApp</a>
 </div>
 <script type="module" src="/assets/visitor-tracker.js"></script>
+<script src="/assets/category-loader.js" defer></script>
 </body></html>
