@@ -1,89 +1,177 @@
-# Preserve SEO from old novastyle.ma Shopify URLs
+# ─────────────────────────────────────────────────────────────────────────────
+# Nova Style — Netlify _redirects
+# Preserves all SEO equity from the old Shopify store (novastyle.ma)
+# Rule order matters: specific rules MUST appear before wildcards.
+# ─────────────────────────────────────────────────────────────────────────────
 
-/products/consol-et-miroir-nova-style-ensemble  /produits/consol-et-miroir-nova-style-ensemble/  301
-/products/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm  /produits/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/  301
-/products/nova-style-miroir-vortex  /produits/nova-style-miroir-vortex/  301
-/products/miroire-nova-style-miroir-horizon  /produits/miroire-nova-style-miroir-horizon/  301
-/products/nova-style-deux-miroirs-anfa-medina  /produits/nova-style-deux-miroirs-anfa-medina/  301
-/products/nova-style-miroir-halo  /produits/nova-style-miroir-halo/  301
-/products/nova-style-miroir-bloom  /produits/nova-style-miroir-bloom/  301
-/products/nova-style-miroir-pebble  /produits/nova-style-miroir-pebble/  301
-/products/deco-miroir-mural-nova-style-miroir-rital  /produits/deco-miroir-mural-nova-style-miroir-rital/  301
-/products/nova-style-miroir-vega  /produits/nova-style-miroir-vega/  301
-/products/douche-italienne-en-forme-droite  /produits/douche-italienne-en-forme-droite/  301
-/products/douche-italienne-en-l-verre-trempe  /produits/douche-italienne-en-l-verre-trempe/  301
-/products/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm  /produits/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/  301
-/products/nova-style-miroir-elvis-woody  /produits/nova-style-miroir-elvis-woody/  301
-/products/مرايا-nova-style-miroir-elios  /produits/مرايا-nova-style-miroir-elios/  301
-/products/miroir-anfa-essentiel  /produits/miroir-anfa-essentiel/  301
-/products/miroir-eclipse-essentiel  /produits/miroir-eclipse-essentiel/  301
-/products/miroir-magnum-essentiel  /produits/miroir-magnum-essentiel/  301
-/products/nova-style-miroir-eclipse-cm  /produits/nova-style-miroir-eclipse-cm/  301
-/products/nova-style-miroir-anfa-cm  /produits/nova-style-miroir-anfa-cm/  301
-/products/nova-style-miroir-archway  /produits/nova-style-miroir-archway/  301
-/products/nova-style-miroir-azalee  /produits/nova-style-miroir-azalee/  301
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 1. COLLECTIONS → CATEGORY PAGES
+#    Specific high-traffic collections first, wildcard fallback last.
+# ══════════════════════════════════════════════════════════════════════════════
+
+# 745 clicks — most valuable redirect on the site
+/collections/miroir-de-salle-de-bain-retroeclaire-led   /categorie/sdb-premium/     301
+
+# Named collection slugs → categories
+/collections/consoles-et-miroirs-d-entree               /categorie/consoles/         301
+/collections/douche-italienne-sur-mesure                 /categorie/douches/          301
+/collections/table-de-sejour                             /categorie/tables/           301
+/collections/miroir-salle-de-bain-maroc                  /categorie/sdb-premium/     301
+/collections/miroirs-sdb                                 /categorie/sdb-premium/     301
+/collections/miroir-sdb-premium                          /categorie/sdb-premium/     301
+/collections/sdb-premium                                 /categorie/sdb-premium/     301
+/collections/entree-de-gamme                             /categorie/sdb-essentiel/   301
+/collections/salon                                       /categorie/salon/            301
+/collections/dressing                                    /categorie/salon/            301
+/collections/consoles                                    /categorie/consoles/         301
+/collections/tables                                      /categorie/tables/           301
+/collections/douches                                     /categorie/douches/          301
+
+# Homepage aliases
+/collections/frontpage                                   /                            301
+/collections/all                                         /shop.html                   301
+
+# Shopify hub pages with impressions
+/collections/miroir-avec-led                             /categorie/sdb-premium/     301
+/collections/miroir-anti-buee                            /categorie/sdb-premium/     301
+
+# Wildcard fallback — catches any other /collections/* URL
+/collections/*                                           /categorie/sdb-premium/     301
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 2. PRODUCTS → PRODUITS  (exact slug matches — Netlify ignores query strings)
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ── Alias slugs (old Shopify slug ≠ new site slug) ───────────────────────────
+/products/nova-style-miroir-anfa                         /produits/miroir-maroc-nova-style-miroir-anfa/                    301
+/products/nova-style-miroir-celia                        /produits/miroir-marrakech-nova-style-miroir-celia/               301
+/products/nova-style-miroir-horizon                      /produits/miroire-nova-style-miroir-horizon/                      301
+/products/nova-style-miroir-eclipse                      /produits/magasin-miroir-casablanca-nova-style-miroir-eclipse/    301
+/products/nova-style-miroir-anfa-half                    /produits/nova-style-miroir-anfa-half-plus/                       301
+/products/nova-style-miroir-pentagone                    /produits/nova-style-miroir-pentagone-2/                          301
+/products/nova-style-miroir-rital                        /produits/deco-miroir-mural-nova-style-miroir-rital/              301
+/products/nova-style-miroir-elios                        /categorie/sdb-premium/                                           301
+/products/nova-style-miroir-pear-ii-cm                   /produits/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/      301
+/products/Miroir-salle-de-bain-nova-style-miroir-pear-ii-cm  /produits/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/ 301
+/products/Deco-miroir-mural-nova-style-miroir-rital      /produits/deco-miroir-mural-nova-style-miroir-rital/              301
+/products/miroir-rotin-led-oval-cadre-rotin-naturel      /produits/nova-style-miroir-rotin-irregulier-bois-nova-style/     301
+/products/miroir-de-salon-et-dressing-nova-style-miroir-bloom  /produits/nova-style-miroir-bloom/                         301
+/products/personnalisez-votre-douche-a-l-italienne-en-forme-droite  /produits/douche-italienne-en-forme-droite/            301
+/products/miroir-de-salle-de-bain-salon-et-entree-galet-antibuee-anticorrosion  /produits/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/  301
+/products/miroir-de-salle-de-bain-ovale-anti-buee-et-anticorrosion  /produits/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/  301
+/products/nova-style-miroir-silhouette-de-salon-et-console  /categorie/salon/                                              301
+/products/nova-style-miroir-vitrail-de-salon-et-consol   /categorie/salon/                                                 301
+
+# ── Exact slug matches (old slug = new slug) ──────────────────────────────────
+/products/nova-style-miroir-elvis                        /produits/nova-style-miroir-elvis/                                301
+/products/nova-style-miroir-emeraude                     /produits/nova-style-miroir-emeraude/                             301
+/products/nova-style-miroir-vega                         /produits/nova-style-miroir-vega/                                 301
+/products/nova-style-miroir-double-cercle                /produits/nova-style-miroir-double-cercle/                        301
+/products/nova-style-miroir-anfa-cm                      /produits/nova-style-miroir-anfa-cm/                              301
+/products/nova-style-miroir-anfa-half-plus               /produits/nova-style-miroir-anfa-half-plus/                       301
 /products/nova-style-ensemble-meuble-et-miroir-retroeclaire  /produits/nova-style-ensemble-meuble-et-miroir-retroeclaire/  301
-/products/nova-style-ensemble-console-et-miroir  /produits/nova-style-ensemble-console-et-miroir/  301
+/products/nova-style-miroir-archway                      /produits/nova-style-miroir-archway/                              301
+/products/nova-style-miroir-iceberg                      /produits/nova-style-miroir-iceberg/                              301
 /products/nova-style-miroir-croissant-de-lune-ii-finition-noyer  /produits/nova-style-miroir-croissant-de-lune-ii-finition-noyer/  301
-/products/nova-style-miroir-emeraude  /produits/nova-style-miroir-emeraude/  301
-/products/nova-style-miroir-victoria  /produits/nova-style-miroir-victoria/  301
-/products/nova-style-miroir-dunes  /produits/nova-style-miroir-dunes/  301
-/products/nova-style-miroir-cloud  /produits/nova-style-miroir-cloud/  301
-/products/miroir-marrakech-nova-style-miroir-celia  /produits/miroir-marrakech-nova-style-miroir-celia/  301
-/products/nova-style-miroir-eclipse-bright  /produits/nova-style-miroir-eclipse-bright/  301
-/products/nova-style-miroir-drizzle  /produits/nova-style-miroir-drizzle/  301
-/products/nova-style-miroir-croissant-de-lune-ii  /produits/nova-style-miroir-croissant-de-lune-ii/  301
-/products/table-de-sejour-en-bois-mdf-et-verre-trempe  /produits/table-de-sejour-en-bois-mdf-et-verre-trempe/  301
-/products/miroir-rectangulaire-bright-ii  /produits/miroir-rectangulaire-bright-ii/  301
-/products/nova-style-miroir-croissant-de-lune  /produits/nova-style-miroir-croissant-de-lune/  301
-/products/table-basse-de-sejour-en-bois-mdf-et-verre-trempe  /produits/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/  301
-/products/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm  /produits/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm/  301
-/products/nova-style-miroir-magnum-sdb  /produits/nova-style-miroir-magnum-sdb/  301
-/products/nova-style-miroir-zenith  /produits/nova-style-miroir-zenith/  301
-/products/nova-style-miroir-pear-ii  /produits/nova-style-miroir-pear-ii/  301
-/products/nova-style-miroir-galet-vertical  /produits/nova-style-miroir-galet-vertical/  301
-/products/nova-style-miroir-rond  /produits/nova-style-miroir-rond/  301
-/products/nova-style-miroir-iceberg  /produits/nova-style-miroir-iceberg/  301
-/products/nova-style-miroir-havana  /produits/nova-style-miroir-havana/  301
-/products/nova-style-miroir-anfa-half-plus  /produits/nova-style-miroir-anfa-half-plus/  301
-/products/nova-style-miroir-anfa-plus  /produits/nova-style-miroir-anfa-plus/  301
-/products/nova-style-miroir-lightning  /produits/nova-style-miroir-lightning/  301
-/products/nova-style-miroir-luxalight  /produits/nova-style-miroir-luxalight/  301
-/products/nova-style-miroir-magnum  /produits/nova-style-miroir-magnum/  301
-/products/nova-style-deux-miroirs-triples  /produits/nova-style-deux-miroirs-triples/  301
-/products/nova-style-miroir-rectangulaire-bright  /produits/nova-style-miroir-rectangulaire-bright/  301
-/products/nova-style-miroir-sunrise  /produits/nova-style-miroir-sunrise/  301
-/products/nova-style-miroir-octogonal  /produits/nova-style-miroir-octogonal/  301
-/products/nova-style-miroir-rectangulaire-1  /produits/nova-style-miroir-rectangulaire-1/  301
-/products/nova-style-miroir-pear  /produits/nova-style-miroir-pear/  301
-/products/miroir-maroc-nova-style-miroir-anfa  /produits/miroir-maroc-nova-style-miroir-anfa/  301
-/products/nova-style-miroir-hawaii  /produits/nova-style-miroir-hawaii/  301
-/products/nova-style-miroir-asymetrique  /produits/nova-style-miroir-asymetrique/  301
-/products/nova-style-miroir-hawaii-sdb  /produits/nova-style-miroir-hawaii-sdb/  301
-/products/nova-style-miroir-galet-2  /produits/nova-style-miroir-galet-2/  301
-/products/nova-style-miroir-split  /produits/nova-style-miroir-split/  301
-/products/nova-style-miroir-elvis  /produits/nova-style-miroir-elvis/  301
-/products/nova-style-miroir-upside-down  /produits/nova-style-miroir-upside-down/  301
-/products/nova-style-miroir-rectangulaire  /produits/nova-style-miroir-rectangulaire/  301
-/products/مرأة-الحمام-nova-style-miroir-anfa-half  /produits/مرأة-الحمام-nova-style-miroir-anfa-half/  301
-/products/nova-style-miroir-pentagone-2  /produits/nova-style-miroir-pentagone-2/  301
-/products/مرايا-حمام-nova-style-miroir-pentagone  /produits/مرايا-حمام-nova-style-miroir-pentagone/  301
-/products/magasin-miroir-casablanca-nova-style-miroir-eclipse  /produits/magasin-miroir-casablanca-nova-style-miroir-eclipse/  301
-/products/nova-style-miroir-totem  /produits/nova-style-miroir-totem/  301
+/products/nova-style-miroir-croissant-de-lune            /produits/nova-style-miroir-croissant-de-lune/                    301
+/products/nova-style-miroir-azalee                       /produits/nova-style-miroir-azalee/                               301
+/products/nova-style-miroir-anfa-plus                    /produits/nova-style-miroir-anfa-plus/                            301
+/products/nova-style-miroir-rond                         /produits/nova-style-miroir-rond/                                 301
+/products/nova-style-miroir-hawaii                       /produits/nova-style-miroir-hawaii/                               301
+/products/nova-style-miroir-croissant-de-lune-ii         /produits/nova-style-miroir-croissant-de-lune-ii/                 301
+/products/nova-style-miroir-victoria                     /produits/nova-style-miroir-victoria/                             301
+/products/nova-style-miroir-bloom                        /produits/nova-style-miroir-bloom/                                301
+/products/nova-style-miroir-magnum-sdb                   /produits/nova-style-miroir-magnum-sdb/                           301
+/products/nova-style-deux-miroirs-anfa-medina            /produits/nova-style-deux-miroirs-anfa-medina/                    301
+/products/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm  /produits/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/ 301
+/products/nova-style-deux-miroirs-triples                /produits/nova-style-deux-miroirs-triples/                        301
+/products/miroir-rectangulaire-bright-ii                 /produits/miroir-rectangulaire-bright-ii/                         301
+/products/nova-style-miroir-rectangulaire                /produits/nova-style-miroir-rectangulaire/                        301
+/products/nova-style-miroir-pentagone-2                  /produits/nova-style-miroir-pentagone-2/                          301
+/products/nova-style-miroir-vortex                       /produits/nova-style-miroir-vortex/                               301
+/products/nova-style-miroir-halo                         /produits/nova-style-miroir-halo/                                 301
+/products/nova-style-miroir-pear                         /produits/nova-style-miroir-pear/                                 301
+/products/nova-style-miroir-eclipse-bright               /produits/nova-style-miroir-eclipse-bright/                       301
+/products/nova-style-miroir-totem                        /produits/nova-style-miroir-totem/                                301
+/products/nova-style-miroir-luxalight                    /produits/nova-style-miroir-luxalight/                            301
+/products/nova-style-miroir-elvis-woody                  /produits/nova-style-miroir-elvis-woody/                          301
+/products/nova-style-miroir-drizzle                      /produits/nova-style-miroir-drizzle/                              301
+/products/nova-style-miroir-rectangulaire-bright         /produits/nova-style-miroir-rectangulaire-bright/                 301
+/products/nova-style-miroir-split                        /produits/nova-style-miroir-split/                                301
+/products/nova-style-miroir-galet-2                      /produits/nova-style-miroir-galet-2/                              301
+/products/nova-style-miroir-zenith                       /produits/nova-style-miroir-zenith/                               301
+/products/nova-style-miroir-havana                       /produits/nova-style-miroir-havana/                               301
+/products/nova-style-miroir-magnum                       /produits/nova-style-miroir-magnum/                               301
+/products/nova-style-miroir-sunrise                      /produits/nova-style-miroir-sunrise/                              301
+/products/nova-style-miroir-pear-ii                      /produits/nova-style-miroir-pear-ii/                              301
+/products/nova-style-miroir-cloud                        /produits/nova-style-miroir-cloud/                                301
+/products/nova-style-miroir-pebble                       /produits/nova-style-miroir-pebble/                               301
+/products/nova-style-miroir-eclipse-cm                   /produits/nova-style-miroir-eclipse-cm/                           301
+/products/nova-style-miroir-hawaii-sdb                   /produits/nova-style-miroir-hawaii-sdb/                           301
+/products/miroir-marrakech-nova-style-miroir-celia       /produits/miroir-marrakech-nova-style-miroir-celia/               301
+/products/deco-miroir-mural-nova-style-miroir-rital      /produits/deco-miroir-mural-nova-style-miroir-rital/              301
+/products/miroir-maroc-nova-style-miroir-anfa            /produits/miroir-maroc-nova-style-miroir-anfa/                    301
+/products/miroir-magnum-essentiel                        /produits/miroir-magnum-essentiel/                                301
+/products/miroir-anfa-essentiel                          /produits/miroir-anfa-essentiel/                                  301
+/products/miroire-nova-style-miroir-horizon              /produits/miroire-nova-style-miroir-horizon/                      301
 /products/miroir-gale-salle-de-bain-led-antibuee-anticorrosion  /produits/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/  301
-/products/nova-style-miroir-double-cercle  /produits/nova-style-miroir-double-cercle/  301
+/products/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm  /produits/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/  301
+/products/nova-style-miroir-rectangulaire-1              /produits/nova-style-miroir-rectangulaire-1/                      301
+/products/nova-style-miroir-lightning                    /produits/nova-style-miroir-lightning/                            301
+/products/miroir-eclipse-essentiel                       /produits/miroir-eclipse-essentiel/                               301
+/products/nova-style-miroir-asymetrique                  /produits/nova-style-miroir-asymetrique/                          301
+/products/magasin-miroir-casablanca-nova-style-miroir-eclipse  /produits/magasin-miroir-casablanca-nova-style-miroir-eclipse/  301
+/products/nova-style-miroir-octogonal                    /produits/nova-style-miroir-octogonal/                            301
+/products/nova-style-miroir-upside-down                  /produits/nova-style-miroir-upside-down/                          301
+/products/nova-style-miroir-dunes                        /produits/nova-style-miroir-dunes/                                301
+/products/nova-style-miroir-galet-vertical               /produits/nova-style-miroir-galet-vertical/                       301
+/products/consol-et-miroir-nova-style-ensemble           /produits/consol-et-miroir-nova-style-ensemble/                   301
+/products/nova-style-ensemble-console-et-miroir          /produits/nova-style-ensemble-console-et-miroir/                  301
+/products/douche-italienne-en-forme-droite               /produits/douche-italienne-en-forme-droite/                       301
+/products/douche-italienne-en-l-verre-trempe             /produits/douche-italienne-en-l-verre-trempe/                     301
+/products/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm  /produits/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm/  301
+/products/table-basse-de-sejour-en-bois-mdf-et-verre-trempe  /produits/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/  301
+/products/table-de-sejour-en-bois-mdf-et-verre-trempe    /produits/table-de-sejour-en-bois-mdf-et-verre-trempe/            301
 
-# Shopify collections → real category pages
-/collections/sdb-premium             /categorie/sdb-premium/      301
-/collections/entree-de-gamme         /categorie/sdb-essentiel/    301
-/collections/salon                   /categorie/salon/            301
-/collections/dressing                /categorie/salon/            301
-/collections/consoles                /categorie/consoles/         301
-/collections/tables                  /categorie/tables/           301
-/collections/douches                 /categorie/douches/          301
+# ── Wildcard fallback for any /products/* not matched above ───────────────────
+/products/*                                              /categorie/sdb-premium/     301
 
-# Shopify collections → keyword hub pages
-/collections/all                     /miroir-salle-de-bain/       301
-/collections/miroir-avec-led         /miroir-salle-de-bain-led/   301
-/collections/miroir-anti-buee        /miroir-salle-de-bain-anti-buee/ 301
-/collections/*                       /miroir-salle-de-bain/       301
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 3. SHOPIFY AMP PAGES  (/a/p/products/*)
+# ══════════════════════════════════════════════════════════════════════════════
+
+/a/p/products/*                                          /produits/:splat/           301
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 4. SHOPIFY PAGES  (/pages/*)
+#    The two high-traffic pages already exist as real HTML — no redirect needed.
+#    Catch remaining Shopify /pages/* URLs.
+# ══════════════════════════════════════════════════════════════════════════════
+
+/pages/html-sitemap                                      /                           301
+/pages/html-sitemap-products                             /                           301
+/pages/html-sitemap-collections                          /                           301
+/pages/html-sitemap-articles                             /                           301
+/pages/html-sitemap-blogs                                /                           301
+/pages/html-sitemap-pages                                /                           301
+/pages/partner-links                                     /                           301
+/pages/preferred-partners                                /                           301
+/pages/*                                                 /                           301
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 5. LOCAL KEYWORD HUB PAGES (city + theme landing pages)
+#    These appear in GSC — redirect to the closest real page.
+# ══════════════════════════════════════════════════════════════════════════════
+
+/miroir-sur-mesure/                                      /categorie/sdb-premium/     301
+/miroir-sur-mesure-casablanca/                           /categorie/sdb-premium/     301
+/miroir-led-casablanca/                                  /categorie/sdb-premium/     301
+/miroir-salle-de-bain/                                   /categorie/sdb-premium/     301
+/miroir-salle-de-bain-led/                               /categorie/sdb-premium/     301
+/miroir-salle-de-bain-anti-buee/                         /categorie/sdb-premium/     301
+/miroir-maroc/                                           /categorie/sdb-premium/     301
