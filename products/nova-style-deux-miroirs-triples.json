@@ -1,0 +1,317 @@
+{
+  "id": "nova-style-deux-miroirs-triples",
+  "slug": "nova-style-deux-miroirs-triples",
+  "name": "Nova Style : Trois Miroirs TRIPLES",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-deux-miroirs-triples/1.webp"
+  ],
+  "price": {
+    "min": 1300.0,
+    "max": 2300.0
+  },
+  "description": "L'ensemble Trois Miroirs TRIPLES Nova Style est la solution parfaite pour les salles de bain à triple vasque ou les espaces nécessitant plusieurs miroirs assortis et coordonnés. Cet ensemble combine trois miroirs de la même collection, fabriqués en série pour garantir une cohérence visuelle parfaite.",
+  "seo": {
+    "title": "Nova Style : Trois Miroirs TRIPLES | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "L'ensemble Trois Miroirs TRIPLES Nova Style est la solution parfaite pour les salles de bain à triple vasque ou les espaces nécessitant plusieurs miroirs assort..."
+  },
+  "axes": {
+    "order": [
+      "Dimension",
+      "LED",
+      "Installation"
+    ],
+    "options": {
+      "Dimension": [
+        "A ( 40 X 61 ) - B ( 40 X 63 ) - C ( 36 X 60 ) cm",
+        "A ( 60 X 91 ) - B ( 60 X 95 ) - C ( 53 X 88 ) cm",
+        "A ( 80 X 122 ) - B ( 80 X 126 ) - C ( 70 X 118 ) cm"
+      ],
+      "LED": [
+        "Sans LED",
+        "6000K Blanc pur",
+        "4000K blanc lumière du jour",
+        "3000K Jaune",
+        "2000K Doré"
+      ],
+      "Installation": [
+        "Sans Installation",
+        "Avec Installation"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "A ( 40 X 61 ) - B ( 40 X 63 ) - C ( 36 X 60 ) cm",
+        "LED": "Sans LED",
+        "Installation": "Sans Installation"
+      },
+      "price": 1300.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 40 X 61 ) - B ( 40 X 63 ) - C ( 36 X 60 ) cm",
+        "LED": "Sans LED",
+        "Installation": "Avec Installation"
+      },
+      "price": 1400.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 40 X 61 ) - B ( 40 X 63 ) - C ( 36 X 60 ) cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Sans Installation"
+      },
+      "price": 1450.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 40 X 61 ) - B ( 40 X 63 ) - C ( 36 X 60 ) cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Avec Installation"
+      },
+      "price": 1550.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 40 X 61 ) - B ( 40 X 63 ) - C ( 36 X 60 ) cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Sans Installation"
+      },
+      "price": 1450.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 40 X 61 ) - B ( 40 X 63 ) - C ( 36 X 60 ) cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Avec Installation"
+      },
+      "price": 1550.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 40 X 61 ) - B ( 40 X 63 ) - C ( 36 X 60 ) cm",
+        "LED": "3000K Jaune",
+        "Installation": "Sans Installation"
+      },
+      "price": 1450.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 40 X 61 ) - B ( 40 X 63 ) - C ( 36 X 60 ) cm",
+        "LED": "3000K Jaune",
+        "Installation": "Avec Installation"
+      },
+      "price": 1550.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 40 X 61 ) - B ( 40 X 63 ) - C ( 36 X 60 ) cm",
+        "LED": "2000K Doré",
+        "Installation": "Sans Installation"
+      },
+      "price": 1450.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 40 X 61 ) - B ( 40 X 63 ) - C ( 36 X 60 ) cm",
+        "LED": "2000K Doré",
+        "Installation": "Avec Installation"
+      },
+      "price": 1550.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 60 X 91 ) - B ( 60 X 95 ) - C ( 53 X 88 ) cm",
+        "LED": "Sans LED",
+        "Installation": "Sans Installation"
+      },
+      "price": 1500.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 60 X 91 ) - B ( 60 X 95 ) - C ( 53 X 88 ) cm",
+        "LED": "Sans LED",
+        "Installation": "Avec Installation"
+      },
+      "price": 1600.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 60 X 91 ) - B ( 60 X 95 ) - C ( 53 X 88 ) cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Sans Installation"
+      },
+      "price": 1650.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 60 X 91 ) - B ( 60 X 95 ) - C ( 53 X 88 ) cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Avec Installation"
+      },
+      "price": 1750.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 60 X 91 ) - B ( 60 X 95 ) - C ( 53 X 88 ) cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Sans Installation"
+      },
+      "price": 1650.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 60 X 91 ) - B ( 60 X 95 ) - C ( 53 X 88 ) cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Avec Installation"
+      },
+      "price": 1750.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 60 X 91 ) - B ( 60 X 95 ) - C ( 53 X 88 ) cm",
+        "LED": "3000K Jaune",
+        "Installation": "Sans Installation"
+      },
+      "price": 1650.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 60 X 91 ) - B ( 60 X 95 ) - C ( 53 X 88 ) cm",
+        "LED": "3000K Jaune",
+        "Installation": "Avec Installation"
+      },
+      "price": 1750.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 60 X 91 ) - B ( 60 X 95 ) - C ( 53 X 88 ) cm",
+        "LED": "2000K Doré",
+        "Installation": "Sans Installation"
+      },
+      "price": 1650.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 60 X 91 ) - B ( 60 X 95 ) - C ( 53 X 88 ) cm",
+        "LED": "2000K Doré",
+        "Installation": "Avec Installation"
+      },
+      "price": 1750.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 80 X 122 ) - B ( 80 X 126 ) - C ( 70 X 118 ) cm",
+        "LED": "Sans LED",
+        "Installation": "Sans Installation"
+      },
+      "price": 2000.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 80 X 122 ) - B ( 80 X 126 ) - C ( 70 X 118 ) cm",
+        "LED": "Sans LED",
+        "Installation": "Avec Installation"
+      },
+      "price": 2100.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 80 X 122 ) - B ( 80 X 126 ) - C ( 70 X 118 ) cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Sans Installation"
+      },
+      "price": 2200.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 80 X 122 ) - B ( 80 X 126 ) - C ( 70 X 118 ) cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Avec Installation"
+      },
+      "price": 2300.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 80 X 122 ) - B ( 80 X 126 ) - C ( 70 X 118 ) cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Sans Installation"
+      },
+      "price": 2200.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 80 X 122 ) - B ( 80 X 126 ) - C ( 70 X 118 ) cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Avec Installation"
+      },
+      "price": 2300.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 80 X 122 ) - B ( 80 X 126 ) - C ( 70 X 118 ) cm",
+        "LED": "3000K Jaune",
+        "Installation": "Sans Installation"
+      },
+      "price": 2200.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 80 X 122 ) - B ( 80 X 126 ) - C ( 70 X 118 ) cm",
+        "LED": "3000K Jaune",
+        "Installation": "Avec Installation"
+      },
+      "price": 2300.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 80 X 122 ) - B ( 80 X 126 ) - C ( 70 X 118 ) cm",
+        "LED": "2000K Doré",
+        "Installation": "Sans Installation"
+      },
+      "price": 2200.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "A ( 80 X 122 ) - B ( 80 X 126 ) - C ( 70 X 118 ) cm",
+        "LED": "2000K Doré",
+        "Installation": "Avec Installation"
+      },
+      "price": 2300.0,
+      "sku": ""
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "nova-style-miroir-magnum",
+  "slug": "nova-style-miroir-magnum",
+  "name": "Nova Style : Miroir MAGNUM",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-miroir-magnum/1.webp"
+  ],
+  "price": {
+    "min": 1200.0,
+    "max": 1300.0
+  },
+  "description": "Le Miroir MAGNUM Nova Style est notre grand format signature pour salles de bain et espaces de vie au Maroc. Comme son nom le suggère, le MAGNUM se distingue par ses dimensions imposantes qui en font une véritable pièce statement, transformant l'espace par sa simple présence.",
+  "seo": {
+    "title": "Nova Style : Miroir MAGNUM | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir MAGNUM Nova Style est notre grand format signature pour salles de bain et espaces de vie au Maroc. Comme son nom le suggère, le MAGNUM se distingue pa..."
+  },
+  "axes": {
+    "order": [
+      "Installation"
+    ],
+    "options": {
+      "Installation": [
+        "Sans Installation",
+        "Avec Installation"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Installation": "Sans Installation"
+      },
+      "price": 1200.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Installation": "Avec Installation"
+      },
+      "price": 1300.0,
+      "sku": ""
+    }
+  ]
+}

@@ -1,0 +1,335 @@
+{
+  "id": "miroir-avec-cadre-nova-style-miroir-rectangulaire-cm",
+  "slug": "miroir-avec-cadre-nova-style-miroir-rectangulaire-cm",
+  "name": "Miroir avec cadre nova Style : Miroir Rectangulaire CM",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/1.webp"
+  ],
+  "price": {
+    "min": 1580.0,
+    "max": 2200.0
+  },
+  "description": "Le Miroir Rectangulaire CM avec cadre Nova Style allie design contemporain et fonctionnalités avancées pour votre salle de bain. Ce miroir de salle de bain premium fabriqué au Maroc intègre un éclairage LED décoratif et un système anti-buée électrique, deux innovations qui transforment votre routine quotidienne.",
+  "seo": {
+    "title": "Miroir avec cadre nova Style : Miroir Rectangulaire CM | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir Rectangulaire CM avec cadre Nova Style allie design contemporain et fonctionnalités avancées pour votre salle de bain. Ce miroir de salle de bain prem..."
+  },
+  "axes": {
+    "order": [
+      "Dimension",
+      "LED",
+      "Installation"
+    ],
+    "options": {
+      "Dimension": [
+        "150 x 80 cm",
+        "140 x 60 cm",
+        "120 x 55 cm",
+        "100 x 50 cm"
+      ],
+      "LED": [
+        "6000K Blanc pur",
+        "4000K blanc lumière du jour",
+        "3000K Jaune",
+        "2000K Doré"
+      ],
+      "Installation": [
+        "Sans Installation",
+        "Avec Installation"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "150 x 80 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Sans Installation"
+      },
+      "price": 2100.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "150 x 80 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Avec Installation"
+      },
+      "price": 2200.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "150 x 80 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Sans Installation"
+      },
+      "price": 2100.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "150 x 80 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Avec Installation"
+      },
+      "price": 2200.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "150 x 80 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Sans Installation"
+      },
+      "price": 2100.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "150 x 80 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Avec Installation"
+      },
+      "price": 2200.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "150 x 80 cm",
+        "LED": "2000K Doré",
+        "Installation": "Sans Installation"
+      },
+      "price": 2100.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "150 x 80 cm",
+        "LED": "2000K Doré",
+        "Installation": "Avec Installation"
+      },
+      "price": 2200.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "140 x 60 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Sans Installation"
+      },
+      "price": 1780.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "140 x 60 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Avec Installation"
+      },
+      "price": 1880.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "140 x 60 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Sans Installation"
+      },
+      "price": 1780.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "140 x 60 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Avec Installation"
+      },
+      "price": 1880.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "140 x 60 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Sans Installation"
+      },
+      "price": 1780.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "140 x 60 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Avec Installation"
+      },
+      "price": 1880.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "140 x 60 cm",
+        "LED": "2000K Doré",
+        "Installation": "Sans Installation"
+      },
+      "price": 1780.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "140 x 60 cm",
+        "LED": "2000K Doré",
+        "Installation": "Avec Installation"
+      },
+      "price": 1880.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 x 55 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Sans Installation"
+      },
+      "price": 1630.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 x 55 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Avec Installation"
+      },
+      "price": 1730.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 x 55 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Sans Installation"
+      },
+      "price": 1630.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 x 55 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Avec Installation"
+      },
+      "price": 1730.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 x 55 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Sans Installation"
+      },
+      "price": 1630.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 x 55 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Avec Installation"
+      },
+      "price": 1730.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 x 55 cm",
+        "LED": "2000K Doré",
+        "Installation": "Sans Installation"
+      },
+      "price": 1630.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 x 55 cm",
+        "LED": "2000K Doré",
+        "Installation": "Avec Installation"
+      },
+      "price": 1730.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 x 50 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Sans Installation"
+      },
+      "price": 1580.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 x 50 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Avec Installation"
+      },
+      "price": 1680.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 x 50 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Sans Installation"
+      },
+      "price": 1580.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 x 50 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Avec Installation"
+      },
+      "price": 1680.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 x 50 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Sans Installation"
+      },
+      "price": 1580.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 x 50 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Avec Installation"
+      },
+      "price": 1680.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 x 50 cm",
+        "LED": "2000K Doré",
+        "Installation": "Sans Installation"
+      },
+      "price": 1580.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 x 50 cm",
+        "LED": "2000K Doré",
+        "Installation": "Avec Installation"
+      },
+      "price": 1680.0,
+      "sku": ""
+    }
+  ]
+}

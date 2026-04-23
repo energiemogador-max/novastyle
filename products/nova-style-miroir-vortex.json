@@ -1,0 +1,55 @@
+{
+  "id": "nova-style-miroir-vortex",
+  "slug": "nova-style-miroir-vortex",
+  "name": "Miroir de salon Casablanca Nova Style : Miroir Vortex",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-miroir-vortex/1.webp"
+  ],
+  "price": {
+    "min": 650.0,
+    "max": 1250.0
+  },
+  "description": "Le Miroir Vortex Nova Style est une pièce décorative circulaire conçue pour les salons, dressings et chambres au Maroc. Sa signature visuelle : un cadre en corde naturelle disponible en plusieurs coloris, qui apporte une touche bohème-chic à n'importe quel intérieur.",
+  "seo": {
+    "title": "Miroir de salon Casablanca Nova Style : Miroir Vortex | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir Vortex Nova Style est une pièce décorative circulaire conçue pour les salons, dressings et chambres au Maroc. Sa signature visuelle : un cadre en cord..."
+  },
+  "axes": {
+    "order": [
+      "Dimension"
+    ],
+    "options": {
+      "Dimension": [
+        "60-cm",
+        "80-cm",
+        "100-cm"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "60-cm"
+      },
+      "price": 650.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80-cm"
+      },
+      "price": 1100.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100-cm"
+      },
+      "price": 1250.0,
+      "sku": ""
+    }
+  ]
+}

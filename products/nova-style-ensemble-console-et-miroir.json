@@ -1,0 +1,25 @@
+{
+  "id": "nova-style-ensemble-console-et-miroir",
+  "slug": "nova-style-ensemble-console-et-miroir",
+  "name": "NOVA STYLE : Ensemble Console et Miroir",
+  "category": "Consoles",
+  "categoryId": "consoles",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-ensemble-console-et-miroir/1.webp"
+  ],
+  "price": {
+    "min": 4999,
+    "max": null
+  },
+  "description": "L'Ensemble Console et Miroir Nova Style est la solution élégante pour les halls d'entrée et couloirs au Maroc. Cet ensemble combine une console murale design et un miroir mural assorti, créant un point focal harmonieux dès l'entrée de votre maison.",
+  "seo": {
+    "title": "NOVA STYLE : Ensemble Console et Miroir | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "L'Ensemble Console et Miroir Nova Style est la solution élégante pour les halls d'entrée et couloirs au Maroc. Cet ensemble combine une console murale design et..."
+  },
+  "axes": {
+    "order": [],
+    "options": {}
+  },
+  "variants": []
+}

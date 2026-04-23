@@ -1,0 +1,135 @@
+{
+  "id": "nova-style-miroir-hawaii-sdb",
+  "slug": "nova-style-miroir-hawaii-sdb",
+  "name": "Nova Style : Miroir HAWAII SDB",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-miroir-hawaii-sdb/1.webp"
+  ],
+  "price": {
+    "min": 1400.0,
+    "max": 1650.0
+  },
+  "description": "Le Miroir HAWAII SDB Nova Style est la version optimisée salle de bain de notre célèbre HAWAII. Conservant la silhouette organique inspirée des paysages tropicaux, cette version intègre des fonctionnalités spécifiquement conçues pour l'environnement humide de la salle de bain au Maroc.",
+  "seo": {
+    "title": "Nova Style : Miroir HAWAII SDB | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir HAWAII SDB Nova Style est la version optimisée salle de bain de notre célèbre HAWAII. Conservant la silhouette organique inspirée des paysages tropica..."
+  },
+  "axes": {
+    "order": [
+      "Dimension",
+      "LED",
+      "Installation"
+    ],
+    "options": {
+      "Dimension": [
+        "120 cm Largeur x 80 cm Hauteur"
+      ],
+      "LED": [
+        "Sans LED",
+        "6000k blanc pur",
+        "3000k jaune",
+        "2000k doré",
+        "4000k blanc chaud"
+      ],
+      "Installation": [
+        "Sans Installation",
+        "Avec Installation"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "120 cm Largeur x 80 cm Hauteur",
+        "LED": "Sans LED",
+        "Installation": "Sans Installation"
+      },
+      "price": 1400.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 cm Largeur x 80 cm Hauteur",
+        "LED": "6000k blanc pur",
+        "Installation": "Sans Installation"
+      },
+      "price": 1500.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 cm Largeur x 80 cm Hauteur",
+        "LED": "3000k jaune",
+        "Installation": "Sans Installation"
+      },
+      "price": 1500.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 cm Largeur x 80 cm Hauteur",
+        "LED": "2000k doré",
+        "Installation": "Sans Installation"
+      },
+      "price": 1500.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 cm Largeur x 80 cm Hauteur",
+        "LED": "4000k blanc chaud",
+        "Installation": "Sans Installation"
+      },
+      "price": 1500.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 cm Largeur x 80 cm Hauteur",
+        "LED": "Sans LED",
+        "Installation": "Avec Installation"
+      },
+      "price": 1550.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 cm Largeur x 80 cm Hauteur",
+        "LED": "6000k blanc pur",
+        "Installation": "Avec Installation"
+      },
+      "price": 1650.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 cm Largeur x 80 cm Hauteur",
+        "LED": "3000k jaune",
+        "Installation": "Avec Installation"
+      },
+      "price": 1650.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 cm Largeur x 80 cm Hauteur",
+        "LED": "2000k doré",
+        "Installation": "Avec Installation"
+      },
+      "price": 1500.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 cm Largeur x 80 cm Hauteur",
+        "LED": "4000k blanc chaud",
+        "Installation": "Avec Installation"
+      },
+      "price": 1650.0,
+      "sku": ""
+    }
+  ]
+}

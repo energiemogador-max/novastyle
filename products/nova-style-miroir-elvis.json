@@ -1,0 +1,115 @@
+{
+  "id": "nova-style-miroir-elvis",
+  "slug": "nova-style-miroir-elvis",
+  "name": "Nova Style : Miroir ELVIS",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-miroir-elvis/1.webp"
+  ],
+  "price": {
+    "min": 2000.0,
+    "max": 2500.0
+  },
+  "description": "Le Miroir ELVIS Nova Style est une pièce signature qui apporte caractère et personnalité à votre intérieur. Sa silhouette unique et reconnaissable en fait l'un des miroirs les plus distinctifs de notre collection pour salons, dressings et chambres au Maroc.",
+  "seo": {
+    "title": "Nova Style : Miroir ELVIS | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir ELVIS Nova Style est une pièce signature qui apporte caractère et personnalité à votre intérieur. Sa silhouette unique et reconnaissable en fait l'un ..."
+  },
+  "axes": {
+    "order": [
+      "Dimension",
+      "Installation",
+      "Finition"
+    ],
+    "options": {
+      "Dimension": [
+        "L 74 x H 170 cm",
+        "L 60x H 120 cm"
+      ],
+      "Installation": [
+        "Sans Installation",
+        "Avec Installation"
+      ],
+      "Finition": [
+        "Bronze",
+        "Noir"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "L 74 x H 170 cm",
+        "Installation": "Sans Installation",
+        "Finition": "Bronze"
+      },
+      "price": 2400.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "L 74 x H 170 cm",
+        "Installation": "Sans Installation",
+        "Finition": "Noir"
+      },
+      "price": 2400.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "L 60x H 120 cm",
+        "Installation": "Sans Installation",
+        "Finition": "Bronze"
+      },
+      "price": 2000.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "L 60x H 120 cm",
+        "Installation": "Sans Installation",
+        "Finition": "Noir"
+      },
+      "price": 2000.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "L 74 x H 170 cm",
+        "Installation": "Avec Installation",
+        "Finition": "Bronze"
+      },
+      "price": 2500.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "L 74 x H 170 cm",
+        "Installation": "Avec Installation",
+        "Finition": "Noir"
+      },
+      "price": 2500.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "L 60x H 120 cm",
+        "Installation": "Avec Installation",
+        "Finition": "Bronze"
+      },
+      "price": 2100.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "L 60x H 120 cm",
+        "Installation": "Avec Installation",
+        "Finition": "Noir"
+      },
+      "price": 2100.0,
+      "sku": ""
+    }
+  ]
+}

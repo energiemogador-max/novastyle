@@ -1,0 +1,262 @@
+{
+  "id": "nova-style-miroir-asymetrique",
+  "slug": "nova-style-miroir-asymetrique",
+  "name": "Nova Style : Miroir Asymétrique",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-miroir-asymetrique/1.webp"
+  ],
+  "price": {
+    "min": 850.0,
+    "max": 1250.0
+  },
+  "description": "Le Miroir Asymétrique Nova Style sort radicalement des codes classiques pour offrir une pièce unique et statement à votre intérieur. Sa forme volontairement asymétrique — sans symétrie, sans répétition — en fait un véritable objet d'art mural qui transforme l'espace par sa simple présence.",
+  "seo": {
+    "title": "Nova Style : Miroir Asymétrique | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir Asymétrique Nova Style sort radicalement des codes classiques pour offrir une pièce unique et statement à votre intérieur. Sa forme volontairement asy..."
+  },
+  "axes": {
+    "order": [
+      "Dimension",
+      "LED",
+      "Installation"
+    ],
+    "options": {
+      "Dimension": [
+        "80 X 100 cm",
+        "70 x 87 cm",
+        "60 x 74 cm"
+      ],
+      "LED": [
+        "6000K Blanc pur",
+        "4000K blanc lumière du jour",
+        "3000K Jaune",
+        "2000K Doré"
+      ],
+      "Installation": [
+        "Sans Installation",
+        "Avec Installation"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "80 X 100 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Sans Installation"
+      },
+      "price": 1150.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80 X 100 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Avec Installation"
+      },
+      "price": 1250.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80 X 100 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Sans Installation"
+      },
+      "price": 1150.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80 X 100 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Avec Installation"
+      },
+      "price": 1250.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80 X 100 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Sans Installation"
+      },
+      "price": 1150.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80 X 100 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Avec Installation"
+      },
+      "price": 1250.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80 X 100 cm",
+        "LED": "2000K Doré",
+        "Installation": "Sans Installation"
+      },
+      "price": 1150.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80 X 100 cm",
+        "LED": "2000K Doré",
+        "Installation": "Avec Installation"
+      },
+      "price": 1250.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "70 x 87 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Sans Installation"
+      },
+      "price": 950.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "70 x 87 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Avec Installation"
+      },
+      "price": 1050.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "70 x 87 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Sans Installation"
+      },
+      "price": 950.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "70 x 87 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Avec Installation"
+      },
+      "price": 1050.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "70 x 87 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Sans Installation"
+      },
+      "price": 950.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "70 x 87 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Avec Installation"
+      },
+      "price": 1050.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "70 x 87 cm",
+        "LED": "2000K Doré",
+        "Installation": "Sans Installation"
+      },
+      "price": 950.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "70 x 87 cm",
+        "LED": "2000K Doré",
+        "Installation": "Avec Installation"
+      },
+      "price": 1050.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 x 74 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Sans Installation"
+      },
+      "price": 850.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 x 74 cm",
+        "LED": "6000K Blanc pur",
+        "Installation": "Avec Installation"
+      },
+      "price": 950.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 x 74 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Sans Installation"
+      },
+      "price": 850.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 x 74 cm",
+        "LED": "4000K blanc lumière du jour",
+        "Installation": "Avec Installation"
+      },
+      "price": 950.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 x 74 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Sans Installation"
+      },
+      "price": 850.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 x 74 cm",
+        "LED": "3000K Jaune",
+        "Installation": "Avec Installation"
+      },
+      "price": 950.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 x 74 cm",
+        "LED": "2000K Doré",
+        "Installation": "Sans Installation"
+      },
+      "price": 850.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 x 74 cm",
+        "LED": "2000K Doré",
+        "Installation": "Avec Installation"
+      },
+      "price": 950.0,
+      "sku": ""
+    }
+  ]
+}

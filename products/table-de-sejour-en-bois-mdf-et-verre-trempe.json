@@ -1,0 +1,44 @@
+{
+  "id": "table-de-sejour-en-bois-mdf-et-verre-trempe",
+  "slug": "table-de-sejour-en-bois-mdf-et-verre-trempe",
+  "name": "Table de Séjour en Bois MDF et Verre Trempé",
+  "category": "Tables",
+  "categoryId": "tables",
+  "active": true,
+  "images": [
+    "/assets/images/table-de-sejour-en-bois-mdf-et-verre-trempe/1.webp"
+  ],
+  "price": {
+    "min": 980.0,
+    "max": null
+  },
+  "description": "La Table de Séjour Nova Style en Bois MDF et Verre Trempé combine élégance contemporaine et durabilité pour les salons modernes au Maroc. Cette table allie la chaleur du bois MDF traité et la transparence raffinée du verre trempé, créant un meuble central polyvalent et design.",
+  "seo": {
+    "title": "Table de Séjour en Bois MDF et Verre Trempé | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "La Table de Séjour Nova Style en Bois MDF et Verre Trempé combine élégance contemporaine et durabilité pour les salons modernes au Maroc. Cette table allie la c..."
+  },
+  "axes": {
+    "order": [
+      "Dimension",
+      "Couleur"
+    ],
+    "options": {
+      "Dimension": [
+        "Largueur = 60 cm Longueur =120 cm hauteur = 40 cm"
+      ],
+      "Couleur": [
+        "Noyer"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "Largueur = 60 cm Longueur =120 cm hauteur = 40 cm",
+        "Couleur": "Noyer"
+      },
+      "price": 980.0,
+      "sku": ""
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "nova-style-miroir-cloud",
+  "slug": "nova-style-miroir-cloud",
+  "name": "Nova Style : Miroir CLOUD",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-miroir-cloud/1.webp"
+  ],
+  "price": {
+    "min": 1500.0,
+    "max": null
+  },
+  "description": "Le Miroir CLOUD Nova Style capture la légèreté d'un nuage dans une pièce design irrésistible pour salons, dressings et chambres au Maroc. Sa forme organique nuageuse — courbes douces et asymétriques — en fait un véritable objet de décoration murale, bien plus qu'un simple miroir.",
+  "seo": {
+    "title": "Nova Style : Miroir CLOUD | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir CLOUD Nova Style capture la légèreté d'un nuage dans une pièce design irrésistible pour salons, dressings et chambres au Maroc. Sa forme organique nua..."
+  },
+  "axes": {
+    "order": [
+      "Dimension"
+    ],
+    "options": {
+      "Dimension": [
+        "L 74 x H 170 cm"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "L 74 x H 170 cm"
+      },
+      "price": 1500.0,
+      "sku": ""
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "id": "nova-style-miroir-elvis-woody",
+  "slug": "nova-style-miroir-elvis-woody",
+  "name": "Nova Style : Miroir ELVIS WOODY",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-miroir-elvis-woody/1.webp"
+  ],
+  "price": {
+    "min": 1600.0,
+    "max": 1700.0
+  },
+  "description": "Le Miroir ELVIS WOODY Nova Style est la version chaleureuse de notre célèbre ELVIS, dotée d'une finition bois noyer qui apporte authenticité et noblesse à votre intérieur. Conçu pour les salons, dressings et chambres au Maroc, ce miroir devient une véritable pièce de décoration murale.",
+  "seo": {
+    "title": "Nova Style : Miroir ELVIS WOODY | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir ELVIS WOODY Nova Style est la version chaleureuse de notre célèbre ELVIS, dotée d'une finition bois noyer qui apporte authenticité et noblesse à votre..."
+  },
+  "axes": {
+    "order": [
+      "Dimension",
+      "Installation"
+    ],
+    "options": {
+      "Dimension": [
+        "L 74 x H 170 cm"
+      ],
+      "Installation": [
+        "Sans Installation",
+        "Avec Installation"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "L 74 x H 170 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 1600.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "L 74 x H 170 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 1700.0,
+      "sku": ""
+    }
+  ]
+}

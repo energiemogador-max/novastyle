@@ -1,0 +1,25 @@
+{
+  "id": "miroir-anfa-essentiel",
+  "slug": "miroir-anfa-essentiel",
+  "name": "Miroir pas cher au maroc ANFA essentiel",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/miroir-anfa-essentiel/1.webp"
+  ],
+  "price": {
+    "min": null,
+    "max": null
+  },
+  "description": "Le Miroir ANFA Essentiel Nova Style rend la qualité de notre célèbre miroir ANFA accessible à tous les budgets au Maroc. Cette version essentielle conserve les caractéristiques techniques fondamentales — verre AGC Belgique, traitement anti-buée, anticorrosion — tout en proposant un prix particulièrement attractif.",
+  "seo": {
+    "title": "Miroir pas cher au maroc ANFA essentiel | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir ANFA Essentiel Nova Style rend la qualité de notre célèbre miroir ANFA accessible à tous les budgets au Maroc. Cette version essentielle conserve les ..."
+  },
+  "axes": {
+    "order": [],
+    "options": {}
+  },
+  "variants": []
+}

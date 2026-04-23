@@ -1,0 +1,121 @@
+{
+  "id": "nova-style-miroir-rond",
+  "slug": "nova-style-miroir-rond",
+  "name": "Nova Style : Miroir ROND",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-miroir-rond/1.webp"
+  ],
+  "price": {
+    "min": 700.0,
+    "max": 2200.0
+  },
+  "description": "Le Miroir ROND Nova Style est l'incarnation de la simplicité élégante et intemporelle. Cette forme géométrique pure traverse les modes et s'adapte à tous les styles décoratifs — moderne minimaliste, bohème, scandinave, classique, ou riad marocain contemporain.",
+  "seo": {
+    "title": "Nova Style : Miroir ROND | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir ROND Nova Style est l'incarnation de la simplicité élégante et intemporelle. Cette forme géométrique pure traverse les modes et s'adapte à tous les st..."
+  },
+  "axes": {
+    "order": [
+      "Dimension",
+      "Installation"
+    ],
+    "options": {
+      "Dimension": [
+        "50 cm",
+        "60 cm",
+        "80 cm",
+        "90 cm",
+        "100 cm"
+      ],
+      "Installation": [
+        "Sans Installation",
+        "Avec Installation"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "50 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 700.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "50 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 800.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 970.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "60 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 1070.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 1300.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 1400.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "90 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 1580.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "90 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 1680.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 2100.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 2200.0,
+      "sku": ""
+    }
+  ]
+}

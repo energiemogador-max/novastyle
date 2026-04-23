@@ -1,0 +1,25 @@
+{
+  "id": "nova-style-ensemble-meuble-et-miroir-retroeclaire",
+  "slug": "nova-style-ensemble-meuble-et-miroir-retroeclaire",
+  "name": "Nova Style : Ensemble Meuble et Miroir rétroéclairé",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-ensemble-meuble-et-miroir-retroeclaire/1.webp"
+  ],
+  "price": {
+    "min": 4800,
+    "max": null
+  },
+  "description": "L'Ensemble Meuble et Miroir Rétroéclairé Nova Style est la solution complète pour équiper votre salle de bain au Maroc avec style et fonctionnalité. Cet ensemble combine un meuble vasque design et un miroir rétroéclairé assorti, conçus pour s'harmoniser parfaitement.",
+  "seo": {
+    "title": "Nova Style : Ensemble Meuble et Miroir rétroéclairé | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "L'Ensemble Meuble et Miroir Rétroéclairé Nova Style est la solution complète pour équiper votre salle de bain au Maroc avec style et fonctionnalité. Cet ensembl..."
+  },
+  "axes": {
+    "order": [],
+    "options": {}
+  },
+  "variants": []
+}

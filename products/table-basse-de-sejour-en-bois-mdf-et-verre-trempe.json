@@ -1,0 +1,47 @@
+{
+  "id": "table-basse-de-sejour-en-bois-mdf-et-verre-trempe",
+  "slug": "table-basse-de-sejour-en-bois-mdf-et-verre-trempe",
+  "name": "Table BAMBOU",
+  "category": "Tables",
+  "categoryId": "tables",
+  "active": true,
+  "images": [
+    "/assets/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/1.webp"
+  ],
+  "price": {
+    "min": 880.0,
+    "max": 1290.0
+  },
+  "description": "La Table BAMBOU Nova Style célèbre l'authenticité et la chaleur du bambou dans une création moderne pour salons et espaces de vie au Maroc. Combinant la noblesse du bambou et la transparence du verre trempé, cette table apporte une touche organique et exotique à votre intérieur.",
+  "seo": {
+    "title": "Table BAMBOU | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "La Table BAMBOU Nova Style célèbre l'authenticité et la chaleur du bambou dans une création moderne pour salons et espaces de vie au Maroc. Combinant la nobless..."
+  },
+  "axes": {
+    "order": [
+      "Dimension"
+    ],
+    "options": {
+      "Dimension": [
+        "Largueur = 90 cm Longueur =90 cm hauteur = 40 cm",
+        "Largueur = 60 cm Longueur =60 cm hauteur = 40 cm"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "Largueur = 90 cm Longueur =90 cm hauteur = 40 cm"
+      },
+      "price": 1290.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "Largueur = 60 cm Longueur =60 cm hauteur = 40 cm"
+      },
+      "price": 880.0,
+      "sku": ""
+    }
+  ]
+}

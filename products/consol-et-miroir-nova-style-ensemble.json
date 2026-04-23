@@ -1,0 +1,25 @@
+{
+  "id": "consol-et-miroir-nova-style-ensemble",
+  "slug": "consol-et-miroir-nova-style-ensemble",
+  "name": "Consol et miroir NOVA STYLE : Élégance Stylish",
+  "category": "Consoles",
+  "categoryId": "consoles",
+  "active": true,
+  "images": [
+    "/assets/images/consol-et-miroir-nova-style-ensemble/1.webp"
+  ],
+  "price": {
+    "min": 2500,
+    "max": null
+  },
+  "description": "L'ensemble Console et Miroir Nova Style apporte une touche d'élégance contemporaine à votre hall d'entrée ou couloir. Conçu pour optimiser les petits espaces tout en offrant un rangement fonctionnel, cet ensemble combine une console murale en bois MDF avec finition au choix et un miroir mural assorti.",
+  "seo": {
+    "title": "Consol et miroir NOVA STYLE : Élégance Stylish | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "L'ensemble Console et Miroir Nova Style apporte une touche d'élégance contemporaine à votre hall d'entrée ou couloir. Conçu pour optimiser les petits espaces to..."
+  },
+  "axes": {
+    "order": [],
+    "options": {}
+  },
+  "variants": []
+}

@@ -1,0 +1,87 @@
+{
+  "id": "nova-style-miroir-split",
+  "slug": "nova-style-miroir-split",
+  "name": "Nova Style : Miroir Split",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-miroir-split/1.webp"
+  ],
+  "price": {
+    "min": 1500.0,
+    "max": 3900.0
+  },
+  "description": "Le Miroir SPLIT Nova Style est une pièce design audacieuse qui joue avec les codes du miroir traditionnel. Sa composition divisée — généralement en deux parties séparées d'une fine ligne — en fait une œuvre d'art mural distinctive pour salons, dressings et chambres au Maroc.",
+  "seo": {
+    "title": "Nova Style : Miroir Split | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir SPLIT Nova Style est une pièce design audacieuse qui joue avec les codes du miroir traditionnel. Sa composition divisée — généralement en deux parties..."
+  },
+  "axes": {
+    "order": [
+      "Dimension",
+      "Installation"
+    ],
+    "options": {
+      "Dimension": [
+        "100 cm",
+        "130 cm",
+        "150 cm"
+      ],
+      "Installation": [
+        "Sans Installation",
+        "Avec Installation"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "100 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 1500.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 1600.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "130 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 3100.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "130 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 3200.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "150 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 3800.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "150 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 3900.0,
+      "sku": ""
+    }
+  ]
+}

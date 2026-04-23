@@ -1,0 +1,39 @@
+{
+  "id": "deco-miroir-mural-nova-style-miroir-rital",
+  "slug": "deco-miroir-mural-nova-style-miroir-rital",
+  "name": "Deco miroir mural Nova Style : Miroir RITAL",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/deco-miroir-mural-nova-style-miroir-rital/1.webp"
+  ],
+  "price": {
+    "min": 1650.0,
+    "max": null
+  },
+  "description": "Le Miroir RITAL Nova Style est une pièce décorative murale au design italien contemporain, conçue pour habiller les murs des salons, halls d'entrée, dressings et chambres au Maroc. Sa silhouette élégante et ses lignes raffinées en font un véritable objet d'art mural.",
+  "seo": {
+    "title": "Deco miroir mural Nova Style : Miroir RITAL | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir RITAL Nova Style est une pièce décorative murale au design italien contemporain, conçue pour habiller les murs des salons, halls d'entrée, dressings e..."
+  },
+  "axes": {
+    "order": [
+      "Dimension"
+    ],
+    "options": {
+      "Dimension": [
+        "L 74 x H 170 cm"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "L 74 x H 170 cm"
+      },
+      "price": 1650.0,
+      "sku": ""
+    }
+  ]
+}

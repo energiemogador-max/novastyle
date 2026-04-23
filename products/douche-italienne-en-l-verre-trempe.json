@@ -1,0 +1,25 @@
+{
+  "id": "douche-italienne-en-l-verre-trempe",
+  "slug": "douche-italienne-en-l-verre-trempe",
+  "name": "devis douche italienne en verre trempé TYPE L: Personnalisez votre douche à l'italienne en forme L",
+  "category": "Douches",
+  "categoryId": "douches",
+  "active": true,
+  "images": [
+    "/assets/images/douche-italienne-en-l-verre-trempe/1.webp"
+  ],
+  "price": {
+    "min": null,
+    "max": null
+  },
+  "description": "La douche italienne en forme L Nova Style est la solution premium pour les salles de bain modernes au Maroc qui souhaitent créer un espace douche d'angle élégant et fonctionnel. Fabriquée sur mesure en verre trempé dans notre atelier de Casablanca, cette douche allie esthétique contemporaine et sécurité technique.",
+  "seo": {
+    "title": "devis douche italienne en verre trempé TYPE L: Personnalisez votre douche à l&#39;italienne en forme L | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "La douche italienne en forme L Nova Style est la solution premium pour les salles de bain modernes au Maroc qui souhaitent créer un espace douche d'angle élégan..."
+  },
+  "axes": {
+    "order": [],
+    "options": {}
+  },
+  "variants": []
+}

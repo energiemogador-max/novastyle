@@ -1,0 +1,25 @@
+{
+  "id": "douche-italienne-en-forme-droite",
+  "slug": "douche-italienne-en-forme-droite",
+  "name": "Douche italienne en forme droite",
+  "category": "Douches",
+  "categoryId": "douches",
+  "active": true,
+  "images": [
+    "/assets/images/douche-italienne-en-forme-droite/1.webp"
+  ],
+  "price": {
+    "min": null,
+    "max": null
+  },
+  "description": "La douche italienne en forme droite Nova Style est la solution moderne et élégante pour transformer votre salle de bain en véritable espace bien-être. Fabriquée sur mesure à Casablanca en verre trempé de qualité, cette douche s'adapte parfaitement aux salles de bain contemporaines au Maroc.",
+  "seo": {
+    "title": "Douche italienne en forme droite | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "La douche italienne en forme droite Nova Style est la solution moderne et élégante pour transformer votre salle de bain en véritable espace bien-être. Fabriquée..."
+  },
+  "axes": {
+    "order": [],
+    "options": {}
+  },
+  "variants": []
+}

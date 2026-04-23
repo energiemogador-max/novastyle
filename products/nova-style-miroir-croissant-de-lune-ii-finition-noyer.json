@@ -1,0 +1,121 @@
+{
+  "id": "nova-style-miroir-croissant-de-lune-ii-finition-noyer",
+  "slug": "nova-style-miroir-croissant-de-lune-ii-finition-noyer",
+  "name": "Nova Style : Miroir Croissant de lune II Finition Noyer",
+  "category": "Miroirs SDB Premium",
+  "categoryId": "miroirs-sdb",
+  "active": true,
+  "images": [
+    "/assets/images/nova-style-miroir-croissant-de-lune-ii-finition-noyer/1.webp"
+  ],
+  "price": {
+    "min": 1700.0,
+    "max": 3700.0
+  },
+  "description": "Le Miroir Croissant de Lune II Finition Noyer Nova Style est la version chaleureuse et organique de notre célèbre miroir Croissant de Lune. Sa forme inspirée d'un croissant lunaire combinée à la noblesse du bois noyer en fait une pièce statement pour salons, dressings et chambres au Maroc.",
+  "seo": {
+    "title": "Nova Style : Miroir Croissant de lune II Finition Noyer | Miroir Salle de Bain Maroc · Nova Style",
+    "description": "Le Miroir Croissant de Lune II Finition Noyer Nova Style est la version chaleureuse et organique de notre célèbre miroir Croissant de Lune. Sa forme inspirée d'..."
+  },
+  "axes": {
+    "order": [
+      "Dimension",
+      "Installation"
+    ],
+    "options": {
+      "Dimension": [
+        "80 cm",
+        "90 cm",
+        "100 cm",
+        "120 cm",
+        "150 cm"
+      ],
+      "Installation": [
+        "Sans Installation",
+        "Avec Installation"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "80 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 1700.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "80 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 1800.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "90 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 1800.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "90 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 1900.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 2000.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "100 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 2100.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 2400.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "120 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 2500.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "150 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 3600.0,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "150 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 3700.0,
+      "sku": ""
+    }
+  ]
+}
