@@ -2,11 +2,11 @@
   "id": "nova-style-miroir-rond",
   "slug": "nova-style-miroir-rond",
   "name": "Nova Style : Miroir ROND",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Salon & dressing",
+  "categoryId": "salon",
   "active": true,
   "images": [
-    "/assets/images/nova-style-miroir-rond/1.webp"
+    "/images/nova-style-miroir-rond/1.webp"
   ],
   "price": {
     "min": 700.0,

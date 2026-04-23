@@ -2,11 +2,11 @@
   "id": "nova-style-miroir-magnum",
   "slug": "nova-style-miroir-magnum",
   "name": "Nova Style : Miroir MAGNUM",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Salon & dressing",
+  "categoryId": "salon",
   "active": true,
   "images": [
-    "/assets/images/nova-style-miroir-magnum/1.webp"
+    "/images/nova-style-miroir-magnum/1.webp"
   ],
   "price": {
     "min": 1200.0,

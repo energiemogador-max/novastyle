@@ -6,7 +6,7 @@
   "categoryId": "consoles",
   "active": true,
   "images": [
-    "/assets/images/consol-et-miroir-nova-style-ensemble/1.webp"
+    "/images/consol-et-miroir-nova-style-ensemble/1.webp"
   ],
   "price": {
     "min": 2500,

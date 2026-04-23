@@ -2,11 +2,11 @@
   "id": "nova-style-miroir-elvis-woody",
   "slug": "nova-style-miroir-elvis-woody",
   "name": "Nova Style : Miroir ELVIS WOODY",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Salon & dressing",
+  "categoryId": "salon",
   "active": true,
   "images": [
-    "/assets/images/nova-style-miroir-elvis-woody/1.webp"
+    "/images/nova-style-miroir-elvis-woody/1.webp"
   ],
   "price": {
     "min": 1600.0,

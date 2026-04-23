@@ -2,11 +2,11 @@
   "id": "nova-style-miroir-cloud",
   "slug": "nova-style-miroir-cloud",
   "name": "Nova Style : Miroir CLOUD",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Salon & dressing",
+  "categoryId": "salon",
   "active": true,
   "images": [
-    "/assets/images/nova-style-miroir-cloud/1.webp"
+    "/images/nova-style-miroir-cloud/1.webp"
   ],
   "price": {
     "min": 1500.0,

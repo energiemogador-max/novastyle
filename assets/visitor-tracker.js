@@ -29,15 +29,17 @@ function getReferrer(){const r=document.referrer;if(!r)return"Direct";if(r.inclu
 function getCartCount(){try{const i=JSON.parse(localStorage.getItem("nova_style_cart")||"[]");return Array.isArray(i)?i.reduce((s,x)=>s+(x.quantity||1),0):0;}catch{return 0;}}
 
 // ── IP Geolocation: cached 24h to avoid hammering the API ──
+// Uses ipwho.is — free, CORS-enabled, no API key required.
 async function getLocation(){
   const KEY="nova_geo_cache",TTL=86400000;
   try{
     const cached=JSON.parse(localStorage.getItem(KEY)||"null");
     if(cached&&Date.now()-cached.ts<TTL) return cached.data;
-    const res=await fetch("https://ipapi.co/json/",{signal:AbortSignal.timeout(4000)});
+    const res=await fetch("https://ipwho.is/",{signal:AbortSignal.timeout(4000)});
     if(!res.ok) return null;
     const j=await res.json();
-    const data={ip:j.ip||"",city:j.city||"",country:j.country_name||"",country_code:j.country_code||""};
+    if(!j.success) return null;
+    const data={ip:j.ip||"",city:j.city||"",country:j.country||"",country_code:j.country_code||""};
     localStorage.setItem(KEY,JSON.stringify({ts:Date.now(),data}));
     return data;
   }catch{return null;}

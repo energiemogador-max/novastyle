@@ -2,11 +2,11 @@
   "id": "nova-style-miroir-croissant-de-lune-ii-finition-noyer",
   "slug": "nova-style-miroir-croissant-de-lune-ii-finition-noyer",
   "name": "Nova Style : Miroir Croissant de lune II Finition Noyer",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Salon & dressing",
+  "categoryId": "salon",
   "active": true,
   "images": [
-    "/assets/images/nova-style-miroir-croissant-de-lune-ii-finition-noyer/1.webp"
+    "/images/nova-style-miroir-croissant-de-lune-ii-finition-noyer/1.webp"
   ],
   "price": {
     "min": 1700.0,

@@ -2,11 +2,11 @@
   "id": "miroir-magnum-essentiel",
   "slug": "miroir-magnum-essentiel",
   "name": "Miroir pas cher MAGNUM essentiel",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Entrée de gamme",
+  "categoryId": "entree-de-gamme",
   "active": true,
   "images": [
-    "/assets/images/miroir-magnum-essentiel/1.webp"
+    "/images/miroir-magnum-essentiel/1.webp"
   ],
   "price": {
     "min": null,

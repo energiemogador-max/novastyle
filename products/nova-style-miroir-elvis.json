@@ -2,11 +2,11 @@
   "id": "nova-style-miroir-elvis",
   "slug": "nova-style-miroir-elvis",
   "name": "Nova Style : Miroir ELVIS",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Salon & dressing",
+  "categoryId": "salon",
   "active": true,
   "images": [
-    "/assets/images/nova-style-miroir-elvis/1.webp"
+    "/images/nova-style-miroir-elvis/1.webp"
   ],
   "price": {
     "min": 2000.0,

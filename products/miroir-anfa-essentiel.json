@@ -2,11 +2,11 @@
   "id": "miroir-anfa-essentiel",
   "slug": "miroir-anfa-essentiel",
   "name": "Miroir pas cher au maroc ANFA essentiel",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Entrée de gamme",
+  "categoryId": "entree-de-gamme",
   "active": true,
   "images": [
-    "/assets/images/miroir-anfa-essentiel/1.webp"
+    "/images/miroir-anfa-essentiel/1.webp"
   ],
   "price": {
     "min": null,

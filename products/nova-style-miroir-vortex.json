@@ -2,11 +2,11 @@
   "id": "nova-style-miroir-vortex",
   "slug": "nova-style-miroir-vortex",
   "name": "Miroir de salon Casablanca Nova Style : Miroir Vortex",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Salon & dressing",
+  "categoryId": "salon",
   "active": true,
   "images": [
-    "/assets/images/nova-style-miroir-vortex/1.webp"
+    "/images/nova-style-miroir-vortex/1.webp"
   ],
   "price": {
     "min": 650.0,

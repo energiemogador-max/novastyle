@@ -157,7 +157,7 @@
       fetch('/products.json').then(r => r.json()).then(d => {
         var prods = (d.products || []).filter(p => p.category === "Miroirs SDB Premium" && (p.id || p.slug) !== "nova-style-miroir-rotin-irregulier-bois-nova-style").slice(0, 4);
         document.getElementById('related-grid').innerHTML = prods.map(function (p, i) {
-          var img = p.image || '/assets/images/' + (p.id || p.slug) + '/1.webp';
+          var img = p.image || '/images/' + (p.id || p.slug) + '/1.webp';
           var priceObj = p.price; var priceLabel = '';
           if (priceObj && typeof priceObj === 'object') priceLabel = priceObj.min ? 'À partir de ' + priceObj.min.toLocaleString('fr-MA') + ' MAD' : '';
           else if (priceObj) priceLabel = 'À partir de ' + Number(priceObj).toLocaleString('fr-MA') + ' MAD';

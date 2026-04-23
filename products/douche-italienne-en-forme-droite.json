@@ -6,7 +6,7 @@
   "categoryId": "douches",
   "active": true,
   "images": [
-    "/assets/images/douche-italienne-en-forme-droite/1.webp"
+    "/images/douche-italienne-en-forme-droite/1.webp"
   ],
   "price": {
     "min": null,

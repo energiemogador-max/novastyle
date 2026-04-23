@@ -2,11 +2,11 @@
   "id": "nova-style-miroir-archway",
   "slug": "nova-style-miroir-archway",
   "name": "Nova Style : Miroir ARCHWAY Grand miroir de salon et dressing",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Salon & dressing",
+  "categoryId": "salon",
   "active": true,
   "images": [
-    "/assets/images/nova-style-miroir-archway/1.webp"
+    "/images/nova-style-miroir-archway/1.webp"
   ],
   "price": {
     "min": 2000.0,

@@ -2,11 +2,11 @@
   "id": "nova-style-miroir-split",
   "slug": "nova-style-miroir-split",
   "name": "Nova Style : Miroir Split",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Salon & dressing",
+  "categoryId": "salon",
   "active": true,
   "images": [
-    "/assets/images/nova-style-miroir-split/1.webp"
+    "/images/nova-style-miroir-split/1.webp"
   ],
   "price": {
     "min": 1500.0,

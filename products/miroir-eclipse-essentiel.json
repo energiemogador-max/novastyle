@@ -2,11 +2,11 @@
   "id": "miroir-eclipse-essentiel",
   "slug": "miroir-eclipse-essentiel",
   "name": "Miroir pas cher avec led ECLIPSE essentiel",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Entrée de gamme",
+  "categoryId": "entree-de-gamme",
   "active": true,
   "images": [
-    "/assets/images/miroir-eclipse-essentiel/1.webp"
+    "/images/miroir-eclipse-essentiel/1.webp"
   ],
   "price": {
     "min": null,

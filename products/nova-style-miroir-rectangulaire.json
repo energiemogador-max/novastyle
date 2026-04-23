@@ -6,7 +6,7 @@
   "categoryId": "miroirs-sdb",
   "active": true,
   "images": [
-    "/assets/images/nova-style-miroir-rectangulaire/1.webp"
+    "/images/nova-style-miroir-rectangulaire/1.webp"
   ],
   "price": {
     "min": 500.0,

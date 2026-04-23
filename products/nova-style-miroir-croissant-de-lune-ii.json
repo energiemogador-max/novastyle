@@ -2,11 +2,11 @@
   "id": "nova-style-miroir-croissant-de-lune-ii",
   "slug": "nova-style-miroir-croissant-de-lune-ii",
   "name": "Nova Style : Miroir Croissant de lune II",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "category": "Salon & dressing",
+  "categoryId": "salon",
   "active": true,
   "images": [
-    "/assets/images/nova-style-miroir-croissant-de-lune-ii/1.webp"
+    "/images/nova-style-miroir-croissant-de-lune-ii/1.webp"
   ],
   "price": {
     "min": 1000.0,
