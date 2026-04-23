@@ -6,7 +6,10 @@
   "categoryId": "salon",
   "active": true,
   "images": [
-    "/images/nova-style-miroir-split/1.webp"
+    "/images/nova-style-miroir-split/1.webp",
+    "/images/nova-style-miroir-split/2.webp",
+    "/images/nova-style-miroir-split/3.webp",
+    "/images/nova-style-miroir-split/4.webp"
   ],
   "price": {
     "min": 1500.0,

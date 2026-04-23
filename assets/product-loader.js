@@ -134,14 +134,36 @@ async function hydrate() {
   window.PRODUCT = PRODUCT;
   window.SELECTION = SELECTION;
 
-  // Gallery
+  // Gallery — main image + thumbnails
   const gallery = document.getElementById('p-gallery');
   if (gallery && PRODUCT.images?.length) {
-    gallery.innerHTML = PRODUCT.images
-      .map((src, i) =>
-        `<img src="${src}" alt="${PRODUCT.name}" loading="${i === 0 ? 'eager' : 'lazy'}"${i === 0 ? ' fetchpriority="high"' : ''}>`
-      )
-      .join('\n');
+    const imgs = PRODUCT.images;
+    const alt = PRODUCT.name.replace(/"/g, '&quot;');
+
+    const thumbsHTML = imgs.length > 1
+      ? `<div class="thumbs">${imgs.map((src, i) =>
+          `<img src="${src}" alt="${alt}" loading="lazy" decoding="async" class="${i === 0 ? 'active' : ''}" onclick="window.setMainImg(this)">`
+        ).join('')}</div>`
+      : '';
+
+    gallery.innerHTML = `<div class="p-gallery-wrap">
+  <div class="p-gallery-main-wrap">
+    <img id="main-img" src="${imgs[0]}" alt="${alt}" fetchpriority="high" decoding="async"
+      onload="this.closest('.p-gallery-main-wrap').classList.add('img-ready')">
+  </div>
+  ${thumbsHTML}
+</div>`;
+
+    window.setMainImg = function(thumb) {
+      const mainImg = document.getElementById('main-img');
+      if (!mainImg) return;
+      const wrap = mainImg.closest('.p-gallery-main-wrap');
+      wrap?.classList.remove('img-ready');
+      mainImg.src = thumb.src;
+      mainImg.onload = () => wrap?.classList.add('img-ready');
+      document.querySelectorAll('.thumbs img').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+    };
   }
 
   // Variant option pills

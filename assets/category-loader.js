@@ -39,8 +39,9 @@
   }
 
   function cardHTML(p, eager) {
+    const imgAttrs = eager ? ' fetchpriority="high"' : ' loading="lazy"';
     return `<a class="product-card" href="/produits/${p.slug}/">
-  <div class="card-img"><img src="${p.image}" alt="${p.name.replace(/"/g, '&quot;')}" loading="${eager ? 'eager' : 'lazy'}"${eager ? ' fetchpriority="high"' : ''}></div>
+  <div class="card-img"><img src="${p.image}" alt="${p.name.replace(/"/g, '&quot;')}"${imgAttrs} decoding="async" onload="this.classList.add('img-ready');this.closest('.card-img').classList.add('img-ready')"></div>
   <div class="card-info">
     <div class="card-name">${p.name}</div>
     <div class="card-price">${priceLabel(p)}</div>

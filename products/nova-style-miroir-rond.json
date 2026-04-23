@@ -6,7 +6,8 @@
   "categoryId": "salon",
   "active": true,
   "images": [
-    "/images/nova-style-miroir-rond/1.webp"
+    "/images/nova-style-miroir-rond/1.webp",
+    "/images/nova-style-miroir-rond/2.webp"
   ],
   "price": {
     "min": 700.0,

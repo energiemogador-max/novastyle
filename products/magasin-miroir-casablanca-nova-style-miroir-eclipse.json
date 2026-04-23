@@ -6,7 +6,8 @@
   "categoryId": "miroirs-sdb",
   "active": true,
   "images": [
-    "/images/magasin-miroir-casablanca-nova-style-miroir-eclipse/1.webp"
+    "/images/magasin-miroir-casablanca-nova-style-miroir-eclipse/1.webp",
+    "/images/magasin-miroir-casablanca-nova-style-miroir-eclipse/2.webp"
   ],
   "price": {
     "min": 450.0,

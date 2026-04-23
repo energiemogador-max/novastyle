@@ -6,7 +6,8 @@
   "categoryId": "salon",
   "active": true,
   "images": [
-    "/images/nova-style-miroir-elvis/1.webp"
+    "/images/nova-style-miroir-elvis/1.webp",
+    "/images/nova-style-miroir-elvis/2.webp"
   ],
   "price": {
     "min": 2000.0,

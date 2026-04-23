@@ -6,7 +6,11 @@
   "categoryId": "salon",
   "active": true,
   "images": [
-    "/images/nova-style-miroir-croissant-de-lune/1.webp"
+    "/images/nova-style-miroir-croissant-de-lune/1.webp",
+    "/images/nova-style-miroir-croissant-de-lune/2.webp",
+    "/images/nova-style-miroir-croissant-de-lune/3.webp",
+    "/images/nova-style-miroir-croissant-de-lune/4.webp",
+    "/images/nova-style-miroir-croissant-de-lune/5.webp"
   ],
   "price": {
     "min": 1000.0,

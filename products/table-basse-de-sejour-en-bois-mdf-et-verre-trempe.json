@@ -6,7 +6,11 @@
   "categoryId": "tables",
   "active": true,
   "images": [
-    "/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/1.webp"
+    "/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/1.webp",
+    "/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/2.webp",
+    "/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/3.webp",
+    "/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/4.webp",
+    "/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/5.webp"
   ],
   "price": {
     "min": 880.0,

@@ -6,7 +6,12 @@
   "categoryId": "douches",
   "active": true,
   "images": [
-    "/images/douche-italienne-en-l-verre-trempe/1.webp"
+    "/images/douche-italienne-en-l-verre-trempe/1.webp",
+    "/images/douche-italienne-en-l-verre-trempe/2.webp",
+    "/images/douche-italienne-en-l-verre-trempe/3.webp",
+    "/images/douche-italienne-en-l-verre-trempe/4.webp",
+    "/images/douche-italienne-en-l-verre-trempe/5.webp",
+    "/images/douche-italienne-en-l-verre-trempe/6.webp"
   ],
   "price": {
     "min": null,

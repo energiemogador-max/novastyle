@@ -6,7 +6,8 @@
   "categoryId": "miroirs-sdb",
   "active": true,
   "images": [
-    "/images/nova-style-miroir-magnum-sdb/1.webp"
+    "/images/nova-style-miroir-magnum-sdb/1.webp",
+    "/images/nova-style-miroir-magnum-sdb/2.webp"
   ],
   "price": {
     "min": 500.0,

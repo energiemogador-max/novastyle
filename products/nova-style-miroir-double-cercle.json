@@ -6,7 +6,11 @@
   "categoryId": "miroirs-sdb",
   "active": true,
   "images": [
-    "/images/nova-style-miroir-double-cercle/1.webp"
+    "/images/nova-style-miroir-double-cercle/1.webp",
+    "/images/nova-style-miroir-double-cercle/2.webp",
+    "/images/nova-style-miroir-double-cercle/3.webp",
+    "/images/nova-style-miroir-double-cercle/4.webp",
+    "/images/nova-style-miroir-double-cercle/5.webp"
   ],
   "price": {
     "min": 900.0,

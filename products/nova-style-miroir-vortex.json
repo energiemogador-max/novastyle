@@ -6,7 +6,8 @@
   "categoryId": "salon",
   "active": true,
   "images": [
-    "/images/nova-style-miroir-vortex/1.webp"
+    "/images/nova-style-miroir-vortex/1.webp",
+    "/images/nova-style-miroir-vortex/2.webp"
   ],
   "price": {
     "min": 650.0,

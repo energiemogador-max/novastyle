@@ -6,7 +6,9 @@
   "categoryId": "miroirs-sdb",
   "active": true,
   "images": [
-    "/images/nova-style-miroir-dunes/1.webp"
+    "/images/nova-style-miroir-dunes/1.webp",
+    "/images/nova-style-miroir-dunes/2.webp",
+    "/images/nova-style-miroir-dunes/3.webp"
   ],
   "price": {
     "min": 1200.0,

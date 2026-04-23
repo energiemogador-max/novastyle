@@ -6,7 +6,9 @@
   "categoryId": "miroirs-sdb",
   "active": true,
   "images": [
-    "/images/nova-style-miroir-hawaii-sdb/1.webp"
+    "/images/nova-style-miroir-hawaii-sdb/1.webp",
+    "/images/nova-style-miroir-hawaii-sdb/2.webp",
+    "/images/nova-style-miroir-hawaii-sdb/3.webp"
   ],
   "price": {
     "min": 1400.0,

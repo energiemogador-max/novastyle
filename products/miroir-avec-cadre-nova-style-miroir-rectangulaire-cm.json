@@ -6,7 +6,9 @@
   "categoryId": "miroirs-sdb",
   "active": true,
   "images": [
-    "/images/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/1.webp"
+    "/images/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/1.webp",
+    "/images/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/2.webp",
+    "/images/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/3.webp"
   ],
   "price": {
     "min": 1580.0,

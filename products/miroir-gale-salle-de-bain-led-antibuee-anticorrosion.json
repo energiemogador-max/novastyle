@@ -6,7 +6,11 @@
   "categoryId": "miroirs-sdb",
   "active": true,
   "images": [
-    "/images/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/1.webp"
+    "/images/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/1.webp",
+    "/images/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/2.webp",
+    "/images/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/3.webp",
+    "/images/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/4.webp",
+    "/images/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/5.webp"
   ],
   "price": {
     "min": 800.0,
