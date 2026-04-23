@@ -53,9 +53,6 @@
 
     // ── 3. Patch addProductToCart to use qty ──────────────────────────────
     setTimeout(patchAddToCart, 0);
-
-    // ── 4. Inject aggregateRating into existing Product JSON-LD ───────────
-    setTimeout(injectAggregateRating, 0);
   });
 
   // ─── Qty helpers ──────────────────────────────────────────────────────────
@@ -174,25 +171,7 @@
     window.addProductToCart._qtyAware = true;
   }
 
-  // ─── Inject aggregateRating into Product JSON-LD ─────────────────────────
-  function injectAggregateRating() {
-    document.querySelectorAll('script[type="application/ld+json"]').forEach(tag => {
-      try {
-        const data = JSON.parse(tag.textContent);
-        if (data["@type"] !== "Product") return;
-        if (data.aggregateRating) return; // already present
-
-        // Add a realistic aggregate rating block
-        data.aggregateRating = {
-          "@type": "AggregateRating",
-          "ratingValue": "4.8",
-          "bestRating":  "5",
-          "worstRating": "1",
-          "ratingCount": "47",
-          "reviewCount": "47"
-        };
-        tag.textContent = JSON.stringify(data);
-      } catch (e) { /* not valid JSON or not a product */ }
-    });
-  }
+  // aggregateRating injection removed — injecting fabricated ratings violates
+  // Google's structured data guidelines and can cause manual penalties.
+  // Real ratings should be populated server-side from actual review data.
 })();

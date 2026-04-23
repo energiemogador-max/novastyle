@@ -1,8 +1,11 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+// visitor-tracker.js — uses shared Firebase app from firebase-config.js (Bug #3 fix)
+import { firebaseConfig } from './firebase-config.js';
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, set, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-const firebaseConfig={apiKey:"AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc",authDomain:"nova-9ac76.firebaseapp.com",projectId:"nova-9ac76",databaseURL:"https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app",storageBucket:"nova-9ac76.firebasestorage.app",messagingSenderId:"645613145752",appId:"1:645613145752:web:775e6f8ffce64ae12c4aed"};
-const app=initializeApp(firebaseConfig),db=getDatabase(app);
+// Reuse existing Firebase app if already initialized (prevents duplicate app error)
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+const db  = getDatabase(app);
 
 // ── Visitor ID: localStorage → same person across all tabs = 1 live entry ──
 let vid=localStorage.getItem("nova_visitor_id");
@@ -41,7 +44,6 @@ async function getLocation(){
 }
 
 // ── Firebase refs ──
-// online_visitors keyed by visitorId → multi-tab same person = 1 slot
 const visRef=ref(db,"online_visitors/"+vid);
 const arrival=Date.now();
 
@@ -69,7 +71,7 @@ async function initTracker(){
   document.addEventListener("cartUpdated",write);
   document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){write();clearInterval(hb);}});
 
-  // ── Session counting: sessions/YYYY-MM-DD/sessionId → daily/weekly/monthly ──
+  // ── Session counting ──
   try{
     const today=new Date().toISOString().slice(0,10);
     const sessRef=ref(db,"sessions/"+today+"/"+sid);

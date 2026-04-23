@@ -214,7 +214,7 @@
 
 <div class="shop-header">
   <h1>Boutique Nova Style</h1>
-  <a href="/cart" class="cart-link">
+  <a href="/cart.html" class="cart-link">
     🛒 Panier
     <span id="cart-badge"></span>
   </a>
@@ -226,7 +226,7 @@
   <p>© 2024 Nova Style · Casablanca · <a href="tel:+212707074748" style="color: var(--accent);">+212 70 70 74 748</a></p>
 </footer>
 
-<script src="/assets/cart.js"></script>
+<script type="module" src="/assets/cart.js"></script>
 <script>
 let allProducts = [];
 
@@ -274,6 +274,18 @@ function addProductToCart(productId) {
     addToCart(productId, product, null);
     updateCartBadge();
   }
+}
+
+function updateCartBadge() {
+  try {
+    const items = JSON.parse(localStorage.getItem('nova_style_cart') || '[]');
+    const count = Array.isArray(items) ? items.reduce((s, i) => s + (i.quantity || 1), 0) : 0;
+    const badge = document.getElementById('cart-badge');
+    if (badge) {
+      badge.textContent = count > 0 ? count : '';
+      badge.style.display = count > 0 ? 'inline-flex' : 'none';
+    }
+  } catch(e) {}
 }
 
 // Load products on page load

@@ -123,6 +123,7 @@
 
   window.refreshCartDisplay = function () {
     updateCartBadge();
-    document.dispatchEvent(new Event("cartUpdated"));
+    // Note: do NOT dispatch cartUpdated here — that would cause an infinite loop
+    // since cartUpdated listeners call updateCartBadge which calls refreshCartDisplay
   };
 })();

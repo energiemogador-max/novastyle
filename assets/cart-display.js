@@ -65,7 +65,8 @@ function updateCartCount() {
 }
 
 // Expose function for cart.html to call when it updates cart
+// Note: does NOT dispatch cartUpdated to avoid infinite loop
+// (header.js's refreshCartDisplay also fires cartUpdated → would recurse)
 window.refreshCartDisplay = function() {
   updateCartCount();
-  document.dispatchEvent(new Event('cartUpdated'));
 };

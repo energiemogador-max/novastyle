@@ -348,10 +348,10 @@
         quantity: qty
       };
       var cart = JSON.parse(localStorage.getItem("nova_style_cart")||"[]");
-      var key  = JSON.stringify({id:item.id, axes:item.axes});
-      var idx  = cart.findIndex(function(c){ return JSON.stringify({id:c.id,axes:c.axes})===key; });
+      var key  = item.id + "_" + JSON.stringify(item.axes || {});
+      var idx  = cart.findIndex(function(c){ return c.key===key; });
       if (idx >= 0) cart[idx].quantity = (cart[idx].quantity||1) + qty;
-      else cart.push(item);
+      else { item.key = key; cart.push(item); }
       localStorage.setItem("nova_style_cart", JSON.stringify(cart));
       document.dispatchEvent(new CustomEvent("cartUpdated"));
       var btn = document.getElementById("add-to-cart-btn");

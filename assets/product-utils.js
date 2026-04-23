@@ -178,6 +178,7 @@ export function buildProductPage(info, axesConfig, variants, priceMin, priceMax)
   <script type="module" src="/assets/reviews-widget.js"></script>
   <script src="/assets/footer.js" defer></script>
   <script type="module" src="/assets/cart.js"></script>
+  <script type="module" src="/assets/visitor-tracker.js"></script>
 </body>
 </html>`;
 }

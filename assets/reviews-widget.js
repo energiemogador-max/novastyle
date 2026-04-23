@@ -1,4 +1,4 @@
-import { firebaseConfig } from './firebase-config.js.js';
+import { firebaseConfig } from './firebase-config.js';
 
 const DB_URL = firebaseConfig.databaseURL;
 
@@ -12,7 +12,7 @@ class NSReviewsWidget extends HTMLElement {
     this.safeProductId = this.productId.replace(/[\.#\$\[\]]/g, '_');
     this.reviews   = [];
     this.dbUrl     = `${DB_URL}/reviews/${this.safeProductId}.json`;
-    this.submitUrl = `${DB_URL}/reviews/${this.safeProductId}.json`;
+    this.submitUrl = `${DB_URL}/pending_reviews/${this.safeProductId}.json`;
     this.page      = 0;
     this.pageSize  = 5;
   }
@@ -256,7 +256,7 @@ class NSReviewsWidget extends HTMLElement {
           rating  : parseInt(ratingEl?.value || '5'),
           text,
           date    : new Date().toISOString(),
-          approved: true
+          approved: false
         });
         this._msg(msg, '✅ Merci ! Votre avis a bien été envoyé.', '#2e7d32');
         if (nameEl) nameEl.value = '';

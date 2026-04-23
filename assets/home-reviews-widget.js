@@ -1,4 +1,4 @@
-import { firebaseConfig } from './firebase-config.js.js';
+import { firebaseConfig } from './firebase-config.js';
 
 const DB_URL    = firebaseConfig.databaseURL;
 const CACHE_KEY = 'ns_reviews_v1';
