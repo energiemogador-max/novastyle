@@ -2680,6 +2680,155 @@
     .h-panel-body {
       padding: 14px 16px
     }
+
+    /* GitHub config card */
+    .gh-config-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-top: 14px
+    }
+
+    .gh-config-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border2);
+      background: var(--surface2);
+      cursor: pointer;
+      user-select: none
+    }
+
+    .gh-config-head:hover { background: var(--bg2) }
+
+    .gh-config-title {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex: 1
+    }
+
+    .gh-config-status {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 99px
+    }
+
+    .gh-config-status.ok   { background: #00c85322; color: #00c853 }
+    .gh-config-status.warn { background: #ffb30022; color: #ffb300 }
+    .gh-config-status.err  { background: #e8194b22; color: #e8194b }
+
+    .gh-config-body {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    @media (max-width: 700px) { .gh-config-body { grid-template-columns: 1fr } }
+
+    .gh-field { display: flex; flex-direction: column; gap: 5px }
+    .gh-field.full { grid-column: 1 / -1 }
+
+    .gh-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text4);
+      text-transform: uppercase;
+      letter-spacing: .8px
+    }
+
+    .gh-input {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 11px;
+      font-size: 13px;
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      transition: border .15s;
+      width: 100%;
+      box-sizing: border-box
+    }
+
+    .gh-input:focus { outline: none; border-color: var(--red) }
+
+    .gh-input.masked { letter-spacing: 3px; color: var(--text3) }
+
+    .gh-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .btn-gh-save {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 9px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .15s
+    }
+
+    .btn-gh-save:hover { opacity: .85 }
+    .btn-gh-save:disabled { opacity: .4; cursor: not-allowed }
+
+    .btn-gh-test {
+      background: transparent;
+      color: var(--text3);
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .btn-gh-test:hover { border-color: var(--text3); color: var(--text) }
+
+    .btn-gh-clear {
+      background: transparent;
+      color: #e8194b;
+      border: 1.5px solid #e8194b44;
+      border-radius: 7px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+      margin-left: auto
+    }
+
+    .btn-gh-clear:hover { background: #e8194b11 }
+
+    .gh-feedback {
+      grid-column: 1 / -1;
+      font-size: 12px;
+      font-weight: 600;
+      min-height: 18px;
+      color: var(--text3)
+    }
+
+    .gh-chevron {
+      font-size: 11px;
+      color: var(--text4);
+      transition: transform .2s
+    }
+
+    .gh-config-card.open .gh-chevron { transform: rotate(180deg) }
+    .gh-config-card:not(.open) .gh-config-body { display: none }
   </style>
 </head>
 
@@ -2832,14 +2981,58 @@
               </div>
             </div>
 
+            <!-- GitHub Configuration -->
+            <div class="gh-config-card" id="gh-config-card">
+              <div class="gh-config-head" onclick="toggleGhConfig()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text3)" style="flex-shrink:0"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span class="gh-config-title">Configuration GitHub</span>
+                <span class="gh-config-status warn" id="gh-status-badge">Non configuré</span>
+                <span class="gh-chevron">▼</span>
+              </div>
+              <div class="gh-config-body">
+                <div class="gh-field full">
+                  <label class="gh-label">Personal Access Token (PAT)</label>
+                  <input class="gh-input masked" id="gh-input-pat" type="password"
+                    placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                    autocomplete="off" spellcheck="false">
+                </div>
+                <div class="gh-field">
+                  <label class="gh-label">Dépôt (user/repo)</label>
+                  <input class="gh-input" id="gh-input-repo" type="text"
+                    placeholder="votre-org/novastyle"
+                    autocomplete="off" spellcheck="false">
+                </div>
+                <div class="gh-field">
+                  <label class="gh-label">Branche</label>
+                  <input class="gh-input" id="gh-input-branch" type="text"
+                    placeholder="main"
+                    autocomplete="off" spellcheck="false">
+                </div>
+                <div class="gh-actions">
+                  <button class="btn-gh-save" id="btn-gh-save" onclick="saveGhConfig()">💾 Enregistrer</button>
+                  <button class="btn-gh-test" id="btn-gh-test" onclick="testGhConfig()">🔗 Tester la connexion</button>
+                  <button class="btn-gh-clear" onclick="clearGhConfig()">🗑️ Effacer</button>
+                </div>
+                <div class="gh-feedback" id="gh-feedback"></div>
+              </div>
+            </div>
+
           </div>
         </div>
-
-        <!-- ═══ CUSTOMERS (placeholder) ═══ -->
         <div class="tab-panel" id="tab-customers">
           <div class="container">
-            <div class="section-title" style="margin-bottom:16px">Clients</div>
-            <div class="no-order">👥 Module Clients — en cours de développement.</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+              <div class="section-title">Clients</div>
+              <input class="search-input" id="customer-search" placeholder="🔍 Rechercher client, ville, téléphone…" style="width:260px">
+            </div>
+            <!-- KPI row -->
+            <div style="display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap">
+              <div class="stat-card"><div class="lbl">Total clients</div><div class="val blue" id="cust-kpi-total">—</div></div>
+              <div class="stat-card"><div class="lbl">Commandes moy.</div><div class="val" id="cust-kpi-avg-orders">—</div></div>
+              <div class="stat-card"><div class="lbl">Panier moyen</div><div class="val green" id="cust-kpi-avg-basket">—</div></div>
+              <div class="stat-card"><div class="lbl">CA total</div><div class="val amber" id="cust-kpi-revenue">—</div></div>
+            </div>
+            <div id="customers-display"><div class="loading">Chargement des clients…</div></div>
           </div>
         </div>
 
@@ -3409,6 +3602,7 @@
         if (tab === "newproduct") window.__mountNouveauProduit__?.();
         if (tab === "reviews" && !allReviewsFlat.length) loadReviews();
         if (tab === "home") applyPeriod(currentPeriod);
+        if (tab === "customers") loadCustomers();
       });
     });
 
@@ -3430,7 +3624,7 @@
       if (user) {
         ls.style.display = "none"; as.style.display = "block";
         document.getElementById("admin-email-display").textContent = user.email;
-        startOrders(); startVisitors(); watchPendingReviews();
+        startOrders(); startVisitors(); watchPendingReviews(); loadSessionStats();
       } else {
         ls.style.display = "flex"; as.style.display = "none";
         [unsubOrders, unsubVisitors, unsubPending].forEach(u => u && u());
@@ -3512,9 +3706,8 @@
         setStats(allOrders.length, rev, td);
         prevCount = allOrders.length;
         renderOrders(allOrders);
-        // Refresh home KPIs with current period
-        if (document.getElementById("tab-home").classList.contains("active")) applyPeriod(currentPeriod);
-        else applyPeriod(currentPeriod); // always update so home is ready
+        // Refresh home KPIs — single call, unconditional
+        applyPeriod(currentPeriod);
       }, (err) => {
         const el = document.getElementById("orders-display");
         if (el) el.innerHTML = `<div class="reviews-empty">Erreur Firebase (orders): ${esc(err?.message || String(err))}</div>`;
@@ -3526,8 +3719,6 @@
       document.getElementById("stat-total").textContent = t;
       document.getElementById("stat-revenue").textContent = r.toLocaleString("fr-MA") + " MAD";
       document.getElementById("stat-today").textContent = td;
-      // Also update home KPI orders with full count on load
-      if (document.getElementById("kpi-orders").textContent === "—") applyPeriod(currentPeriod);
     }
 
     // ── HOME PAGE ─────────────────────────────────────────────────────────────────
@@ -3642,7 +3833,122 @@
       btn.addEventListener("click", () => applyPeriod(btn.dataset.period));
     });
 
-    // Patch watchPendingReviews to also update home KPI
+    // ── GITHUB CONFIGURATION ──────────────────────────────────────────────────────
+    // Keys stored in localStorage (unified — both catalog publish and page regen flows read these)
+    const GH_KEY_PAT    = "nova_gh_pat";       // used by catalog publish (admin.html line ~4186)
+    const GH_KEY_REPO   = "nova_gh_repo";      // used by catalog publish
+    const GH_KEY_BRANCH = "nova_gh_branch";
+    // nova_github_token is the older key used by the module script — we keep it in sync
+    const GH_KEY_PAT_LEGACY = "nova_github_token";
+
+    function toggleGhConfig() {
+      document.getElementById("gh-config-card").classList.toggle("open");
+    }
+
+    function ghStatusBadge(state, msg) {
+      const el = document.getElementById("gh-status-badge");
+      el.className = "gh-config-status " + state;
+      el.textContent = msg;
+    }
+
+    function loadGhConfig() {
+      const pat    = localStorage.getItem(GH_KEY_PAT) || "";
+      const repo   = localStorage.getItem(GH_KEY_REPO) || "";
+      const branch = localStorage.getItem(GH_KEY_BRANCH) || "";
+      const patEl    = document.getElementById("gh-input-pat");
+      const repoEl   = document.getElementById("gh-input-repo");
+      const branchEl = document.getElementById("gh-input-branch");
+      if (patEl)    patEl.value    = pat;
+      if (repoEl)   repoEl.value   = repo;
+      if (branchEl) branchEl.value = branch || "main";
+      if (pat && repo) {
+        ghStatusBadge("ok", "✓ Configuré");
+      } else {
+        ghStatusBadge("warn", "Non configuré");
+      }
+    }
+
+    function saveGhConfig() {
+      const pat    = (document.getElementById("gh-input-pat")?.value    || "").trim();
+      const repo   = (document.getElementById("gh-input-repo")?.value   || "").trim();
+      const branch = (document.getElementById("gh-input-branch")?.value || "").trim() || "main";
+      const fb = document.getElementById("gh-feedback");
+
+      if (!pat)  { fb.style.color = "var(--red)"; fb.textContent = "⚠️ Le token PAT est requis."; return; }
+      if (!repo || !repo.includes("/")) { fb.style.color = "var(--red)"; fb.textContent = "⚠️ Format dépôt invalide (attendu: user/repo)."; return; }
+
+      localStorage.setItem(GH_KEY_PAT, pat);
+      localStorage.setItem(GH_KEY_REPO, repo);
+      localStorage.setItem(GH_KEY_BRANCH, branch);
+      // Keep legacy key in sync so the module script also picks it up
+      localStorage.setItem(GH_KEY_PAT_LEGACY, pat);
+
+      ghStatusBadge("ok", "✓ Configuré");
+      fb.style.color = "var(--green)";
+      fb.textContent = "✅ Configuration enregistrée localement.";
+      setTimeout(() => { fb.textContent = ""; }, 3000);
+    }
+
+    async function testGhConfig() {
+      const pat  = (document.getElementById("gh-input-pat")?.value  || "").trim();
+      const repo = (document.getElementById("gh-input-repo")?.value || "").trim();
+      const fb   = document.getElementById("gh-feedback");
+      const btn  = document.getElementById("btn-gh-test");
+
+      if (!pat || !repo) { fb.style.color = "var(--red)"; fb.textContent = "⚠️ Renseignez le token et le dépôt avant de tester."; return; }
+
+      btn.disabled = true;
+      fb.style.color = "var(--text3)";
+      fb.textContent = "⏳ Test en cours…";
+
+      try {
+        // 1. Verify token identity
+        const userRes = await fetch("https://api.github.com/user", {
+          headers: { Authorization: "Bearer " + pat, Accept: "application/vnd.github+json" }
+        });
+        if (!userRes.ok) throw new Error(`Token invalide (HTTP ${userRes.status})`);
+        const user = await userRes.json();
+
+        // 2. Verify repo access
+        const repoRes = await fetch(`https://api.github.com/repos/${repo}`, {
+          headers: { Authorization: "Bearer " + pat, Accept: "application/vnd.github+json" }
+        });
+        if (!repoRes.ok) throw new Error(`Dépôt "${repo}" inaccessible (HTTP ${repoRes.status})`);
+        const repoData = await repoRes.json();
+
+        ghStatusBadge("ok", "✓ Connecté");
+        fb.style.color = "var(--green)";
+        fb.textContent = `✅ Connecté en tant que @${user.login} — dépôt "${repoData.full_name}" accessible (${repoData.private ? "privé" : "public"}).`;
+      } catch (e) {
+        ghStatusBadge("err", "Erreur");
+        fb.style.color = "var(--red)";
+        fb.textContent = "❌ " + (e.message || String(e));
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function clearGhConfig() {
+      if (!confirm("Effacer la configuration GitHub enregistrée ?")) return;
+      [GH_KEY_PAT, GH_KEY_REPO, GH_KEY_BRANCH, GH_KEY_PAT_LEGACY].forEach(k => localStorage.removeItem(k));
+      ["gh-input-pat", "gh-input-repo", "gh-input-branch"].forEach(id => {
+        const el = document.getElementById(id); if (el) el.value = "";
+      });
+      document.getElementById("gh-input-branch").value = "main";
+      ghStatusBadge("warn", "Non configuré");
+      const fb = document.getElementById("gh-feedback");
+      fb.style.color = "var(--text3)";
+      fb.textContent = "Configuration effacée.";
+      setTimeout(() => { fb.textContent = ""; }, 2500);
+    }
+
+    // Load saved config when page initialises (fires after auth)
+    loadGhConfig();
+
+    // Also open the card automatically if not configured yet
+    if (!localStorage.getItem(GH_KEY_PAT)) {
+      document.getElementById("gh-config-card").classList.add("open");
+    }
     const _origWatchPending = watchPendingReviews;
 
 
@@ -3681,7 +3987,7 @@
         }
         else {
           const sorted = [...visitors].sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
-          listEl.innerHTML = sorted.map(v => {
+          const rowsHTML = sorted.map(v => {
             const flagEmoji = v.country_code ? String.fromCodePoint(...[...v.country_code.toUpperCase()].map(c => 127397 + c.charCodeAt())) : "";
             const loc = v.city ? `${flagEmoji} ${v.city}, ${v.country}`.trim() : (v.country ? `${flagEmoji} ${v.country}`.trim() : "");
             return `<div class="vis-row">
@@ -3692,6 +3998,8 @@
           <div class="vis-meta">${esc(v.browser || "")} · ${esc(v.referrer || "")}${v.duration ? ` · ${formatDur(v.duration)}` : ""}</div>
         </div>`;
           }).join("");
+          listEl.innerHTML = rowsHTML;
+          if (homeListEl) homeListEl.innerHTML = rowsHTML;
         }
         renderBarChart("vis-pages-chart", countBy(visitors, "pageLabel"), "#e8194b");
         renderBarChart("vis-devices-chart", countBy(visitors, "device"), "#4da6ff");
@@ -3703,9 +4011,6 @@
         const listEl = document.getElementById("vis-list");
         if (listEl) listEl.innerHTML = `<div class="no-visitors">Erreur Firebase: ${esc(err?.message || String(err))}</div>`;
       });
-
-      // ── Session stats (daily / weekly / monthly) ──
-      loadSessionStats();
     }
 
     async function loadSessionStats() {
@@ -4013,7 +4318,103 @@
     document.getElementById("product-search").addEventListener("input", renderProducts);
     document.getElementById("product-cat-filter").addEventListener("change", renderProducts);
 
-    // ── CATEGORY EDIT MODAL ───────────────────────────────────────────────────────
+    // ── CUSTOMERS TAB ─────────────────────────────────────────────────────────────
+    let customersLoaded = false;
+
+    function loadCustomers() {
+      if (customersLoaded && allOrders.length) { renderCustomers(); return; }
+      const el = document.getElementById("customers-display");
+      if (!allOrders.length) {
+        el.innerHTML = `<div class="no-order">⏳ Aucune commande disponible — les clients apparaîtront dès qu'une commande est enregistrée.</div>`;
+        return;
+      }
+      customersLoaded = true;
+      renderCustomers();
+    }
+
+    function renderCustomers() {
+      const el = document.getElementById("customers-display");
+      const q = (document.getElementById("customer-search").value || "").toLowerCase().trim();
+
+      // Aggregate orders by customer phone (fallback: name)
+      const map = {};
+      allOrders.forEach(([id, o]) => {
+        const c = o.customer || {};
+        const key = (c.phone || c.name || "").toLowerCase() || id;
+        if (!map[key]) {
+          map[key] = { name: c.name || "—", phone: c.phone || "—", city: c.city || "—", email: c.email || "", orders: [], totalRevenue: 0 };
+        }
+        map[key].orders.push({ id, ...o });
+        map[key].totalRevenue += (o.total || 0);
+      });
+
+      let customers = Object.values(map).sort((a, b) => b.totalRevenue - a.totalRevenue);
+
+      // Search filter
+      if (q) {
+        customers = customers.filter(c =>
+          c.name.toLowerCase().includes(q) ||
+          c.phone.toLowerCase().includes(q) ||
+          c.city.toLowerCase().includes(q) ||
+          c.email.toLowerCase().includes(q)
+        );
+      }
+
+      // Update KPIs
+      const allCusts = Object.values(map);
+      const totalRev = allCusts.reduce((s, c) => s + c.totalRevenue, 0);
+      const totalOrds = allCusts.reduce((s, c) => s + c.orders.length, 0);
+      document.getElementById("cust-kpi-total").textContent = allCusts.length;
+      document.getElementById("cust-kpi-avg-orders").textContent = allCusts.length ? (totalOrds / allCusts.length).toFixed(1) : "—";
+      document.getElementById("cust-kpi-avg-basket").textContent = totalOrds ? Math.round(totalRev / totalOrds).toLocaleString("fr-MA") + " MAD" : "—";
+      document.getElementById("cust-kpi-revenue").textContent = totalRev.toLocaleString("fr-MA") + " MAD";
+
+      if (!customers.length) {
+        el.innerHTML = `<div class="no-order">Aucun client trouvé${q ? " pour cette recherche" : ""}.</div>`;
+        return;
+      }
+
+      const stC = { pending: "var(--amber)", confirmed: "var(--green)", delivered: "var(--blue)", cancelled: "var(--red)" };
+      const stL = { pending: "En attente", confirmed: "Confirmée", delivered: "Livrée", cancelled: "Annulée" };
+
+      el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border2);color:var(--text4);font-size:11px;text-align:left">
+            <th style="padding:8px 10px;font-weight:600">Client</th>
+            <th style="padding:8px 10px;font-weight:600">Téléphone</th>
+            <th style="padding:8px 10px;font-weight:600">Ville</th>
+            <th style="padding:8px 10px;font-weight:600;text-align:center">Commandes</th>
+            <th style="padding:8px 10px;font-weight:600;text-align:right">CA total</th>
+            <th style="padding:8px 10px;font-weight:600">Dernière commande</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${customers.map(c => {
+            const lastOrder = c.orders.sort((a, b) => b.timestamp - a.timestamp)[0];
+            const lastSt = lastOrder?.status || "pending";
+            const lastDt = lastOrder?.timestamp ? new Date(lastOrder.timestamp).toLocaleDateString("fr-MA") : "—";
+            return `<tr style="border-bottom:1px solid var(--border2);transition:background .15s" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background=''">
+              <td style="padding:10px 10px">
+                <div style="font-weight:700;color:var(--text)">${esc(c.name)}</div>
+                ${c.email ? `<div style="font-size:11px;color:var(--text4)">${esc(c.email)}</div>` : ""}
+              </td>
+              <td style="padding:10px 10px;color:var(--text3)">${esc(c.phone)}</td>
+              <td style="padding:10px 10px;color:var(--text3)">${esc(c.city)}</td>
+              <td style="padding:10px 10px;text-align:center">
+                <span style="font-weight:700;color:var(--text)">${c.orders.length}</span>
+              </td>
+              <td style="padding:10px 10px;text-align:right;font-weight:800;color:var(--green)">${c.totalRevenue.toLocaleString("fr-MA")} MAD</td>
+              <td style="padding:10px 10px">
+                <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:${stC[lastSt]}22;color:${stC[lastSt]}">${stL[lastSt] || lastSt}</span>
+                <div style="font-size:10px;color:var(--text4);margin-top:2px">${lastDt}</div>
+              </td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>`;
+    }
+
+    document.getElementById("customer-search").addEventListener("input", () => { if (customersLoaded) renderCustomers(); });
     const PRODUCT_CATEGORIES = [
       "Miroirs SDB Premium",
       "Miroirs SDB Essentiel",
@@ -4993,7 +5394,8 @@
     import { buildProductPage, ghCommit, generateAllVariants, fmtPrice } from '/assets/product-utils.js';
 
     const DB = 'https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app';
-    const REPO = 'your-org/novastyle'; // TODO: replace with actual repo slug
+    // Read repo slug from the GitHub config form (saved in localStorage by saveGhConfig)
+    const REPO = localStorage.getItem('nova_gh_repo') || 'your-org/novastyle';
     let _editingSlug = null;
     let _allAdminProducts = {};
     let _panelOpen = false;
