@@ -3127,6 +3127,16 @@
                 <div class="chart-wrap" id="vis-sources-chart"></div>
               </div>
             </div>
+            <div class="visitors-grid">
+              <div class="vis-panel">
+                <div class="vis-panel-head"><span>📍 Villes</span></div>
+                <div class="chart-wrap" id="vis-cities-chart"></div>
+              </div>
+              <div class="vis-panel">
+                <div class="vis-panel-head"><span>🌍 Pays</span></div>
+                <div class="chart-wrap" id="vis-countries-chart"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -3562,6 +3572,8 @@
     function fmtDate(iso) { try { return new Date(iso).toLocaleDateString("fr-MA", { day: "numeric", month: "short", year: "numeric" }); } catch { return iso || ""; } }
     function ping() { try { new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play().catch(() => { }); } catch { } }
     function countBy(arr, key) { const m = {}; arr.forEach(v => { const k = v[key] || "Autre"; m[k] = (m[k] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 6); }
+    function flagOf(cc) { if (!cc) return ""; try { return String.fromCodePoint(...[...cc.toUpperCase()].map(c => 127397 + c.charCodeAt())); } catch { return ""; } }
+    function countByFn(arr, fn) { const m = {}; arr.forEach(v => { const k = fn(v); if (!k) return; m[k] = (m[k] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 8); }
     function renderBarChart(elId, entries, color) { const el = document.getElementById(elId); if (!el) return; if (!entries.length) { el.innerHTML = "<div style='padding:20px;color:#333;font-size:11px'>Pas de données</div>"; return; } const max = entries[0][1] || 1; el.innerHTML = entries.map(([l, v]) => { const p = Math.round((v / max) * 100); return `<div class="chart-bar-row"><div class="chart-bar-label" title="${esc(l)}">${esc(l)}</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${p}%;background:${color}"></div></div><div class="chart-bar-val">${v}</div></div>`; }).join(""); }
     function formatDur(s) { if (s < 60) return `${s}s`; return `${Math.floor(s / 60)}min`; }
     function optTags(o) { if (!o || typeof o !== "object") return ""; return Object.entries(o).map(([k, v]) => { let c = "opt-tag"; if (k.toLowerCase() === "led") c += " led"; else if (k.toLowerCase() === "installation") c += " install"; return `<span class="${c}">${esc(k)}: ${esc(v)}</span>`; }).join(""); }
@@ -3994,12 +4006,12 @@
         else {
           const sorted = [...visitors].sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
           const rowsHTML = sorted.map(v => {
-            const flagEmoji = v.country_code ? String.fromCodePoint(...[...v.country_code.toUpperCase()].map(c => 127397 + c.charCodeAt())) : "";
-            const loc = v.city ? `${flagEmoji} ${v.city}, ${v.country}`.trim() : (v.country ? `${flagEmoji} ${v.country}`.trim() : "");
+            const flag = flagOf(v.country_code);
+            const loc = v.city ? `${flag} ${v.city}, ${v.country}`.trim() : (v.country ? `${flag} ${v.country}`.trim() : "");
             return `<div class="vis-row">
           <span class="vis-dot"></span>
           <span class="vis-page">${esc(v.pageLabel || v.page || "—")}</span>
-          ${loc ? `<span class="vis-location" title="${esc(v.ip || "")}">${esc(loc)}</span>` : ""}
+          ${loc ? `<span class="vis-location" title="${esc(v.ip || "")}">📍 ${esc(loc)}</span>` : '<span class="vis-location" style="color:var(--text4)">📍 —</span>'}
           <span class="vis-device ${v.device === "Mobile" || v.device === "Tablette" ? "mobile" : ""}">${esc(v.device || "—")}</span>
           <div class="vis-meta">${esc(v.browser || "")} · ${esc(v.referrer || "")}${v.duration ? ` · ${formatDur(v.duration)}` : ""}</div>
         </div>`;
@@ -4010,6 +4022,11 @@
         renderBarChart("vis-pages-chart", countBy(visitors, "pageLabel"), "#e8194b");
         renderBarChart("vis-devices-chart", countBy(visitors, "device"), "#4da6ff");
         renderBarChart("vis-sources-chart", countBy(visitors, "referrer"), "#00c853");
+        // Location charts — city labels include flag, country labels include flag
+        const cityEntries = countByFn(visitors, v => v.city ? `${flagOf(v.country_code)} ${v.city}` : null);
+        const countryEntries = countByFn(visitors, v => v.country ? `${flagOf(v.country_code)} ${v.country}` : null);
+        renderBarChart("vis-cities-chart", cityEntries, "#f59e0b");
+        renderBarChart("vis-countries-chart", countryEntries, "#8b5cf6");
         // Also update home tab live charts (renamed to avoid duplicate ID collision)
         renderBarChart("home-vis-devices-chart", countBy(visitors, "device"), "#4da6ff");
         renderBarChart("home-vis-sources-chart", countBy(visitors, "referrer"), "#00c853");
