@@ -11,22 +11,13 @@
         "$reviewId": {
           ".read": true,
           ".write": "auth != null",
-          ".validate": "newData.hasChildren(['name','rating','text','date']) && newData.child('rating').isNumber() && newData.child('rating').val() >= 1 && newData.child('rating').val() <= 5 && newData.child('name').isString() && newData.child('name').val().length <= 60 && newData.child('text').isString() && newData.child('text').val().length >= 10 && newData.child('text').val().length <= 1000"
+          ".validate": "newData.hasChildren(['name','rating','text','date'])"
         }
       }
     },
     "pending_reviews": {
       ".read": "auth != null",
-      ".write": true,
-      "$productId": {
-        "$reviewId": {
-          ".validate": "newData.hasChildren(['name','rating','text','date']) && newData.child('rating').isNumber() && newData.child('rating').val() >= 1 && newData.child('rating').val() <= 5 && newData.child('name').isString() && newData.child('name').val().length <= 60 && newData.child('text').isString() && newData.child('text').val().length >= 10 && newData.child('text').val().length <= 1000 && newData.child('approved').isBoolean() && newData.child('approved').val() === false"
-        }
-      }
-    },
-    "review_summaries": {
-      ".read": true,
-      ".write": "auth != null"
+      ".write": true
     },
     "online_visitors": {
       ".read": true,
@@ -41,14 +32,6 @@
       ".write": "auth != null"
     },
     "orders": {
-      ".read": "auth != null",
-      ".write": true
-    },
-    "drafts": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    },
-    "sessions": {
       ".read": "auth != null",
       ".write": true
     }
