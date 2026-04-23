@@ -58,7 +58,20 @@
       <h1>Miroir Rotin Irrégulier & Bois - Nova Style</h1>
       <p class="p-subtitle">Miroir sur mesure · Fabrication Casablanca · Livraison Maroc</p>
       <div class="p-price" id="current-price"></div>
-      <div id="axes-container"></div>
+      <div class="axes-container">
+        <div class="axis-row">
+          <div class="axis-label">Dimension <span class="selected-val" data-axis-label="Dimension"></span></div>
+          <div class="opt-values" data-axis="Dimension"><button type="button" class="opt-pill" data-axis="Dimension" data-value="80 L x 140 H cm" onclick="selectOption('Dimension', '80 L x 140 H cm')">80 L x 140 H cm</button><button type="button" class="opt-pill" data-axis="Dimension" data-value="80 L x 120 H cm" onclick="selectOption('Dimension', '80 L x 120 H cm')">80 L x 120 H cm</button><button type="button" class="opt-pill" data-axis="Dimension" data-value="75 L x 130 H cm" onclick="selectOption('Dimension', '75 L x 130 H cm')">75 L x 130 H cm</button><button type="button" class="opt-pill" data-axis="Dimension" data-value="60 L x 120 H cm" onclick="selectOption('Dimension', '60 L x 120 H cm')">60 L x 120 H cm</button><button type="button" class="opt-pill" data-axis="Dimension" data-value="55 L x 110 H cm" onclick="selectOption('Dimension', '55 L x 110 H cm')">55 L x 110 H cm</button><button type="button" class="opt-pill" data-axis="Dimension" data-value="50 L x 140 H cm" onclick="selectOption('Dimension', '50 L x 140 H cm')">50 L x 140 H cm</button><button type="button" class="opt-pill" data-axis="Dimension" data-value="50 L x 100 H cm" onclick="selectOption('Dimension', '50 L x 100 H cm')">50 L x 100 H cm</button><button type="button" class="opt-pill" data-axis="Dimension" data-value="45 L x 90 H cm" onclick="selectOption('Dimension', '45 L x 90 H cm')">45 L x 90 H cm</button></div>
+        </div>
+        <div class="axis-row">
+          <div class="axis-label">LED <span class="selected-val" data-axis-label="LED"></span></div>
+          <div class="opt-values" data-axis="LED"><button type="button" class="opt-pill" data-axis="LED" data-value="Sans LED" onclick="selectOption('LED', 'Sans LED')">Sans LED</button><button type="button" class="opt-pill" data-axis="LED" data-value="6000K Blanc pur" onclick="selectOption('LED', '6000K Blanc pur')">6000K Blanc pur</button><button type="button" class="opt-pill" data-axis="LED" data-value="4000K blanc lumière du jour" onclick="selectOption('LED', '4000K blanc lumière du jour')">4000K blanc lumière du jour</button><button type="button" class="opt-pill" data-axis="LED" data-value="3000K Jaune" onclick="selectOption('LED', '3000K Jaune')">3000K Jaune</button><button type="button" class="opt-pill" data-axis="LED" data-value="2000k Doré" onclick="selectOption('LED', '2000k Doré')">2000k Doré</button></div>
+        </div>
+        <div class="axis-row">
+          <div class="axis-label">Installation <span class="selected-val" data-axis-label="Installation"></span></div>
+          <div class="opt-values" data-axis="Installation"><button type="button" class="opt-pill" data-axis="Installation" data-value="Sans Installation" onclick="selectOption('Installation', 'Sans Installation')">Sans Installation</button><button type="button" class="opt-pill" data-axis="Installation" data-value="Avec Installation" onclick="selectOption('Installation', 'Avec Installation')">Avec Installation</button></div>
+        </div>
+      </div>
       <div class="p-cta">
         <button class="btn-primary" id="add-to-cart-btn" onclick="addProductToCart()">🛒 Ajouter au panier</button>
         <a class="btn-secondary" href="/cart">Voir panier</a>
@@ -161,882 +174,192 @@
   <script src="/assets/footer.js" defer></script>
   <script type="module" src="/assets/cart.js"></script>
   <script>
-
-
-    <script>
-      (function(){
-  var DB="https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
-      var PRODUCT_ID=window.location.pathname.replace(/\/+$/,"").split("/").pop()||"unknown";
-      var selectedRating=0;
-      var stars=document.querySelectorAll("#star-picker span");
-      stars.forEach(function(s){
-        s.addEventListener("mouseenter", function () { stars.forEach(function (x, i) { x.style.color = i < s.dataset.val ? "#ffb400" : "#ddd"; }); });
-      s.addEventListener("mouseleave",function(){stars.forEach(function (x, i) { x.style.color = i < selectedRating ? "#ffb400" : "#ddd"; });});
-      s.addEventListener("click",function(){selectedRating = Number(s.dataset.val);stars.forEach(function(x,i){x.style.color = i < selectedRating ? "#ffb400" : "#ddd";});});
-  });
-      var ta=document.getElementById("review-text");
-      if(ta)ta.addEventListener("input",function(){document.getElementById("review-char-count").textContent = this.value.length;});
-      document.getElementById("review-submit").addEventListener("click",async function(){
-    var name=(document.getElementById("review-name").value||"").trim();
-      var city=(document.getElementById("review-city").value||"").trim();
-      var text=(document.getElementById("review-text").value||"").trim();
-      var msg=document.getElementById("review-msg");
-      msg.textContent="";
-      if(!selectedRating){msg.textContent = "⚠️ Veuillez sélectionner une note.";msg.style.color="var(--accent,#6b2929)";return;}
-      if(!name){msg.textContent = "⚠️ Veuillez entrer votre nom.";msg.style.color="var(--accent,#6b2929)";return;}
-      if(text.length<10){msg.textContent = "⚠️ Votre avis doit faire au moins 10 caractères.";msg.style.color="var(--accent,#6b2929)";return;}
-      this.disabled=true;this.textContent="Envoi en cours…";
-      var revId="r_"+Date.now()+"_"+Math.random().toString(36).slice(2,8);
-      var payload={name:name,text:text,rating:selectedRating,date:new Date().toISOString(),productId:PRODUCT_ID,city:city,approved:false};
-      try{
-      var url=DB+"/pending_reviews/"+encodeURIComponent(PRODUCT_ID)+"/"+revId+".json";
-      var res=await fetch(url,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-      if(!res.ok)throw new Error("HTTP "+res.status);
-      document.getElementById("review-form-wrap").innerHTML="<div style='text-align:center;padding:30px 20px;background:var(--bg-soft,#fafafa);border-radius:12px;border:1px solid var(--border,#e8e8e8)'><div style='font-size:36px;margin-bottom:12px'>🎉</div><div style='font-size:16px;font-weight:700;color:var(--text,#1a1a1a);margin-bottom:8px'>Merci "+name.split(" ")[0]+" !</div><div style='font-size:13px;color:var(--muted,#8a8a8a);line-height:1.6'>Votre avis a été reçu et sera publié après vérification par notre équipe sous 24–48h.</div></div>";
-    }catch(e){
-        msg.textContent = "❌ Erreur d'envoi. Veuillez réessayer.";msg.style.color="var(--accent,#6b2929)";
-      this.disabled=false;this.textContent="Envoyer l'avis";
-    }
-  });
-})();
-  </script>
-
-  <script>
-      const PRODUCT = {
-        "title": "Miroir Rotin Irrégulier & Bois - Nova Style",
+    const PRODUCT = {
+      "title": "Miroir Rotin Irrégulier & Bois - Nova Style",
       "variants": [
-      {
-        "axes": {
-        "Dimension": "80 L x 140 H cm",
-      "LED": "Sans LED",
-      "Installation": "Sans Installation"
-  },
-      "price": 1617,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 140 H cm",
-      "LED": "Sans LED",
-      "Installation": "Avec Installation"
-  },
-      "price": 1771,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 140 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Sans Installation"
-  },
-      "price": 1771,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 140 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Avec Installation"
-  },
-      "price": 1925,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 140 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Sans Installation"
-  },
-      "price": 1771,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 140 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Avec Installation"
-  },
-      "price": 1925,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 140 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Sans Installation"
-  },
-      "price": 1771,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 140 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Avec Installation"
-  },
-      "price": 1925,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 140 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Sans Installation"
-  },
-      "price": 1771,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 140 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Avec Installation"
-  },
-      "price": 1925,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 120 H cm",
-      "LED": "Sans LED",
-      "Installation": "Sans Installation"
-  },
-      "price": 1463,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 120 H cm",
-      "LED": "Sans LED",
-      "Installation": "Avec Installation"
-  },
-      "price": 1617,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 120 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Sans Installation"
-  },
-      "price": 1617,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 120 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Avec Installation"
-  },
-      "price": 1771,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 120 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Sans Installation"
-  },
-      "price": 1617,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 120 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Avec Installation"
-  },
-      "price": 1771,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 120 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Sans Installation"
-  },
-      "price": 1617,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 120 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Avec Installation"
-  },
-      "price": 1771,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 120 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Sans Installation"
-  },
-      "price": 1617,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "80 L x 120 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Avec Installation"
-  },
-      "price": 1771,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "75 L x 130 H cm",
-      "LED": "Sans LED",
-      "Installation": "Sans Installation"
-  },
-      "price": 1386,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "75 L x 130 H cm",
-      "LED": "Sans LED",
-      "Installation": "Avec Installation"
-  },
-      "price": 1540,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "75 L x 130 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Sans Installation"
-  },
-      "price": 1540,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "75 L x 130 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Avec Installation"
-  },
-      "price": 1694,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "75 L x 130 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Sans Installation"
-  },
-      "price": 1540,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "75 L x 130 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Avec Installation"
-  },
-      "price": 1694,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "75 L x 130 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Sans Installation"
-  },
-      "price": 1540,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "75 L x 130 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Avec Installation"
-  },
-      "price": 1694,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "75 L x 130 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Sans Installation"
-  },
-      "price": 1540,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "75 L x 130 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Avec Installation"
-  },
-      "price": 1694,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "60 L x 120 H cm",
-      "LED": "Sans LED",
-      "Installation": "Sans Installation"
-  },
-      "price": 1155,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "60 L x 120 H cm",
-      "LED": "Sans LED",
-      "Installation": "Avec Installation"
-  },
-      "price": 1309,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "60 L x 120 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Sans Installation"
-  },
-      "price": 1309,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "60 L x 120 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Avec Installation"
-  },
-      "price": 1463,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "60 L x 120 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Sans Installation"
-  },
-      "price": 1309,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "60 L x 120 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Avec Installation"
-  },
-      "price": 1463,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "60 L x 120 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Sans Installation"
-  },
-      "price": 1309,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "60 L x 120 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Avec Installation"
-  },
-      "price": 1463,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "60 L x 120 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Sans Installation"
-  },
-      "price": 1309,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "60 L x 120 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Avec Installation"
-  },
-      "price": 1463,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "55 L x 110 H cm",
-      "LED": "Sans LED",
-      "Installation": "Sans Installation"
-  },
-      "price": 1001,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "55 L x 110 H cm",
-      "LED": "Sans LED",
-      "Installation": "Avec Installation"
-  },
-      "price": 1155,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "55 L x 110 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Sans Installation"
-  },
-      "price": 1155,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "55 L x 110 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Avec Installation"
-  },
-      "price": 1309,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "55 L x 110 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Sans Installation"
-  },
-      "price": 1155,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "55 L x 110 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Avec Installation"
-  },
-      "price": 1309,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "55 L x 110 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Sans Installation"
-  },
-      "price": 1155,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "55 L x 110 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Avec Installation"
-  },
-      "price": 1309,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "55 L x 110 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Sans Installation"
-  },
-      "price": 1155,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "55 L x 110 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Avec Installation"
-  },
-      "price": 1309,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 140 H cm",
-      "LED": "Sans LED",
-      "Installation": "Sans Installation"
-  },
-      "price": 924,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 140 H cm",
-      "LED": "Sans LED",
-      "Installation": "Avec Installation"
-  },
-      "price": 1078,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 140 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Sans Installation"
-  },
-      "price": 1078,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 140 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Avec Installation"
-  },
-      "price": 1232,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 140 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Sans Installation"
-  },
-      "price": 1078,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 140 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Avec Installation"
-  },
-      "price": 1232,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 140 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Sans Installation"
-  },
-      "price": 1078,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 140 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Avec Installation"
-  },
-      "price": 1232,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 140 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Sans Installation"
-  },
-      "price": 1078,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 140 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Avec Installation"
-  },
-      "price": 1232,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 100 H cm",
-      "LED": "Sans LED",
-      "Installation": "Sans Installation"
-  },
-      "price": 862,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 100 H cm",
-      "LED": "Sans LED",
-      "Installation": "Avec Installation"
-  },
-      "price": 1016,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 100 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Sans Installation"
-  },
-      "price": 1016,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 100 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Avec Installation"
-  },
-      "price": 1170,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 100 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Sans Installation"
-  },
-      "price": 1016,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 100 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Avec Installation"
-  },
-      "price": 1170,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 100 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Sans Installation"
-  },
-      "price": 1016,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 100 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Avec Installation"
-  },
-      "price": 1170,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 100 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Sans Installation"
-  },
-      "price": 1016,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "50 L x 100 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Avec Installation"
-  },
-      "price": 1170,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "45 L x 90 H cm",
-      "LED": "Sans LED",
-      "Installation": "Sans Installation"
-  },
-      "price": 708,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "45 L x 90 H cm",
-      "LED": "Sans LED",
-      "Installation": "Avec Installation"
-  },
-      "price": 862,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "45 L x 90 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Sans Installation"
-  },
-      "price": 862,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "45 L x 90 H cm",
-      "LED": "6000K Blanc pur",
-      "Installation": "Avec Installation"
-  },
-      "price": 1016,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "45 L x 90 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Sans Installation"
-  },
-      "price": 862,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "45 L x 90 H cm",
-      "LED": "4000K blanc lumière du jour",
-      "Installation": "Avec Installation"
-  },
-      "price": 1016,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "45 L x 90 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Sans Installation"
-  },
-      "price": 862,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "45 L x 90 H cm",
-      "LED": "3000K Jaune",
-      "Installation": "Avec Installation"
-  },
-      "price": 1016,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "45 L x 90 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Sans Installation"
-  },
-      "price": 862,
-      "sku": ""
-  },
-      {
-        "axes": {
-        "Dimension": "45 L x 90 H cm",
-      "LED": "2000k Doré",
-      "Installation": "Avec Installation"
-  },
-      "price": 1016,
-      "sku": ""
-  }
+        {"axes":{"Dimension":"80 L x 140 H cm","LED":"Sans LED","Installation":"Sans Installation"},"price":1617,"sku":""},
+        {"axes":{"Dimension":"80 L x 140 H cm","LED":"Sans LED","Installation":"Avec Installation"},"price":1771,"sku":""},
+        {"axes":{"Dimension":"80 L x 140 H cm","LED":"6000K Blanc pur","Installation":"Sans Installation"},"price":1771,"sku":""},
+        {"axes":{"Dimension":"80 L x 140 H cm","LED":"6000K Blanc pur","Installation":"Avec Installation"},"price":1925,"sku":""},
+        {"axes":{"Dimension":"80 L x 140 H cm","LED":"4000K blanc lumière du jour","Installation":"Sans Installation"},"price":1771,"sku":""},
+        {"axes":{"Dimension":"80 L x 140 H cm","LED":"4000K blanc lumière du jour","Installation":"Avec Installation"},"price":1925,"sku":""},
+        {"axes":{"Dimension":"80 L x 140 H cm","LED":"3000K Jaune","Installation":"Sans Installation"},"price":1771,"sku":""},
+        {"axes":{"Dimension":"80 L x 140 H cm","LED":"3000K Jaune","Installation":"Avec Installation"},"price":1925,"sku":""},
+        {"axes":{"Dimension":"80 L x 140 H cm","LED":"2000k Doré","Installation":"Sans Installation"},"price":1771,"sku":""},
+        {"axes":{"Dimension":"80 L x 140 H cm","LED":"2000k Doré","Installation":"Avec Installation"},"price":1925,"sku":""},
+        {"axes":{"Dimension":"80 L x 120 H cm","LED":"Sans LED","Installation":"Sans Installation"},"price":1463,"sku":""},
+        {"axes":{"Dimension":"80 L x 120 H cm","LED":"Sans LED","Installation":"Avec Installation"},"price":1617,"sku":""},
+        {"axes":{"Dimension":"80 L x 120 H cm","LED":"6000K Blanc pur","Installation":"Sans Installation"},"price":1617,"sku":""},
+        {"axes":{"Dimension":"80 L x 120 H cm","LED":"6000K Blanc pur","Installation":"Avec Installation"},"price":1771,"sku":""},
+        {"axes":{"Dimension":"80 L x 120 H cm","LED":"4000K blanc lumière du jour","Installation":"Sans Installation"},"price":1617,"sku":""},
+        {"axes":{"Dimension":"80 L x 120 H cm","LED":"4000K blanc lumière du jour","Installation":"Avec Installation"},"price":1771,"sku":""},
+        {"axes":{"Dimension":"80 L x 120 H cm","LED":"3000K Jaune","Installation":"Sans Installation"},"price":1617,"sku":""},
+        {"axes":{"Dimension":"80 L x 120 H cm","LED":"3000K Jaune","Installation":"Avec Installation"},"price":1771,"sku":""},
+        {"axes":{"Dimension":"80 L x 120 H cm","LED":"2000k Doré","Installation":"Sans Installation"},"price":1617,"sku":""},
+        {"axes":{"Dimension":"80 L x 120 H cm","LED":"2000k Doré","Installation":"Avec Installation"},"price":1771,"sku":""},
+        {"axes":{"Dimension":"75 L x 130 H cm","LED":"Sans LED","Installation":"Sans Installation"},"price":1386,"sku":""},
+        {"axes":{"Dimension":"75 L x 130 H cm","LED":"Sans LED","Installation":"Avec Installation"},"price":1540,"sku":""},
+        {"axes":{"Dimension":"75 L x 130 H cm","LED":"6000K Blanc pur","Installation":"Sans Installation"},"price":1540,"sku":""},
+        {"axes":{"Dimension":"75 L x 130 H cm","LED":"6000K Blanc pur","Installation":"Avec Installation"},"price":1694,"sku":""},
+        {"axes":{"Dimension":"75 L x 130 H cm","LED":"4000K blanc lumière du jour","Installation":"Sans Installation"},"price":1540,"sku":""},
+        {"axes":{"Dimension":"75 L x 130 H cm","LED":"4000K blanc lumière du jour","Installation":"Avec Installation"},"price":1694,"sku":""},
+        {"axes":{"Dimension":"75 L x 130 H cm","LED":"3000K Jaune","Installation":"Sans Installation"},"price":1540,"sku":""},
+        {"axes":{"Dimension":"75 L x 130 H cm","LED":"3000K Jaune","Installation":"Avec Installation"},"price":1694,"sku":""},
+        {"axes":{"Dimension":"75 L x 130 H cm","LED":"2000k Doré","Installation":"Sans Installation"},"price":1540,"sku":""},
+        {"axes":{"Dimension":"75 L x 130 H cm","LED":"2000k Doré","Installation":"Avec Installation"},"price":1694,"sku":""},
+        {"axes":{"Dimension":"60 L x 120 H cm","LED":"Sans LED","Installation":"Sans Installation"},"price":1155,"sku":""},
+        {"axes":{"Dimension":"60 L x 120 H cm","LED":"Sans LED","Installation":"Avec Installation"},"price":1309,"sku":""},
+        {"axes":{"Dimension":"60 L x 120 H cm","LED":"6000K Blanc pur","Installation":"Sans Installation"},"price":1309,"sku":""},
+        {"axes":{"Dimension":"60 L x 120 H cm","LED":"6000K Blanc pur","Installation":"Avec Installation"},"price":1463,"sku":""},
+        {"axes":{"Dimension":"60 L x 120 H cm","LED":"4000K blanc lumière du jour","Installation":"Sans Installation"},"price":1309,"sku":""},
+        {"axes":{"Dimension":"60 L x 120 H cm","LED":"4000K blanc lumière du jour","Installation":"Avec Installation"},"price":1463,"sku":""},
+        {"axes":{"Dimension":"60 L x 120 H cm","LED":"3000K Jaune","Installation":"Sans Installation"},"price":1309,"sku":""},
+        {"axes":{"Dimension":"60 L x 120 H cm","LED":"3000K Jaune","Installation":"Avec Installation"},"price":1463,"sku":""},
+        {"axes":{"Dimension":"60 L x 120 H cm","LED":"2000k Doré","Installation":"Sans Installation"},"price":1309,"sku":""},
+        {"axes":{"Dimension":"60 L x 120 H cm","LED":"2000k Doré","Installation":"Avec Installation"},"price":1463,"sku":""},
+        {"axes":{"Dimension":"55 L x 110 H cm","LED":"Sans LED","Installation":"Sans Installation"},"price":1001,"sku":""},
+        {"axes":{"Dimension":"55 L x 110 H cm","LED":"Sans LED","Installation":"Avec Installation"},"price":1155,"sku":""},
+        {"axes":{"Dimension":"55 L x 110 H cm","LED":"6000K Blanc pur","Installation":"Sans Installation"},"price":1155,"sku":""},
+        {"axes":{"Dimension":"55 L x 110 H cm","LED":"6000K Blanc pur","Installation":"Avec Installation"},"price":1309,"sku":""},
+        {"axes":{"Dimension":"55 L x 110 H cm","LED":"4000K blanc lumière du jour","Installation":"Sans Installation"},"price":1155,"sku":""},
+        {"axes":{"Dimension":"55 L x 110 H cm","LED":"4000K blanc lumière du jour","Installation":"Avec Installation"},"price":1309,"sku":""},
+        {"axes":{"Dimension":"55 L x 110 H cm","LED":"3000K Jaune","Installation":"Sans Installation"},"price":1155,"sku":""},
+        {"axes":{"Dimension":"55 L x 110 H cm","LED":"3000K Jaune","Installation":"Avec Installation"},"price":1309,"sku":""},
+        {"axes":{"Dimension":"55 L x 110 H cm","LED":"2000k Doré","Installation":"Sans Installation"},"price":1155,"sku":""},
+        {"axes":{"Dimension":"55 L x 110 H cm","LED":"2000k Doré","Installation":"Avec Installation"},"price":1309,"sku":""},
+        {"axes":{"Dimension":"50 L x 140 H cm","LED":"Sans LED","Installation":"Sans Installation"},"price":924,"sku":""},
+        {"axes":{"Dimension":"50 L x 140 H cm","LED":"Sans LED","Installation":"Avec Installation"},"price":1078,"sku":""},
+        {"axes":{"Dimension":"50 L x 140 H cm","LED":"6000K Blanc pur","Installation":"Sans Installation"},"price":1078,"sku":""},
+        {"axes":{"Dimension":"50 L x 140 H cm","LED":"6000K Blanc pur","Installation":"Avec Installation"},"price":1232,"sku":""},
+        {"axes":{"Dimension":"50 L x 140 H cm","LED":"4000K blanc lumière du jour","Installation":"Sans Installation"},"price":1078,"sku":""},
+        {"axes":{"Dimension":"50 L x 140 H cm","LED":"4000K blanc lumière du jour","Installation":"Avec Installation"},"price":1232,"sku":""},
+        {"axes":{"Dimension":"50 L x 140 H cm","LED":"3000K Jaune","Installation":"Sans Installation"},"price":1078,"sku":""},
+        {"axes":{"Dimension":"50 L x 140 H cm","LED":"3000K Jaune","Installation":"Avec Installation"},"price":1232,"sku":""},
+        {"axes":{"Dimension":"50 L x 140 H cm","LED":"2000k Doré","Installation":"Sans Installation"},"price":1078,"sku":""},
+        {"axes":{"Dimension":"50 L x 140 H cm","LED":"2000k Doré","Installation":"Avec Installation"},"price":1232,"sku":""},
+        {"axes":{"Dimension":"50 L x 100 H cm","LED":"Sans LED","Installation":"Sans Installation"},"price":862,"sku":""},
+        {"axes":{"Dimension":"50 L x 100 H cm","LED":"Sans LED","Installation":"Avec Installation"},"price":1016,"sku":""},
+        {"axes":{"Dimension":"50 L x 100 H cm","LED":"6000K Blanc pur","Installation":"Sans Installation"},"price":1016,"sku":""},
+        {"axes":{"Dimension":"50 L x 100 H cm","LED":"6000K Blanc pur","Installation":"Avec Installation"},"price":1170,"sku":""},
+        {"axes":{"Dimension":"50 L x 100 H cm","LED":"4000K blanc lumière du jour","Installation":"Sans Installation"},"price":1016,"sku":""},
+        {"axes":{"Dimension":"50 L x 100 H cm","LED":"4000K blanc lumière du jour","Installation":"Avec Installation"},"price":1170,"sku":""},
+        {"axes":{"Dimension":"50 L x 100 H cm","LED":"3000K Jaune","Installation":"Sans Installation"},"price":1016,"sku":""},
+        {"axes":{"Dimension":"50 L x 100 H cm","LED":"3000K Jaune","Installation":"Avec Installation"},"price":1170,"sku":""},
+        {"axes":{"Dimension":"50 L x 100 H cm","LED":"2000k Doré","Installation":"Sans Installation"},"price":1016,"sku":""},
+        {"axes":{"Dimension":"50 L x 100 H cm","LED":"2000k Doré","Installation":"Avec Installation"},"price":1170,"sku":""},
+        {"axes":{"Dimension":"45 L x 90 H cm","LED":"Sans LED","Installation":"Sans Installation"},"price":708,"sku":""},
+        {"axes":{"Dimension":"45 L x 90 H cm","LED":"Sans LED","Installation":"Avec Installation"},"price":862,"sku":""},
+        {"axes":{"Dimension":"45 L x 90 H cm","LED":"6000K Blanc pur","Installation":"Sans Installation"},"price":862,"sku":""},
+        {"axes":{"Dimension":"45 L x 90 H cm","LED":"6000K Blanc pur","Installation":"Avec Installation"},"price":1016,"sku":""},
+        {"axes":{"Dimension":"45 L x 90 H cm","LED":"4000K blanc lumière du jour","Installation":"Sans Installation"},"price":862,"sku":""},
+        {"axes":{"Dimension":"45 L x 90 H cm","LED":"4000K blanc lumière du jour","Installation":"Avec Installation"},"price":1016,"sku":""},
+        {"axes":{"Dimension":"45 L x 90 H cm","LED":"3000K Jaune","Installation":"Sans Installation"},"price":862,"sku":""},
+        {"axes":{"Dimension":"45 L x 90 H cm","LED":"3000K Jaune","Installation":"Avec Installation"},"price":1016,"sku":""},
+        {"axes":{"Dimension":"45 L x 90 H cm","LED":"2000k Doré","Installation":"Sans Installation"},"price":862,"sku":""},
+        {"axes":{"Dimension":"45 L x 90 H cm","LED":"2000k Doré","Installation":"Avec Installation"},"price":1016,"sku":""}
       ],
-      "axis_order": [
-      "Dimension",
-      "LED",
-      "Installation"
-      ],
+      "axis_order": ["Dimension", "LED", "Installation"],
       "axes": {
-        "Dimension": [
-      "80 L x 140 H cm",
-      "80 L x 120 H cm",
-      "75 L x 130 H cm",
-      "60 L x 120 H cm",
-      "55 L x 110 H cm",
-      "50 L x 140 H cm",
-      "50 L x 100 H cm",
-      "45 L x 90 H cm"
-      ],
-      "LED": [
-      "Sans LED",
-      "6000K Blanc pur",
-      "4000K blanc lumière du jour",
-      "3000K Jaune",
-      "2000k Doré"
-      ],
-      "Installation": [
-      "Sans Installation",
-      "Avec Installation"
-      ]
-  },
+        "Dimension": ["80 L x 140 H cm","80 L x 120 H cm","75 L x 130 H cm","60 L x 120 H cm","55 L x 110 H cm","50 L x 140 H cm","50 L x 100 H cm","45 L x 90 H cm"],
+        "LED": ["Sans LED","6000K Blanc pur","4000K blanc lumière du jour","3000K Jaune","2000k Doré"],
+        "Installation": ["Sans Installation","Avec Installation"]
+      },
       "price_min": 708,
       "price_max": 1925
-  };
-      const WHATSAPP = "212707074748";
-      let SELECTION = { };
+    };
+    const WHATSAPP = "212707074748";
+    let SELECTION = {};
 
-      function fmtPrice(v){ return v==null?"":Math.round(v).toLocaleString('fr-FR')+" MAD"; }
-      function computePriceRange(){
-    var prices=(PRODUCT.variants||[]).map(function(v){return v.price;}).filter(function(p){return p!=null&&p>0;});
-      if(!prices.length) return {min:0,max:0};
-      return {min:Math.min.apply(null,prices),max:Math.max.apply(null,prices)};
-  }
-      function priceRange(){
-    var min=PRODUCT.price_min;
-      var max=PRODUCT.price_max;
-      if(!min){var r=computePriceRange();min=r.min;max=r.max;}
-      if(!min) return "";
-      if(min===max||!max) return fmtPrice(min);
-      return fmtPrice(min)+" – "+fmtPrice(max);
-  }
-      function getVariant(){
-  return PRODUCT.variants.find(v=>
-  PRODUCT.axis_order.every(a=>v.axes[a]===SELECTION[a])
-      );
-  }
-      function hasVariant(axis,val){
-  return PRODUCT.variants.some(v=>
-  v.axes[axis]===val&&PRODUCT.axis_order.filter(a=>a!==axis).every(a=>v.axes[a]===SELECTION[a])
-      );
-  }
-      function renderAxes(){
-  var c=document.getElementById("axes-container");
-      if(!c) return;
-      c.innerHTML=PRODUCT.axis_order.map(function(axis){
-  var opts=PRODUCT.axes[axis]||[];
-      return '<div class="axis-group" style="margin-bottom:14px">'
-        +'<div
-          style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">
-          '+axis+'</div>'
-        +'<div style="display:flex;flex-wrap:wrap;gap:8px">'+opts.map(function(opt){
-      var active=SELECTION[axis]===opt;
-          var avail=hasVariant(axis,opt);
-          return '<button onclick="SELECTION[''+axis.replace(/'/g," \'")+'']=''
-          +opt.replace(/'/g,"\'")+'';renderAxes();updatePrice();" '
-          +' style="padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:'+(avail?'pointer':'not-allowed')+';'
-          +'border:1px solid '+(active?'#e8194b':'#2a2a2a')+';'
-          +'background:'+(active?'#e8194b20':'#1a1a1a')+';'
-          +'color:'+(active?'#e8194b':avail?'#ccc':'#444')+';'
-          +'opacity:'+(avail?1:0.4)+'">'+opt+'</button>';
-      }).join('')+'</div>
-    </div>';
-  }).join('');
-  }
+    function fmtPrice(v) { return v == null ? "" : Math.round(v).toLocaleString('fr-FR') + " MAD"; }
+    function priceRange() {
+      var min = PRODUCT.price_min, max = PRODUCT.price_max;
+      if (!min) {
+        var prices = (PRODUCT.variants||[]).map(function(v){return v.price;}).filter(function(p){return p!=null&&p>0;});
+        if (prices.length) { min = Math.min.apply(null,prices); max = Math.max.apply(null,prices); }
+      }
+      if (!min) return "";
+      if (min === max || !max) return fmtPrice(min);
+      return fmtPrice(min) + " – " + fmtPrice(max);
+    }
+
+    function findMatchingVariant() {
+      return PRODUCT.variants.find(function(v) {
+        return Object.keys(SELECTION).every(function(a) { return v.axes[a] === SELECTION[a]; });
+      });
+    }
+    window.findMatchingVariant = findMatchingVariant;
+
+    function isValueAvailable(axis, value) {
+      var test = Object.assign({}, SELECTION, {[axis]: value});
+      return PRODUCT.variants.some(function(v) {
+        return Object.keys(test).every(function(a) { return v.axes[a] === test[a]; });
+      });
+    }
+
+    function selectOption(axis, value) {
+      SELECTION[axis] = value;
+      updateUI();
+    }
+    window.selectOption = selectOption;
+
     function updateUI() {
-      var v = getVariant();
-      var el = document.getElementById("current-price");
-      if (el) el.textContent = v && v.price != null ? fmtPrice(v.price) : priceRange();
+      document.querySelectorAll('.opt-pill').forEach(function(btn) {
+        var axis = btn.dataset.axis;
+        var val  = btn.dataset.value;
+        var selected  = SELECTION[axis] === val;
+        var available = isValueAvailable(axis, val);
+        btn.classList.toggle('selected',   selected);
+        btn.classList.toggle('unavailable', !available);
+        btn.disabled = !available;
+      });
+      document.querySelectorAll('[data-axis-label]').forEach(function(el) {
+        el.textContent = SELECTION[el.dataset.axisLabel] || '';
+      });
+      var matching = findMatchingVariant();
+      var priceEl  = document.getElementById('current-price');
+      if (priceEl) {
+        priceEl.textContent = (matching && matching.price != null) ? fmtPrice(matching.price) : priceRange();
+      }
     }
     window.updateUI = updateUI;
-    window.findMatchingVariant = getVariant;
-    window.PRODUCT = PRODUCT;
+    window.PRODUCT  = PRODUCT;
     window.SELECTION = SELECTION;
-    for (var axis of PRODUCT.axis_order) {
-      if (PRODUCT.axes[axis] && PRODUCT.axes[axis].length) SELECTION[axis] = PRODUCT.axes[axis][0];
-    }
-    renderAxes(); updateUI();
 
-    window.addProductToCart = function () {
-      var v = getVariant();
-      if (PRODUCT.axis_order.length && !v) { alert("Veuillez sélectionner toutes les options."); return; }
-      var
-        item = { id: "nova-style-miroir-rotin-irregulier-bois-nova-style", name: PRODUCT.title, price: v ? v.price : PRODUCT.price_min, axes: Object.assign({}, SELECTION), image: "/assets/images/nova-style-miroir-rotin-irregulier-bois-nova-style/1.webp", quantity: 1 };
-      var cart = JSON.parse(localStorage.getItem("nova_style_cart") || "[]");
-      var key = JSON.stringify({ id: item.id, axes: item.axes });
-      var idx = cart.findIndex(function (c) { return JSON.stringify({ id: c.id, axes: c.axes }) === key; });
-      if (idx >= 0) cart[idx].quantity = (cart[idx].quantity || 1) + 1;
+    PRODUCT.axis_order.forEach(function(axis) {
+      if (PRODUCT.axes[axis] && PRODUCT.axes[axis].length) {
+        SELECTION[axis] = PRODUCT.axes[axis][0];
+      }
+    });
+    updateUI();
+
+    function addProductToCart() {
+      var matching = findMatchingVariant();
+      if (PRODUCT.axis_order.length && !matching) { alert("Veuillez sélectionner toutes les options."); return; }
+      var prices = (PRODUCT.variants||[]).map(function(v){return v.price;}).filter(function(p){return p>0;});
+      var fallback = PRODUCT.price_min || (prices.length ? Math.min.apply(null,prices) : 0);
+      var qtyInput = document.getElementById("qty-input");
+      var qty = qtyInput ? Math.max(1, Math.min(99, parseInt(qtyInput.value)||1)) : 1;
+      var item = {
+        id: "nova-style-miroir-rotin-irregulier-bois-nova-style",
+        name: PRODUCT.title,
+        price: matching ? matching.price : fallback,
+        axes: Object.assign({}, SELECTION),
+        image: "/assets/images/nova-style-miroir-rotin-irregulier-bois-nova-style/1.webp",
+        quantity: qty
+      };
+      var cart = JSON.parse(localStorage.getItem("nova_style_cart")||"[]");
+      var key  = JSON.stringify({id:item.id, axes:item.axes});
+      var idx  = cart.findIndex(function(c){ return JSON.stringify({id:c.id,axes:c.axes})===key; });
+      if (idx >= 0) cart[idx].quantity = (cart[idx].quantity||1) + qty;
       else cart.push(item);
       localStorage.setItem("nova_style_cart", JSON.stringify(cart));
       document.dispatchEvent(new CustomEvent("cartUpdated"));
       var btn = document.getElementById("add-to-cart-btn");
-      if (btn) { btn.textContent = "✓ Ajouté !"; setTimeout(function () { btn.textContent = "🛒 Ajouter au panier"; }, 1800); }
-    }; </script>
+      if (btn) { btn.textContent = "✓ Ajouté !"; setTimeout(function(){ btn.textContent = "🛒 Ajouter au panier"; }, 1800); }
+    }
+    window.addProductToCart = addProductToCart;
   </script>
+  <script src="/assets/product-qty.js" defer></script>
   <script type="module" src="/assets/visitor-tracker.js"></script>
 </body>
 

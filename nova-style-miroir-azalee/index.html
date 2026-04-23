@@ -125,39 +125,6 @@
   <script type="module" src="/assets/reviews-widget.js"></script>
 </section>
 
-<section style="padding:30px 0 0;border-top:1px solid var(--border,#eee);margin-top:10px">
-  <h2 style="font-size:18px;font-weight:700;color:var(--text,#1a1a1a);margin-bottom:20px">✍️ Laisser un avis</h2>
-  <div id="review-form-wrap">
-    <div style="margin-bottom:16px">
-      <label style="display:block;font-size:11px;font-weight:700;color:var(--text-soft,#4a4a4a);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Note *</label>
-      <div id="star-picker" style="display:flex;gap:3px;font-size:30px;cursor:pointer;line-height:1">
-        <span data-val="1" style="color:#ddd;transition:color .1s">★</span>
-        <span data-val="2" style="color:#ddd;transition:color .1s">★</span>
-        <span data-val="3" style="color:#ddd;transition:color .1s">★</span>
-        <span data-val="4" style="color:#ddd;transition:color .1s">★</span>
-        <span data-val="5" style="color:#ddd;transition:color .1s">★</span>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-      <div>
-        <label style="display:block;font-size:11px;font-weight:700;color:var(--text-soft,#4a4a4a);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Votre nom *</label>
-        <input id="review-name" type="text" maxlength="60" placeholder="Prénom et nom" style="width:100%;padding:10px 12px;border:1px solid var(--border,#e8e8e8);border-radius:7px;font-size:14px;outline:none;background:var(--bg,#fff);color:var(--text,#1a1a1a);font-family:inherit">
-      </div>
-      <div>
-        <label style="display:block;font-size:11px;font-weight:700;color:var(--text-soft,#4a4a4a);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Ville</label>
-        <input id="review-city" type="text" maxlength="40" placeholder="Ex: Casablanca" style="width:100%;padding:10px 12px;border:1px solid var(--border,#e8e8e8);border-radius:7px;font-size:14px;outline:none;background:var(--bg,#fff);color:var(--text,#1a1a1a);font-family:inherit">
-      </div>
-    </div>
-    <div style="margin-bottom:14px">
-      <label style="display:block;font-size:11px;font-weight:700;color:var(--text-soft,#4a4a4a);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Votre avis *</label>
-      <textarea id="review-text" rows="4" maxlength="1000" placeholder="Partagez votre expérience avec ce produit…" style="width:100%;padding:10px 12px;border:1px solid var(--border,#e8e8e8);border-radius:7px;font-size:14px;outline:none;resize:vertical;background:var(--bg,#fff);color:var(--text,#1a1a1a);font-family:inherit;line-height:1.5"></textarea>
-      <div style="font-size:11px;color:var(--muted,#8a8a8a);margin-top:4px;text-align:right"><span id="review-char-count">0</span>/1000</div>
-    </div>
-    <div id="review-msg" style="font-size:13px;margin-bottom:10px;min-height:18px"></div>
-    <button id="review-submit" style="background:var(--accent,#6b2929);color:#fff;border:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s">Envoyer l'avis</button>
-    <p style="font-size:11px;color:var(--muted,#8a8a8a);margin-top:10px;line-height:1.6">🔒 Votre avis sera publié après vérification par notre équipe (sous 24–48h).</p>
-  </div>
-</section>
 
 <script>
 (function(){
