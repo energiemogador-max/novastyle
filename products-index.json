@@ -1090,5 +1090,53 @@
       "hasVariants": true,
       "variantCount": 40
     }
+
+    {
+      "slug": "nova-style-miroir-de-salon-rotin-anfa-bois-nova-style",
+      "name": "Miroir de salon Rotin ANFA & Bois - Nova Style",
+      "categoryId": "salon",
+      "category": "Salon & Dressing",
+      "image": "/images/nova-style-miroir-de-salon-rotin-anfa-bois-nova-style/1.webp",
+      "images": [
+        "/images/nova-style-miroir-de-salon-rotin-anfa-bois-nova-style/1.webp",
+        "/images/nova-style-miroir-de-salon-rotin-anfa-bois-nova-style/2.webp",
+        "/images/nova-style-miroir-de-salon-rotin-anfa-bois-nova-style/3.webp"
+      ],
+      "active": true,
+      "price": {
+        "min": 708,
+        "max": 1925
+      },
+      "axes": {
+        "order": [
+          "Dimension",
+          "LED",
+          "Installation"
+        ],
+        "options": {
+          "Dimension": [
+            "80 L x 140 H cm",
+            "80 L x 120 H cm",
+            "75 L x 130 H cm",
+            "60 L x 120 H cm",
+            "55 L x 110 H cm",
+            "50 L x 140 H cm",
+            "50 L x 100 H cm",
+            "45 L x 90 H cm"
+          ],
+          "LED": [
+            "Sans LED",
+            "6000K Blanc pur",
+            "4000K blanc lumière du jour",
+            "3000K Jaune",
+            "2000k Doré"
+          ],
+          "Installation": [
+            "Sans Installation",
+            "Avec Installation"
+          ]
+        }
+      }
+    }
   ]
 }

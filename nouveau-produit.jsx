@@ -760,59 +760,124 @@ function StepPrix({ axesConfig, copied, onNext, onBack }) {
   );
 }
 
-// ─── STEP 5: EXPORT ───────────────────────────────────────────────────────────
+// ─── STEP 5: EXPORT (fully automatic) ────────────────────────────────────────
 function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
-  const [saving,    setSaving]   = useState(false);
-  const [saved,     setSaved]    = useState(false);
-  const [saveErr,   setSaveErr]  = useState("");
-  const [ghPushing, setGhPush]  = useState(false);
-  const [ghResult,  setGhResult] = useState(null);
-  const [copiedKey, setCopiedKey]= useState("");
+  // tasks: { id, label, status: "pending"|"running"|"ok"|"error", detail }
+  const [tasks, setTasks] = useState([
+    { id: "firebase", label: "Enregistrer dans Firebase",           status: "pending", detail: "" },
+    { id: "product",  label: `Créer products/${info.slug}.json`,    status: "pending", detail: "" },
+    { id: "index",    label: "Mettre à jour products-index.json",   status: "pending", detail: "" },
+  ]);
+  const [done, setDone] = useState(false);
+  const [copiedKey, setCopiedKey] = useState("");
 
-  const variants  = allCombos.map(combo => ({ axes: combo, price: prices[JSON.stringify(combo)] || 0, sku: "" }));
-  const validPrices = variants.map(v=>v.price).filter(p=>p>0);
-  const priceMin  = validPrices.length ? Math.min(...validPrices) : 0;
-  const priceMax  = validPrices.length ? Math.max(...validPrices) : 0;
+  const variants   = allCombos.map(combo => ({ axes: combo, price: prices[JSON.stringify(combo)] || 0, sku: "" }));
+  const validPrices = variants.map(v => v.price).filter(p => p > 0);
+  const priceMin    = validPrices.length ? Math.min(...validPrices) : 0;
+  const priceMax    = validPrices.length ? Math.max(...validPrices) : 0;
+  const imgCount    = info.photos?.length || info.imageCount || 1;
+  const images      = Array.from({ length: imgCount }, (_, i) => `/images/${info.slug}/${i+1}.webp`);
+  const catLabel    = CATEGORIES.find(c => c.id === info.category)?.label || info.category;
 
-  const imgCount  = info.photos?.length || info.imageCount || 1;
-  const images    = Array.from({ length: imgCount }, (_, i) => `/images/${info.slug}/${i+1}.webp`);
-
-  const catLabel  = CATEGORIES.find(c => c.id === info.category)?.label || info.category;
-
-  // products-index.json entry
-  const indexEntry = JSON.stringify({
-    slug: info.slug,
-    name: info.name,
-    categoryId: info.category,
-    category: catLabel,
-    image: images[0] || `/images/${info.slug}/1.webp`,
-    images,
-    active: true,
-    price: { min: priceMin, max: priceMax },
-    axes: { order: axesConfig.axis_order, options: axesConfig.axes }
-  }, null, 2);
-
-  // Full product JSON (for /products/{slug}.json)
   const productJson = JSON.stringify({
-    slug: info.slug,
-    name: info.name,
-    categoryId: info.category,
-    category: catLabel,
-    active: true,
-    images,
+    slug: info.slug, name: info.name, categoryId: info.category, category: catLabel,
+    active: true, images,
     description: info.desc || "",
     seo: { title: info.seoTitle || info.name, description: info.seoDesc || "" },
     axes: { order: axesConfig.axis_order, options: axesConfig.axes },
     variants
   }, null, 2);
 
-  // Firebase catalog entry (legacy)
+  const indexEntry = {
+    slug: info.slug, name: info.name, categoryId: info.category, category: catLabel,
+    image: images[0], images, active: true,
+    price: { min: priceMin, max: priceMax },
+    axes: { order: axesConfig.axis_order, options: axesConfig.axes }
+  };
+
   const catalogEntry = JSON.stringify({
-    title: info.name, slug: info.slug, category: catLabel, active: true,
-    images, price_min: priceMin, price_max: priceMax,
+    title: info.name, slug: info.slug, category: catLabel, active: true, images,
+    price_min: priceMin, price_max: priceMax,
     axis_order: axesConfig.axis_order, axes: axesConfig.axes, variants,
     description: info.desc, seo: { title: info.seoTitle || info.name, description: info.seoDesc }
   }, null, 2);
+
+  const setTask = (id, patch) => setTasks(prev => prev.map(t => t.id === id ? { ...t, ...patch } : t));
+
+  // ── Run all tasks automatically on mount ─────────────────────────────────
+  useEffect(() => {
+    const token = localStorage.getItem(GH_TOKEN_KEY);
+
+    async function runAll() {
+      // 1. Firebase
+      setTask("firebase", { status: "running", detail: "" });
+      try {
+        const fbAuth = window.__NOVA_FIREBASE__?.auth;
+        const currentUser = fbAuth?.currentUser;
+        if (!currentUser) throw new Error("Non authentifié");
+        const fbToken = await currentUser.getIdToken();
+        const res = await fetch(`${DB}/catalog/${info.slug}.json?auth=${fbToken}`, {
+          method: "PUT", headers: { "Content-Type": "application/json" }, body: catalogEntry
+        });
+        if (!res.ok) throw new Error(`Firebase ${res.status}`);
+        setTask("firebase", { status: "ok", detail: `catalog/${info.slug}` });
+      } catch(e) {
+        setTask("firebase", { status: "error", detail: e.message });
+      }
+
+      if (!token) {
+        setTask("product",  { status: "error", detail: "Token GitHub manquant — configurez-le dans Paramètres" });
+        setTask("index",    { status: "error", detail: "Token GitHub manquant" });
+        setDone(true);
+        return;
+      }
+
+      // 2. products/{slug}.json
+      setTask("product", { status: "running", detail: "" });
+      try {
+        const b64 = btoa(unescape(encodeURIComponent(productJson)));
+        await ghUpload(token, `novastyle/products/${info.slug}.json`, b64, `Add product ${info.slug}`);
+        setTask("product", { status: "ok", detail: `novastyle/products/${info.slug}.json` });
+      } catch(e) {
+        setTask("product", { status: "error", detail: e.message });
+      }
+
+      // 3. products-index.json — fetch current, insert new entry, push back
+      setTask("index", { status: "running", detail: "" });
+      try {
+        // Get current file + SHA
+        const fileRes = await fetch(
+          `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/novastyle/products-index.json`,
+          { headers: { Authorization: `token ${token}`, Accept: "application/vnd.github+json" } }
+        );
+        if (!fileRes.ok) throw new Error(`Cannot read products-index.json (${fileRes.status})`);
+        const fileData = await fileRes.json();
+        const currentContent = JSON.parse(atob(fileData.content.replace(/\n/g, "")));
+
+        // Remove existing entry with same slug (idempotent)
+        const products = (currentContent.products || []).filter(p => p.slug !== info.slug);
+        products.push(indexEntry);
+        currentContent.products = products;
+
+        const newB64 = btoa(unescape(encodeURIComponent(JSON.stringify(currentContent, null, 2))));
+        await fetch(
+          `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/novastyle/products-index.json`,
+          {
+            method: "PUT",
+            headers: { Authorization: `token ${token}`, "Content-Type": "application/json", Accept: "application/vnd.github+json" },
+            body: JSON.stringify({ message: `Add ${info.slug} to products-index`, content: newB64, sha: fileData.sha, branch: GH_BRANCH })
+          }
+        );
+        setTask("index", { status: "ok", detail: `${products.length} produits dans l'index` });
+      } catch(e) {
+        setTask("index", { status: "error", detail: e.message });
+      }
+
+      setDone(true);
+    }
+
+    runAll();
+  }, []);
 
   const copy = (text, key) => {
     navigator.clipboard.writeText(text).then(() => { setCopiedKey(key); setTimeout(() => setCopiedKey(""), 1800); });
@@ -823,46 +888,15 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
       background: copiedKey===id ? "#091509" : "#1e1e1e",
       border: copiedKey===id ? "1px solid #00c85340" : "1px solid #2a2a2a",
       color: copiedKey===id ? "#00c853" : "#888",
-      padding:"5px 12px", borderRadius:5, fontSize:11, cursor:"pointer", transition:"all .15s", marginLeft:"auto"
+      padding:"5px 12px", borderRadius:5, fontSize:11, cursor:"pointer", marginLeft:8
     }}>
       {copiedKey===id ? "✓ Copié !" : `📋 ${label}`}
     </button>
   );
 
-  // Push JSON files to GitHub
-  const pushToGitHub = async () => {
-    const token = localStorage.getItem(GH_TOKEN_KEY);
-    if (!token) { alert("Token GitHub manquant."); return; }
-    setGhPush(true); setGhResult(null);
-    const results = [];
-    // 1. /novastyle/products/{slug}.json
-    try {
-      const b64 = btoa(unescape(encodeURIComponent(productJson)));
-      await ghUpload(token, `novastyle/products/${info.slug}.json`, b64, `Add product ${info.slug}`);
-      results.push({ ok: true, path: `novastyle/products/${info.slug}.json` });
-    } catch(e) { results.push({ ok: false, path: `products/${info.slug}.json`, err: e.message }); }
-
-    setGhResult(results);
-    setGhPush(false);
-  };
-
-  const saveToFirebase = async () => {
-    setSaving(true); setSaveErr(""); setSaved(false);
-    try {
-      const fbAuth = window.__NOVA_FIREBASE__?.auth;
-      const currentUser = fbAuth?.currentUser;
-      if (!currentUser) throw new Error("Non authentifié — reconnectez-vous.");
-      const token = await currentUser.getIdToken();
-      const res = await fetch(`${DB}/catalog/${info.slug}.json?auth=${token}`, {
-        method: "PUT", headers: { "Content-Type": "application/json" }, body: catalogEntry
-      });
-      if (!res.ok) { const msg = await res.text().catch(() => ""); throw new Error(`Firebase ${res.status}: ${msg.slice(0,120)}`); }
-      setSaved(true);
-    } catch(e) { setSaveErr(e.message); }
-    finally { setSaving(false); }
-  };
-
-  const boxStyle = { background:"#0a0a0a", border:"1px solid #1e1e1e", borderRadius:8, padding:"12px 14px", fontFamily:"'Courier New',monospace", fontSize:11, color:"#7ec8e3", lineHeight:1.6, maxHeight:200, overflowY:"auto", overflowX:"auto", whiteSpace:"pre", marginTop:8 };
+  const statusIcon = (s) => s === "pending" ? "⏳" : s === "running" ? "🔄" : s === "ok" ? "✅" : "❌";
+  const statusColor = (s) => s === "ok" ? "#00c853" : s === "error" ? "#e8194b" : s === "running" ? "#ffb300" : "#555";
+  const boxStyle = { background:"#0a0a0a", border:"1px solid #1e1e1e", borderRadius:8, padding:"12px 14px", fontFamily:"'Courier New',monospace", fontSize:11, color:"#7ec8e3", lineHeight:1.6, maxHeight:180, overflowY:"auto", overflowX:"auto", whiteSpace:"pre", marginTop:8 };
 
   return (
     <div>
@@ -872,115 +906,55 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
           {[["Produit",info.name],["Variantes",variants.length],["Prix min",priceMin?priceMin+" MAD":"—"],["Prix max",priceMax?priceMax+" MAD":"—"]].map(([l,v]) => (
             <div key={l}>
               <div style={{ fontSize:9, color:"#444", textTransform:"uppercase", letterSpacing:1.5, fontWeight:700 }}>{l}</div>
-              <div style={{ fontSize:16, fontWeight:800, color:"#e8194b", marginTop:3 }}>{v}</div>
+              <div style={{ fontSize:15, fontWeight:800, color:"#e8194b", marginTop:3 }}>{v}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Push to GitHub */}
-      <div style={{ background:"#071010", border:"1px solid #003a3a", borderRadius:12, padding:16, marginBottom:12 }}>
-        <div style={{ display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
-          <div>
-            <div style={{ fontWeight:800, color:"#00bcd4", fontSize:13 }}>⬆ Pousser les fichiers JSON sur GitHub</div>
-            <div style={{ fontSize:11, color:"#555", marginTop:3 }}>
-              Crée <code style={{color:"#7ec8e3"}}>products/{info.slug}.json</code> directement dans le repo
-            </div>
-          </div>
-          <button onClick={pushToGitHub} disabled={ghPushing} style={{
-            marginLeft:"auto", background: ghPushing ? "#2a2a2a" : "#005f5f", color: ghPushing ? "#555" : "#fff",
-            border:"none", padding:"11px 22px", borderRadius:8, fontWeight:800, fontSize:13, cursor: ghPushing ? "not-allowed" : "pointer"
-          }}>
-            {ghPushing ? "⏳ Push…" : "⬆ Push GitHub"}
-          </button>
+      {/* Auto-tasks progress */}
+      <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:20, marginBottom:20 }}>
+        <div style={{ fontWeight:800, fontSize:13, color:"#f0f0f0", marginBottom:16 }}>
+          {done ? (tasks.every(t=>t.status==="ok") ? "✅ Tout est enregistré automatiquement !" : "⚠ Terminé avec des erreurs") : "🔄 Enregistrement en cours…"}
         </div>
-        {ghResult && (
-          <div style={{ marginTop:10 }}>
-            {ghResult.map((r, i) => (
-              <div key={i} style={{ fontSize:11, color: r.ok ? "#00c853" : "#e8194b", padding:"2px 0" }}>
-                {r.ok ? `✓ ${r.path}` : `✗ ${r.path}: ${r.err}`}
-              </div>
-            ))}
-            {ghResult.every(r=>r.ok) && (
-              <div style={{ fontSize:11, color:"#888", marginTop:6 }}>
-                ⚠ Ajoutez manuellement l'entrée dans <code style={{color:"#7ec8e3"}}>products-index.json</code> (voir ① ci-dessous).
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Firebase Save */}
-      <div style={{ background: saved ? "#091509" : "#0d0800", border:`1px solid ${saved ? "#00c85340" : "#3a2000"}`, borderRadius:12, padding:16, marginBottom:20 }}>
-        <div style={{ display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
-          <div>
-            <div style={{ fontWeight:800, color: saved ? "#00c853" : "#ffb300", fontSize:13 }}>
-              {saved ? "✅ Enregistré dans Firebase !" : "🔥 Enregistrer dans Firebase /catalog"}
-            </div>
-            <div style={{ fontSize:11, color:"#666", marginTop:3 }}>
-              {saved ? `catalog/${info.slug}` : "Rend le produit visible immédiatement via rendu dynamique"}
-            </div>
-          </div>
-          <button onClick={saveToFirebase} disabled={saving||saved} style={{
-            marginLeft:"auto", background: saved ? "#00c853" : "#e8194b", color:"#fff",
-            border:"none", padding:"11px 24px", borderRadius:8, fontWeight:800, fontSize:13,
-            cursor: saving||saved ? "not-allowed" : "pointer", opacity: saving ? 0.6 : 1
-          }}>
-            {saving ? "⏳…" : saved ? "✓ Enregistré" : "🚀 Enregistrer Firebase"}
-          </button>
-        </div>
-        {saveErr && <div style={{ fontSize:12, color:"#e8194b", marginTop:8 }}>❌ {saveErr}</div>}
-      </div>
-
-      {/* ① products-index entry */}
-      <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:12 }}>
-        <div style={{ display:"flex", alignItems:"center" }}>
-          <div>
-            <div style={{ fontWeight:800, fontSize:13, color:"#f0f0f0" }}>① Entrée products-index.json</div>
-            <div style={{ fontSize:11, color:"#555", marginTop:2 }}>Ajouter dans le tableau <code style={{color:"#e8194b"}}>products-index.json</code> sur GitHub</div>
-          </div>
-          <CopyBtn text={indexEntry} id="index" label="Copier" />
-        </div>
-        <div style={boxStyle}>{indexEntry}</div>
-      </div>
-
-      {/* ② Full product JSON */}
-      <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:12 }}>
-        <div style={{ display:"flex", alignItems:"center" }}>
-          <div>
-            <div style={{ fontWeight:800, fontSize:13, color:"#f0f0f0" }}>② products/{info.slug}.json (complet)</div>
-            <div style={{ fontSize:11, color:"#555", marginTop:2 }}>Déjà pushé via le bouton ci-dessus · ou import manuel</div>
-          </div>
-          <CopyBtn text={productJson} id="productjson" label="Copier" />
-        </div>
-        <div style={boxStyle}>{productJson.substring(0,600)}{productJson.length>600?"\n…":"" }</div>
-      </div>
-
-      {/* Checklist */}
-      <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:20 }}>
-        <div style={{ fontWeight:800, fontSize:13, color:"#f0f0f0", marginBottom:12 }}>✅ Checklist</div>
-        {[
-          ["Photos uploadées", "Via le bouton upload dans Étape 1 → /images/{slug}/"],
-          [`products/${info.slug}.json`, "Pushé via ⬆ GitHub ci-dessus"],
-          ["products-index.json", "Ajouter l'entrée ① manuellement sur GitHub"],
-          [`Créer /produits/${info.slug}/index.html`, "Copier un index.html existant, mettre le data-slug"],
-          ["Commit + push", "Le déploiement Netlify se lance automatiquement"],
-        ].map(([title, detail]) => (
-          <div key={title} style={{ display:"flex", gap:10, padding:"8px 0", borderBottom:"1px solid #1a1a1a" }}>
-            <span style={{ color:"#e8194b", fontSize:14, flexShrink:0 }}>□</span>
-            <div>
-              <div style={{ fontSize:12, fontWeight:700, color:"#e0e0e0" }}>{title}</div>
-              <div style={{ fontSize:11, color:"#555", marginTop:2 }}>{detail}</div>
+        {tasks.map(t => (
+          <div key={t.id} style={{ display:"flex", alignItems:"flex-start", gap:12, padding:"10px 0", borderBottom:"1px solid #1a1a1a" }}>
+            <span style={{ fontSize:16, flexShrink:0, marginTop:1 }}>{statusIcon(t.status)}</span>
+            <div style={{ flex:1 }}>
+              <div style={{ fontSize:13, fontWeight:700, color: statusColor(t.status) }}>{t.label}</div>
+              {t.detail && <div style={{ fontSize:11, color: t.status==="error" ? "#e8194b" : "#555", marginTop:3 }}>{t.detail}</div>}
             </div>
           </div>
         ))}
       </div>
 
-      <div style={{ display:"flex", gap:12 }}>
-        <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#888", padding:"11px 24px", borderRadius:8, fontWeight:700, fontSize:13, cursor:"pointer" }}>← Retour</button>
-        <button onClick={() => window.location.reload()} style={{ background:"#141414", border:"1px solid #e8194b30", color:"#e8194b", padding:"11px 24px", borderRadius:8, fontWeight:700, fontSize:13, cursor:"pointer" }}>
+      {/* Remaining manual step + JSON copies */}
+      {done && (
+        <div>
+          <div style={{ background:"#0d0800", border:"1px solid #3a2000", borderRadius:12, padding:16, marginBottom:16 }}>
+            <div style={{ fontWeight:800, color:"#ffb300", fontSize:13, marginBottom:8 }}>📋 Dernière étape manuelle</div>
+            <div style={{ fontSize:12, color:"#ccc", lineHeight:1.7 }}>
+              Créer la page produit <code style={{color:"#7ec8e3"}}>/produits/{info.slug}/index.html</code> :<br/>
+              Copiez n'importe quel <code style={{color:"#7ec8e3"}}>index.html</code> existant dans <code style={{color:"#7ec8e3"}}>/produits/</code> et changez le <code style={{color:"#7ec8e3"}}>data-slug</code> en <strong style={{color:"#fff"}}>{info.slug}</strong>.
+            </div>
+          </div>
+
+          <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:12 }}>
+            <div style={{ display:"flex", alignItems:"center", marginBottom:6 }}>
+              <div style={{ fontWeight:800, fontSize:12, color:"#f0f0f0" }}>products/{info.slug}.json</div>
+              <CopyBtn text={productJson} id="productjson" label="Copier" />
+            </div>
+            <div style={boxStyle}>{productJson.substring(0,500)}{productJson.length>500?"\n…":""}</div>
+          </div>
+        </div>
+      )}
+
+      <div style={{ display:"flex", gap:12, marginTop:8 }}>
+        {!done && <button disabled style={{ background:"#1a1a1a", color:"#444", border:"1px solid #222", padding:"11px 24px", borderRadius:8, fontWeight:700, fontSize:13, cursor:"not-allowed" }}>← Retour</button>}
+        {done && <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#888", padding:"11px 24px", borderRadius:8, fontWeight:700, fontSize:13, cursor:"pointer" }}>← Retour</button>}
+        {done && <button onClick={() => window.location.reload()} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"11px 28px", borderRadius:8, fontWeight:800, fontSize:13, cursor:"pointer" }}>
           + Nouveau produit
-        </button>
+        </button>}
       </div>
     </div>
   );
