@@ -1,10 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin.html
-Disallow: /cart.html
-Disallow: /confirmation.html
-Disallow: /404.html
-Disallow: /products.json
-Disallow: /descriptions_enhanced.json
 
 Sitemap: https://novastyle.ma/sitemap.xml
