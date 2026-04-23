@@ -3074,11 +3074,6 @@
               <button onclick="saveProduct()"
                 style="background:#1a1a1a;color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:700">💾
                 Enregistrer</button>
-              <div style="margin-top:16px">
-                <label style="font-size:12px;font-weight:700;color:#555">GitHub Token</label><br>
-                <input id="github-token" placeholder="ghp_xxxxxxxxxxxxxxxxx"
-                  style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;margin-top:4px;box-sizing:border-box">
-              </div>
               <button onclick="regeneratePage()"
                 style="background:#e8194b;color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:700">⚡
                 Régénérer la page</button>
@@ -5165,74 +5160,8 @@
       document.getElementById('product-edit-modal').style.display = 'none';
       _editingSlug = null;
     };
-
-
   </script>
-  <script>
-    function regeneratePage() {
-      const statusEl = document.getElementById("modal-status");
 
-      try {
-        const tokenInput = document.getElementById("github-token");
-
-        if (!tokenInput || !tokenInput.value.trim()) {
-          statusEl.innerText = "❌ GitHub token manquant";
-          return;
-        }
-
-        const token = tokenInput.value.trim();
-        statusEl.innerText = "⏳ En cours...";
-
-        const owner = "energiemogador-max";
-        const repo = "novastyle";
-        const path = "admin.html";
-
-        fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-          headers: {
-            "Authorization": "token " + token,
-            "Accept": "application/vnd.github+json"
-          }
-        })
-          .then(res => {
-            if (!res.ok) throw new Error("GET failed: " + res.status);
-            return res.json();
-          })
-          .then(data => {
-            const sha = data.sha;
-
-            const newContent = btoa(unescape(encodeURIComponent(data.content)));
-
-            return fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-              method: "PUT",
-              headers: {
-                "Authorization": "token " + token,
-                "Accept": "application/vnd.github+json"
-              },
-              body: JSON.stringify({
-                message: "⚡ Regenerated from admin",
-                content: newContent,
-                sha: sha
-              })
-            });
-          })
-          .then(res => {
-            if (!res.ok) throw new Error("PUT failed: " + res.status);
-            return res.json();
-          })
-          .then(() => {
-            statusEl.innerText = "✅ Done";
-          })
-          .catch(err => {
-            statusEl.innerText = "❌ " + err.message;
-            console.error(err);
-          });
-
-      } catch (e) {
-        statusEl.innerText = "❌ Unexpected error";
-        console.error(e);
-      }
-    }
-  </script>
 </body>
 
 </html>
