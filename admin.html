@@ -5384,7 +5384,7 @@
           // Replace React ESM import with UMD React hooks
           src = src.replace(
             /^\s*import\s+\{[^}]+\}\s+from\s+["']react["'];?\s*$/m,
-            "const { useState, useCallback, useMemo, useEffect } = React;"
+            "const { useState, useCallback, useMemo, useEffect, useRef } = React;"
           );
 
           // Convert `export default function App(` → `function NouveauProduitApp(`
