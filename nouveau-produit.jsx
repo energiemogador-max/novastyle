@@ -1,450 +1,545 @@
 
-// Nova Style — Nouveau Produit Creator
-// Integrates with Firebase /catalog + generates products.json entry + PRODUCT JS
-import { useState, useCallback, useMemo, useEffect } from "react";
+// Nova Style — Nouveau Produit Creator v2
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 
-// ─── Reference products from the 5 real product pages ───────────────────────
-const REFERENCE_PRODUCTS = {
-  "miroir-maroc-nova-style-miroir-anfa": {
-    label: "Miroir Anfa (SDB LED)",
-    axis_order: ["Dimension", "LED", "Installation"],
-    axes: {
-      Dimension: ["80 L x 140 H cm","80 L x 120 H cm","75 L x 130 H cm","60 L x 120 H cm","55 L x 110 H cm","50 L x 140 H cm","50 L x 100 H cm","45 L x 90 H cm"],
-      LED: ["Sans LED","6000K Blanc pur","4000K blanc lumière du jour","3000K Jaune","2000k Doré"],
-      Installation: ["Sans Installation","Avec Installation"]
-    },
-    variants: [
-      {axes:{Dimension:"80 L x 140 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:1050},
-      {axes:{Dimension:"80 L x 140 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1150},
-      {axes:{Dimension:"80 L x 140 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1150},
-      {axes:{Dimension:"80 L x 140 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1250},
-      {axes:{Dimension:"80 L x 140 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1150},
-      {axes:{Dimension:"80 L x 140 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1250},
-      {axes:{Dimension:"80 L x 140 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1150},
-      {axes:{Dimension:"80 L x 140 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1250},
-      {axes:{Dimension:"80 L x 140 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:1150},
-      {axes:{Dimension:"80 L x 140 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:1250},
-      {axes:{Dimension:"80 L x 120 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:950},
-      {axes:{Dimension:"80 L x 120 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1050},
-      {axes:{Dimension:"80 L x 120 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1050},
-      {axes:{Dimension:"80 L x 120 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1150},
-      {axes:{Dimension:"80 L x 120 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1050},
-      {axes:{Dimension:"80 L x 120 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1150},
-      {axes:{Dimension:"80 L x 120 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1050},
-      {axes:{Dimension:"80 L x 120 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1150},
-      {axes:{Dimension:"80 L x 120 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:1050},
-      {axes:{Dimension:"80 L x 120 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:1150},
-      {axes:{Dimension:"75 L x 130 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:900},
-      {axes:{Dimension:"75 L x 130 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1000},
-      {axes:{Dimension:"75 L x 130 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1000},
-      {axes:{Dimension:"75 L x 130 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1100},
-      {axes:{Dimension:"75 L x 130 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1000},
-      {axes:{Dimension:"75 L x 130 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1100},
-      {axes:{Dimension:"75 L x 130 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1000},
-      {axes:{Dimension:"75 L x 130 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1100},
-      {axes:{Dimension:"75 L x 130 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:1000},
-      {axes:{Dimension:"75 L x 130 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:1100},
-      {axes:{Dimension:"60 L x 120 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:750},
-      {axes:{Dimension:"60 L x 120 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:850},
-      {axes:{Dimension:"60 L x 120 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:850},
-      {axes:{Dimension:"60 L x 120 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:950},
-      {axes:{Dimension:"60 L x 120 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:850},
-      {axes:{Dimension:"60 L x 120 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:950},
-      {axes:{Dimension:"60 L x 120 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:850},
-      {axes:{Dimension:"60 L x 120 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:950},
-      {axes:{Dimension:"60 L x 120 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:850},
-      {axes:{Dimension:"60 L x 120 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:950},
-      {axes:{Dimension:"55 L x 110 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:650},
-      {axes:{Dimension:"55 L x 110 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:750},
-      {axes:{Dimension:"55 L x 110 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:750},
-      {axes:{Dimension:"55 L x 110 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:850},
-      {axes:{Dimension:"55 L x 110 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:750},
-      {axes:{Dimension:"55 L x 110 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:850},
-      {axes:{Dimension:"55 L x 110 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:750},
-      {axes:{Dimension:"55 L x 110 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:850},
-      {axes:{Dimension:"55 L x 110 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:750},
-      {axes:{Dimension:"55 L x 110 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:850},
-      {axes:{Dimension:"50 L x 140 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:600},
-      {axes:{Dimension:"50 L x 140 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:700},
-      {axes:{Dimension:"50 L x 140 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:700},
-      {axes:{Dimension:"50 L x 140 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:800},
-      {axes:{Dimension:"50 L x 140 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:700},
-      {axes:{Dimension:"50 L x 140 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:800},
-      {axes:{Dimension:"50 L x 140 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:700},
-      {axes:{Dimension:"50 L x 140 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:800},
-      {axes:{Dimension:"50 L x 140 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:700},
-      {axes:{Dimension:"50 L x 140 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:800},
-      {axes:{Dimension:"50 L x 100 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:560},
-      {axes:{Dimension:"50 L x 100 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:660},
-      {axes:{Dimension:"50 L x 100 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:660},
-      {axes:{Dimension:"50 L x 100 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:760},
-      {axes:{Dimension:"50 L x 100 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:660},
-      {axes:{Dimension:"50 L x 100 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:760},
-      {axes:{Dimension:"50 L x 100 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:660},
-      {axes:{Dimension:"50 L x 100 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:760},
-      {axes:{Dimension:"50 L x 100 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:660},
-      {axes:{Dimension:"50 L x 100 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:760},
-      {axes:{Dimension:"45 L x 90 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:460},
-      {axes:{Dimension:"45 L x 90 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:560},
-      {axes:{Dimension:"45 L x 90 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:560},
-      {axes:{Dimension:"45 L x 90 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:660},
-      {axes:{Dimension:"45 L x 90 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:560},
-      {axes:{Dimension:"45 L x 90 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:660},
-      {axes:{Dimension:"45 L x 90 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:560},
-      {axes:{Dimension:"45 L x 90 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:660},
-      {axes:{Dimension:"45 L x 90 H cm",LED:"2000k Doré",Installation:"Sans Installation"},price:560},
-      {axes:{Dimension:"45 L x 90 H cm",LED:"2000k Doré",Installation:"Avec Installation"},price:660}
-    ]
-  },
-  "nova-style-miroir-rectangulaire-bright": {
-    label: "Rectangulaire Bright (LED)",
-    axis_order: ["Dimension", "LED", "Installation"],
-    axes: {
-      Dimension: ["80 X 60 cm","80 X 80 cm","80 X 100 cm","120 X 80 cm","140 X 95 cm","150 X 100 cm","155 X 105 cm","160 X 110 cm","170 X 95 cm","200 X 110 cm"],
-      LED: ["6000K Blanc pur","4000K blanc lumière du jour","3000K Jaune","2000K Doré"],
-      Installation: ["Sans Installation","Avec Installation"]
-    },
-    variants: [
-      {axes:{Dimension:"80 X 60 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:800},
-      {axes:{Dimension:"80 X 60 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:900},
-      {axes:{Dimension:"80 X 60 cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:800},
-      {axes:{Dimension:"80 X 60 cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:900},
-      {axes:{Dimension:"80 X 60 cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:800},
-      {axes:{Dimension:"80 X 60 cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:900},
-      {axes:{Dimension:"80 X 60 cm",LED:"2000K Doré",Installation:"Sans Installation"},price:800},
-      {axes:{Dimension:"80 X 60 cm",LED:"2000K Doré",Installation:"Avec Installation"},price:900},
-      {axes:{Dimension:"80 X 80 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:900},
-      {axes:{Dimension:"80 X 80 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1000},
-      {axes:{Dimension:"80 X 80 cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:900},
-      {axes:{Dimension:"80 X 80 cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1000},
-      {axes:{Dimension:"80 X 80 cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:900},
-      {axes:{Dimension:"80 X 80 cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1000},
-      {axes:{Dimension:"80 X 80 cm",LED:"2000K Doré",Installation:"Sans Installation"},price:900},
-      {axes:{Dimension:"80 X 80 cm",LED:"2000K Doré",Installation:"Avec Installation"},price:1000},
-      {axes:{Dimension:"80 X 100 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1000},
-      {axes:{Dimension:"80 X 100 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1100},
-      {axes:{Dimension:"80 X 100 cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1000},
-      {axes:{Dimension:"80 X 100 cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1100},
-      {axes:{Dimension:"80 X 100 cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1000},
-      {axes:{Dimension:"80 X 100 cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1100},
-      {axes:{Dimension:"80 X 100 cm",LED:"2000K Doré",Installation:"Sans Installation"},price:1000},
-      {axes:{Dimension:"80 X 100 cm",LED:"2000K Doré",Installation:"Avec Installation"},price:1100},
-      {axes:{Dimension:"120 X 80 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1200},
-      {axes:{Dimension:"120 X 80 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1300},
-      {axes:{Dimension:"120 X 80 cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1200},
-      {axes:{Dimension:"120 X 80 cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1300},
-      {axes:{Dimension:"120 X 80 cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1200},
-      {axes:{Dimension:"120 X 80 cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1300},
-      {axes:{Dimension:"120 X 80 cm",LED:"2000K Doré",Installation:"Sans Installation"},price:1200},
-      {axes:{Dimension:"120 X 80 cm",LED:"2000K Doré",Installation:"Avec Installation"},price:1300},
-      {axes:{Dimension:"140 X 95 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1400},
-      {axes:{Dimension:"140 X 95 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1500},
-      {axes:{Dimension:"140 X 95 cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1400},
-      {axes:{Dimension:"140 X 95 cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1500},
-      {axes:{Dimension:"140 X 95 cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1400},
-      {axes:{Dimension:"140 X 95 cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1500},
-      {axes:{Dimension:"140 X 95 cm",LED:"2000K Doré",Installation:"Sans Installation"},price:1400},
-      {axes:{Dimension:"140 X 95 cm",LED:"2000K Doré",Installation:"Avec Installation"},price:1500},
-      {axes:{Dimension:"150 X 100 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1600},
-      {axes:{Dimension:"150 X 100 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1700},
-      {axes:{Dimension:"150 X 100 cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1600},
-      {axes:{Dimension:"150 X 100 cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1700},
-      {axes:{Dimension:"150 X 100 cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1600},
-      {axes:{Dimension:"150 X 100 cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1700},
-      {axes:{Dimension:"150 X 100 cm",LED:"2000K Doré",Installation:"Sans Installation"},price:1600},
-      {axes:{Dimension:"150 X 100 cm",LED:"2000K Doré",Installation:"Avec Installation"},price:1700},
-      {axes:{Dimension:"155 X 105 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1700},
-      {axes:{Dimension:"155 X 105 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1800},
-      {axes:{Dimension:"155 X 105 cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1700},
-      {axes:{Dimension:"155 X 105 cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1800},
-      {axes:{Dimension:"155 X 105 cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1700},
-      {axes:{Dimension:"155 X 105 cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1800},
-      {axes:{Dimension:"155 X 105 cm",LED:"2000K Doré",Installation:"Sans Installation"},price:1700},
-      {axes:{Dimension:"155 X 105 cm",LED:"2000K Doré",Installation:"Avec Installation"},price:1800},
-      {axes:{Dimension:"160 X 110 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1800},
-      {axes:{Dimension:"160 X 110 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1900},
-      {axes:{Dimension:"160 X 110 cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1800},
-      {axes:{Dimension:"160 X 110 cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1900},
-      {axes:{Dimension:"160 X 110 cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1800},
-      {axes:{Dimension:"160 X 110 cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1900},
-      {axes:{Dimension:"160 X 110 cm",LED:"2000K Doré",Installation:"Sans Installation"},price:1800},
-      {axes:{Dimension:"160 X 110 cm",LED:"2000K Doré",Installation:"Avec Installation"},price:1900},
-      {axes:{Dimension:"170 X 95 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:2000},
-      {axes:{Dimension:"170 X 95 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:2100},
-      {axes:{Dimension:"170 X 95 cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:2000},
-      {axes:{Dimension:"170 X 95 cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:2100},
-      {axes:{Dimension:"170 X 95 cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:2000},
-      {axes:{Dimension:"170 X 95 cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:2100},
-      {axes:{Dimension:"170 X 95 cm",LED:"2000K Doré",Installation:"Sans Installation"},price:2000},
-      {axes:{Dimension:"170 X 95 cm",LED:"2000K Doré",Installation:"Avec Installation"},price:2100},
-      {axes:{Dimension:"200 X 110 cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:2200},
-      {axes:{Dimension:"200 X 110 cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:2300},
-      {axes:{Dimension:"200 X 110 cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:2200},
-      {axes:{Dimension:"200 X 110 cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:2300},
-      {axes:{Dimension:"200 X 110 cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:2200},
-      {axes:{Dimension:"200 X 110 cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:2300},
-      {axes:{Dimension:"200 X 110 cm",LED:"2000K Doré",Installation:"Sans Installation"},price:2200},
-      {axes:{Dimension:"200 X 110 cm",LED:"2000K Doré",Installation:"Avec Installation"},price:2300}
-    ]
-  },
-  "nova-style-deux-miroirs-anfa-medina": {
-    label: "Deux Miroirs Anfa & Medina",
-    axis_order: ["Dimension", "LED", "Installation"],
-    axes: {
-      Dimension: ["65 L cm x 125 H cm + 60 L cm x 125 H cm","60 L x 110 H cm +55 L x 110 H cm","55 L x 115 H cm + 50 L x 115 H cm","50 L x 100 H cm + 45 L x 100 H cm"],
-      LED: ["Sans LED","6000K Blanc pur","4000K blanc lumière du jour","3000K Jaune","2000K Doré"],
-      Installation: ["Sans Installation","Avec Installation"]
-    },
-    variants: [
-      {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:1250},
-      {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1350},
-      {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1350},
-      {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1450},
-      {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1350},
-      {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1450},
-      {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1350},
-      {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1450},
-      {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"2000K Doré",Installation:"Sans Installation"},price:1350},
-      {axes:{Dimension:"65 L cm x 125 H cm + 60 L cm x 125 H cm",LED:"2000K Doré",Installation:"Avec Installation"},price:1450},
-      {axes:{Dimension:"60 L x 110 H cm +55 L x 110 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:1100},
-      {axes:{Dimension:"60 L x 110 H cm +55 L x 110 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1200},
-      {axes:{Dimension:"60 L x 110 H cm +55 L x 110 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1200},
-      {axes:{Dimension:"60 L x 110 H cm +55 L x 110 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1300},
-      {axes:{Dimension:"60 L x 110 H cm +55 L x 110 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1200},
-      {axes:{Dimension:"60 L x 110 H cm +55 L x 110 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1300},
-      {axes:{Dimension:"60 L x 110 H cm +55 L x 110 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1200},
-      {axes:{Dimension:"60 L x 110 H cm +55 L x 110 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1300},
-      {axes:{Dimension:"60 L x 110 H cm +55 L x 110 H cm",LED:"2000K Doré",Installation:"Sans Installation"},price:1200},
-      {axes:{Dimension:"60 L x 110 H cm +55 L x 110 H cm",LED:"2000K Doré",Installation:"Avec Installation"},price:1300},
-      {axes:{Dimension:"55 L x 115 H cm + 50 L x 115 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:1050},
-      {axes:{Dimension:"55 L x 115 H cm + 50 L x 115 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1150},
-      {axes:{Dimension:"55 L x 115 H cm + 50 L x 115 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1150},
-      {axes:{Dimension:"55 L x 115 H cm + 50 L x 115 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1250},
-      {axes:{Dimension:"55 L x 115 H cm + 50 L x 115 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1150},
-      {axes:{Dimension:"55 L x 115 H cm + 50 L x 115 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1250},
-      {axes:{Dimension:"55 L x 115 H cm + 50 L x 115 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1150},
-      {axes:{Dimension:"55 L x 115 H cm + 50 L x 115 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1250},
-      {axes:{Dimension:"55 L x 115 H cm + 50 L x 115 H cm",LED:"2000K Doré",Installation:"Sans Installation"},price:1150},
-      {axes:{Dimension:"55 L x 115 H cm + 50 L x 115 H cm",LED:"2000K Doré",Installation:"Avec Installation"},price:1250},
-      {axes:{Dimension:"50 L x 100 H cm + 45 L x 100 H cm",LED:"Sans LED",Installation:"Sans Installation"},price:1000},
-      {axes:{Dimension:"50 L x 100 H cm + 45 L x 100 H cm",LED:"Sans LED",Installation:"Avec Installation"},price:1100},
-      {axes:{Dimension:"50 L x 100 H cm + 45 L x 100 H cm",LED:"6000K Blanc pur",Installation:"Sans Installation"},price:1100},
-      {axes:{Dimension:"50 L x 100 H cm + 45 L x 100 H cm",LED:"6000K Blanc pur",Installation:"Avec Installation"},price:1200},
-      {axes:{Dimension:"50 L x 100 H cm + 45 L x 100 H cm",LED:"4000K blanc lumière du jour",Installation:"Sans Installation"},price:1100},
-      {axes:{Dimension:"50 L x 100 H cm + 45 L x 100 H cm",LED:"4000K blanc lumière du jour",Installation:"Avec Installation"},price:1200},
-      {axes:{Dimension:"50 L x 100 H cm + 45 L x 100 H cm",LED:"3000K Jaune",Installation:"Sans Installation"},price:1100},
-      {axes:{Dimension:"50 L x 100 H cm + 45 L x 100 H cm",LED:"3000K Jaune",Installation:"Avec Installation"},price:1200},
-      {axes:{Dimension:"50 L x 100 H cm + 45 L x 100 H cm",LED:"2000K Doré",Installation:"Sans Installation"},price:1100},
-      {axes:{Dimension:"50 L x 100 H cm + 45 L x 100 H cm",LED:"2000K Doré",Installation:"Avec Installation"},price:1200}
-    ]
-  },
-  "nova-style-miroir-archway": {
-    label: "Archway (Finition / Installation)",
-    axis_order: ["Dimension", "Installation", "Finition"],
-    axes: {
-      Dimension: ["L 74 x H 170 cm","L 60x H 120 cm"],
-      Installation: ["Sans Installation","Avec Installation"],
-      Finition: ["Bronze","Noir"]
-    },
-    variants: [
-      {axes:{Dimension:"L 74 x H 170 cm",Installation:"Sans Installation",Finition:"Bronze"},price:2400},
-      {axes:{Dimension:"L 74 x H 170 cm",Installation:"Sans Installation",Finition:"Noir"},price:2400},
-      {axes:{Dimension:"L 74 x H 170 cm",Installation:"Avec Installation",Finition:"Bronze"},price:2500},
-      {axes:{Dimension:"L 74 x H 170 cm",Installation:"Avec Installation",Finition:"Noir"},price:2500},
-      {axes:{Dimension:"L 60x H 120 cm",Installation:"Sans Installation",Finition:"Bronze"},price:2000},
-      {axes:{Dimension:"L 60x H 120 cm",Installation:"Sans Installation",Finition:"Noir"},price:2000},
-      {axes:{Dimension:"L 60x H 120 cm",Installation:"Avec Installation",Finition:"Bronze"},price:2100},
-      {axes:{Dimension:"L 60x H 120 cm",Installation:"Avec Installation",Finition:"Noir"},price:2100}
-    ]
-  },
-  "nova-style-miroir-vortex": {
-    label: "Vortex (Dimension seule)",
-    axis_order: ["Dimension"],
-    axes: { Dimension: ["60-cm","80-cm","100-cm"] },
-    variants: [
-      {axes:{Dimension:"60-cm"},price:650},
-      {axes:{Dimension:"80-cm"},price:1100},
-      {axes:{Dimension:"100-cm"},price:1250}
-    ]
-  }
-};
+// ─── GitHub config ────────────────────────────────────────────────────────────
+const GH_OWNER  = "energiemogador-max";
+const GH_REPO   = "novastyle";
+const GH_BRANCH = "main";
+const GH_TOKEN_KEY = "nova_github_token";
 
-const CATEGORIES = ["Miroirs SDB Premium","Miroirs SDB Essentiel","Salon & Dressing","Consoles & Entrée","Douches Italiennes","Tables de Séjour"];
+async function ghUpload(token, repoPath, base64, message) {
+  let sha;
+  try {
+    const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${repoPath}`,
+      { headers: { Authorization: `token ${token}`, Accept: "application/vnd.github+json" } });
+    if (r.ok) { const d = await r.json(); sha = d.sha; }
+  } catch {}
+  const body = { message, content: base64, branch: GH_BRANCH };
+  if (sha) body.sha = sha;
+  const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${repoPath}`, {
+    method: "PUT",
+    headers: { Authorization: `token ${token}`, "Content-Type": "application/json", Accept: "application/vnd.github+json" },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) { const t = await res.text().catch(() => ""); throw new Error(`GitHub ${res.status}: ${t.slice(0,200)}`); }
+  return true;
+}
+
+async function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+const CATEGORIES = [
+  { id: "sdb-premium",   label: "Miroirs SDB Premium" },
+  { id: "sdb-essentiel", label: "Miroirs SDB Essentiel" },
+  { id: "salon",         label: "Salon & Dressing" },
+  { id: "consoles",      label: "Consoles & Entrée" },
+  { id: "douches",       label: "Douches Italiennes" },
+  { id: "tables",        label: "Tables de Séjour" },
+];
 const DB = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
+const steps = ["Info & Photos", "Copier un produit", "Axes", "Prix", "Exporter"];
 
-// Utility
-const slug = (s) => s.toLowerCase().replace(/[àâä]/g,"a").replace(/[éèêë]/g,"e").replace(/[îï]/g,"i").replace(/[ôö]/g,"o").replace(/[ùûü]/g,"u").replace(/[ç]/g,"c").replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");
+const slug = (s) => s.toLowerCase()
+  .replace(/[àâä]/g,"a").replace(/[éèêë]/g,"e").replace(/[îï]/g,"i")
+  .replace(/[ôö]/g,"o").replace(/[ùûü]/g,"u").replace(/[ç]/g,"c")
+  .replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");
 
 function generateAllVariants(axes, axis_order) {
   if (!axis_order.length) return [];
-  const result = [{}];
+  let result = [{}];
   for (const axis of axis_order) {
     const opts = axes[axis] || [];
     const next = [];
-    for (const combo of result) {
-      for (const opt of opts) {
+    for (const combo of result)
+      for (const opt of opts)
         next.push({ ...combo, [axis]: opt });
-      }
-    }
-    result.splice(0, result.length, ...next);
+    result = next;
   }
   return result;
 }
 
 // ─── STEP INDICATOR ──────────────────────────────────────────────────────────
-const steps = ["Info","Copier","Axes","Prix","Exporter"];
 function Stepper({ current }) {
   return (
-    <div style={{ display:"flex", alignItems:"center", gap:0, marginBottom:32 }}>
+    <div style={{ display:"flex", alignItems:"center", marginBottom:32, gap:0 }}>
       {steps.map((s, i) => (
         <div key={s} style={{ display:"flex", alignItems:"center", flex: i < steps.length-1 ? 1 : "none" }}>
           <div style={{
-            width:32, height:32, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center",
-            background: i < current ? "#e8194b" : i === current ? "#e8194b" : "#1a1a1a",
-            border: i === current ? "2px solid #e8194b" : i < current ? "2px solid #e8194b" : "2px solid #333",
-            color: i <= current ? "#fff" : "#555", fontSize:12, fontWeight:800, flexShrink:0
-          }}>
-            {i < current ? "✓" : i+1}
-          </div>
-          <span style={{ marginLeft:8, fontSize:11, fontWeight:700, color: i === current ? "#fff" : i < current ? "#e8194b" : "#555", textTransform:"uppercase", letterSpacing:1, flexShrink:0 }}>{s}</span>
-          {i < steps.length-1 && <div style={{ flex:1, height:2, background: i < current ? "#e8194b" : "#1e1e1e", margin:"0 12px" }} />}
+            width:30, height:30, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center",
+            background: i <= current ? "#e8194b" : "#1a1a1a",
+            border: `2px solid ${i <= current ? "#e8194b" : "#333"}`,
+            color: i <= current ? "#fff" : "#555", fontSize:11, fontWeight:800, flexShrink:0
+          }}>{i < current ? "✓" : i+1}</div>
+          <span style={{ marginLeft:7, fontSize:10, fontWeight:700, color: i === current ? "#fff" : i < current ? "#e8194b" : "#444", textTransform:"uppercase", letterSpacing:.8, flexShrink:0 }}>{s}</span>
+          {i < steps.length-1 && <div style={{ flex:1, height:2, background: i < current ? "#e8194b" : "#1e1e1e", margin:"0 10px" }} />}
         </div>
       ))}
     </div>
   );
 }
 
+// ─── RICH HTML EDITOR ────────────────────────────────────────────────────────
+function HtmlEditor({ value, onChange }) {
+  const [tab, setTab] = useState("visual"); // visual | html | preview
+  const editorRef = useRef(null);
+
+  // Sync contentEditable → state
+  const handleInput = () => {
+    if (editorRef.current) onChange(editorRef.current.innerHTML);
+  };
+
+  // When switching to visual, set innerHTML from value
+  useEffect(() => {
+    if (tab === "visual" && editorRef.current && editorRef.current.innerHTML !== value) {
+      editorRef.current.innerHTML = value || "";
+    }
+  }, [tab]);
+
+  const exec = (cmd, arg) => { document.execCommand(cmd, false, arg); editorRef.current?.focus(); handleInput(); };
+
+  const tabBtn = (id, label) => (
+    <button onClick={() => setTab(id)} style={{
+      padding:"5px 14px", fontSize:11, fontWeight:700, cursor:"pointer", border:"none",
+      background: tab === id ? "#e8194b" : "#1a1a1a", color: tab === id ? "#fff" : "#666",
+      borderRadius:"6px 6px 0 0", textTransform:"uppercase", letterSpacing:.8
+    }}>{label}</button>
+  );
+
+  const toolBtn = (label, onclick, title) => (
+    <button title={title} onClick={onclick} style={{
+      background:"#1e1e1e", border:"1px solid #2a2a2a", color:"#aaa", padding:"4px 10px",
+      borderRadius:5, fontSize:12, cursor:"pointer", fontFamily:"inherit"
+    }}>{label}</button>
+  );
+
+  return (
+    <div style={{ border:"1px solid #2a2a2a", borderRadius:8, overflow:"hidden" }}>
+      {/* Tabs */}
+      <div style={{ display:"flex", gap:4, padding:"8px 10px 0", background:"#111", borderBottom:"1px solid #1e1e1e" }}>
+        {tabBtn("visual","Visuel")}
+        {tabBtn("html","HTML")}
+        {tabBtn("preview","Aperçu")}
+      </div>
+
+      {/* Toolbar (visual only) */}
+      {tab === "visual" && (
+        <div style={{ display:"flex", flexWrap:"wrap", gap:5, padding:"8px 10px", background:"#111", borderBottom:"1px solid #1e1e1e" }}>
+          {toolBtn("H1", () => exec("formatBlock","h1"), "Titre H1")}
+          {toolBtn("H2", () => exec("formatBlock","h2"), "Titre H2")}
+          {toolBtn("H3", () => exec("formatBlock","h3"), "Titre H3")}
+          {toolBtn("P",  () => exec("formatBlock","p"),  "Paragraphe")}
+          {toolBtn(<b>G</b>, () => exec("bold"),   "Gras")}
+          {toolBtn(<i>I</i>, () => exec("italic"), "Italique")}
+          {toolBtn("🔗", () => { const url = prompt("URL du lien:"); if(url) exec("createLink", url); }, "Lien")}
+          {toolBtn("• Liste", () => exec("insertUnorderedList"), "Liste à puces")}
+          {toolBtn("Effacer", () => exec("removeFormat"), "Effacer format")}
+        </div>
+      )}
+
+      {/* Visual editor */}
+      {tab === "visual" && (
+        <div
+          ref={editorRef}
+          contentEditable
+          suppressContentEditableWarning
+          onInput={handleInput}
+          style={{
+            minHeight:180, padding:"14px 16px", background:"#0d0d0d", color:"#e8e8e8",
+            outline:"none", fontSize:13, lineHeight:1.7,
+            fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          }}
+        />
+      )}
+
+      {/* Raw HTML textarea */}
+      {tab === "html" && (
+        <textarea
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          style={{
+            width:"100%", minHeight:200, padding:"14px 16px", background:"#0d0d0d",
+            color:"#7ec8e3", border:"none", outline:"none", resize:"vertical",
+            fontFamily:"'Courier New',monospace", fontSize:12, lineHeight:1.6, boxSizing:"border-box"
+          }}
+          placeholder="<h2>Titre section</h2><p>Description HTML…</p>"
+        />
+      )}
+
+      {/* Preview */}
+      {tab === "preview" && (
+        <div
+          style={{ minHeight:180, padding:"16px 20px", background:"#fff", color:"#111", fontSize:14, lineHeight:1.7 }}
+          dangerouslySetInnerHTML={{ __html: value || "<em style='color:#aaa'>Aucun contenu</em>" }}
+        />
+      )}
+    </div>
+  );
+}
+
+// ─── PHOTO UPLOADER ──────────────────────────────────────────────────────────
+function PhotoUploader({ slugVal, photos, onChange }) {
+  const [uploading, setUploading] = useState(false);
+  const [results, setResults] = useState([]);
+  const [dragOver, setDragOver] = useState(false);
+  const inputRef = useRef(null);
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+
+  const addFiles = (files) => {
+    const newPhotos = [...photos];
+    Array.from(files).forEach(file => {
+      if (!file.type.startsWith("image/")) return;
+      const url = URL.createObjectURL(file);
+      newPhotos.push({ file, preview: url, name: file.name });
+    });
+    onChange(newPhotos);
+  };
+
+  const removePhoto = (i) => {
+    const next = photos.filter((_, j) => j !== i);
+    onChange(next);
+  };
+
+  const moveUp = (i) => {
+    if (i === 0) return;
+    const next = [...photos];
+    [next[i-1], next[i]] = [next[i], next[i-1]];
+    onChange(next);
+  };
+
+  const uploadAll = async () => {
+    if (!token) { alert("Token GitHub manquant — configurez-le dans les Paramètres."); return; }
+    if (!slugVal) { alert("Définissez d'abord le slug du produit (Étape 1)."); return; }
+    setUploading(true);
+    const res = [];
+    for (let i = 0; i < photos.length; i++) {
+      const { file } = photos[i];
+      const ext = file.name.split(".").pop().toLowerCase();
+      const repoPath = `novastyle/images/${slugVal}/${i+1}.${ext === "webp" ? "webp" : ext}`;
+      try {
+        const b64 = await fileToBase64(file);
+        await ghUpload(token, repoPath, b64, `Add image ${i+1} for ${slugVal}`);
+        res.push({ i, ok: true, path: repoPath });
+      } catch(e) {
+        res.push({ i, ok: false, err: e.message });
+      }
+    }
+    setResults(res);
+    setUploading(false);
+  };
+
+  return (
+    <div>
+      {/* Drop zone */}
+      <div
+        onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={e => { e.preventDefault(); setDragOver(false); addFiles(e.dataTransfer.files); }}
+        onClick={() => inputRef.current?.click()}
+        style={{
+          border: `2px dashed ${dragOver ? "#e8194b" : "#2a2a2a"}`,
+          borderRadius:10, padding:"22px 16px", textAlign:"center", cursor:"pointer",
+          background: dragOver ? "#1a0005" : "#0d0d0d", transition:"all .2s", marginBottom:12
+        }}
+      >
+        <div style={{ fontSize:24, marginBottom:6 }}>📸</div>
+        <div style={{ fontSize:13, color:"#888" }}>Glissez les photos ici ou <span style={{ color:"#e8194b" }}>cliquez pour choisir</span></div>
+        <div style={{ fontSize:10, color:"#444", marginTop:4 }}>WEBP, JPG, PNG · L'ordre ici = ordre dans la galerie</div>
+        <input ref={inputRef} type="file" multiple accept="image/*" style={{ display:"none" }} onChange={e => addFiles(e.target.files)} />
+      </div>
+
+      {/* Thumbnails */}
+      {photos.length > 0 && (
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(100px,1fr))", gap:8, marginBottom:12 }}>
+          {photos.map((ph, i) => (
+            <div key={i} style={{ position:"relative", background:"#111", borderRadius:8, overflow:"hidden", border:"1px solid #2a2a2a" }}>
+              <img src={ph.preview} style={{ width:"100%", aspectRatio:"1", objectFit:"cover", display:"block" }} />
+              <div style={{ position:"absolute", top:4, left:4, background:"#e8194b", color:"#fff", fontSize:9, fontWeight:800, padding:"2px 6px", borderRadius:4 }}>
+                {i+1}
+              </div>
+              <div style={{ position:"absolute", top:4, right:4, display:"flex", flexDirection:"column", gap:3 }}>
+                {i > 0 && (
+                  <button onClick={() => moveUp(i)} title="Monter" style={{ background:"#111a", border:"none", color:"#fff", borderRadius:4, width:20, height:20, cursor:"pointer", fontSize:11, display:"flex", alignItems:"center", justifyContent:"center" }}>↑</button>
+                )}
+                <button onClick={() => removePhoto(i)} title="Supprimer" style={{ background:"#e8194b99", border:"none", color:"#fff", borderRadius:4, width:20, height:20, cursor:"pointer", fontSize:13, lineHeight:1 }}>×</button>
+              </div>
+              <div style={{ fontSize:9, color:"#555", padding:"3px 5px", textOverflow:"ellipsis", overflow:"hidden", whiteSpace:"nowrap" }}>{ph.name}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Upload button */}
+      {photos.length > 0 && (
+        <button onClick={uploadAll} disabled={uploading} style={{
+          background: uploading ? "#2a2a2a" : "#1a6b1a", color: uploading ? "#555" : "#fff",
+          border:"none", padding:"10px 20px", borderRadius:8, fontWeight:800, fontSize:13,
+          cursor: uploading ? "not-allowed" : "pointer", width:"100%", marginBottom:8
+        }}>
+          {uploading ? "⏳ Upload en cours…" : `⬆ Uploader ${photos.length} photo${photos.length>1?"s":""} sur GitHub`}
+        </button>
+      )}
+
+      {/* Results */}
+      {results.length > 0 && (
+        <div style={{ background:"#0a0a0a", borderRadius:8, padding:10, marginTop:4 }}>
+          {results.map(r => (
+            <div key={r.i} style={{ fontSize:11, padding:"3px 0", color: r.ok ? "#00c853" : "#e8194b" }}>
+              {r.ok ? `✓ Photo ${r.i+1} → ${r.path}` : `✗ Photo ${r.i+1}: ${r.err}`}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!token && (
+        <div style={{ fontSize:11, color:"#e8194b", marginTop:6 }}>
+          ⚠ Token GitHub non configuré — allez dans Paramètres pour l'ajouter.
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── STEP 1: INFO ─────────────────────────────────────────────────────────────
 function StepInfo({ data, onChange, onNext }) {
-  const [name, setName] = useState(data.name || "");
-  const [slugVal, setSlug] = useState(data.slug || "");
-  const [category, setCategory] = useState(data.category || CATEGORIES[0]);
-  const [desc, setDesc] = useState(data.desc || "");
-  const [seoTitle, setSeoTitle] = useState(data.seoTitle || "");
-  const [seoDesc, setSeoDesc] = useState(data.seoDesc || "");
-  const [imageCount, setImageCount] = useState(data.imageCount || 3);
-  const [autoSlug, setAutoSlug] = useState(!data.slug);
+  const [name,      setName]      = useState(data.name      || "");
+  const [slugVal,   setSlug]      = useState(data.slug      || "");
+  const [category,  setCategory]  = useState(data.category  || CATEGORIES[0].id);
+  const [desc,      setDesc]      = useState(data.desc      || "");
+  const [seoTitle,  setSeoTitle]  = useState(data.seoTitle  || "");
+  const [seoDesc,   setSeoDesc]   = useState(data.seoDesc   || "");
+  const [photos,    setPhotos]    = useState(data.photos    || []);
+  const [autoSlug,  setAutoSlug]  = useState(!data.slug);
 
   useEffect(() => { if (autoSlug) setSlug("nova-style-" + slug(name)); }, [name, autoSlug]);
 
   const valid = name.trim() && slugVal.trim();
 
   const next = () => {
-    onChange({ name, slug: slugVal, category, desc, seoTitle, seoDesc, imageCount });
+    onChange({ name, slug: slugVal, category, desc, seoTitle, seoDesc, photos, imageCount: photos.length || 3 });
     onNext();
   };
 
-  const inp = { background:"#111", border:"1px solid #2a2a2a", color:"#f0f0f0", padding:"10px 14px", borderRadius:8, fontSize:14, outline:"none", width:"100%", fontFamily:"inherit", boxSizing:"border-box" };
-  const lbl = { fontSize:10, color:"#555", textTransform:"uppercase", letterSpacing:"1.2px", fontWeight:700, marginBottom:6, display:"block" };
+  const inp  = { background:"#111", border:"1px solid #2a2a2a", color:"#f0f0f0", padding:"10px 14px", borderRadius:8, fontSize:14, outline:"none", width:"100%", fontFamily:"inherit", boxSizing:"border-box" };
+  const lbl  = { fontSize:10, color:"#555", textTransform:"uppercase", letterSpacing:"1.2px", fontWeight:700, marginBottom:6, display:"block" };
+  const card = { background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:20, marginBottom:16 };
 
   return (
     <div>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:16 }}>
-        <div>
-          <label style={lbl}>Nom du produit *</label>
-          <input style={inp} value={name} onChange={e => setName(e.target.value)} placeholder="Ex: Miroir LUNE LED" />
-        </div>
-        <div>
-          <label style={lbl}>Slug (URL) *</label>
-          <input style={{...inp, fontFamily:"monospace", fontSize:12}} value={slugVal}
-            onChange={e => { setAutoSlug(false); setSlug(e.target.value); }} placeholder="nova-style-miroir-lune" />
-          <div style={{ fontSize:10, color:"#555", marginTop:4 }}>
-            → /produits/<span style={{ color:"#e8194b" }}>{slugVal || "…"}</span>/
+      {/* ① Identité */}
+      <div style={card}>
+        <div style={{ fontWeight:800, fontSize:12, color:"#e8194b", textTransform:"uppercase", letterSpacing:1, marginBottom:16 }}>① Identité du produit</div>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:16 }}>
+          <div>
+            <label style={lbl}>Nom du produit *</label>
+            <input style={inp} value={name} onChange={e => setName(e.target.value)} placeholder="Ex: Miroir LUNE LED" />
+          </div>
+          <div>
+            <label style={lbl}>Slug (URL) *</label>
+            <input style={{...inp, fontFamily:"monospace", fontSize:12}} value={slugVal}
+              onChange={e => { setAutoSlug(false); setSlug(e.target.value); }} placeholder="nova-style-miroir-lune" />
+            <div style={{ fontSize:10, color:"#555", marginTop:4 }}>
+              → /produits/<span style={{ color:"#e8194b" }}>{slugVal || "…"}</span>/
+            </div>
           </div>
         </div>
-      </div>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:16 }}>
         <div>
           <label style={lbl}>Catégorie</label>
           <select style={{...inp, cursor:"pointer"}} value={category} onChange={e => setCategory(e.target.value)}>
-            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+            {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
           </select>
         </div>
-        <div>
-          <label style={lbl}>Nombre d'images (GitHub)</label>
-          <input style={inp} type="number" min={1} max={10} value={imageCount} onChange={e => setImageCount(+e.target.value)} />
-          <div style={{ fontSize:10, color:"#555", marginTop:4 }}>/assets/images/{slugVal || "slug"}/1.webp … {imageCount}.webp</div>
+      </div>
+
+      {/* ② Description HTML */}
+      <div style={card}>
+        <div style={{ fontWeight:800, fontSize:12, color:"#e8194b", textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>② Description produit (HTML)</div>
+        <div style={{ fontSize:11, color:"#555", marginBottom:10 }}>
+          Utilisez les boutons de mise en forme ou collez directement du HTML. Supports H1, H2, H3, gras, italique, liens.
+        </div>
+        <HtmlEditor value={desc} onChange={setDesc} />
+      </div>
+
+      {/* ③ SEO */}
+      <div style={card}>
+        <div style={{ fontWeight:800, fontSize:12, color:"#e8194b", textTransform:"uppercase", letterSpacing:1, marginBottom:16 }}>③ SEO</div>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+          <div>
+            <label style={lbl}>Titre SEO (meta title)</label>
+            <input style={inp} value={seoTitle} onChange={e => setSeoTitle(e.target.value)} placeholder="Miroir LUNE LED salle de bain | Nova Style Maroc" />
+            <div style={{ fontSize:10, color: seoTitle.length > 60 ? "#e8194b" : "#555", marginTop:4 }}>{seoTitle.length}/60 car.</div>
+          </div>
+          <div>
+            <label style={lbl}>Meta description</label>
+            <input style={inp} value={seoDesc} onChange={e => setSeoDesc(e.target.value)} placeholder="Miroir LUNE Nova Style — LED anti-buée, verre AGC…" />
+            <div style={{ fontSize:10, color: seoDesc.length > 160 ? "#e8194b" : "#555", marginTop:4 }}>{seoDesc.length}/160 car.</div>
+          </div>
         </div>
       </div>
-      <div style={{ marginBottom:16 }}>
-        <label style={lbl}>Description produit</label>
-        <textarea style={{...inp, minHeight:90, resize:"vertical", lineHeight:1.6}} value={desc} onChange={e => setDesc(e.target.value)} placeholder="Description affichée sur la page produit…" />
-      </div>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:24 }}>
-        <div>
-          <label style={lbl}>Titre SEO</label>
-          <input style={inp} value={seoTitle} onChange={e => setSeoTitle(e.target.value)} placeholder="Miroir LUNE LED salle de bain | Nova Style Maroc" />
-          <div style={{ fontSize:10, color: seoTitle.length > 60 ? "#e8194b" : "#555", marginTop:4 }}>{seoTitle.length}/60 caractères</div>
+
+      {/* ④ Photos */}
+      <div style={card}>
+        <div style={{ fontWeight:800, fontSize:12, color:"#e8194b", textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>④ Photos produit</div>
+        <div style={{ fontSize:11, color:"#555", marginBottom:12 }}>
+          Ajoutez les photos ici pour les uploader directement sur GitHub dans <code style={{color:"#7ec8e3"}}>/images/{slugVal || "slug"}/</code>.<br/>
+          La 1ère photo = image principale. Réordonnez en cliquant ↑.
         </div>
-        <div>
-          <label style={lbl}>Meta Description SEO</label>
-          <input style={inp} value={seoDesc} onChange={e => setSeoDesc(e.target.value)} placeholder="Miroir LUNE Nova Style — LED anti-buée, verre AGC Belgique…" />
-          <div style={{ fontSize:10, color: seoDesc.length > 160 ? "#e8194b" : "#555", marginTop:4 }}>{seoDesc.length}/160 caractères</div>
-        </div>
+        <PhotoUploader slugVal={slugVal} photos={photos} onChange={setPhotos} />
       </div>
-      <button onClick={next} disabled={!valid} style={{ background: valid ? "#e8194b" : "#2a2a2a", color: valid ? "#fff" : "#555", border:"none", padding:"13px 32px", borderRadius:8, fontWeight:800, fontSize:14, cursor: valid ? "pointer" : "not-allowed", transition:"all .2s" }}>
+
+      <button onClick={next} disabled={!valid} style={{
+        background: valid ? "#e8194b" : "#2a2a2a", color: valid ? "#fff" : "#555",
+        border:"none", padding:"13px 32px", borderRadius:8, fontWeight:800, fontSize:14,
+        cursor: valid ? "pointer" : "not-allowed", transition:"all .2s"
+      }}>
         Suivant → Copier une config
       </button>
     </div>
   );
 }
 
-// ─── STEP 2: COPY CONFIG ──────────────────────────────────────────────────────
+// ─── STEP 2: COPY FROM ALL PRODUCTS ──────────────────────────────────────────
 function StepCopy({ onNext, onBack }) {
-  const [selected, setSelected] = useState("");
-  const [preview, setPreview] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [loading,  setLoading]  = useState(true);
+  const [search,   setSearch]   = useState("");
+  const [catFilter,setCatFilter]= useState("all");
+  const [selected, setSelected] = useState(null);  // { slug, name, image }
+  const [copied,   setCopied]   = useState(null);  // full product JSON
+  const [fetching, setFetching] = useState(false);
+  const [fetchErr, setFetchErr] = useState("");
 
-  const select = (key) => {
-    setSelected(key);
-    setPreview(REFERENCE_PRODUCTS[key]);
+  useEffect(() => {
+    fetch("/products-index.json").then(r => r.json()).then(data => {
+      const list = (data.products || []).filter(p => p.active && !/[^\x00-\x7F]/.test(p.slug));
+      setProducts(list);
+    }).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  const filtered = products.filter(p => {
+    const matchCat = catFilter === "all" || p.categoryId === catFilter;
+    const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.slug.includes(search.toLowerCase());
+    return matchCat && matchSearch;
+  });
+
+  const selectProduct = async (p) => {
+    setSelected(p);
+    setCopied(null);
+    setFetchErr("");
+    setFetching(true);
+    try {
+      const r = await fetch(`/products/${p.slug}.json`);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const full = await r.json();
+      setCopied(full);
+    } catch(e) {
+      setFetchErr(e.message);
+    } finally {
+      setFetching(false);
+    }
   };
+
+  const buildConfig = () => {
+    if (!copied) return null;
+    // Support both old (axis_order) and new (axes.order) schema
+    const order   = copied.axes?.order || copied.axis_order || [];
+    const options = copied.axes?.options || copied.axes || {};
+    // Remove non-array keys from options
+    const cleanOpts = {};
+    order.forEach(ax => { if (Array.isArray(options[ax])) cleanOpts[ax] = options[ax]; });
+    return { axis_order: order, axes: cleanOpts, variants: copied.variants || [] };
+  };
+
+  const inp = { background:"#111", border:"1px solid #2a2a2a", color:"#f0f0f0", padding:"8px 12px", borderRadius:6, fontSize:13, outline:"none", fontFamily:"inherit", boxSizing:"border-box" };
 
   return (
     <div>
-      <p style={{ color:"#888", fontSize:13, marginBottom:20, lineHeight:1.7 }}>
-        Choisissez un produit de référence pour copier sa <strong style={{ color:"#f0f0f0" }}>configuration d'axes et de variantes</strong>.<br/>
-        Vous pourrez ensuite modifier les dimensions, options et prix dans les étapes suivantes.
+      <p style={{ color:"#888", fontSize:13, marginBottom:16, lineHeight:1.7 }}>
+        Choisissez un produit existant pour <strong style={{ color:"#f0f0f0" }}>copier sa configuration d'axes et de variantes</strong>.<br/>
+        Vous pourrez modifier dimensions, options et prix ensuite.
       </p>
 
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:12, marginBottom:20 }}>
-        {Object.entries(REFERENCE_PRODUCTS).map(([key, p]) => (
-          <div key={key} onClick={() => select(key)} style={{
-            background: selected === key ? "#1a0a0e" : "#141414",
-            border: selected === key ? "2px solid #e8194b" : "1px solid #2a2a2a",
-            borderRadius:12, padding:"14px 16px", cursor:"pointer", transition:"all .15s"
-          }}>
-            <div style={{ fontWeight:800, fontSize:13, color: selected === key ? "#e8194b" : "#e0e0e0", marginBottom:8 }}>{p.label}</div>
-            <div style={{ display:"flex", flexWrap:"wrap", gap:5, marginBottom:8 }}>
-              {p.axis_order.map(a => (
-                <span key={a} style={{ fontSize:10, padding:"2px 8px", background:"#1e1e1e", border:"1px solid #2a2a2a", borderRadius:4, color:"#888" }}>{a}</span>
-              ))}
-            </div>
-            <div style={{ fontSize:11, color:"#555" }}>
-              {p.variants.length} variantes · {Math.min(...p.variants.map(v=>v.price))} – {Math.max(...p.variants.map(v=>v.price))} MAD
-            </div>
-          </div>
-        ))}
+      {/* Filters */}
+      <div style={{ display:"flex", gap:10, marginBottom:14, flexWrap:"wrap" }}>
+        <input style={{...inp, flex:1, minWidth:180}} value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un produit…" />
+        <select style={{...inp, cursor:"pointer"}} value={catFilter} onChange={e => setCatFilter(e.target.value)}>
+          <option value="all">Toutes catégories</option>
+          {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+        </select>
+        <div style={{ fontSize:11, color:"#444", padding:"8px 14px", background:"#111", border:"1px solid #1e1e1e", borderRadius:6 }}>
+          {filtered.length} produits
+        </div>
       </div>
 
-      {preview && (
-        <div style={{ background:"#0d0800", border:"1px solid #3a2000", borderRadius:10, padding:16, marginBottom:20 }}>
-          <div style={{ fontWeight:700, color:"#ffb300", fontSize:12, marginBottom:10 }}>📋 Aperçu — {preview.label}</div>
-          {preview.axis_order.map(axis => (
-            <div key={axis} style={{ marginBottom:8 }}>
-              <span style={{ fontSize:11, color:"#555", fontWeight:700, textTransform:"uppercase", letterSpacing:1 }}>{axis}: </span>
-              <span style={{ fontSize:11, color:"#ccc" }}>{preview.axes[axis].join(" · ")}</span>
-            </div>
-          ))}
-          <div style={{ fontSize:11, color:"#555", marginTop:8 }}>
-            {preview.variants.length} variantes générées · Prix: {Math.min(...preview.variants.map(v=>v.price))} – {Math.max(...preview.variants.map(v=>v.price))} MAD
-          </div>
+      {/* Products grid */}
+      {loading ? (
+        <div style={{ textAlign:"center", padding:40, color:"#555", fontSize:13 }}>Chargement des produits…</div>
+      ) : (
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))", gap:10, marginBottom:16, maxHeight:420, overflowY:"auto", paddingRight:4 }}>
+          {filtered.map(p => {
+            const isSelected = selected?.slug === p.slug;
+            const priceMin = p.price?.min;
+            return (
+              <div key={p.slug} onClick={() => selectProduct(p)} style={{
+                background: isSelected ? "#1a0008" : "#141414",
+                border: `2px solid ${isSelected ? "#e8194b" : "#1e1e1e"}`,
+                borderRadius:10, cursor:"pointer", overflow:"hidden", transition:"all .15s"
+              }}>
+                <div style={{ aspectRatio:"1", overflow:"hidden", background:"#0d0d0d" }}>
+                  <img src={p.image} alt={p.name} loading="lazy"
+                    style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+                    onError={e => { e.target.style.display="none"; }}
+                  />
+                </div>
+                <div style={{ padding:"8px 10px" }}>
+                  <div style={{ fontSize:11, fontWeight:800, color: isSelected ? "#e8194b" : "#e0e0e0", lineHeight:1.3, marginBottom:4 }}>{p.name}</div>
+                  {priceMin != null && <div style={{ fontSize:10, color:"#555" }}>dès {Math.round(priceMin).toLocaleString("fr-FR")} MAD</div>}
+                </div>
+              </div>
+            );
+          })}
+          {filtered.length === 0 && <div style={{ gridColumn:"1/-1", textAlign:"center", padding:30, color:"#555", fontSize:13 }}>Aucun produit trouvé.</div>}
+        </div>
+      )}
+
+      {/* Selected product preview */}
+      {selected && (
+        <div style={{ background:"#0d0800", border:"1px solid #3a2000", borderRadius:10, padding:16, marginBottom:16 }}>
+          {fetching && <div style={{ fontSize:12, color:"#888" }}>⏳ Chargement de la configuration…</div>}
+          {fetchErr && <div style={{ fontSize:12, color:"#e8194b" }}>❌ {fetchErr}</div>}
+          {copied && (() => {
+            const cfg = buildConfig();
+            return (
+              <div>
+                <div style={{ fontWeight:700, color:"#ffb300", fontSize:12, marginBottom:10 }}>
+                  📋 Config copiée depuis : <span style={{ color:"#fff" }}>{selected.name}</span>
+                </div>
+                {cfg.axis_order.length > 0 ? cfg.axis_order.map(axis => (
+                  <div key={axis} style={{ marginBottom:6 }}>
+                    <span style={{ fontSize:11, color:"#555", fontWeight:700, textTransform:"uppercase", letterSpacing:1 }}>{axis}: </span>
+                    <span style={{ fontSize:11, color:"#ccc" }}>{(cfg.axes[axis] || []).join(" · ")}</span>
+                  </div>
+                )) : <div style={{ fontSize:11, color:"#555" }}>Pas d'axes de variantes.</div>}
+                <div style={{ fontSize:11, color:"#555", marginTop:8 }}>
+                  {cfg.variants.length} variantes · Prix: {Math.min(...cfg.variants.map(v=>v.price).filter(p=>p>0), Infinity).toLocaleString("fr-FR")} – {Math.max(...cfg.variants.map(v=>v.price).filter(p=>p>0), 0).toLocaleString("fr-FR")} MAD
+                </div>
+              </div>
+            );
+          })()}
         </div>
       )}
 
       <div style={{ display:"flex", gap:12 }}>
         <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#888", padding:"11px 24px", borderRadius:8, fontWeight:700, fontSize:13, cursor:"pointer" }}>← Retour</button>
-        <button onClick={() => onNext(selected ? REFERENCE_PRODUCTS[selected] : null)} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"11px 32px", borderRadius:8, fontWeight:800, fontSize:14, cursor:"pointer" }}>
-          {selected ? "Copier cette config →" : "Continuer sans copier →"}
+        <button onClick={() => onNext(copied && !fetchErr ? buildConfig() : null)} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"11px 32px", borderRadius:8, fontWeight:800, fontSize:14, cursor:"pointer" }}>
+          {copied && !fetchErr ? "Copier cette config →" : "Continuer sans copier →"}
         </button>
       </div>
     </div>
@@ -471,14 +566,11 @@ function StepAxes({ copied, onNext, onBack }) {
     setAxisOrder(o => o.filter(a => a !== ax));
     setAxes(a => { const b = {...a}; delete b[ax]; return b; });
   };
-  const updateOption = (ax, i, val) => {
-    setAxes(a => ({ ...a, [ax]: a[ax].map((v, j) => j===i ? val : v) }));
-  };
-  const addOption = (ax) => setAxes(a => ({ ...a, [ax]: [...a[ax], ""] }));
-  const removeOption = (ax, i) => setAxes(a => ({ ...a, [ax]: a[ax].filter((_,j) => j!==i) }));
+  const updateOption = (ax, i, val) => setAxes(a => ({ ...a, [ax]: a[ax].map((v,j) => j===i ? val : v) }));
+  const addOption    = (ax)       => setAxes(a => ({ ...a, [ax]: [...a[ax], ""] }));
+  const removeOption = (ax, i)    => setAxes(a => ({ ...a, [ax]: a[ax].filter((_,j) => j!==i) }));
 
   const totalVariants = axisOrder.reduce((acc, ax) => acc * (axes[ax]?.filter(v=>v.trim()).length || 1), 1);
-
   const inp = { background:"#111", border:"1px solid #2a2a2a", color:"#f0f0f0", padding:"8px 12px", borderRadius:6, fontSize:13, outline:"none", fontFamily:"inherit", boxSizing:"border-box" };
 
   return (
@@ -486,11 +578,11 @@ function StepAxes({ copied, onNext, onBack }) {
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:16 }}>
         <p style={{ color:"#888", fontSize:13 }}>Configurez les axes de variantes (dimensions, LED, finitions…)</p>
         <div style={{ fontSize:11, color:"#444", background:"#141414", padding:"5px 12px", borderRadius:20, border:"1px solid #222" }}>
-          <span style={{ color:"#e8194b", fontWeight:800 }}>{totalVariants}</span> variantes au total
+          <span style={{ color:"#e8194b", fontWeight:800 }}>{totalVariants}</span> variantes
         </div>
       </div>
 
-      {axisOrder.map((ax) => (
+      {axisOrder.map(ax => (
         <div key={ax} style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:12 }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
             <span style={{ fontWeight:800, fontSize:13, color:"#e0e0e0" }}>{ax}</span>
@@ -519,8 +611,9 @@ function StepAxes({ copied, onNext, onBack }) {
 
       <div style={{ display:"flex", gap:12 }}>
         <button onClick={onBack} style={{ background:"none", border:"1px solid #2a2a2a", color:"#888", padding:"11px 24px", borderRadius:8, fontWeight:700, fontSize:13, cursor:"pointer" }}>← Retour</button>
-        <button onClick={() => onNext({ axis_order: axisOrder, axes: Object.fromEntries(Object.entries(axes).map(([k,v]) => [k, v.filter(x=>x.trim())])) })} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"11px 32px", borderRadius:8, fontWeight:800, fontSize:14, cursor:"pointer" }}>
-          Suivant → Configurer les prix ({totalVariants} variantes)
+        <button onClick={() => onNext({ axis_order: axisOrder, axes: Object.fromEntries(Object.entries(axes).map(([k,v]) => [k, v.filter(x=>x.trim())])) })}
+          style={{ background:"#e8194b", color:"#fff", border:"none", padding:"11px 32px", borderRadius:8, fontWeight:800, fontSize:14, cursor:"pointer" }}>
+          Suivant → Prix ({totalVariants} variantes)
         </button>
       </div>
     </div>
@@ -535,130 +628,97 @@ function StepPrix({ axesConfig, copied, onNext, onBack }) {
     const map = {};
     allCombos.forEach(combo => {
       const key = JSON.stringify(combo);
-      // Try to find matching price from copied product
       if (copied) {
-        const match = copied.variants.find(v => {
-          return axesConfig.axis_order.every(ax => v.axes[ax] === combo[ax]);
-        });
+        const match = copied.variants.find(v => axesConfig.axis_order.every(ax => v.axes[ax] === combo[ax]));
         map[key] = match ? match.price : 0;
-      } else {
-        map[key] = 0;
-      }
+      } else map[key] = 0;
     });
     return map;
   };
 
-  const [prices, setPrices] = useState(initPrices);
-  const [pctInput, setPctInput] = useState("");
-  const [filterAxis, setFilterAxis] = useState("all");
-  const [filterVal, setFilterVal] = useState("all");
+  const [prices,    setPrices]   = useState(initPrices);
+  const [pctInput,  setPctInput] = useState("");
+  const [filterAxis,setFA]       = useState("all");
+  const [filterVal, setFV]       = useState("all");
 
-  const updatePrice = (key, val) => {
-    const n = parseFloat(val);
-    setPrices(p => ({ ...p, [key]: isNaN(n) ? 0 : n }));
-  };
+  const updatePrice = (key, val) => { const n = parseFloat(val); setPrices(p => ({ ...p, [key]: isNaN(n) ? 0 : n })); };
 
-  const applyPct = (filter) => {
-    const pct = parseFloat(pctInput);
-    if (isNaN(pct)) return;
+  const applyPct = (mode) => {
+    const pct = parseFloat(pctInput); if (isNaN(pct)) return;
     const mult = 1 + pct / 100;
     setPrices(p => {
       const next = { ...p };
       allCombos.forEach(combo => {
         const key = JSON.stringify(combo);
-        // Apply only if matches filter
-        if (filter === "all" || (filterAxis !== "all" && combo[filterAxis] === filterVal)) {
+        if (mode === "all" || (filterAxis !== "all" && combo[filterAxis] === filterVal))
           next[key] = Math.round(p[key] * mult);
-        }
       });
       return next;
     });
   };
 
   const setAllPrices = (val) => {
-    const n = parseFloat(val);
-    if (isNaN(n)) return;
-    setPrices(p => {
-      const next = { ...p };
-      allCombos.forEach(combo => { next[JSON.stringify(combo)] = n; });
-      return next;
-    });
+    const n = parseFloat(val); if (isNaN(n)) return;
+    setPrices(p => { const next = { ...p }; allCombos.forEach(combo => { next[JSON.stringify(combo)] = n; }); return next; });
   };
 
-  // Group variants by first axis for display
   const firstAxis = axesConfig.axis_order[0];
-  const firstAxisVals = axesConfig.axes[firstAxis] || [];
-  const otherAxes = axesConfig.axis_order.slice(1);
-
-  const allPrices = Object.values(prices).filter(v => v > 0);
-  const priceMin = allPrices.length ? Math.min(...allPrices) : 0;
-  const priceMax = allPrices.length ? Math.max(...allPrices) : 0;
-
+  const allPriceVals = Object.values(prices).filter(v => v > 0);
+  const priceMin = allPriceVals.length ? Math.min(...allPriceVals) : 0;
+  const priceMax = allPriceVals.length ? Math.max(...allPriceVals) : 0;
   const inp = { background:"#111", border:"1px solid #2a2a2a", color:"#f0f0f0", padding:"7px 10px", borderRadius:6, fontSize:13, outline:"none", width:90, textAlign:"right", fontFamily:"monospace" };
 
   return (
     <div>
-      {/* Price tools bar */}
       <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:20 }}>
         <div style={{ fontSize:10, color:"#555", textTransform:"uppercase", letterSpacing:1.2, fontWeight:700, marginBottom:12 }}>🔧 Outils de prix</div>
         <div style={{ display:"flex", flexWrap:"wrap", gap:12, alignItems:"flex-end" }}>
-
-          {/* Global % adjuster */}
           <div>
-            <div style={{ fontSize:10, color:"#888", marginBottom:5 }}>Augmenter/réduire tous les prix</div>
+            <div style={{ fontSize:10, color:"#888", marginBottom:5 }}>% sur tous les prix</div>
             <div style={{ display:"flex", gap:8, alignItems:"center" }}>
               <input style={{ background:"#111", border:"1px solid #2a2a2a", color:"#f0f0f0", padding:"8px 12px", borderRadius:6, width:80, outline:"none", fontSize:14, fontFamily:"monospace", textAlign:"right" }}
                 value={pctInput} onChange={e => setPctInput(e.target.value)} placeholder="+10" />
-              <span style={{ color:"#555", fontSize:14 }}>%</span>
-              <button onClick={() => applyPct("all")} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"8px 16px", borderRadius:6, fontWeight:700, fontSize:12, cursor:"pointer" }}>Appliquer à tous</button>
+              <span style={{ color:"#555" }}>%</span>
+              <button onClick={() => applyPct("all")} style={{ background:"#e8194b", color:"#fff", border:"none", padding:"8px 16px", borderRadius:6, fontWeight:700, fontSize:12, cursor:"pointer" }}>Appliquer</button>
             </div>
           </div>
-
-          {/* Per-axis filter */}
           {axesConfig.axis_order.length > 1 && (
             <div>
               <div style={{ fontSize:10, color:"#888", marginBottom:5 }}>Appliquer seulement à…</div>
               <div style={{ display:"flex", gap:6 }}>
                 <select style={{ background:"#111", border:"1px solid #2a2a2a", color:"#f0f0f0", padding:"7px 10px", borderRadius:6, fontSize:12, outline:"none", cursor:"pointer" }}
-                  value={filterAxis} onChange={e => { setFilterAxis(e.target.value); setFilterVal("all"); }}>
+                  value={filterAxis} onChange={e => { setFA(e.target.value); setFV("all"); }}>
                   <option value="all">Tous axes</option>
                   {axesConfig.axis_order.map(a => <option key={a} value={a}>{a}</option>)}
                 </select>
                 {filterAxis !== "all" && (
                   <select style={{ background:"#111", border:"1px solid #2a2a2a", color:"#f0f0f0", padding:"7px 10px", borderRadius:6, fontSize:12, outline:"none", cursor:"pointer" }}
-                    value={filterVal} onChange={e => setFilterVal(e.target.value)}>
+                    value={filterVal} onChange={e => setFV(e.target.value)}>
                     <option value="all">Toutes options</option>
                     {(axesConfig.axes[filterAxis] || []).map(v => <option key={v} value={v}>{v}</option>)}
                   </select>
                 )}
                 {filterAxis !== "all" && filterVal !== "all" && (
-                  <button onClick={() => applyPct("filter")} style={{ background:"#1e1e1e", border:"1px solid #e8194b30", color:"#e8194b", padding:"7px 14px", borderRadius:6, fontWeight:700, fontSize:12, cursor:"pointer" }}>
-                    → Appliquer à {filterVal}
-                  </button>
+                  <button onClick={() => applyPct("filter")} style={{ background:"#1e1e1e", border:"1px solid #e8194b30", color:"#e8194b", padding:"7px 14px", borderRadius:6, fontWeight:700, fontSize:12, cursor:"pointer" }}>→ {filterVal}</button>
                 )}
               </div>
             </div>
           )}
-
-          {/* Set all to same price */}
           <div>
             <div style={{ fontSize:10, color:"#888", marginBottom:5 }}>Mettre tous à</div>
             <div style={{ display:"flex", gap:6 }}>
               <input id="bulk-price" style={{ background:"#111", border:"1px solid #2a2a2a", color:"#f0f0f0", padding:"8px 12px", borderRadius:6, width:80, outline:"none", fontSize:14, fontFamily:"monospace", textAlign:"right" }} placeholder="1200" />
-              <span style={{ color:"#555", fontSize:14, lineHeight:"36px" }}>MAD</span>
+              <span style={{ color:"#555", lineHeight:"36px" }}>MAD</span>
               <button onClick={() => setAllPrices(document.getElementById("bulk-price")?.value)} style={{ background:"#1e1e1e", border:"1px solid #2a2a2a", color:"#888", padding:"8px 14px", borderRadius:6, fontSize:12, cursor:"pointer" }}>OK</button>
             </div>
           </div>
-
-          {/* Summary */}
           <div style={{ marginLeft:"auto", textAlign:"right" }}>
             <div style={{ fontSize:10, color:"#555" }}>Fourchette</div>
-            <div style={{ fontSize:16, fontWeight:800, color:"#e8194b" }}>{priceMin} – {priceMax} <span style={{fontSize:11, color:"#555"}}>MAD</span></div>
+            <div style={{ fontSize:16, fontWeight:800, color:"#e8194b" }}>{priceMin.toLocaleString("fr-FR")} – {priceMax.toLocaleString("fr-FR")} <span style={{fontSize:11,color:"#555"}}>MAD</span></div>
           </div>
         </div>
       </div>
 
-      {/* Price table grouped by first axis */}
       <div style={{ maxHeight:440, overflowY:"auto", borderRadius:12, border:"1px solid #1e1e1e", marginBottom:20 }}>
         <table style={{ width:"100%", borderCollapse:"collapse" }}>
           <thead style={{ position:"sticky", top:0, background:"#0d0d0d", zIndex:2 }}>
@@ -672,20 +732,16 @@ function StepPrix({ axesConfig, copied, onNext, onBack }) {
           <tbody>
             {allCombos.map((combo, i) => {
               const key = JSON.stringify(combo);
-              const isNew = i === 0 || JSON.stringify(allCombos[i-1])[firstAxis] !== JSON.stringify(combo)[firstAxis];
               const showDim = i === 0 || allCombos[i-1][firstAxis] !== combo[firstAxis];
               return (
-                <tr key={key} style={{ background: i % 2 === 0 ? "#111" : "#0f0f0f", borderBottom:"1px solid #1a1a1a" }}>
+                <tr key={key} style={{ background: i%2===0 ? "#111" : "#0f0f0f", borderBottom:"1px solid #1a1a1a" }}>
                   {axesConfig.axis_order.map((ax, j) => (
                     <td key={ax} style={{ padding:"8px 14px", fontSize:12, color: j===0 ? "#e0e0e0" : "#888", fontWeight: j===0 && showDim ? 700 : 400 }}>
                       {j===0 ? (showDim ? combo[ax] : <span style={{color:"#333"}}>″</span>) : combo[ax]}
                     </td>
                   ))}
                   <td style={{ padding:"6px 14px", textAlign:"right" }}>
-                    <input style={inp} type="number" min={0} step={50}
-                      value={prices[key] || ""}
-                      onChange={e => updatePrice(key, e.target.value)}
-                      placeholder="0" />
+                    <input style={inp} type="number" min={0} step={50} value={prices[key] || ""} onChange={e => updatePrice(key, e.target.value)} placeholder="0" />
                   </td>
                 </tr>
               );
@@ -706,120 +762,152 @@ function StepPrix({ axesConfig, copied, onNext, onBack }) {
 
 // ─── STEP 5: EXPORT ───────────────────────────────────────────────────────────
 function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
-  const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [saveErr, setSaveErr] = useState("");
-  const [copiedKey, setCopiedKey] = useState("");
+  const [saving,    setSaving]   = useState(false);
+  const [saved,     setSaved]    = useState(false);
+  const [saveErr,   setSaveErr]  = useState("");
+  const [ghPushing, setGhPush]  = useState(false);
+  const [ghResult,  setGhResult] = useState(null);
+  const [copiedKey, setCopiedKey]= useState("");
 
-  const variants = allCombos.map(combo => ({
-    axes: combo,
-    price: prices[JSON.stringify(combo)] || 0,
-    sku: ""
-  }));
-  const priceMin = Math.min(...variants.map(v=>v.price).filter(p=>p>0), Infinity);
-  const priceMax = Math.max(...variants.map(v=>v.price).filter(p=>p>0), -Infinity);
-  const images = Array.from({ length: info.imageCount }, (_, i) =>
-    `/assets/images/${info.slug}/${i+1}.webp`
-  );
+  const variants  = allCombos.map(combo => ({ axes: combo, price: prices[JSON.stringify(combo)] || 0, sku: "" }));
+  const validPrices = variants.map(v=>v.price).filter(p=>p>0);
+  const priceMin  = validPrices.length ? Math.min(...validPrices) : 0;
+  const priceMax  = validPrices.length ? Math.max(...validPrices) : 0;
 
-  // The PRODUCT JS constant (for embedding in product HTML page)
-  const productJS = `const PRODUCT = ${JSON.stringify({
-    title: info.name,
-    variants,
-    axis_order: axesConfig.axis_order,
-    axes: axesConfig.axes,
-    price_min: priceMin === Infinity ? 0 : priceMin,
-    price_max: priceMax === -Infinity ? 0 : priceMax
-  }, null, 2)};`;
+  const imgCount  = info.photos?.length || info.imageCount || 1;
+  const images    = Array.from({ length: imgCount }, (_, i) => `/images/${info.slug}/${i+1}.webp`);
 
-  // The Firebase catalog entry
-  const catalogEntry = JSON.stringify({
-    title: info.name,
+  const catLabel  = CATEGORIES.find(c => c.id === info.category)?.label || info.category;
+
+  // products-index.json entry
+  const indexEntry = JSON.stringify({
     slug: info.slug,
-    category: info.category,
-    active: true,
+    name: info.name,
+    categoryId: info.category,
+    category: catLabel,
+    image: images[0] || `/images/${info.slug}/1.webp`,
     images,
-    price_min: priceMin === Infinity ? 0 : priceMin,
-    price_max: priceMax === -Infinity ? 0 : priceMax,
-    axis_order: axesConfig.axis_order,
-    axes: axesConfig.axes,
-    variants,
-    description: info.desc,
-    seo: {
-      title: info.seoTitle || info.name,
-      description: info.seoDesc
-    }
+    active: true,
+    price: { min: priceMin, max: priceMax },
+    axes: { order: axesConfig.axis_order, options: axesConfig.axes }
   }, null, 2);
 
-  // The products.json entry
-  const productsFeedEntry = JSON.stringify({
-    id: info.slug,
+  // Full product JSON (for /products/{slug}.json)
+  const productJson = JSON.stringify({
+    slug: info.slug,
     name: info.name,
-    price: { min: priceMin === Infinity ? 0 : priceMin, max: priceMax === -Infinity ? 0 : priceMax },
-    category: info.category,
-    image: `/assets/images/${info.slug}/1.webp`
+    categoryId: info.category,
+    category: catLabel,
+    active: true,
+    images,
+    description: info.desc || "",
+    seo: { title: info.seoTitle || info.name, description: info.seoDesc || "" },
+    axes: { order: axesConfig.axis_order, options: axesConfig.axes },
+    variants
+  }, null, 2);
+
+  // Firebase catalog entry (legacy)
+  const catalogEntry = JSON.stringify({
+    title: info.name, slug: info.slug, category: catLabel, active: true,
+    images, price_min: priceMin, price_max: priceMax,
+    axis_order: axesConfig.axis_order, axes: axesConfig.axes, variants,
+    description: info.desc, seo: { title: info.seoTitle || info.name, description: info.seoDesc }
   }, null, 2);
 
   const copy = (text, key) => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedKey(key);
-      setTimeout(() => setCopiedKey(""), 1800);
-    });
+    navigator.clipboard.writeText(text).then(() => { setCopiedKey(key); setTimeout(() => setCopiedKey(""), 1800); });
+  };
+
+  const CopyBtn = ({ text, id, label }) => (
+    <button onClick={() => copy(text, id)} style={{
+      background: copiedKey===id ? "#091509" : "#1e1e1e",
+      border: copiedKey===id ? "1px solid #00c85340" : "1px solid #2a2a2a",
+      color: copiedKey===id ? "#00c853" : "#888",
+      padding:"5px 12px", borderRadius:5, fontSize:11, cursor:"pointer", transition:"all .15s", marginLeft:"auto"
+    }}>
+      {copiedKey===id ? "✓ Copié !" : `📋 ${label}`}
+    </button>
+  );
+
+  // Push JSON files to GitHub
+  const pushToGitHub = async () => {
+    const token = localStorage.getItem(GH_TOKEN_KEY);
+    if (!token) { alert("Token GitHub manquant."); return; }
+    setGhPush(true); setGhResult(null);
+    const results = [];
+    // 1. /novastyle/products/{slug}.json
+    try {
+      const b64 = btoa(unescape(encodeURIComponent(productJson)));
+      await ghUpload(token, `novastyle/products/${info.slug}.json`, b64, `Add product ${info.slug}`);
+      results.push({ ok: true, path: `novastyle/products/${info.slug}.json` });
+    } catch(e) { results.push({ ok: false, path: `products/${info.slug}.json`, err: e.message }); }
+
+    setGhResult(results);
+    setGhPush(false);
   };
 
   const saveToFirebase = async () => {
     setSaving(true); setSaveErr(""); setSaved(false);
     try {
-      // Get Firebase auth token so the REST call passes the /catalog write rule
       const fbAuth = window.__NOVA_FIREBASE__?.auth;
       const currentUser = fbAuth?.currentUser;
-      if (!currentUser) throw new Error("Non authentifié — veuillez vous reconnecter.");
+      if (!currentUser) throw new Error("Non authentifié — reconnectez-vous.");
       const token = await currentUser.getIdToken();
-
       const res = await fetch(`${DB}/catalog/${info.slug}.json?auth=${token}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: catalogEntry
+        method: "PUT", headers: { "Content-Type": "application/json" }, body: catalogEntry
       });
-      if (!res.ok) {
-        const msg = await res.text().catch(() => "");
-        throw new Error(`Firebase error ${res.status}${msg ? ": " + msg.slice(0, 120) : ""}`);
-      }
+      if (!res.ok) { const msg = await res.text().catch(() => ""); throw new Error(`Firebase ${res.status}: ${msg.slice(0,120)}`); }
       setSaved(true);
-    } catch(e) {
-      setSaveErr(e.message);
-    } finally {
-      setSaving(false);
-    }
+    } catch(e) { setSaveErr(e.message); }
+    finally { setSaving(false); }
   };
 
   const boxStyle = { background:"#0a0a0a", border:"1px solid #1e1e1e", borderRadius:8, padding:"12px 14px", fontFamily:"'Courier New',monospace", fontSize:11, color:"#7ec8e3", lineHeight:1.6, maxHeight:200, overflowY:"auto", overflowX:"auto", whiteSpace:"pre", marginTop:8 };
-
-  const sectionTitle = { fontSize:10, color:"#555", textTransform:"uppercase", letterSpacing:1.2, fontWeight:700, marginBottom:6, marginTop:20 };
-
-  const CopyBtn = ({ text, id, label }) => (
-    <button onClick={() => copy(text, id)} style={{ background: copiedKey===id ? "#091509" : "#1e1e1e", border: copiedKey===id ? "1px solid #00c85340" : "1px solid #2a2a2a", color: copiedKey===id ? "#00c853" : "#888", padding:"5px 12px", borderRadius:5, fontSize:11, cursor:"pointer", transition:"all .15s", marginLeft:"auto" }}>
-      {copiedKey===id ? "✓ Copié !" : `📋 ${label}`}
-    </button>
-  );
 
   return (
     <div>
       {/* Summary */}
       <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:20 }}>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12 }}>
-          {[
-            ["Produit", info.name],
-            ["Variantes", variants.length],
-            ["Prix min", priceMin === Infinity ? "—" : priceMin + " MAD"],
-            ["Prix max", priceMax === -Infinity ? "—" : priceMax + " MAD"],
-          ].map(([l,v]) => (
+          {[["Produit",info.name],["Variantes",variants.length],["Prix min",priceMin?priceMin+" MAD":"—"],["Prix max",priceMax?priceMax+" MAD":"—"]].map(([l,v]) => (
             <div key={l}>
               <div style={{ fontSize:9, color:"#444", textTransform:"uppercase", letterSpacing:1.5, fontWeight:700 }}>{l}</div>
-              <div style={{ fontSize:18, fontWeight:800, color:"#e8194b", marginTop:3 }}>{v}</div>
+              <div style={{ fontSize:16, fontWeight:800, color:"#e8194b", marginTop:3 }}>{v}</div>
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Push to GitHub */}
+      <div style={{ background:"#071010", border:"1px solid #003a3a", borderRadius:12, padding:16, marginBottom:12 }}>
+        <div style={{ display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
+          <div>
+            <div style={{ fontWeight:800, color:"#00bcd4", fontSize:13 }}>⬆ Pousser les fichiers JSON sur GitHub</div>
+            <div style={{ fontSize:11, color:"#555", marginTop:3 }}>
+              Crée <code style={{color:"#7ec8e3"}}>products/{info.slug}.json</code> directement dans le repo
+            </div>
+          </div>
+          <button onClick={pushToGitHub} disabled={ghPushing} style={{
+            marginLeft:"auto", background: ghPushing ? "#2a2a2a" : "#005f5f", color: ghPushing ? "#555" : "#fff",
+            border:"none", padding:"11px 22px", borderRadius:8, fontWeight:800, fontSize:13, cursor: ghPushing ? "not-allowed" : "pointer"
+          }}>
+            {ghPushing ? "⏳ Push…" : "⬆ Push GitHub"}
+          </button>
+        </div>
+        {ghResult && (
+          <div style={{ marginTop:10 }}>
+            {ghResult.map((r, i) => (
+              <div key={i} style={{ fontSize:11, color: r.ok ? "#00c853" : "#e8194b", padding:"2px 0" }}>
+                {r.ok ? `✓ ${r.path}` : `✗ ${r.path}: ${r.err}`}
+              </div>
+            ))}
+            {ghResult.every(r=>r.ok) && (
+              <div style={{ fontSize:11, color:"#888", marginTop:6 }}>
+                ⚠ Ajoutez manuellement l'entrée dans <code style={{color:"#7ec8e3"}}>products-index.json</code> (voir ① ci-dessous).
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Firebase Save */}
@@ -827,66 +915,56 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
         <div style={{ display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
           <div>
             <div style={{ fontWeight:800, color: saved ? "#00c853" : "#ffb300", fontSize:13 }}>
-              {saved ? "✅ Produit enregistré dans Firebase !" : "🔥 Enregistrer dans Firebase /catalog"}
+              {saved ? "✅ Enregistré dans Firebase !" : "🔥 Enregistrer dans Firebase /catalog"}
             </div>
             <div style={{ fontSize:11, color:"#666", marginTop:3 }}>
-              {saved ? `catalog/${info.slug} · Le produit apparaît immédiatement via le rendu dynamique` : "Rend le produit accessible immédiatement avant même le commit GitHub"}
+              {saved ? `catalog/${info.slug}` : "Rend le produit visible immédiatement via rendu dynamique"}
             </div>
           </div>
-          <button onClick={saveToFirebase} disabled={saving || saved} style={{ marginLeft:"auto", background: saved ? "#00c853" : "#e8194b", color:"#fff", border:"none", padding:"11px 24px", borderRadius:8, fontWeight:800, fontSize:13, cursor: saving || saved ? "not-allowed" : "pointer", opacity: saving ? 0.6 : 1 }}>
-            {saving ? "⏳ Enregistrement…" : saved ? "✓ Enregistré" : "🚀 Enregistrer dans Firebase"}
+          <button onClick={saveToFirebase} disabled={saving||saved} style={{
+            marginLeft:"auto", background: saved ? "#00c853" : "#e8194b", color:"#fff",
+            border:"none", padding:"11px 24px", borderRadius:8, fontWeight:800, fontSize:13,
+            cursor: saving||saved ? "not-allowed" : "pointer", opacity: saving ? 0.6 : 1
+          }}>
+            {saving ? "⏳…" : saved ? "✓ Enregistré" : "🚀 Enregistrer Firebase"}
           </button>
         </div>
         {saveErr && <div style={{ fontSize:12, color:"#e8194b", marginTop:8 }}>❌ {saveErr}</div>}
       </div>
 
-      {/* 1 — products.json */}
+      {/* ① products-index entry */}
       <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:12 }}>
         <div style={{ display:"flex", alignItems:"center" }}>
           <div>
-            <div style={{ fontWeight:800, fontSize:13, color:"#f0f0f0" }}>① products.json</div>
-            <div style={{ fontSize:11, color:"#555", marginTop:2 }}>Ajouter dans le tableau "products" de <code style={{color:"#e8194b"}}>/products.json</code> sur GitHub</div>
+            <div style={{ fontWeight:800, fontSize:13, color:"#f0f0f0" }}>① Entrée products-index.json</div>
+            <div style={{ fontSize:11, color:"#555", marginTop:2 }}>Ajouter dans le tableau <code style={{color:"#e8194b"}}>products-index.json</code> sur GitHub</div>
           </div>
-          <CopyBtn text={productsFeedEntry} id="feed" label="Copier" />
+          <CopyBtn text={indexEntry} id="index" label="Copier" />
         </div>
-        <div style={boxStyle}>{productsFeedEntry}</div>
+        <div style={boxStyle}>{indexEntry}</div>
       </div>
 
-      {/* 2 — PRODUCT JS */}
+      {/* ② Full product JSON */}
       <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:12 }}>
         <div style={{ display:"flex", alignItems:"center" }}>
           <div>
-            <div style={{ fontWeight:800, fontSize:13, color:"#f0f0f0" }}>② const PRODUCT = …</div>
-            <div style={{ fontSize:11, color:"#555", marginTop:2 }}>
-              Coller dans le HTML de <code style={{color:"#e8194b"}}>/produits/{info.slug}/index.html</code> (en bas du body)
-            </div>
+            <div style={{ fontWeight:800, fontSize:13, color:"#f0f0f0" }}>② products/{info.slug}.json (complet)</div>
+            <div style={{ fontSize:11, color:"#555", marginTop:2 }}>Déjà pushé via le bouton ci-dessus · ou import manuel</div>
           </div>
-          <CopyBtn text={productJS} id="productjs" label="Copier" />
+          <CopyBtn text={productJson} id="productjson" label="Copier" />
         </div>
-        <div style={boxStyle}>{productJS.substring(0, 800)}{productJS.length > 800 ? "\n…(tronqué pour l'affichage)" : ""}</div>
-      </div>
-
-      {/* 3 — Firebase catalog JSON (full) */}
-      <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:20 }}>
-        <div style={{ display:"flex", alignItems:"center" }}>
-          <div>
-            <div style={{ fontWeight:800, fontSize:13, color:"#f0f0f0" }}>③ Firebase catalog entry (complet)</div>
-            <div style={{ fontSize:11, color:"#555", marginTop:2 }}>Déjà sauvé via le bouton ci-dessus · également utilisable pour import manuel</div>
-          </div>
-          <CopyBtn text={catalogEntry} id="catalog" label="Copier" />
-        </div>
-        <div style={boxStyle}>{catalogEntry.substring(0, 500)}…</div>
+        <div style={boxStyle}>{productJson.substring(0,600)}{productJson.length>600?"\n…":"" }</div>
       </div>
 
       {/* Checklist */}
       <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:20 }}>
-        <div style={{ fontWeight:800, fontSize:13, color:"#f0f0f0", marginBottom:12 }}>✅ Checklist GitHub</div>
+        <div style={{ fontWeight:800, fontSize:13, color:"#f0f0f0", marginBottom:12 }}>✅ Checklist</div>
         {[
-          [`Créer le dossier produits/${info.slug}/`, "Copier un fichier index.html existant et remplacer const PRODUCT = …"],
-          [`Uploader les images`, `assets/images/${info.slug}/1.webp … ${info.imageCount}.webp`],
-          [`Mettre à jour products.json`, "Ajouter l'entrée ① dans le tableau products"],
-          [`Vérifier les liens de navigation`, "Ajouter le produit dans la catégorie correspondante si nécessaire"],
-          [`Commit + push`, "Le déploiement GitHub Pages se lance automatiquement"],
+          ["Photos uploadées", "Via le bouton upload dans Étape 1 → /images/{slug}/"],
+          [`products/${info.slug}.json`, "Pushé via ⬆ GitHub ci-dessus"],
+          ["products-index.json", "Ajouter l'entrée ① manuellement sur GitHub"],
+          [`Créer /produits/${info.slug}/index.html`, "Copier un index.html existant, mettre le data-slug"],
+          ["Commit + push", "Le déploiement Netlify se lance automatiquement"],
         ].map(([title, detail]) => (
           <div key={title} style={{ display:"flex", gap:10, padding:"8px 0", borderBottom:"1px solid #1a1a1a" }}>
             <span style={{ color:"#e8194b", fontSize:14, flexShrink:0 }}>□</span>
@@ -910,16 +988,15 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
-  const [step, setStep] = useState(0);
-  const [info, setInfo] = useState({});
-  const [copied, setCopied] = useState(null);
-  const [axesConfig, setAxesConfig] = useState(null);
-  const [prices, setPrices] = useState(null);
-  const [allCombos, setAllCombos] = useState(null);
+  const [step,      setStep]     = useState(0);
+  const [info,      setInfo]     = useState({});
+  const [copied,    setCopied]   = useState(null);
+  const [axesConfig,setAxesCfg] = useState(null);
+  const [prices,    setPrices]   = useState(null);
+  const [allCombos, setAllCombos]= useState(null);
 
   return (
     <div style={{ background:"#0f0f0f", minHeight:"100vh", color:"#f0f0f0", fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", padding:"0 0 60px" }}>
-      {/* Header */}
       <div style={{ background:"#141414", borderBottom:"2px solid #e8194b", padding:"14px 24px", display:"flex", alignItems:"center", gap:16, marginBottom:32 }}>
         <span style={{ fontSize:20, fontWeight:900, color:"#e8194b", letterSpacing:-1 }}>NOVA STYLE</span>
         <span style={{ fontSize:10, color:"#333", letterSpacing:3, textTransform:"uppercase", marginTop:2 }}>Nouveau Produit</span>
@@ -928,14 +1005,13 @@ export default function App() {
         </div>
       </div>
 
-      <div style={{ maxWidth:900, margin:"0 auto", padding:"0 24px" }}>
+      <div style={{ maxWidth:920, margin:"0 auto", padding:"0 24px" }}>
         <Stepper current={step} />
-
-        {step === 0 && <StepInfo data={info} onChange={setInfo} onNext={() => setStep(1)} />}
-        {step === 1 && <StepCopy onBack={() => setStep(0)} onNext={(ref) => { setCopied(ref); setStep(2); }} />}
-        {step === 2 && <StepAxes copied={copied} onBack={() => setStep(1)} onNext={(cfg) => { setAxesConfig(cfg); setStep(3); }} />}
-        {step === 3 && <StepPrix axesConfig={axesConfig} copied={copied} onBack={() => setStep(2)} onNext={(p, combos) => { setPrices(p); setAllCombos(combos); setStep(4); }} />}
-        {step === 4 && <StepExport info={info} axesConfig={axesConfig} prices={prices} allCombos={allCombos} onBack={() => setStep(3)} />}
+        {step===0 && <StepInfo  data={info} onChange={setInfo} onNext={() => setStep(1)} />}
+        {step===1 && <StepCopy  onBack={() => setStep(0)} onNext={ref => { setCopied(ref); setStep(2); }} />}
+        {step===2 && <StepAxes  copied={copied} onBack={() => setStep(1)} onNext={cfg => { setAxesCfg(cfg); setStep(3); }} />}
+        {step===3 && <StepPrix  axesConfig={axesConfig} copied={copied} onBack={() => setStep(2)} onNext={(p,c) => { setPrices(p); setAllCombos(c); setStep(4); }} />}
+        {step===4 && <StepExport info={info} axesConfig={axesConfig} prices={prices} allCombos={allCombos} onBack={() => setStep(3)} />}
       </div>
     </div>
   );
