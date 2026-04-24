@@ -1,17 +1,17 @@
 {
-  "id": "miroir-eclipse-essentiel",
   "slug": "miroir-eclipse-essentiel",
   "name": "Miroir pas cher avec led ECLIPSE essentiel",
+<<<<<<< HEAD
   "category": "Entrée de gamme",
   "categoryId": "sdb-essentiel",
+=======
+  "categoryId": "sdb-essentiel",
+  "category": "Miroirs SDB Essentiel",
+>>>>>>> c0255adc4758c01e2db40441cb6ace104ca48960
   "active": true,
   "images": [
     "/images/miroir-eclipse-essentiel/1.webp"
   ],
-  "price": {
-    "min": null,
-    "max": null
-  },
   "description": "Le Miroir ECLIPSE Essentiel Nova Style propose l'élégance de notre célèbre ECLIPSE avec éclairage LED intégré, dans une version au prix accessible à tous les budgets au Maroc. Forme circulaire signature, LED rétroéclairage moderne — toutes les caractéristiques essentielles à un prix optimisé.",
   "seo": {
     "title": "Miroir pas cher avec led ECLIPSE essentiel | Miroir Salle de Bain Maroc · Nova Style",
@@ -21,5 +21,11 @@
     "order": [],
     "options": {}
   },
-  "variants": []
+  "variants": [
+    {
+      "axes": {},
+      "price": 350,
+      "sku": ""
+    }
+  ]
 }
