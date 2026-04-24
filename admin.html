@@ -3182,7 +3182,7 @@
                 <option value="tables">Tables</option>
                 <option value="douches">Douches</option>
               </select>
-              <button onclick="loadProductList()"
+              <button onclick="window.loadProductList?.()"
                 style="padding:8px 16px;background:#1a1a1a;color:#fff;border:none;border-radius:6px;cursor:pointer">🔄 Actualiser</button>
               <span id="product-count" style="font-size:11px;color:#6b7280;margin-left:auto"></span>
             </div>
@@ -3743,7 +3743,10 @@
         item.classList.add("active");
         const panel = document.getElementById("tab-" + tab);
         if (panel) panel.classList.add("active");
-        if (tab === "products") loadProductList();
+        if (tab === "products") {
+          if (window.loadProductList) window.loadProductList();
+          else window._pendingProductLoad = true; // second module not ready yet; it will auto-fire
+        }
         if (tab === "newproduct") window.__mountNouveauProduit__?.();
         if (tab === "reviews" && !allReviewsFlat.length) loadReviews();
         if (tab === "home") applyPeriod(currentPeriod);
@@ -6094,6 +6097,14 @@
         if (!_adsLoaded) { _adsLoaded = true; loadAdsConfig(); }
       });
     });
+
+    // Auto-trigger loadProductList if the Products tab was already active
+    // when this module finished loading (handles race with the Firebase module).
+    if (window._pendingProductLoad ||
+        document.getElementById('tab-products')?.classList.contains('active')) {
+      window._pendingProductLoad = false;
+      window.loadProductList();
+    }
 
   </script>
 

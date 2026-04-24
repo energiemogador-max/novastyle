@@ -124,6 +124,7 @@ function buildProductHtml({ slug, name, catLabel, categoryId, images, seoTitle, 
 <script type="application/ld+json">${schemaProduct}</script>
 <script type="application/ld+json">${schemaBreadcrumb}</script>
 
+<script src="/assets/ads-loader.js" defer></script>
 <script src="/assets/header.js" defer></script>
 
 <nav class="breadcrumb"><a href="/">Accueil</a> › <a href="${catUrl}">${catLabel || "Miroirs"}</a> › <span>${name}</span></nav>
@@ -904,7 +905,9 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
     slug: info.slug, name: info.name, categoryId: info.category, category: catLabel,
     image: images[0], images, active: true,
     price: { min: priceMin, max: priceMax },
-    axes: { order: axesConfig.axis_order, options: axesConfig.axes }
+    axes: { order: axesConfig.axis_order, options: axesConfig.axes },
+    seo: { title: info.seoTitle || info.name, description: info.seoDesc || "" },
+    hasVariants: variants.length > 0, variantCount: variants.length
   };
 
   const catalogEntry = JSON.stringify({
@@ -980,7 +983,11 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
         );
         if (!fileRes.ok) throw new Error(`Cannot read products-index.json (${fileRes.status})`);
         const fileData = await fileRes.json();
-        const currentContent = JSON.parse(atob(fileData.content.replace(/\n/g, "")));
+        // Decode as UTF-8 (not Latin-1) to preserve French accents in existing product names.
+        const binary = atob(fileData.content.replace(/\n/g, ""));
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        const currentContent = JSON.parse(new TextDecoder("utf-8").decode(bytes));
 
         // Remove existing entry with same slug (idempotent)
         const products = (currentContent.products || []).filter(p => p.slug !== info.slug);

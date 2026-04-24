@@ -229,68 +229,40 @@
 
 <script type="module" src="/assets/cart.js"></script>
 <script>
-let allProducts = [];
-
-// Load products from JSON
-async function loadProducts() {
-  try {
-    const response = await fetch('/products.json');
-    const data = await response.json();
-    allProducts = data.products;
-    renderProducts(allProducts);
-  } catch (error) {
-    console.error('Error loading products:', error);
-    document.getElementById('products-grid').innerHTML = '<div class="empty-shop"><p>Erreur lors du chargement des produits</p></div>';
-  }
-}
-
-function renderProducts(products) {
+(async function () {
   const grid = document.getElementById('products-grid');
-  
-  if (products.length === 0) {
-    grid.innerHTML = '<div class="empty-shop"><p>Aucun produit trouvé</p></div>';
-    return;
-  }
-  
-  grid.innerHTML = products.map(product => `
-    <div class="product-card">
-      <div class="product-image">
-        <img src="${product.image}" alt="${product.name}" onerror="this.src='/assets/logo.png'">
-      </div>
-      <div class="product-info">
-        <div class="product-category">${product.category}</div>
-        <div class="product-name">${product.name}</div>
-        <div class="product-price">${formatPrice(product.price)}</div>
-        <button class="add-to-cart-btn" onclick="addProductToCart('${product.id}')">
-          Ajouter au panier
-        </button>
-      </div>
-    </div>
-  `).join('');
-}
+  function fmtPrice(v) { return v == null ? '' : Math.round(v).toLocaleString('fr-FR') + ' MAD'; }
 
-function addProductToCart(productId) {
-  const product = allProducts.find(p => p.id === productId);
-  if (product) {
-    addToCart(productId, product, null);
-    updateCartBadge();
-  }
-}
-
-function updateCartBadge() {
   try {
-    const items = JSON.parse(localStorage.getItem('nova_style_cart') || '[]');
-    const count = Array.isArray(items) ? items.reduce((s, i) => s + (i.quantity || 1), 0) : 0;
-    const badge = document.getElementById('cart-badge');
-    if (badge) {
-      badge.textContent = count > 0 ? count : '';
-      badge.style.display = count > 0 ? 'inline-flex' : 'none';
-    }
-  } catch(e) {}
-}
+    const res = await fetch('/products-index.json?_=' + Math.floor(Date.now() / 60000));
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const products = (data.products || []).filter(p => p.active && !/[^\x00-\x7F]/.test(p.slug));
 
-// Load products on page load
-document.addEventListener('DOMContentLoaded', loadProducts);
+    if (!products.length) {
+      grid.innerHTML = '<div class="empty-shop"><p>Aucun produit trouvé</p></div>';
+      return;
+    }
+
+    grid.innerHTML = products.map((p, i) => {
+      const imgAttrs = i === 0 ? ' fetchpriority="high"' : ' loading="lazy"';
+      const price = p.price?.min != null ? 'À partir de ' + fmtPrice(p.price.min) : '';
+      return `<a class="product-card" href="/produits/${p.slug}/" style="text-decoration:none;color:inherit">
+        <div class="product-image">
+          <img src="${p.image || ''}" alt="${(p.name || '').replace(/"/g, '&quot;')}"${imgAttrs} decoding="async" onerror="this.src='/assets/logo.png'">
+        </div>
+        <div class="product-info">
+          <div class="product-category">${p.category || ''}</div>
+          <div class="product-name">${p.name || ''}</div>
+          <div class="product-price">${price}</div>
+        </div>
+      </a>`;
+    }).join('');
+  } catch (e) {
+    console.error('shop:', e);
+    grid.innerHTML = '<div class="empty-shop"><p>Erreur de chargement des produits.</p></div>';
+  }
+})();
 </script>
 
 </body>
