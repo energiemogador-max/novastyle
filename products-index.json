@@ -251,16 +251,34 @@
       "variantCount": 10
     },
     {
-      "id": "nova-style-miroir-hawaii",
       "slug": "nova-style-miroir-hawaii",
       "name": "Nova Style : Miroir HAWAII",
-      "category": "Miroirs SDB Premium",
-      "categoryId": "sdb-premium",
-      "active": true,
+      "categoryId": "salon",
+      "category": "Salon & Dressing",
       "image": "/images/nova-style-miroir-hawaii/1.webp",
+      "images": [
+        "/images/nova-style-miroir-hawaii/1.webp",
+        "/images/nova-style-miroir-hawaii/2.webp"
+      ],
+      "active": true,
       "price": {
         "min": 2300,
         "max": 2450
+      },
+      "axes": {
+        "order": [
+          "Dimension",
+          "Installation"
+        ],
+        "options": {
+          "Dimension": [
+            "180 cm x 90 cm"
+          ],
+          "Installation": [
+            "Sans Installation",
+            "Avec Installation"
+          ]
+        }
       },
       "hasVariants": true,
       "variantCount": 2
