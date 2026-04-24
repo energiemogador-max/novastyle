@@ -35,7 +35,89 @@
 </head>
 <body>
 
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SEO + GEO (AI engines) structured data
+     Targets: "miroir de salle de bain", "miroir maroc", "miroir casablanca",
+     "miroir LED maroc", "fabricant miroir casablanca", "Nova Style"
+     ═══════════════════════════════════════════════════════════════════════ -->
+<script type="application/ld+json">{
+  "@context":"https://schema.org",
+  "@type":"Organization",
+  "@id":"https://novastyle.ma/#organization",
+  "name":"Nova Style",
+  "alternateName":["Nova Style Maroc","Nova Style Casablanca","NovaStyle"],
+  "url":"https://novastyle.ma/",
+  "logo":"https://novastyle.ma/assets/logo.png",
+  "image":"https://novastyle.ma/assets/logo.png",
+  "description":"Fabricant marocain de miroirs de salle de bain LED, anti-buée et anticorrosion. Verre AGC Belgique. Sur mesure. Livraison partout au Maroc.",
+  "telephone":"+212707074748",
+  "email":"contact@novastyle.ma",
+  "address":{"@type":"PostalAddress","streetAddress":"Route de Médiouna","addressLocality":"Casablanca","addressRegion":"Casablanca-Settat","postalCode":"20000","addressCountry":"MA"},
+  "areaServed":[
+    {"@type":"Country","name":"Maroc"},
+    {"@type":"City","name":"Casablanca"},{"@type":"City","name":"Rabat"},
+    {"@type":"City","name":"Marrakech"},{"@type":"City","name":"Tanger"},
+    {"@type":"City","name":"Fès"},{"@type":"City","name":"Agadir"},
+    {"@type":"City","name":"Meknès"},{"@type":"City","name":"Oujda"},
+    {"@type":"City","name":"Kénitra"},{"@type":"City","name":"El Jadida"},
+    {"@type":"City","name":"Tétouan"},{"@type":"City","name":"Mohammedia"}
+  ],
+  "sameAs":["https://www.instagram.com/novastyle.ma/"],
+  "foundingLocation":{"@type":"Place","name":"Casablanca, Maroc"}
+}</script>
 
+<script type="application/ld+json">{
+  "@context":"https://schema.org",
+  "@type":"LocalBusiness",
+  "@id":"https://novastyle.ma/#localbusiness",
+  "name":"Nova Style — Fabricant Miroirs Casablanca",
+  "image":"https://novastyle.ma/assets/logo.png",
+  "url":"https://novastyle.ma/",
+  "telephone":"+212707074748",
+  "priceRange":"450 – 4800 MAD",
+  "address":{"@type":"PostalAddress","streetAddress":"Route de Médiouna","addressLocality":"Casablanca","addressRegion":"Casablanca-Settat","postalCode":"20000","addressCountry":"MA"},
+  "geo":{"@type":"GeoCoordinates","latitude":33.5731,"longitude":-7.5898},
+  "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"09:00","closes":"18:00"}],
+  "currenciesAccepted":"MAD",
+  "paymentAccepted":"Espèces, Virement bancaire, Acompte 50%",
+  "hasOfferCatalog":{"@type":"OfferCatalog","name":"Catalogue Nova Style","itemListElement":[
+    {"@type":"OfferCatalog","name":"Miroirs de salle de bain LED anti-buée"},
+    {"@type":"OfferCatalog","name":"Miroirs salle de bain entrée de gamme"},
+    {"@type":"OfferCatalog","name":"Miroirs de salon et dressing"},
+    {"@type":"OfferCatalog","name":"Consoles et miroirs d'entrée"},
+    {"@type":"OfferCatalog","name":"Tables de séjour"},
+    {"@type":"OfferCatalog","name":"Douches italiennes en verre trempé"}
+  ]}
+}</script>
+
+<script type="application/ld+json">{
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "@id":"https://novastyle.ma/#website",
+  "url":"https://novastyle.ma/",
+  "name":"Nova Style",
+  "description":"Miroir de salle de bain LED anti-buée au Maroc — fabriqué à Casablanca",
+  "inLanguage":"fr-MA",
+  "publisher":{"@id":"https://novastyle.ma/#organization"},
+  "potentialAction":{
+    "@type":"SearchAction",
+    "target":{"@type":"EntryPoint","urlTemplate":"https://novastyle.ma/shop.html?q={search_term_string}"},
+    "query-input":"required name=search_term_string"
+  }
+}</script>
+
+<script type="application/ld+json">{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"Où acheter un miroir de salle de bain au Maroc ?","acceptedAnswer":{"@type":"Answer","text":"Nova Style fabrique des miroirs de salle de bain sur mesure à Casablanca et livre partout au Maroc : Rabat, Marrakech, Tanger, Fès, Agadir, Meknès, Oujda, Kénitra, El Jadida, Tétouan, Mohammedia. Devis WhatsApp au 07 07 07 47 48."}},
+    {"@type":"Question","name":"Quel est le prix d'un miroir de salle de bain LED au Maroc ?","acceptedAnswer":{"@type":"Answer","text":"Les miroirs de salle de bain LED Nova Style commencent à 450 MAD pour la gamme Essentiel et vont jusqu'à 4 800 MAD pour les ensembles meuble + miroir rétroéclairé. Tous nos miroirs sont fabriqués sur mesure avec verre AGC Belgique 6 mm."}},
+    {"@type":"Question","name":"Qu'est-ce qu'un miroir anti-buée et comment ça marche ?","acceptedAnswer":{"@type":"Answer","text":"Un miroir anti-buée intègre une plaque chauffante électrique au dos du verre qui empêche la condensation après la douche. Nos miroirs Nova Style combinent l'anti-buée électrique avec un traitement anticorrosion garanti 3 ans."}},
+    {"@type":"Question","name":"Nova Style fabrique-t-il sur mesure ?","acceptedAnswer":{"@type":"Answer","text":"Oui, tous nos miroirs sont fabriqués sur mesure dans notre atelier de Casablanca. Vous choisissez les dimensions exactes, la forme, la température LED (2000K à 6000K), avec ou sans installation. Délai 5 à 10 jours."}},
+    {"@type":"Question","name":"Quel verre est utilisé pour les miroirs Nova Style ?","acceptedAnswer":{"@type":"Answer","text":"Nous utilisons exclusivement du verre AGC importé de Belgique, épaisseur 6 mm, qualité supérieure pour une réflexion parfaite. Garantie 3 ans contre la corrosion grâce au traitement de surface anticorrosion."}},
+    {"@type":"Question","name":"Livrez-vous à Casablanca ?","acceptedAnswer":{"@type":"Answer","text":"Oui, livraison gratuite à Casablanca et environs (Mohammedia, Bouskoura, Dar Bouazza, Ain Diab). L'installation est également disponible en option dans la région de Casablanca."}}
+  ]
+}</script>
 
 <section class="hero">
   <h1>Miroir de salle de bain LED anti-buée au Maroc</h1>
