@@ -1,18 +1,13 @@
 {
-  "id": "nova-style-miroir-hawaii",
   "slug": "nova-style-miroir-hawaii",
   "name": "Nova Style : Miroir HAWAII",
-  "category": "Miroirs SDB Premium",
-  "categoryId": "sdb-premium",
+  "categoryId": "salon",
+  "category": "Salon & Dressing",
   "active": true,
   "images": [
     "/images/nova-style-miroir-hawaii/1.webp",
     "/images/nova-style-miroir-hawaii/2.webp"
   ],
-  "price": {
-    "min": 2300.0,
-    "max": 2450.0
-  },
   "description": "Le Miroir HAWAII Nova Style apporte une touche d'évasion tropicale et de modernité à votre intérieur. Inspiré des paysages hawaïens — courbes naturelles évoquant les vagues ou les feuilles tropicales — le HAWAII transforme votre espace en véritable oasis design pour salles de bain et espaces de vie au Maroc.",
   "seo": {
     "title": "Nova Style : Miroir HAWAII | Miroir Salle de Bain Maroc · Nova Style",
@@ -39,7 +34,7 @@
         "Dimension": "180 cm x 90 cm",
         "Installation": "Sans Installation"
       },
-      "price": 2300.0,
+      "price": 2300,
       "sku": ""
     },
     {
@@ -47,7 +42,7 @@
         "Dimension": "180 cm x 90 cm",
         "Installation": "Avec Installation"
       },
-      "price": 2450.0,
+      "price": 2450,
       "sku": ""
     }
   ]
