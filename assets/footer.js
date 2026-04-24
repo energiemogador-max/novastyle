@@ -22,6 +22,7 @@
     { href: "/miroir-sur-mesure/",              label: "Miroir sur mesure" },
     { href: "/miroir-led-casablanca/",          label: "Miroir LED Casablanca" },
     { href: "/miroir-maroc/",                   label: "Miroir Maroc" },
+    { href: "/blog/",                           label: "📖 Blog" },
   ];
 
   var CITIES = [

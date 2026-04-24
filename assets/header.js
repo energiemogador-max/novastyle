@@ -12,6 +12,7 @@
     { href: "/categorie/consoles/",       label: "Consoles &amp; entrée" },
     { href: "/categorie/tables/",         label: "Tables de séjour" },
     { href: "/categorie/douches/",        label: "Douches italiennes" },
+    { href: "/blog/",                     label: "Blog" },
   ];
 
   const ANNOUNCE = "Acompte de 50% requis pour confirmer votre commande · Livraison partout au Maroc";
