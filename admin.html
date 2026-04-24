@@ -6023,7 +6023,7 @@
       try {
         const fbToken = await window.__NOVA_FIREBASE__?.auth?.currentUser?.getIdToken();
         if (!fbToken) return;
-        const res = await fetch(`${DB_REST}/ads_config.json?auth=${fbToken}`);
+        const res = await fetch(`${DB}/ads_config.json?auth=${fbToken}`);
         if (!res.ok) return;
         const cfg = await res.json();
         if (!cfg) return;
@@ -6062,7 +6062,7 @@
         ADS_FIELDS.forEach(({ id, key }) => {
           cfg[key] = document.getElementById(id)?.value.trim() || '';
         });
-        const res = await fetch(`${DB_REST}/ads_config.json?auth=${fbToken}`, {
+        const res = await fetch(`${DB}/ads_config.json?auth=${fbToken}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(cfg)
