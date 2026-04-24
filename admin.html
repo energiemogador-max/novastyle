@@ -2875,6 +2875,7 @@
           <div class="sidebar-item" data-tab="reviews"><span class="sidebar-icon">⭐</span>Avis<span
               class="sidebar-badge" id="reviews-tab-badge" style="display:none">0</span></div>
           <div class="sidebar-item" data-tab="import"><span class="sidebar-icon">🚀</span>Import</div>
+          <div class="sidebar-item" data-tab="ads"><span class="sidebar-icon">📣</span>Ads Manager</div>
         </div>
         <div class="sidebar-footer">
           <span class="sidebar-email" id="admin-email-display"></span>
@@ -3561,6 +3562,98 @@
 
           </div>
         </div>
+
+        <!-- ═══ ADS MANAGER ═══ -->
+        <div class="tab-panel" id="tab-ads">
+          <div class="container" style="max-width:760px">
+            <h2 style="font-size:20px;font-weight:700;margin:0 0 6px">📣 Ads Manager</h2>
+            <p style="font-size:13px;color:#6b7280;margin:0 0 28px">Ajoutez vos identifiants de pixels publicitaires. Ils seront injectés automatiquement sur toutes les pages du site.</p>
+
+            <!-- Google Analytics / Ads -->
+            <div class="tool-card" style="margin-bottom:20px">
+              <div class="tool-card-head">
+                <div>
+                  <div class="tool-card-title" style="display:flex;align-items:center;gap:8px">
+                    <img src="https://www.google.com/favicon.ico" style="width:16px;height:16px" onerror="this.style.display='none'">
+                    Google
+                  </div>
+                  <div class="tool-card-sub">Google Analytics 4 &amp; Google Ads (Gtag)</div>
+                </div>
+                <span id="ads-google-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;background:#dcfce7;color:#166534;display:none">Actif</span>
+              </div>
+              <div style="display:grid;gap:12px;margin-top:16px">
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:4px">Google Analytics 4 — Measurement ID</label>
+                  <input id="ads-ga4-id" type="text" placeholder="G-XXXXXXXXXX"
+                    style="width:100%;box-sizing:border-box;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px;font-family:monospace">
+                  <div style="font-size:11px;color:#9ca3af;margin-top:3px">Trouvé dans Google Analytics → Admin → Flux de données</div>
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:4px">Google Ads — Conversion ID</label>
+                  <input id="ads-gads-id" type="text" placeholder="AW-XXXXXXXXXX"
+                    style="width:100%;box-sizing:border-box;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px;font-family:monospace">
+                  <div style="font-size:11px;color:#9ca3af;margin-top:3px">Trouvé dans Google Ads → Outils → Conversions</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Meta / Facebook -->
+            <div class="tool-card" style="margin-bottom:20px">
+              <div class="tool-card-head">
+                <div>
+                  <div class="tool-card-title" style="display:flex;align-items:center;gap:8px">
+                    <img src="https://www.facebook.com/favicon.ico" style="width:16px;height:16px" onerror="this.style.display='none'">
+                    Meta (Facebook &amp; Instagram)
+                  </div>
+                  <div class="tool-card-sub">Meta Pixel pour Facebook Ads &amp; Instagram Ads</div>
+                </div>
+                <span id="ads-meta-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;background:#dcfce7;color:#166534;display:none">Actif</span>
+              </div>
+              <div style="margin-top:16px">
+                <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:4px">Meta Pixel ID</label>
+                <input id="ads-meta-id" type="text" placeholder="123456789012345"
+                  style="width:100%;box-sizing:border-box;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px;font-family:monospace">
+                <div style="font-size:11px;color:#9ca3af;margin-top:3px">Trouvé dans Meta Business Suite → Events Manager → Pixels</div>
+              </div>
+            </div>
+
+            <!-- TikTok -->
+            <div class="tool-card" style="margin-bottom:28px">
+              <div class="tool-card-head">
+                <div>
+                  <div class="tool-card-title" style="display:flex;align-items:center;gap:8px">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.95a8.16 8.16 0 004.77 1.52V7.01a4.85 4.85 0 01-1-.32z"/></svg>
+                    TikTok
+                  </div>
+                  <div class="tool-card-sub">TikTok Pixel pour TikTok Ads</div>
+                </div>
+                <span id="ads-tiktok-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;background:#dcfce7;color:#166534;display:none">Actif</span>
+              </div>
+              <div style="margin-top:16px">
+                <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:4px">TikTok Pixel ID</label>
+                <input id="ads-tiktok-id" type="text" placeholder="CXXXXXXXXXXXXXXXXXXXXXXX"
+                  style="width:100%;box-sizing:border-box;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px;font-family:monospace">
+                <div style="font-size:11px;color:#9ca3af;margin-top:3px">Trouvé dans TikTok Ads Manager → Assets → Events → Web Events</div>
+              </div>
+            </div>
+
+            <!-- Save button + status -->
+            <div style="display:flex;align-items:center;gap:16px">
+              <button onclick="window.saveAdsConfig()"
+                style="background:#e8194b;color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">
+                💾 Enregistrer les pixels
+              </button>
+              <span id="ads-save-status" style="font-size:13px;color:#6b7280"></span>
+            </div>
+
+            <div style="margin-top:32px;padding:16px;background:#fffbeb;border:1.5px solid #fbbf24;border-radius:10px;font-size:12px;color:#92400e;line-height:1.7">
+              <strong>⚠️ Comment appliquer ces pixels ?</strong><br>
+              Les identifiants sont sauvegardés dans Firebase sous <code>/ads_config</code>. Votre développeur (ou vous-même) doit ensuite lire cette clé Firebase au chargement de chaque page et injecter les scripts correspondants dans le <code>&lt;head&gt;</code>.
+              Alternatively, ajoutez directement les snippets officiels dans votre <code>_headers</code> ou dans un fichier JS partagé.
+            </div>
+          </div>
+        </div>
+
       </div><!-- /main-content -->
     </div><!-- /admin-body -->
 
@@ -4522,7 +4615,10 @@
         const getRes = await fetch(apiUrl, { headers: ghHeaders });
         if (!getRes.ok) throw new Error(`Lecture products.json (HTTP ${getRes.status})`);
         const fileData = await getRes.json();
-        const decoded = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, "")))));
+        const _rawB64 = fileData.content.replace(/\n/g, "");
+        const _bytes = Uint8Array.from(atob(_rawB64), c => c.charCodeAt(0));
+        const _text = new TextDecoder('utf-8').decode(_bytes);
+        const decoded = JSON.parse(_text.charCodeAt(0) === 0xFEFF ? _text.slice(1) : _text);
 
         // Patch category
         const idx = decoded.products.findIndex(p => (p.id || p.slug) === productId);
@@ -5432,7 +5528,15 @@
       if (r.status === 404) return { sha: null, content: null };
       if (!r.ok) throw new Error(`GH read ${path}: ${r.status}`);
       const d = await r.json();
-      return { sha: d.sha, content: atob(d.content.replace(/\n/g, '')) };
+      // Properly decode UTF-8: GitHub returns base64-encoded raw bytes.
+      // atob() gives a binary Latin-1 string — we must re-decode as UTF-8
+      // so that French accents and other multi-byte chars survive round-trips.
+      const binary = atob(d.content.replace(/\n/g, ''));
+      const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+      const decoded = new TextDecoder('utf-8').decode(bytes);
+      // Strip BOM (ï»¿ / U+FEFF) if present — some editors write it
+      const content = decoded.charCodeAt(0) === 0xFEFF ? decoded.slice(1) : decoded;
+      return { sha: d.sha, content };
     }
 
     async function ghPutFile(token, path, content, message, sha) {
@@ -5900,7 +6004,83 @@
       _editingFull = null;
       _editImages = [];
     };
-  </script>
+
+    // ── ADS MANAGER ─────────────────────────────────────────────────────────
+    const ADS_FIELDS = [
+      { id: 'ads-ga4-id',    key: 'google_ga4',    badge: 'ads-google-badge' },
+      { id: 'ads-gads-id',   key: 'google_ads',    badge: 'ads-google-badge' },
+      { id: 'ads-meta-id',   key: 'meta_pixel',    badge: 'ads-meta-badge'   },
+      { id: 'ads-tiktok-id', key: 'tiktok_pixel',  badge: 'ads-tiktok-badge' },
+    ];
+
+    // Load saved pixel IDs from Firebase when user opens Ads tab
+    async function loadAdsConfig() {
+      try {
+        const fbToken = localStorage.getItem('nova_admin_token');
+        if (!fbToken) return;
+        const res = await fetch(`${DB_REST}/ads_config.json?auth=${fbToken}`);
+        if (!res.ok) return;
+        const cfg = await res.json();
+        if (!cfg) return;
+        ADS_FIELDS.forEach(({ id, key }) => {
+          const el = document.getElementById(id);
+          if (el && cfg[key]) el.value = cfg[key];
+        });
+        updateAdsBadges();
+      } catch (e) { console.warn('loadAdsConfig:', e); }
+    }
+
+    function updateAdsBadges() {
+      // Google badge: active if either GA4 or Ads ID is set
+      const ga4 = document.getElementById('ads-ga4-id')?.value.trim();
+      const gads = document.getElementById('ads-gads-id')?.value.trim();
+      const googleBadge = document.getElementById('ads-google-badge');
+      if (googleBadge) googleBadge.style.display = (ga4 || gads) ? '' : 'none';
+
+      const metaVal = document.getElementById('ads-meta-id')?.value.trim();
+      const metaBadge = document.getElementById('ads-meta-badge');
+      if (metaBadge) metaBadge.style.display = metaVal ? '' : 'none';
+
+      const ttVal = document.getElementById('ads-tiktok-id')?.value.trim();
+      const ttBadge = document.getElementById('ads-tiktok-badge');
+      if (ttBadge) ttBadge.style.display = ttVal ? '' : 'none';
+    }
+
+    window.saveAdsConfig = async function () {
+      const statusEl = document.getElementById('ads-save-status');
+      statusEl.style.color = '#6b7280';
+      statusEl.textContent = '⏳ Sauvegarde…';
+      try {
+        const fbToken = localStorage.getItem('nova_admin_token');
+        if (!fbToken) throw new Error('Token Firebase manquant — reconnectez-vous.');
+        const cfg = {};
+        ADS_FIELDS.forEach(({ id, key }) => {
+          cfg[key] = document.getElementById(id)?.value.trim() || '';
+        });
+        const res = await fetch(`${DB_REST}/ads_config.json?auth=${fbToken}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(cfg)
+        });
+        if (!res.ok) throw new Error(`Firebase HTTP ${res.status}`);
+        updateAdsBadges();
+        statusEl.style.color = '#16a34a';
+        statusEl.textContent = '✅ Pixels sauvegardés avec succès !';
+        setTimeout(() => { statusEl.textContent = ''; }, 4000);
+      } catch (e) {
+        statusEl.style.color = '#e8194b';
+        statusEl.textContent = '❌ ' + e.message;
+      }
+    };
+
+    // Hook into tab switching to load ads config on first open
+    let _adsLoaded = false;
+    const _origTabSwitch = document.querySelectorAll('.sidebar-item');
+    document.querySelectorAll('.sidebar-item[data-tab="ads"]').forEach(el => {
+      el.addEventListener('click', () => {
+        if (!_adsLoaded) { _adsLoaded = true; loadAdsConfig(); }
+      });
+    });
 
 </body>
 
