@@ -3569,6 +3569,30 @@
             <h2 style="font-size:20px;font-weight:700;margin:0 0 6px">📣 Ads Manager</h2>
             <p style="font-size:13px;color:#6b7280;margin:0 0 28px">Ajoutez vos identifiants de pixels publicitaires. Ils seront injectés automatiquement sur toutes les pages du site.</p>
 
+            <!-- Meta Product Feed -->
+            <div class="tool-card" style="margin-bottom:24px;border-color:#1877f2;background:linear-gradient(135deg,#f0f6ff 0%,#fff 60%)">
+              <div class="tool-card-head">
+                <div>
+                  <div class="tool-card-title" style="display:flex;align-items:center;gap:8px">
+                    <img src="https://www.facebook.com/favicon.ico" style="width:16px;height:16px" onerror="this.style.display='none'">
+                    Catalogue Produits Meta
+                  </div>
+                  <div class="tool-card-sub">Flux CSV pour Facebook &amp; Instagram Shopping — mis à jour depuis vos produits actuels</div>
+                </div>
+                <span id="feed-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;background:#dbeafe;color:#1d4ed8;display:none">Publié</span>
+              </div>
+              <div style="margin-top:14px;padding:12px 14px;background:#eff6ff;border-radius:8px;font-size:12px;color:#1e40af;line-height:1.6">
+                Génère automatiquement <code style="background:#dbeafe;padding:1px 5px;border-radius:4px">meta-feed.csv</code> à la racine du site avec tous vos produits actifs au format requis par Meta Business Suite (id, title, description, price, image_link, link…).
+              </div>
+              <div style="margin-top:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                <button id="feed-btn" onclick="window.generateMetaFeed()"
+                  style="background:#1877f2;color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px">
+                  🔄 Mettre à jour le flux
+                </button>
+                <span id="feed-status" style="font-size:13px;color:#6b7280"></span>
+              </div>
+            </div>
+
             <!-- Google Analytics / Ads -->
             <div class="tool-card" style="margin-bottom:20px">
               <div class="tool-card-head">
@@ -6008,6 +6032,69 @@
       _editingSlug = null;
       _editingFull = null;
       _editImages = [];
+    };
+
+    // ── META PRODUCT FEED ────────────────────────────────────────────────────
+    window.generateMetaFeed = async function () {
+      const btn    = document.getElementById('feed-btn');
+      const status = document.getElementById('feed-status');
+      const badge  = document.getElementById('feed-badge');
+      const ghToken = localStorage.getItem('nova_github_token');
+      if (!ghToken) { status.style.color = '#e8194b'; status.textContent = '❌ Token GitHub manquant'; return; }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Génération…';
+      status.style.color = '#6b7280';
+      status.textContent = 'Chargement des produits…';
+
+      try {
+        // 1. Fetch current products
+        const res = await fetch('/products-index.json?_=' + Date.now());
+        if (!res.ok) throw new Error('products-index.json introuvable');
+        const data = await res.json();
+        const products = (data.products || []).filter(p => p.active && p.slug && !/[^\x00-\x7F]/.test(p.slug));
+
+        // 2. Build CSV (Meta catalog feed format)
+        const BASE = 'https://novastyle.ma';
+        const escape = v => '"' + String(v || '').replace(/"/g, '""') + '"';
+
+        const headers = ['id','title','description','availability','condition','price','link','image_link','brand','google_product_category'];
+        const rows = products.map(p => {
+          const price = p.price?.min != null ? Math.round(p.price.min) + ' MAD' : '350 MAD';
+          const img   = p.image ? (p.image.startsWith('http') ? p.image : BASE + p.image) : '';
+          const desc  = p.seo?.description || p.name || '';
+          return [
+            escape(p.slug),
+            escape(p.name || ''),
+            escape(desc.slice(0, 9999)),
+            escape('in stock'),
+            escape('new'),
+            escape(price),
+            escape(BASE + '/produits/' + p.slug + '/'),
+            escape(img),
+            escape('Nova Style'),
+            escape('Home & Garden > Decor > Mirrors'),
+          ].join(',');
+        });
+
+        const csv = [headers.join(','), ...rows].join('\r\n');
+
+        // 3. Push to GitHub
+        status.textContent = 'Publication sur GitHub…';
+        const existing = await ghReadFile(ghToken, 'meta-feed.csv');
+        await ghPutFile(ghToken, 'meta-feed.csv', csv,
+          `Update meta-feed.csv (${products.length} products)`, existing.sha);
+
+        badge.style.display = '';
+        status.style.color  = '#16a34a';
+        status.textContent  = `✅ ${products.length} produits publiés — meta-feed.csv mis à jour`;
+      } catch(e) {
+        status.style.color  = '#e8194b';
+        status.textContent  = '❌ ' + e.message;
+      } finally {
+        btn.disabled    = false;
+        btn.textContent = '🔄 Mettre à jour le flux';
+      }
     };
 
     // ── ADS MANAGER ─────────────────────────────────────────────────────────
