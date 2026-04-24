@@ -3646,10 +3646,10 @@
               <span id="ads-save-status" style="font-size:13px;color:#6b7280"></span>
             </div>
 
-            <div style="margin-top:32px;padding:16px;background:#fffbeb;border:1.5px solid #fbbf24;border-radius:10px;font-size:12px;color:#92400e;line-height:1.7">
-              <strong>⚠️ Comment appliquer ces pixels ?</strong><br>
-              Les identifiants sont sauvegardés dans Firebase sous <code>/ads_config</code>. Votre développeur (ou vous-même) doit ensuite lire cette clé Firebase au chargement de chaque page et injecter les scripts correspondants dans le <code>&lt;head&gt;</code>.
-              Alternatively, ajoutez directement les snippets officiels dans votre <code>_headers</code> ou dans un fichier JS partagé.
+            <div style="margin-top:32px;padding:16px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;font-size:12px;color:#166534;line-height:1.7">
+              <strong>✅ Injection automatique</strong><br>
+              En cliquant "Enregistrer", les pixels sont sauvegardés dans Firebase <em>et</em> dans le fichier <code>/ads_config.json</code> sur GitHub.
+              Le script <code>/assets/ads-loader.js</code> inclus sur toutes les pages lit ce fichier et injecte automatiquement les trackers actifs — aucune action supplémentaire requise.
             </div>
           </div>
         </div>
@@ -5567,6 +5567,8 @@
       }
     }
 
+    window._ghPutFile = ghPutFile;
+
     function fileToBase64(file) {
       return new Promise((res, rej) => {
         const r = new FileReader();
@@ -6064,8 +6066,19 @@
         });
         if (!res.ok) throw new Error(`Firebase HTTP ${res.status}`);
         updateAdsBadges();
+
+        // Also write static ads_config.json to GitHub so ads-loader.js can read it without auth
+        const ghToken = localStorage.getItem('nova_github_token') || localStorage.getItem('nova_gh_pat');
+        if (ghToken && window._ghPutFile) {
+          try {
+            await window._ghPutFile(ghToken, 'ads_config.json', JSON.stringify(cfg, null, 2), 'Update ads_config.json', null);
+          } catch (ghErr) {
+            console.warn('ads_config.json GitHub write failed:', ghErr);
+          }
+        }
+
         statusEl.style.color = '#16a34a';
-        statusEl.textContent = '✅ Pixels sauvegardés avec succès !';
+        statusEl.textContent = '✅ Pixels sauvegardés et déployés automatiquement !';
         setTimeout(() => { statusEl.textContent = ''; }, 4000);
       } catch (e) {
         statusEl.style.color = '#e8194b';
@@ -6081,6 +6094,8 @@
         if (!_adsLoaded) { _adsLoaded = true; loadAdsConfig(); }
       });
     });
+
+  </script>
 
 </body>
 

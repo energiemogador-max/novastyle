@@ -1,4 +1,4 @@
-﻿{
+{
   "version": 2,
   "generated": "2026-04-23",
   "categories": [
@@ -14,7 +14,6 @@
       "raw": "Entrée de gamme",
       "count": 3
     },
-    
     {
       "id": "salon",
       "name": "Salon & dressing",
@@ -134,7 +133,7 @@
     {
       "id": "nova-style-ensemble-meuble-et-miroir-retroeclaire",
       "slug": "nova-style-ensemble-meuble-et-miroir-retroeclaire",
-      "name": "Nova Style : Ensemble Meuble et Miroir rÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©troÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©clairÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©",
+      "name": "Nova Style : Ensemble Meuble et Miroir rétroéclairé",
       "category": "Miroirs SDB Premium",
       "categoryId": "sdb-premium",
       "active": true,
@@ -209,7 +208,7 @@
     {
       "id": "nova-style-miroir-azalee",
       "slug": "nova-style-miroir-azalee",
-      "name": "miroir salle de bain avec cadre de Nova Style : Miroir AzalÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©e",
+      "name": "miroir salle de bain avec cadre de Nova Style : Miroir Azalée",
       "category": "Miroirs SDB Premium",
       "categoryId": "sdb-premium",
       "active": true,
@@ -479,7 +478,7 @@
     {
       "id": "nova-style-miroir-eclipse-bright",
       "slug": "nova-style-miroir-eclipse-bright",
-      "name": "Nova Style : Miroir ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂCLIPSE BRIGHT",
+      "name": "Nova Style : Miroir ÉCLIPSE BRIGHT",
       "category": "Miroirs SDB Premium",
       "categoryId": "sdb-premium",
       "active": true,
@@ -704,7 +703,7 @@
     {
       "id": "nova-style-miroir-eclipse-cm",
       "slug": "nova-style-miroir-eclipse-cm",
-      "name": "Nova Style : Miroir ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂCLIPSE CM",
+      "name": "Nova Style : Miroir ÉCLIPSE CM",
       "category": "Miroirs SDB Premium",
       "categoryId": "sdb-premium",
       "active": true,
@@ -734,7 +733,7 @@
     {
       "id": "table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm",
       "slug": "table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm",
-      "name": "Table de SÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©jour en Bois de HÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂªtre et Verre TrempÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©",
+      "name": "Table de Sejour en Bois de Hetre et Verre Trempe",
       "category": "Tables",
       "categoryId": "tables",
       "active": true,
@@ -824,7 +823,7 @@
     {
       "id": "consol-et-miroir-nova-style-ensemble",
       "slug": "consol-et-miroir-nova-style-ensemble",
-      "name": "Consol et miroir NOVA STYLE : ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂlÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©gance Stylish",
+      "name": "Consol et miroir NOVA STYLE : Élégance Stylish",
       "category": "Consoles",
       "categoryId": "consoles",
       "active": true,
@@ -884,7 +883,7 @@
     {
       "id": "douche-italienne-en-l-verre-trempe",
       "slug": "douche-italienne-en-l-verre-trempe",
-      "name": "devis douche italienne en verre trempÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ© TYPE L: Personnalisez votre douche ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ  l'italienne en forme L",
+      "name": "devis douche italienne en verre trempé TYPE L: Personnalisez votre douche à l'italienne en forme L",
       "category": "Douches",
       "categoryId": "douches",
       "active": true,
@@ -899,7 +898,7 @@
     {
       "id": "table-de-sejour-en-bois-mdf-et-verre-trempe",
       "slug": "table-de-sejour-en-bois-mdf-et-verre-trempe",
-      "name": "Table de SÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©jour en Bois MDF et Verre TrempÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©",
+      "name": "Table de Séjour en Bois MDF et Verre Trempé",
       "category": "Tables",
       "categoryId": "tables",
       "active": true,
@@ -914,7 +913,7 @@
     {
       "id": "nova-style-miroir-rotin-irregulier-bois-nova-style",
       "slug": "nova-style-miroir-rotin-irregulier-bois-nova-style",
-      "name": "Miroir Rotin IrrÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©gulier & Bois - Nova Style",
+      "name": "Miroir Rotin Irrégulier & Bois - Nova Style",
       "category": "Salon & dressing",
       "categoryId": "salon",
       "active": true,
@@ -929,7 +928,7 @@
     {
       "id": "miroir-gale-salle-de-bain-led-antibuee-anticorrosion",
       "slug": "miroir-gale-salle-de-bain-led-antibuee-anticorrosion",
-      "name": "Miroir de salle de bain au Maroc - Galet AntibuÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©e & Anticorrosion",
+      "name": "Miroir de salle de bain au Maroc - Galet Antibuée & Anticorrosion",
       "category": "Miroirs SDB Premium",
       "categoryId": "sdb-premium",
       "active": true,
@@ -1019,7 +1018,7 @@
     {
       "id": "magasin-miroir-casablanca-nova-style-miroir-eclipse",
       "slug": "magasin-miroir-casablanca-nova-style-miroir-eclipse",
-      "name": "Magasin miroir casablanca nova Style : Miroir ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂCLIPSE",
+      "name": "Magasin miroir casablanca nova Style : Miroir ÉCLIPSE",
       "category": "Miroirs SDB Premium",
       "categoryId": "sdb-premium",
       "active": true,
@@ -1140,7 +1139,7 @@
     },
     {
       "slug": "miroir-de-salle-de-bain-ovale-anti-buee-et-anticorrosion",
-      "name": "Miroir de salle de bain anti-buÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©e et anticorrosion : Miroir NOURA de NOVA STYLE",
+      "name": "Miroir de salle de bain anti-buée et anticorrosion : Miroir NOURA de NOVA STYLE",
       "categoryId": "sdb-premium",
       "category": "Miroirs SDB Premium",
       "image": "/images/miroir-de-salle-de-bain-ovale-anti-buee-et-anticorrosion/1.webp",

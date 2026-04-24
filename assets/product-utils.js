@@ -132,6 +132,7 @@ export function buildProductPage(p) {
 <script type="application/ld+json">${schemaProduct}</script>
 <script type="application/ld+json">${schemaBreadcrumb}</script>
 
+<script src="/assets/ads-loader.js" defer></script>
 <script src="/assets/header.js" defer></script>
 
 <nav class="breadcrumb"><a href="/">Accueil</a> › <a href="${catUrl}">${cat}</a> › <span>${name}</span></nav>
