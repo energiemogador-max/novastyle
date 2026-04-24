@@ -10,8 +10,8 @@
     },
     {
       "id": "entree-de-gamme",
-      "name": "Entrée de gamme",
-      "raw": "Entrée de gamme",
+      "name": "EntrÃ©e de gamme",
+      "raw": "EntrÃ©e de gamme",
       "count": 3
     },
     {
@@ -22,13 +22,13 @@
     },
     {
       "id": "consoles",
-      "name": "Consoles & entrée",
+      "name": "Consoles & entrÃ©e",
       "raw": "Consoles",
       "count": 2
     },
     {
       "id": "tables",
-      "name": "Tables de séjour",
+      "name": "Tables de sÃ©jour",
       "raw": "Tables",
       "count": 3
     },
@@ -49,8 +49,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-elvis/1.webp",
       "price": {
-        "min": 2000.0,
-        "max": 2500.0
+        "min": 2000,
+        "max": 2500
       },
       "hasVariants": true,
       "variantCount": 8
@@ -64,8 +64,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-emeraude/1.webp",
       "price": {
-        "min": 450.0,
-        "max": 1850.0
+        "min": 450,
+        "max": 1850
       },
       "hasVariants": true,
       "variantCount": 80
@@ -79,8 +79,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-vega/1.webp",
       "price": {
-        "min": 800.0,
-        "max": 2300.0
+        "min": 800,
+        "max": 2300
       },
       "hasVariants": true,
       "variantCount": 80
@@ -94,8 +94,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-double-cercle/1.webp",
       "price": {
-        "min": 900.0,
-        "max": 2000.0
+        "min": 900,
+        "max": 2000
       },
       "hasVariants": true,
       "variantCount": 70
@@ -109,8 +109,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-anfa-cm/1.webp",
       "price": {
-        "min": 1580.0,
-        "max": 2200.0
+        "min": 1580,
+        "max": 2200
       },
       "hasVariants": true,
       "variantCount": 32
@@ -124,8 +124,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-anfa-half-plus/1.webp",
       "price": {
-        "min": 650.0,
-        "max": 1350.0
+        "min": 650,
+        "max": 1350
       },
       "hasVariants": true,
       "variantCount": 40
@@ -133,7 +133,7 @@
     {
       "id": "nova-style-ensemble-meuble-et-miroir-retroeclaire",
       "slug": "nova-style-ensemble-meuble-et-miroir-retroeclaire",
-      "name": "Nova Style : Ensemble Meuble et Miroir rétroéclairé",
+      "name": "Nova Style : Ensemble Meuble et Miroir rÃ©troÃ©clairÃ©",
       "category": "Miroirs SDB Premium",
       "categoryId": "miroirs-sdb",
       "active": true,
@@ -154,8 +154,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-archway/1.webp",
       "price": {
-        "min": 2000.0,
-        "max": 2500.0
+        "min": 2000,
+        "max": 2500
       },
       "hasVariants": true,
       "variantCount": 8
@@ -169,8 +169,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-iceberg/1.webp",
       "price": {
-        "min": 1030.0,
-        "max": 1600.0
+        "min": 1030,
+        "max": 1600
       },
       "hasVariants": true,
       "variantCount": 40
@@ -184,8 +184,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-croissant-de-lune-ii-finition-noyer/1.webp",
       "price": {
-        "min": 1700.0,
-        "max": 3700.0
+        "min": 1700,
+        "max": 3700
       },
       "hasVariants": true,
       "variantCount": 10
@@ -199,8 +199,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-croissant-de-lune/1.webp",
       "price": {
-        "min": 1000.0,
-        "max": 2000.0
+        "min": 1000,
+        "max": 2000
       },
       "hasVariants": true,
       "variantCount": 20
@@ -208,14 +208,14 @@
     {
       "id": "nova-style-miroir-azalee",
       "slug": "nova-style-miroir-azalee",
-      "name": "miroir salle de bain avec cadre de Nova Style : Miroir Azalée",
+      "name": "miroir salle de bain avec cadre de Nova Style : Miroir AzalÃ©e",
       "category": "Miroirs SDB Premium",
       "categoryId": "miroirs-sdb",
       "active": true,
       "image": "/images/nova-style-miroir-azalee/1.webp",
       "price": {
-        "min": 1600.0,
-        "max": 3000.0
+        "min": 1600,
+        "max": 3000
       },
       "hasVariants": true,
       "variantCount": 14
@@ -229,8 +229,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-anfa-plus/1.webp",
       "price": {
-        "min": 540.0,
-        "max": 1350.0
+        "min": 540,
+        "max": 1350
       },
       "hasVariants": true,
       "variantCount": 60
@@ -244,8 +244,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-rond/1.webp",
       "price": {
-        "min": 700.0,
-        "max": 2200.0
+        "min": 700,
+        "max": 2200
       },
       "hasVariants": true,
       "variantCount": 10
@@ -259,8 +259,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-hawaii/1.webp",
       "price": {
-        "min": 2300.0,
-        "max": 2450.0
+        "min": 2300,
+        "max": 2450
       },
       "hasVariants": true,
       "variantCount": 2
@@ -274,8 +274,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-croissant-de-lune-ii/1.webp",
       "price": {
-        "min": 1000.0,
-        "max": 2000.0
+        "min": 1000,
+        "max": 2000
       },
       "hasVariants": true,
       "variantCount": 80
@@ -289,8 +289,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-victoria/1.webp",
       "price": {
-        "min": 1100.0,
-        "max": 1700.0
+        "min": 1100,
+        "max": 1700
       },
       "hasVariants": true,
       "variantCount": 24
@@ -304,8 +304,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-bloom/1.webp",
       "price": {
-        "min": 500.0,
-        "max": 1250.0
+        "min": 500,
+        "max": 1250
       },
       "hasVariants": true,
       "variantCount": 50
@@ -319,8 +319,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-magnum-sdb/1.webp",
       "price": {
-        "min": 500.0,
-        "max": 1400.0
+        "min": 500,
+        "max": 1400
       },
       "hasVariants": true,
       "variantCount": 40
@@ -349,8 +349,8 @@
       "active": true,
       "image": "/images/nova-style-deux-miroirs-anfa-medina/1.webp",
       "price": {
-        "min": 1000.0,
-        "max": 1450.0
+        "min": 1000,
+        "max": 1450
       },
       "hasVariants": true,
       "variantCount": 40
@@ -364,8 +364,8 @@
       "active": true,
       "image": "/images/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/1.webp",
       "price": {
-        "min": 1500.0,
-        "max": 2250.0
+        "min": 1500,
+        "max": 2250
       },
       "hasVariants": true,
       "variantCount": 50
@@ -379,8 +379,8 @@
       "active": true,
       "image": "/images/nova-style-deux-miroirs-triples/1.webp",
       "price": {
-        "min": 1300.0,
-        "max": 2300.0
+        "min": 1300,
+        "max": 2300
       },
       "hasVariants": true,
       "variantCount": 30
@@ -394,8 +394,8 @@
       "active": true,
       "image": "/images/miroir-rectangulaire-bright-ii/1.webp",
       "price": {
-        "min": 800.0,
-        "max": 2300.0
+        "min": 800,
+        "max": 2300
       },
       "hasVariants": true,
       "variantCount": 88
@@ -409,8 +409,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-rectangulaire/1.webp",
       "price": {
-        "min": 500.0,
-        "max": 1250.0
+        "min": 500,
+        "max": 1250
       },
       "hasVariants": true,
       "variantCount": 50
@@ -424,8 +424,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-pentagone-2/1.webp",
       "price": {
-        "min": 850.0,
-        "max": 1300.0
+        "min": 850,
+        "max": 1300
       },
       "hasVariants": true,
       "variantCount": 30
@@ -439,8 +439,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-vortex/1.webp",
       "price": {
-        "min": 650.0,
-        "max": 1250.0
+        "min": 650,
+        "max": 1250
       },
       "hasVariants": true,
       "variantCount": 3
@@ -454,8 +454,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-halo/1.webp",
       "price": {
-        "min": 500.0,
-        "max": 1250.0
+        "min": 500,
+        "max": 1250
       },
       "hasVariants": true,
       "variantCount": 50
@@ -469,8 +469,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-pear/1.webp",
       "price": {
-        "min": 600.0,
-        "max": 1390.0
+        "min": 600,
+        "max": 1390
       },
       "hasVariants": true,
       "variantCount": 60
@@ -478,14 +478,14 @@
     {
       "id": "nova-style-miroir-eclipse-bright",
       "slug": "nova-style-miroir-eclipse-bright",
-      "name": "Nova Style : Miroir ÉCLIPSE BRIGHT",
+      "name": "Nova Style : Miroir ÃCLIPSE BRIGHT",
       "category": "Miroirs SDB Premium",
       "categoryId": "miroirs-sdb",
       "active": true,
       "image": "/images/nova-style-miroir-eclipse-bright/1.webp",
       "price": {
-        "min": 450.0,
-        "max": 1850.0
+        "min": 450,
+        "max": 1850
       },
       "hasVariants": true,
       "variantCount": 80
@@ -499,8 +499,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-totem/1.webp",
       "price": {
-        "min": 600.0,
-        "max": 1100.0
+        "min": 600,
+        "max": 1100
       },
       "hasVariants": true,
       "variantCount": 40
@@ -514,8 +514,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-luxalight/1.webp",
       "price": {
-        "min": 420.0,
-        "max": 900.0
+        "min": 420,
+        "max": 900
       },
       "hasVariants": true,
       "variantCount": 60
@@ -529,8 +529,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-elvis-woody/1.webp",
       "price": {
-        "min": 1600.0,
-        "max": 1700.0
+        "min": 1600,
+        "max": 1700
       },
       "hasVariants": true,
       "variantCount": 2
@@ -544,8 +544,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-drizzle/1.webp",
       "price": {
-        "min": 1000.0,
-        "max": 1600.0
+        "min": 1000,
+        "max": 1600
       },
       "hasVariants": true,
       "variantCount": 48
@@ -559,8 +559,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-rectangulaire-bright/1.webp",
       "price": {
-        "min": 800.0,
-        "max": 2300.0
+        "min": 800,
+        "max": 2300
       },
       "hasVariants": true,
       "variantCount": 80
@@ -574,8 +574,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-split/1.webp",
       "price": {
-        "min": 1500.0,
-        "max": 3900.0
+        "min": 1500,
+        "max": 3900
       },
       "hasVariants": true,
       "variantCount": 6
@@ -589,8 +589,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-galet-2/1.webp",
       "price": {
-        "min": 800.0,
-        "max": 1800.0
+        "min": 800,
+        "max": 1800
       },
       "hasVariants": true,
       "variantCount": 40
@@ -604,8 +604,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-zenith/1.webp",
       "price": {
-        "min": 880.0,
-        "max": 1400.0
+        "min": 880,
+        "max": 1400
       },
       "hasVariants": true,
       "variantCount": 40
@@ -619,8 +619,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-havana/1.webp",
       "price": {
-        "min": 500.0,
-        "max": 1250.0
+        "min": 500,
+        "max": 1250
       },
       "hasVariants": true,
       "variantCount": 50
@@ -634,8 +634,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-magnum/1.webp",
       "price": {
-        "min": 1200.0,
-        "max": 1300.0
+        "min": 1200,
+        "max": 1300
       },
       "hasVariants": true,
       "variantCount": 2
@@ -649,8 +649,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-sunrise/1.webp",
       "price": {
-        "min": 440.0,
-        "max": 1980.0
+        "min": 440,
+        "max": 1980
       },
       "hasVariants": true,
       "variantCount": 70
@@ -664,8 +664,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-pear-ii/1.webp",
       "price": {
-        "min": 500.0,
-        "max": 1250.0
+        "min": 500,
+        "max": 1250
       },
       "hasVariants": true,
       "variantCount": 50
@@ -679,7 +679,7 @@
       "active": true,
       "image": "/images/nova-style-miroir-cloud/1.webp",
       "price": {
-        "min": 1500.0,
+        "min": 1500,
         "max": null
       },
       "hasVariants": true,
@@ -694,8 +694,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-pebble/1.webp",
       "price": {
-        "min": 500.0,
-        "max": 1100.0
+        "min": 500,
+        "max": 1100
       },
       "hasVariants": true,
       "variantCount": 30
@@ -703,14 +703,14 @@
     {
       "id": "nova-style-miroir-eclipse-cm",
       "slug": "nova-style-miroir-eclipse-cm",
-      "name": "Nova Style : Miroir ÉCLIPSE CM",
+      "name": "Nova Style : Miroir ÃCLIPSE CM",
       "category": "Miroirs SDB Premium",
       "categoryId": "miroirs-sdb",
       "active": true,
       "image": "/images/nova-style-miroir-eclipse-cm/1.webp",
       "price": {
-        "min": 1050.0,
-        "max": 3700.0
+        "min": 1050,
+        "max": 3700
       },
       "hasVariants": true,
       "variantCount": 64
@@ -724,8 +724,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-hawaii-sdb/1.webp",
       "price": {
-        "min": 1400.0,
-        "max": 1650.0
+        "min": 1400,
+        "max": 1650
       },
       "hasVariants": true,
       "variantCount": 10
@@ -733,14 +733,14 @@
     {
       "id": "table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm",
       "slug": "table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm",
-      "name": "Table de Séjour en Bois de Hêtre et Verre Trempé",
+      "name": "Table de SÃ©jour en Bois de HÃªtre et Verre TrempÃ©",
       "category": "Tables",
       "categoryId": "tables",
       "active": true,
       "image": "/images/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm/1.webp",
       "price": {
-        "min": 1580.0,
-        "max": 1700.0
+        "min": 1580,
+        "max": 1700
       },
       "hasVariants": true,
       "variantCount": 2
@@ -754,8 +754,8 @@
       "active": true,
       "image": "/images/miroir-marrakech-nova-style-miroir-celia/1.webp",
       "price": {
-        "min": 1580.0,
-        "max": 2200.0
+        "min": 1580,
+        "max": 2200
       },
       "hasVariants": true,
       "variantCount": 32
@@ -769,7 +769,7 @@
       "active": true,
       "image": "/images/deco-miroir-mural-nova-style-miroir-rital/1.webp",
       "price": {
-        "min": 1650.0,
+        "min": 1650,
         "max": null
       },
       "hasVariants": true,
@@ -799,8 +799,8 @@
       "active": true,
       "image": "/images/miroir-maroc-nova-style-miroir-anfa/1.webp",
       "price": {
-        "min": 460.0,
-        "max": 1250.0
+        "min": 460,
+        "max": 1250
       },
       "hasVariants": true,
       "variantCount": 80
@@ -809,7 +809,7 @@
       "id": "miroir-magnum-essentiel",
       "slug": "miroir-magnum-essentiel",
       "name": "Miroir pas cher MAGNUM essentiel",
-      "category": "Entrée de gamme",
+      "category": "EntrÃ©e de gamme",
       "categoryId": "entree-de-gamme",
       "active": true,
       "image": "/images/miroir-magnum-essentiel/1.webp",
@@ -823,7 +823,7 @@
     {
       "id": "consol-et-miroir-nova-style-ensemble",
       "slug": "consol-et-miroir-nova-style-ensemble",
-      "name": "Consol et miroir NOVA STYLE : Élégance Stylish",
+      "name": "Consol et miroir NOVA STYLE : ÃlÃ©gance Stylish",
       "category": "Consoles",
       "categoryId": "consoles",
       "active": true,
@@ -839,7 +839,7 @@
       "id": "miroir-anfa-essentiel",
       "slug": "miroir-anfa-essentiel",
       "name": "Miroir pas cher au maroc ANFA essentiel",
-      "category": "Entrée de gamme",
+      "category": "EntrÃ©e de gamme",
       "categoryId": "entree-de-gamme",
       "active": true,
       "image": "/images/miroir-anfa-essentiel/1.webp",
@@ -859,8 +859,8 @@
       "active": true,
       "image": "/images/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/1.webp",
       "price": {
-        "min": 880.0,
-        "max": 1290.0
+        "min": 880,
+        "max": 1290
       },
       "hasVariants": true,
       "variantCount": 2
@@ -874,8 +874,8 @@
       "active": true,
       "image": "/images/miroire-nova-style-miroir-horizon/1.webp",
       "price": {
-        "min": 460.0,
-        "max": 1250.0
+        "min": 460,
+        "max": 1250
       },
       "hasVariants": true,
       "variantCount": 80
@@ -883,7 +883,7 @@
     {
       "id": "douche-italienne-en-l-verre-trempe",
       "slug": "douche-italienne-en-l-verre-trempe",
-      "name": "devis douche italienne en verre trempé TYPE L: Personnalisez votre douche à l'italienne en forme L",
+      "name": "devis douche italienne en verre trempÃ© TYPE L: Personnalisez votre douche Ã  l'italienne en forme L",
       "category": "Douches",
       "categoryId": "douches",
       "active": true,
@@ -898,13 +898,13 @@
     {
       "id": "table-de-sejour-en-bois-mdf-et-verre-trempe",
       "slug": "table-de-sejour-en-bois-mdf-et-verre-trempe",
-      "name": "Table de Séjour en Bois MDF et Verre Trempé",
+      "name": "Table de SÃ©jour en Bois MDF et Verre TrempÃ©",
       "category": "Tables",
       "categoryId": "tables",
       "active": true,
       "image": "/images/table-de-sejour-en-bois-mdf-et-verre-trempe/1.webp",
       "price": {
-        "min": 980.0,
+        "min": 980,
         "max": null
       },
       "hasVariants": true,
@@ -913,7 +913,7 @@
     {
       "id": "nova-style-miroir-rotin-irregulier-bois-nova-style",
       "slug": "nova-style-miroir-rotin-irregulier-bois-nova-style",
-      "name": "Miroir Rotin Irrégulier & Bois - Nova Style",
+      "name": "Miroir Rotin IrrÃ©gulier & Bois - Nova Style",
       "category": "Salon & dressing",
       "categoryId": "salon",
       "active": true,
@@ -928,14 +928,14 @@
     {
       "id": "miroir-gale-salle-de-bain-led-antibuee-anticorrosion",
       "slug": "miroir-gale-salle-de-bain-led-antibuee-anticorrosion",
-      "name": "Miroir de salle de bain au Maroc - Galet Antibuée & Anticorrosion",
+      "name": "Miroir de salle de bain au Maroc - Galet AntibuÃ©e & Anticorrosion",
       "category": "Miroirs SDB Premium",
       "categoryId": "miroirs-sdb",
       "active": true,
       "image": "/images/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/1.webp",
       "price": {
-        "min": 800.0,
-        "max": 1950.0
+        "min": 800,
+        "max": 1950
       },
       "hasVariants": true,
       "variantCount": 60
@@ -949,8 +949,8 @@
       "active": true,
       "image": "/images/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/1.webp",
       "price": {
-        "min": 1580.0,
-        "max": 2200.0
+        "min": 1580,
+        "max": 2200
       },
       "hasVariants": true,
       "variantCount": 32
@@ -964,8 +964,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-rectangulaire-1/1.webp",
       "price": {
-        "min": 450.0,
-        "max": 1300.0
+        "min": 450,
+        "max": 1300
       },
       "hasVariants": true,
       "variantCount": 70
@@ -979,8 +979,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-lightning/1.webp",
       "price": {
-        "min": 550.0,
-        "max": 1250.0
+        "min": 550,
+        "max": 1250
       },
       "hasVariants": true,
       "variantCount": 40
@@ -989,7 +989,7 @@
       "id": "miroir-eclipse-essentiel",
       "slug": "miroir-eclipse-essentiel",
       "name": "Miroir pas cher avec led ECLIPSE essentiel",
-      "category": "Entrée de gamme",
+      "category": "EntrÃ©e de gamme",
       "categoryId": "entree-de-gamme",
       "active": true,
       "image": "/images/miroir-eclipse-essentiel/1.webp",
@@ -1003,14 +1003,14 @@
     {
       "id": "nova-style-miroir-asymetrique",
       "slug": "nova-style-miroir-asymetrique",
-      "name": "Nova Style : Miroir Asymétrique",
+      "name": "Nova Style : Miroir AsymÃ©trique",
       "category": "Miroirs SDB Premium",
       "categoryId": "miroirs-sdb",
       "active": true,
       "image": "/images/nova-style-miroir-asymetrique/1.webp",
       "price": {
-        "min": 850.0,
-        "max": 1250.0
+        "min": 850,
+        "max": 1250
       },
       "hasVariants": true,
       "variantCount": 24
@@ -1018,14 +1018,14 @@
     {
       "id": "magasin-miroir-casablanca-nova-style-miroir-eclipse",
       "slug": "magasin-miroir-casablanca-nova-style-miroir-eclipse",
-      "name": "Magasin miroir casablanca nova Style : Miroir ÉCLIPSE",
+      "name": "Magasin miroir casablanca nova Style : Miroir ÃCLIPSE",
       "category": "Miroirs SDB Premium",
       "categoryId": "miroirs-sdb",
       "active": true,
       "image": "/images/magasin-miroir-casablanca-nova-style-miroir-eclipse/1.webp",
       "price": {
-        "min": 450.0,
-        "max": 1850.0
+        "min": 450,
+        "max": 1850
       },
       "hasVariants": true,
       "variantCount": 80
@@ -1039,8 +1039,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-octogonal/1.webp",
       "price": {
-        "min": 420.0,
-        "max": 900.0
+        "min": 420,
+        "max": 900
       },
       "hasVariants": true,
       "variantCount": 60
@@ -1054,8 +1054,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-upside-down/1.webp",
       "price": {
-        "min": 1000.0,
-        "max": 1450.0
+        "min": 1000,
+        "max": 1450
       },
       "hasVariants": true,
       "variantCount": 40
@@ -1069,8 +1069,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-dunes/1.webp",
       "price": {
-        "min": 1200.0,
-        "max": 2150.0
+        "min": 1200,
+        "max": 2150
       },
       "hasVariants": true,
       "variantCount": 70
@@ -1084,8 +1084,8 @@
       "active": true,
       "image": "/images/nova-style-miroir-galet-vertical/1.webp",
       "price": {
-        "min": 600.0,
-        "max": 890.0
+        "min": 600,
+        "max": 890
       },
       "hasVariants": true,
       "variantCount": 40
@@ -1126,9 +1126,9 @@
           "LED": [
             "Sans LED",
             "6000K Blanc pur",
-            "4000K blanc lumière du jour",
+            "4000K blanc lumiÃ¨re du jour",
             "3000K Jaune",
-            "2000k Doré"
+            "2000k DorÃ©"
           ],
           "Installation": [
             "Sans Installation",
@@ -1178,7 +1178,9 @@
             "Avec Installation"
           ]
         }
-      }
+      },
+      "hasVariants": true,
+      "variantCount": 60
     }
   ]
 }
