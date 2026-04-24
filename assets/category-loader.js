@@ -50,7 +50,7 @@
   }
 
   try {
-    const res = await fetch('/products-index.json');
+    const res = await fetch('/products-index.json?_=' + Math.floor(Date.now() / 60000));
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const index = await res.json();
 
