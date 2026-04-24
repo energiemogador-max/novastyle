@@ -1181,6 +1181,51 @@
       },
       "hasVariants": true,
       "variantCount": 60
+    },
+    {
+      "slug": "nova-style-oducts-miroir-de-salle-de-bain-anti-buee-et-anticorrosion-miroir-noura",
+      "name": "Miroir de salle de bain anti-buée et anticorrosion : Miroir NOURA",
+      "categoryId": "sdb-premium",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-oducts-miroir-de-salle-de-bain-anti-buee-et-anticorrosion-miroir-noura/1.webp",
+      "images": [
+        "/images/nova-style-oducts-miroir-de-salle-de-bain-anti-buee-et-anticorrosion-miroir-noura/1.webp"
+      ],
+      "active": true,
+      "price": {
+        "min": 850,
+        "max": 1250
+      },
+      "axes": {
+        "order": [
+          "Dimension",
+          "LED",
+          "Installation"
+        ],
+        "options": {
+          "Dimension": [
+            "80 X 100 cm",
+            "70 x 87 cm",
+            "60 x 74 cm"
+          ],
+          "LED": [
+            "6000K Blanc pur",
+            "4000K blanc lumière du jour",
+            "3000K Jaune",
+            "2000K Doré"
+          ],
+          "Installation": [
+            "Sans Installation",
+            "Avec Installation"
+          ]
+        }
+      },
+      "seo": {
+        "title": "Miroir NOURA anti-buée LED | Miroir salle de bain sur mesure Maroc",
+        "description": "Miroir NOURA anti-buée et anticorrosion avec LED 6000K. Fabrication sur mesure à Casablanca. Livraison rapide partout au Maroc. Design moderne et durable."
+      },
+      "hasVariants": true,
+      "variantCount": 24
     }
   ]
 }
