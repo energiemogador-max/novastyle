@@ -5,10 +5,11 @@
  */
 (function () {
   const NAV_LINKS = [
-    { href: "/categorie/sdb-premium/",   label: "Miroirs SDB" },
-    { href: "/categorie/sdb-essentiel/", label: "Entrée de gamme" },
-    { href: "/categorie/salon/",         label: "Salon &amp; dressing" },
-    { href: "/categorie/tables/",        label: "Tables &amp; Douches" },
+    { href: "/categorie/sdb-premium/",   label: "Miroir salle de bain premium" },
+    { href: "/categorie/sdb-essentiel/", label: "Miroir entrée de gamme" },
+    { href: "/categorie/salon/",         label: "Miroir de salon &amp; dressing" },
+    { href: "/categorie/tables/",        label: "Table &amp; chaise" },
+    { href: "/categorie/douches/",       label: "Douches italiennes" },
     { href: "/blog/",                    label: "Blog" },
   ];
 
