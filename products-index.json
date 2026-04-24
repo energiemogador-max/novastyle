@@ -1136,6 +1136,49 @@
           ]
         }
       }
+    },
+    {
+      "slug": "miroir-de-salle-de-bain-ovale-anti-buee-et-anticorrosion",
+      "name": "Miroir de salle de bain anti-buée et anticorrosion : Miroir NOURA de NOVA STYLE",
+      "categoryId": "sdb-premium",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/miroir-de-salle-de-bain-ovale-anti-buee-et-anticorrosion/1.webp",
+      "images": [
+        "/images/miroir-de-salle-de-bain-ovale-anti-buee-et-anticorrosion/1.webp"
+      ],
+      "active": true,
+      "price": {
+        "min": 540,
+        "max": 1350
+      },
+      "axes": {
+        "order": [
+          "Dimension",
+          "LED",
+          "Installation"
+        ],
+        "options": {
+          "Dimension": [
+            "80 x 140 cm",
+            "75 x 130 cm",
+            "60 x 120 cm",
+            "60 x 80 cm",
+            "55 x 110 cm",
+            "50 x 100 cm"
+          ],
+          "LED": [
+            "Sans LED",
+            "6000K Blanc pur",
+            "4000K blanc lumière du jour",
+            "3000K Jaune",
+            "2000K Doré"
+          ],
+          "Installation": [
+            "Sans Installation",
+            "Avec Installation"
+          ]
+        }
+      }
     }
   ]
 }

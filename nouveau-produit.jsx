@@ -52,6 +52,115 @@ const slug = (s) => s.toLowerCase()
   .replace(/[ôö]/g,"o").replace(/[ùûü]/g,"u").replace(/[ç]/g,"c")
   .replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");
 
+// Build a complete product HTML page (SEO meta + JSON-LD + dynamic shell that
+// product-loader.js fills from /products/{slug}.json). Mirrors the static
+// pages' structure so search engines see canonical/og tags + product schema,
+// while gallery/axes/prices are populated at runtime.
+function buildProductHtml({ slug, name, catLabel, categoryId, images, seoTitle, seoDesc, variants, priceMin, priceMax }) {
+  const title = seoTitle || name;
+  const desc  = (seoDesc || "").replace(/"/g, "&quot;");
+  const img   = images?.[0] || `/images/${slug}/1.webp`;
+  const catUrl = String(categoryId || "").startsWith("sdb") ? "/miroir-salle-de-bain/" : "/";
+
+  const offers = (variants || []).filter(v => v.price > 0).map(v => ({
+    "@type": "Offer", priceCurrency: "MAD", price: String(Math.round(v.price)),
+    availability: "https://schema.org/InStock",
+    url: `https://novastyle.ma/produits/${slug}/`,
+    seller: { "@type": "Organization", name: "Nova Style" }
+  }));
+
+  const schemaProduct = JSON.stringify({
+    "@context": "https://schema.org", "@type": "Product", name,
+    description: (seoDesc || "").slice(0, 300),
+    image: images || [],
+    brand: { "@type": "Brand", name: "Nova Style" },
+    sku: slug,
+    offers: {
+      "@type": "AggregateOffer", priceCurrency: "MAD",
+      lowPrice: String(Math.round(priceMin || 0)),
+      highPrice: String(Math.round(priceMax || 0)),
+      offerCount: offers.length, offers
+    }
+  });
+
+  const schemaBreadcrumb = JSON.stringify({
+    "@context": "https://schema.org", "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: "https://novastyle.ma/" },
+      { "@type": "ListItem", position: 2, name: catLabel || "Miroirs", item: `https://novastyle.ma${catUrl}` },
+      { "@type": "ListItem", position: 3, name }
+    ]
+  });
+
+  return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title} | Nova Style</title>
+<meta name="description" content="${desc}">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nova Style">
+<meta name="geo.region" content="MA-06">
+<meta name="geo.placename" content="Casablanca">
+<meta name="geo.position" content="33.5731;-7.5898">
+<link rel="canonical" href="https://novastyle.ma/produits/${slug}/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${desc}">
+<meta property="og:url" content="https://novastyle.ma/produits/${slug}/">
+<meta property="og:locale" content="fr_MA">
+<meta property="og:image" content="${img}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${desc}">
+<meta name="twitter:image" content="${img}">
+<link rel="icon" type="image/png" href="/assets/logo.png">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="preconnect" href="https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+</head>
+<body>
+<script type="application/ld+json">${schemaProduct}</script>
+<script type="application/ld+json">${schemaBreadcrumb}</script>
+
+<script src="/assets/header.js" defer></script>
+
+<nav class="breadcrumb"><a href="/">Accueil</a> › <a href="${catUrl}">${catLabel || "Miroirs"}</a> › <span>${name}</span></nav>
+
+<article class="product-page" id="product-root" data-slug="${slug}">
+  <div class="product-gallery" id="p-gallery"></div>
+  <div class="product-info">
+    <h1>${name}</h1>
+    <p class="p-subtitle">Miroir sur mesure · Fabrication Casablanca · Livraison Maroc</p>
+    <div class="p-price" id="current-price"></div>
+    <div class="axes-container" id="axes-container"></div>
+    <div id="qty-wrap"></div>
+    <div class="p-cta">
+      <button class="btn-primary" id="add-to-cart-btn" onclick="addProductToCart()">🛒 Ajouter au panier</button>
+      <a class="btn-secondary" href="/cart">Voir panier</a>
+    </div>
+    <div class="deposit-note">💡 Acompte de 50% requis pour confirmer la commande. Solde à la livraison ou installation.</div>
+  </div>
+</article>
+
+<section class="product-content" id="p-desc"></section>
+
+<section class="reviews-section">
+  <ns-reviews-widget product-id="${slug}"></ns-reviews-widget>
+  <script type="module" src="/assets/reviews-widget.js"></script>
+</section>
+
+<script type="module" src="/assets/product-loader.js"></script>
+<script src="/assets/product-qty.js" defer></script>
+<script src="/assets/footer.js" defer></script>
+<script type="module" src="/assets/cart.js"></script>
+<script type="module" src="/assets/visitor-tracker.js"></script>
+</body>
+</html>
+`;
+}
+
 function generateAllVariants(axes, axis_order) {
   if (!axis_order.length) return [];
   let result = [{}];
@@ -221,8 +330,10 @@ function PhotoUploader({ slugVal, photos, onChange }) {
     const res = [];
     for (let i = 0; i < photos.length; i++) {
       const { file } = photos[i];
-      const ext = file.name.split(".").pop().toLowerCase();
-      const repoPath = `novastyle/images/${slugVal}/${i+1}.${ext === "webp" ? "webp" : ext}`;
+      // Always use .webp extension regardless of source format — browsers
+      // display PNG/JPG/JFIF served as .webp fine, and the rest of the site
+      // expects .webp paths in product JSONs.
+      const repoPath = `images/${slugVal}/${i+1}.webp`;
       try {
         const b64 = await fileToBase64(file);
         await ghUpload(token, repoPath, b64, `Add image ${i+1} for ${slugVal}`);
@@ -764,9 +875,10 @@ function StepPrix({ axesConfig, copied, onNext, onBack }) {
 function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
   // tasks: { id, label, status: "pending"|"running"|"ok"|"error", detail }
   const [tasks, setTasks] = useState([
-    { id: "firebase", label: "Enregistrer dans Firebase",           status: "pending", detail: "" },
-    { id: "product",  label: `Créer products/${info.slug}.json`,    status: "pending", detail: "" },
-    { id: "index",    label: "Mettre à jour products-index.json",   status: "pending", detail: "" },
+    { id: "firebase", label: "Enregistrer dans Firebase",                    status: "pending", detail: "" },
+    { id: "product",  label: `Créer products/${info.slug}.json`,             status: "pending", detail: "" },
+    { id: "page",     label: `Créer la page produits/${info.slug}/index.html`, status: "pending", detail: "" },
+    { id: "index",    label: "Mettre à jour products-index.json",            status: "pending", detail: "" },
   ]);
   const [done, setDone] = useState(false);
   const [copiedKey, setCopiedKey] = useState("");
@@ -827,6 +939,7 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
 
       if (!token) {
         setTask("product",  { status: "error", detail: "Token GitHub manquant — configurez-le dans Paramètres" });
+        setTask("page",     { status: "error", detail: "Token GitHub manquant" });
         setTask("index",    { status: "error", detail: "Token GitHub manquant" });
         setDone(true);
         return;
@@ -836,18 +949,33 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
       setTask("product", { status: "running", detail: "" });
       try {
         const b64 = btoa(unescape(encodeURIComponent(productJson)));
-        await ghUpload(token, `novastyle/products/${info.slug}.json`, b64, `Add product ${info.slug}`);
-        setTask("product", { status: "ok", detail: `novastyle/products/${info.slug}.json` });
+        await ghUpload(token, `products/${info.slug}.json`, b64, `Add product ${info.slug}`);
+        setTask("product", { status: "ok", detail: `products/${info.slug}.json` });
       } catch(e) {
         setTask("product", { status: "error", detail: e.message });
       }
 
-      // 3. products-index.json — fetch current, insert new entry, push back
+      // 3. produits/{slug}/index.html — generate full HTML page with SEO + JSON-LD
+      setTask("page", { status: "running", detail: "" });
+      try {
+        const html = buildProductHtml({
+          slug: info.slug, name: info.name, catLabel,
+          categoryId: info.category, images,
+          seoTitle: info.seoTitle, seoDesc: info.seoDesc,
+          variants, priceMin, priceMax
+        });
+        const b64 = btoa(unescape(encodeURIComponent(html)));
+        await ghUpload(token, `produits/${info.slug}/index.html`, b64, `Add product page ${info.slug}`);
+        setTask("page", { status: "ok", detail: `produits/${info.slug}/index.html` });
+      } catch(e) {
+        setTask("page", { status: "error", detail: e.message });
+      }
+
+      // 4. products-index.json — fetch current, insert new entry, push back
       setTask("index", { status: "running", detail: "" });
       try {
-        // Get current file + SHA
         const fileRes = await fetch(
-          `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/novastyle/products-index.json`,
+          `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/products-index.json`,
           { headers: { Authorization: `token ${token}`, Accept: "application/vnd.github+json" } }
         );
         if (!fileRes.ok) throw new Error(`Cannot read products-index.json (${fileRes.status})`);
@@ -861,7 +989,7 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
 
         const newB64 = btoa(unescape(encodeURIComponent(JSON.stringify(currentContent, null, 2))));
         await fetch(
-          `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/novastyle/products-index.json`,
+          `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/products-index.json`,
           {
             method: "PUT",
             headers: { Authorization: `token ${token}`, "Content-Type": "application/json", Accept: "application/vnd.github+json" },
@@ -928,24 +1056,25 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
         ))}
       </div>
 
-      {/* Remaining manual step + JSON copies */}
-      {done && (
-        <div>
-          <div style={{ background:"#0d0800", border:"1px solid #3a2000", borderRadius:12, padding:16, marginBottom:16 }}>
-            <div style={{ fontWeight:800, color:"#ffb300", fontSize:13, marginBottom:8 }}>📋 Dernière étape manuelle</div>
-            <div style={{ fontSize:12, color:"#ccc", lineHeight:1.7 }}>
-              Créer la page produit <code style={{color:"#7ec8e3"}}>/produits/{info.slug}/index.html</code> :<br/>
-              Copiez n'importe quel <code style={{color:"#7ec8e3"}}>index.html</code> existant dans <code style={{color:"#7ec8e3"}}>/produits/</code> et changez le <code style={{color:"#7ec8e3"}}>data-slug</code> en <strong style={{color:"#fff"}}>{info.slug}</strong>.
-            </div>
-          </div>
+      {/* Success / link to live page */}
+      {done && tasks.every(t => t.status === "ok") && (
+        <div style={{ background:"#091509", border:"1px solid #00c85340", borderRadius:12, padding:16, marginBottom:16, textAlign:"center" }}>
+          <div style={{ fontSize:24, marginBottom:6 }}>🎉</div>
+          <div style={{ fontWeight:800, color:"#00c853", fontSize:14, marginBottom:8 }}>Produit publié — tout est automatique !</div>
+          <a href={`/produits/${info.slug}/`} target="_blank" style={{ color:"#7ec8e3", fontSize:13, textDecoration:"none", borderBottom:"1px dotted #7ec8e3" }}>
+            Voir la page produit ↗
+          </a>
+        </div>
+      )}
 
-          <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:12 }}>
-            <div style={{ display:"flex", alignItems:"center", marginBottom:6 }}>
-              <div style={{ fontWeight:800, fontSize:12, color:"#f0f0f0" }}>products/{info.slug}.json</div>
-              <CopyBtn text={productJson} id="productjson" label="Copier" />
-            </div>
-            <div style={boxStyle}>{productJson.substring(0,500)}{productJson.length>500?"\n…":""}</div>
+      {/* JSON copy fallback (for debugging or manual rescue) */}
+      {done && tasks.some(t => t.status === "error") && (
+        <div style={{ background:"#141414", border:"1px solid #1e1e1e", borderRadius:12, padding:16, marginBottom:12 }}>
+          <div style={{ display:"flex", alignItems:"center", marginBottom:6 }}>
+            <div style={{ fontWeight:800, fontSize:12, color:"#f0f0f0" }}>products/{info.slug}.json (sauvegarde)</div>
+            <CopyBtn text={productJson} id="productjson" label="Copier" />
           </div>
+          <div style={boxStyle}>{productJson.substring(0,500)}{productJson.length>500?"\n…":""}</div>
         </div>
       )}
 
