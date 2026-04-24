@@ -2,9 +2,9 @@
   "id": "miroir-magnum-essentiel",
   "slug": "miroir-magnum-essentiel",
   "name": "Miroir pas cher MAGNUM essentiel",
-  "category": "Entrée de gamme",
+  "category": "EntrÃ©e de gamme",
   "categoryId": "entree-de-gamme",
-  "active": true,
+  "active": false,
   "images": [
     "/images/miroir-magnum-essentiel/1.webp"
   ],
@@ -12,10 +12,10 @@
     "min": null,
     "max": null
   },
-  "description": "Le Miroir MAGNUM Essentiel Nova Style propose les grandes dimensions de notre célèbre MAGNUM à un prix accessible. Idéal pour les salles de bain spacieuses, espaces vanity, ou salles de bain de couples nécessitant un grand miroir, cette version essentielle conserve les caractéristiques fondamentales à coût optimisé.",
+  "description": "Le Miroir MAGNUM Essentiel Nova Style propose les grandes dimensions de notre cÃ©lÃ¨bre MAGNUM Ã  un prix accessible. IdÃ©al pour les salles de bain spacieuses, espaces vanity, ou salles de bain de couples nÃ©cessitant un grand miroir, cette version essentielle conserve les caractÃ©ristiques fondamentales Ã  coÃ»t optimisÃ©.",
   "seo": {
-    "title": "Miroir pas cher MAGNUM essentiel | Miroir Salle de Bain Maroc · Nova Style",
-    "description": "Le Miroir MAGNUM Essentiel Nova Style propose les grandes dimensions de notre célèbre MAGNUM à un prix accessible. Idéal pour les salles de bain spacieuses, esp..."
+    "title": "Miroir pas cher MAGNUM essentiel | Miroir Salle de Bain Maroc Â· Nova Style",
+    "description": "Le Miroir MAGNUM Essentiel Nova Style propose les grandes dimensions de notre cÃ©lÃ¨bre MAGNUM Ã  un prix accessible. IdÃ©al pour les salles de bain spacieuses, esp..."
   },
   "axes": {
     "order": [],
