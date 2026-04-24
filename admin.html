@@ -6021,7 +6021,7 @@
     // Load saved pixel IDs from Firebase when user opens Ads tab
     async function loadAdsConfig() {
       try {
-        const fbToken = localStorage.getItem('nova_admin_token');
+        const fbToken = await window.__NOVA_FIREBASE__?.auth?.currentUser?.getIdToken();
         if (!fbToken) return;
         const res = await fetch(`${DB_REST}/ads_config.json?auth=${fbToken}`);
         if (!res.ok) return;
@@ -6056,7 +6056,7 @@
       statusEl.style.color = '#6b7280';
       statusEl.textContent = '⏳ Sauvegarde…';
       try {
-        const fbToken = localStorage.getItem('nova_admin_token');
+        const fbToken = await window.__NOVA_FIREBASE__?.auth?.currentUser?.getIdToken();
         if (!fbToken) throw new Error('Token Firebase manquant — reconnectez-vous.');
         const cfg = {};
         ADS_FIELDS.forEach(({ id, key }) => {
