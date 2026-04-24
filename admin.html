@@ -5781,8 +5781,11 @@
           axes: { order, options: opts },
           hasVariants: variants.length > 0, variantCount: variants.length
         };
-        indexData.products = (indexData.products || []).filter(x => x.slug !== slug);
-        indexData.products.push(newEntry);
+        const prodArr = indexData.products || [];
+        const existingIdx = prodArr.findIndex(x => x.slug === slug);
+        if (existingIdx >= 0) prodArr[existingIdx] = newEntry;
+        else prodArr.push(newEntry);
+        indexData.products = prodArr;
         await ghPutFile(ghToken, 'products-index.json', JSON.stringify(indexData, null, 2),
           `Update index for ${slug}`, indexFile.sha);
 
