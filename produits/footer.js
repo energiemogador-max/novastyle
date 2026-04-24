@@ -50,14 +50,14 @@
 '      <div class="foot-tag">La beauté dans le miroir</div>\n' +
 '      <p>Fabricant de miroirs à Casablanca. Verre AGC Belgique, traitement anti-buée, anticorrosion. Livraison partout au Maroc.</p>\n' +
 '      <p style="margin-top:10px"><a href="tel:+212707074748">📞 07 07 07 47 48</a> · <a href="https://wa.me/212707074748" target="_blank" rel="noopener">💬 WhatsApp</a></p>\n' +
-'      <p style="margin-top:6px;font-size:12px;color:var(--muted,#888)">Showroom : Route de Médiouna, 20000 Casablanca, Maroc<br>Lun–Sam · 9h00–18h00</p>\n' +
+'      <p style="margin-top:6px;font-size:12px;color:var(--muted,#888)">Showroom : Bd Oued Sebou, Rue 13 N°24, 20000 Casablanca, Maroc<br>Lun–Sam · 9h00–18h00</p>\n' +
 '    </div>\n' +
 '    <div><strong>Catégories</strong>\n      ' + catLinks + '\n    </div>\n' +
 '    <div><strong>Pages SEO</strong>\n      ' + seoLinks + '\n    </div>\n' +
 '    <div><strong>Villes desservies</strong>\n      <div class="cities-inline">' + cityLinks + '</div>\n    </div>\n' +
 '  </div>\n' +
 '  <div class="geo-seo-block" style="margin-top:40px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.05);font-size:12px;color:#666;line-height:1.5;">\n' +
-'    <strong>À propos de Nova Style :</strong> Nova Style est le fabricant marocain de référence spécialisé dans le <strong>miroir de salle de bain</strong>, le <strong>miroir de salle de bain avec LED</strong>, et le <strong>miroir de salle de bain antibuée</strong>. Situés à Casablanca (Route de Médiouna), nous concevons des miroirs sur mesure de très haute qualité utilisant du verre AGC Belgique. Nos miroirs allient design moderne, éclairage LED, et traitement anti-corrosion, avec une livraison et installation disponibles partout au Maroc.\n' +
+'    <strong>À propos de Nova Style :</strong> Nova Style est le fabricant marocain de référence spécialisé dans le <strong>miroir de salle de bain</strong>, le <strong>miroir de salle de bain avec LED</strong>, et le <strong>miroir de salle de bain antibuée</strong>. Situés à Casablanca (Bd Oued Sebou, Rue 13 N°24), nous concevons des miroirs sur mesure de très haute qualité utilisant du verre AGC Belgique. Nos miroirs allient design moderne, éclairage LED, et traitement anti-corrosion, avec une livraison et installation disponibles partout au Maroc.\n' +
 '  </div>\n' +
 '  <div class="foot-legal">© ' + YEAR + ' Nova Style · Fabrication à Casablanca, Maroc · Livraison nationale</div>\n' +
 '</footer>\n' +
@@ -73,7 +73,7 @@
 '  "image": "https://novastyle.ma/assets/logo.png",\n' +
 '  "logo": "https://novastyle.ma/assets/logo.png",\n' +
 '  "sameAs": ["https://share.google/YUlF83PSlRCLlTy2K","https://www.instagram.com/nova_home_style/","https://wa.me/212707074748"],\n' +
-'  "address": {"@type":"PostalAddress","streetAddress":"Route de Médiouna","addressLocality":"Casablanca","addressRegion":"Grand Casablanca-Settat","postalCode":"20000","addressCountry":"MA"},\n' +
+'  "address": {"@type":"PostalAddress","streetAddress":"Bd Oued Sebou, Rue 13 N°24","addressLocality":"Casablanca","addressRegion":"Grand Casablanca-Settat","postalCode":"20000","addressCountry":"MA"},\n' +
 '  "geo": {"@type":"GeoCoordinates","latitude":"33.5731","longitude":"-7.5898"},\n' +
 '  "hasMap": "https://share.google/YUlF83PSlRCLlTy2K",\n' +
 '  "openingHoursSpecification": [{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"09:00","closes":"18:00"}],\n' +
