@@ -19,8 +19,10 @@ function catTileHTML(cat, count, img, eager) {
   return `<a class="cat-tile" href="${CATEGORY_PAGE(cat.id)}">
   <img src="${src}" alt="${cat.name}"${imgAttrs} decoding="async">
   <div class="cat-tile-overlay">
-    <div class="cat-tile-name">${cat.name}</div>
-    <div class="cat-tile-count">${count} produit${count !== 1 ? "s" : ""}</div>
+    <div class="cat-tile-label">
+      <div class="cat-tile-name">${cat.name}</div>
+      <div class="cat-tile-count">${count} produit${count !== 1 ? "s" : ""}</div>
+    </div>
   </div>
 </a>`;
 }
