@@ -1,4 +1,4 @@
-{
+﻿{
   "version": 2,
   "generated": "2026-04-23",
   "categories": [
@@ -9,17 +9,12 @@
       "count": 47
     },
     {
-<<<<<<< HEAD
       "id": "sdb-essentiel",
       "name": "Entrée de gamme",
       "raw": "Entrée de gamme",
-=======
-      "id": "entree-de-gamme",
-      "name": "EntrÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©e de gamme",
-      "raw": "EntrÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©e de gamme",
->>>>>>> c0255adc4758c01e2db40441cb6ace104ca48960
       "count": 3
     },
+    
     {
       "id": "salon",
       "name": "Salon & dressing",
@@ -28,13 +23,13 @@
     },
     {
       "id": "consoles",
-      "name": "Consoles & entrÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©e",
+      "name": "Consoles & Entrée",
       "raw": "Consoles",
       "count": 2
     },
     {
       "id": "tables",
-      "name": "Tables de sÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©jour",
+      "name": "Tables de séjour",
       "raw": "Tables",
       "count": 3
     },
@@ -812,7 +807,6 @@
       "variantCount": 80
     },
     {
-<<<<<<< HEAD
       "id": "miroir-magnum-essentiel",
       "slug": "miroir-magnum-essentiel",
       "name": "Miroir pas cher MAGNUM essentiel",
@@ -828,8 +822,6 @@
       "variantCount": 0
     },
     {
-=======
->>>>>>> c0255adc4758c01e2db40441cb6ace104ca48960
       "id": "consol-et-miroir-nova-style-ensemble",
       "slug": "consol-et-miroir-nova-style-ensemble",
       "name": "Consol et miroir NOVA STYLE : ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂlÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©gance Stylish",
@@ -845,7 +837,6 @@
       "variantCount": 0
     },
     {
-<<<<<<< HEAD
       "id": "miroir-anfa-essentiel",
       "slug": "miroir-anfa-essentiel",
       "name": "Miroir pas cher au maroc ANFA essentiel",
@@ -861,8 +852,6 @@
       "variantCount": 0
     },
     {
-=======
->>>>>>> c0255adc4758c01e2db40441cb6ace104ca48960
       "id": "table-basse-de-sejour-en-bois-mdf-et-verre-trempe",
       "slug": "table-basse-de-sejour-en-bois-mdf-et-verre-trempe",
       "name": "Table BAMBOU",
@@ -998,7 +987,6 @@
       "variantCount": 40
     },
     {
-<<<<<<< HEAD
       "id": "miroir-eclipse-essentiel",
       "slug": "miroir-eclipse-essentiel",
       "name": "Miroir pas cher avec led ECLIPSE essentiel",
@@ -1014,11 +1002,9 @@
       "variantCount": 0
     },
     {
-=======
->>>>>>> c0255adc4758c01e2db40441cb6ace104ca48960
       "id": "nova-style-miroir-asymetrique",
       "slug": "nova-style-miroir-asymetrique",
-      "name": "Nova Style : Miroir AsymÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©trique",
+      "name": "Nova Style : Miroir Asymétrique",
       "category": "Miroirs SDB Premium",
       "categoryId": "sdb-premium",
       "active": true,
