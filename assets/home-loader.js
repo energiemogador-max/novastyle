@@ -1,8 +1,7 @@
 /**
  * home-loader.js
- * Populates the homepage:
- *  1. #dyn-cat-cards  — category tiles (large, image + overlay)
- *  2. #featured-products — 8 mixed products from top categories
+ * Renders homepage collection sections from products-index.json.
+ * Each category → beautiful title + 2 rows × 5 products (10 total) + "Voir tous" link.
  */
 
 const CATEGORY_PAGE = id => `/categorie/${id}/`;
@@ -11,20 +10,6 @@ const UNSAFE_SLUG   = /[^\x00-\x7F]/;
 function fmtPrice(v) {
   if (v == null) return "";
   return Math.round(v).toLocaleString("fr-FR") + " MAD";
-}
-
-function catTileHTML(cat, count, img, eager) {
-  const imgAttrs = eager ? ' fetchpriority="high"' : ' loading="lazy"';
-  const src = img || "/assets/logo.png";
-  return `<a class="cat-tile" href="${CATEGORY_PAGE(cat.id)}">
-  <img src="${src}" alt="${cat.name}"${imgAttrs} decoding="async">
-  <div class="cat-tile-overlay">
-    <div class="cat-tile-label">
-      <div class="cat-tile-name">${cat.name}</div>
-      <div class="cat-tile-count">${count} produit${count !== 1 ? "s" : ""}</div>
-    </div>
-  </div>
-</a>`;
 }
 
 function productCardHTML(p, eager) {
@@ -42,9 +27,8 @@ function productCardHTML(p, eager) {
 }
 
 (async function () {
-  const cardsEl    = document.getElementById("dyn-cat-cards");
-  const featuredEl = document.getElementById("featured-products");
-  if (!cardsEl && !featuredEl) return;
+  const sectionsEl = document.getElementById("dyn-cat-sections");
+  if (!sectionsEl) return;
 
   let data;
   try {
@@ -53,8 +37,7 @@ function productCardHTML(p, eager) {
     data = await res.json();
   } catch (e) {
     console.error("[home-loader]", e);
-    if (cardsEl)    cardsEl.innerHTML    = "<p style='text-align:center;padding:20px;color:#888'>Impossible de charger les catégories.</p>";
-    if (featuredEl) featuredEl.innerHTML = "";
+    sectionsEl.innerHTML = "<p style='text-align:center;padding:20px;color:#888'>Impossible de charger les produits.</p>";
     return;
   }
 
@@ -69,26 +52,25 @@ function productCardHTML(p, eager) {
     (byCat[k] = byCat[k] || []).push(p);
   });
 
-  // 1. Category tiles
-  if (cardsEl) {
-    cardsEl.innerHTML = categories.map((cat, i) => {
-      const items = byCat[cat.id] || [];
-      return catTileHTML(cat, items.length, items[0]?.image, i === 0);
-    }).join("");
-  }
+  let firstProduct = true;
 
-  // 2. Featured products — pick 2 from each of the first 4 categories (8 total)
-  if (featuredEl) {
-    const featured = [];
-    for (const cat of categories) {
-      const items = byCat[cat.id] || [];
-      featured.push(...items.slice(0, 2));
-      if (featured.length >= 8) break;
-    }
-    if (featured.length) {
-      featuredEl.innerHTML = featured.slice(0, 8).map((p, i) => productCardHTML(p, i === 0)).join("");
-    } else {
-      featuredEl.innerHTML = "";
-    }
-  }
+  sectionsEl.innerHTML = categories.map(cat => {
+    const items = (byCat[cat.id] || []).slice(0, 10);
+    if (!items.length) return "";
+
+    const total = (byCat[cat.id] || []).length;
+    const cards = items.map(p => {
+      const html = productCardHTML(p, firstProduct);
+      firstProduct = false;
+      return html;
+    }).join("");
+
+    return `<div class="home-collection">
+  <div class="home-collection-head">
+    <div class="home-collection-title">${cat.name}</div>
+    <a class="home-collection-link" href="${CATEGORY_PAGE(cat.id)}">Voir les ${total} produits →</a>
+  </div>
+  <div class="home-collection-grid">${cards}</div>
+</div>`;
+  }).join("\n");
 })();
