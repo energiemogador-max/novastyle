@@ -1,19 +1,14 @@
 {
-  "id": "table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm",
   "slug": "table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm",
-  "name": "Table de Séjour en Bois de Hêtre et Verre Trempé",
-  "category": "Tables",
+  "name": "Table de Sejour en Bois de Hetre et Verre Trempe",
   "categoryId": "tables",
+  "category": "Tables de Séjour",
   "active": true,
   "images": [
     "/images/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm/1.webp",
     "/images/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm/2.webp",
     "/images/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm/3.webp"
   ],
-  "price": {
-    "min": 1580.0,
-    "max": 1700.0
-  },
   "description": "La Table de Séjour en Bois de Hêtre et Verre Trempé 8mm Nova Style allie la noblesse d'un bois massif et la robustesse du verre trempé épais pour un meuble haut de gamme destiné aux salons élégants au Maroc.",
   "seo": {
     "title": "Table de Séjour en Bois de Hêtre et Verre Trempé | Miroir Salle de Bain Maroc · Nova Style",
@@ -35,14 +30,14 @@
       "axes": {
         "Dimension": "Largueur = 50 cm\n\nLongueur =100 cm\n\nhauteur = 40 cm"
       },
-      "price": 1580.0,
+      "price": 1580,
       "sku": ""
     },
     {
       "axes": {
         "Dimension": "Largueur = 70 cm\n\nLongueur =132 cm\n\nhauteur = 40 cm"
       },
-      "price": 1700.0,
+      "price": 1700,
       "sku": ""
     }
   ]
