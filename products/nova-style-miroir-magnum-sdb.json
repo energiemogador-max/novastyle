@@ -3,7 +3,7 @@
   "slug": "nova-style-miroir-magnum-sdb",
   "name": "Nova Style : Miroir MAGNUM SDB",
   "category": "Miroirs SDB Premium",
-  "categoryId": "miroirs-sdb",
+  "categoryId": "sdb-premium",
   "active": true,
   "images": [
     "/images/nova-style-miroir-magnum-sdb/1.webp",

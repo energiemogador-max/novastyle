@@ -3,7 +3,7 @@
  * Dynamically renders a product grid from products-index.json.
  *
  * Usage on a category page:
- *   <div id="products-grid" data-category-id="miroirs-sdb"></div>
+ *   <div id="products-grid" data-category-id="sdb-premium"></div>
  *   <!-- OR for curated slug lists (e.g. salon) -->
  *   <div id="products-grid" data-slugs="slug-a,slug-b,slug-c"></div>
  *   <script src="/assets/category-loader.js" defer></script>
