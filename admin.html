@@ -3227,63 +3227,129 @@
           </table>
         </div>
 
-        <!-- Product edit modal -->
+        <!-- Product edit modal (Shopify-style full editor) -->
         <div id="product-edit-modal"
           style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;overflow:auto">
           <div
-            style="background:#fff;max-width:860px;margin:40px auto;border-radius:12px;padding:32px;position:relative">
+            style="background:#fff;max-width:920px;margin:30px auto;border-radius:12px;padding:28px 32px;position:relative">
             <button onclick="closeProductModal()"
-              style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:20px;cursor:pointer">✕</button>
-            <h2 id="modal-title" style="margin-top:0;font-size:18px"></h2>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-              <div><label style="font-size:12px;font-weight:700;color:#555">Titre</label><br>
-                <input id="edit-title"
-                  style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;margin-top:4px;box-sizing:border-box">
+              style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#666">✕</button>
+            <h2 id="modal-title" style="margin:0 0 4px;font-size:18px;padding-right:30px"></h2>
+            <div id="modal-slug" style="font-size:11px;color:#888;font-family:monospace;margin-bottom:20px"></div>
+
+            <!-- ── Section: Identity ────────────────────────────────── -->
+            <div class="ed-section">
+              <div class="ed-section-title">① Identité</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <div><label class="ed-lbl">Nom du produit</label>
+                  <input id="edit-title" class="ed-inp"></div>
+                <div><label class="ed-lbl">Catégorie</label>
+                  <select id="edit-category" class="ed-inp">
+                    <option value="sdb-premium">Miroirs SDB Premium</option>
+                    <option value="sdb-essentiel">Miroirs SDB Essentiel</option>
+                    <option value="salon">Salon &amp; Dressing</option>
+                    <option value="consoles">Consoles &amp; Entrée</option>
+                    <option value="douches">Douches Italiennes</option>
+                    <option value="tables">Tables de Séjour</option>
+                  </select></div>
               </div>
-              <div><label style="font-size:12px;font-weight:700;color:#555">Catégorie</label><br>
-                <select id="edit-category"
-                  style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;margin-top:4px">
-                  <option>Miroirs SDB Premium</option>
-                  <option>Miroirs SDB Essentiel</option>
-                  <option>Consoles</option>
-                  <option>Douches</option>
-                  <option>Salon</option>
-                  <option>Tables</option>
-                </select>
+              <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;cursor:pointer">
+                <input id="edit-active" type="checkbox" style="width:16px;height:16px"> Produit actif (visible sur le site)
+              </label>
+            </div>
+
+            <!-- ── Section: Description ─────────────────────────────── -->
+            <div class="ed-section">
+              <div class="ed-section-title">② Description (HTML)</div>
+              <div style="font-size:11px;color:#888;margin-bottom:8px">
+                Utilisez les boutons pour formater, ou collez du HTML directement.
+              </div>
+              <div id="edit-desc-toolbar" style="display:flex;flex-wrap:wrap;gap:5px;padding:6px;background:#f5f5f5;border:1px solid #ddd;border-bottom:none;border-radius:6px 6px 0 0">
+                <button type="button" data-cmd="formatBlock" data-arg="h2" class="ed-tb-btn">H2</button>
+                <button type="button" data-cmd="formatBlock" data-arg="h3" class="ed-tb-btn">H3</button>
+                <button type="button" data-cmd="formatBlock" data-arg="p" class="ed-tb-btn">P</button>
+                <button type="button" data-cmd="bold" class="ed-tb-btn"><b>G</b></button>
+                <button type="button" data-cmd="italic" class="ed-tb-btn"><i>I</i></button>
+                <button type="button" data-cmd="insertUnorderedList" class="ed-tb-btn">• Liste</button>
+                <button type="button" id="edit-desc-html-toggle" class="ed-tb-btn" style="margin-left:auto">&lt;/&gt; HTML</button>
+              </div>
+              <div id="edit-desc-visual" contenteditable
+                style="min-height:140px;max-height:260px;overflow-y:auto;padding:12px;border:1px solid #ddd;border-radius:0 0 6px 6px;background:#fff;font-size:13px;line-height:1.7;outline:none"></div>
+              <textarea id="edit-desc-raw"
+                style="display:none;width:100%;min-height:200px;padding:12px;border:1px solid #ddd;border-radius:0 0 6px 6px;font-family:monospace;font-size:12px;line-height:1.5;resize:vertical;box-sizing:border-box;outline:none"></textarea>
+            </div>
+
+            <!-- ── Section: SEO ─────────────────────────────────────── -->
+            <div class="ed-section">
+              <div class="ed-section-title">③ SEO</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <div><label class="ed-lbl">Titre SEO</label>
+                  <input id="edit-seo-title" class="ed-inp">
+                  <div id="edit-seo-title-count" class="ed-counter">0/60</div></div>
+                <div><label class="ed-lbl">Meta description</label>
+                  <input id="edit-seo-desc" class="ed-inp">
+                  <div id="edit-seo-desc-count" class="ed-counter">0/160</div></div>
               </div>
             </div>
-            <div style="margin-bottom:20px">
-              <label style="font-size:12px;font-weight:700;color:#555">Description</label><br>
-              <textarea id="edit-desc" rows="4"
-                style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;margin-top:4px;resize:vertical;box-sizing:border-box"></textarea>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-              <div><label style="font-size:12px;font-weight:700;color:#555">SEO Title</label><br>
-                <input id="edit-seo-title"
-                  style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;margin-top:4px;box-sizing:border-box">
+
+            <!-- ── Section: Images ──────────────────────────────────── -->
+            <div class="ed-section">
+              <div class="ed-section-title">④ Images</div>
+              <div style="font-size:11px;color:#888;margin-bottom:10px">
+                La 1ère image = image principale. Glissez ↑ pour réordonner, ✕ pour supprimer.
               </div>
-              <div><label style="font-size:12px;font-weight:700;color:#555">SEO Description</label><br>
-                <input id="edit-seo-desc"
-                  style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;margin-top:4px;box-sizing:border-box">
+              <div id="edit-img-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:10px"></div>
+              <div id="edit-img-drop" style="border:2px dashed #ddd;border-radius:8px;padding:20px;text-align:center;cursor:pointer;background:#fafafa;transition:all .15s">
+                <div style="font-size:22px;margin-bottom:4px">📸</div>
+                <div style="font-size:13px;color:#666">Glissez ou <span style="color:#e8194b;font-weight:700">cliquez</span> pour ajouter</div>
+                <input id="edit-img-input" type="file" multiple accept="image/*" style="display:none">
               </div>
             </div>
-            <h3 style="font-size:14px;font-weight:700;margin-bottom:12px">Variantes &amp; Prix</h3>
-            <div id="variant-price-table"
-              style="max-height:320px;overflow-y:auto;border:1px solid #eee;border-radius:8px"></div>
-            <div style="display:flex;gap:12px;margin-top:24px;justify-content:flex-end;flex-wrap:wrap">
+
+            <!-- ── Section: Variants & Prices ───────────────────────── -->
+            <div class="ed-section">
+              <div class="ed-section-title">⑤ Variantes &amp; Prix</div>
+              <div id="variant-price-table"
+                style="max-height:280px;overflow-y:auto;border:1px solid #eee;border-radius:8px"></div>
+            </div>
+
+            <!-- ── Action bar ───────────────────────────────────────── -->
+            <div style="display:flex;gap:12px;margin-top:20px;justify-content:space-between;align-items:center;flex-wrap:wrap;border-top:1px solid #eee;padding-top:16px">
               <button onclick="deleteProduct()"
-                style="background:#fff;border:1px solid #e8194b;color:#e8194b;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:700">🗑
-                Supprimer</button>
-              <button onclick="saveProduct()"
-                style="background:#1a1a1a;color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:700">💾
-                Enregistrer</button>
-              <button onclick="regeneratePage()"
-                style="background:#e8194b;color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:700">⚡
-                Régénérer la page</button>
+                style="background:#fff;border:1px solid #e8194b;color:#e8194b;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px">🗑 Supprimer</button>
+              <div style="display:flex;gap:10px">
+                <button onclick="closeProductModal()"
+                  style="background:#fff;color:#666;border:1px solid #ddd;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px">Annuler</button>
+                <button id="save-product-btn" onclick="saveProduct()"
+                  style="background:#1a1a1a;color:#fff;border:none;padding:10px 28px;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px">💾 Enregistrer (auto-publie tout)</button>
+              </div>
             </div>
-            <div id="modal-status" style="margin-top:12px;font-size:13px;text-align:center"></div>
+            <div id="modal-status" style="margin-top:12px;font-size:13px;text-align:center;line-height:1.7"></div>
           </div>
         </div>
+
+        <style>
+          .ed-section { padding:16px 0; border-bottom:1px solid #f0f0f0; }
+          .ed-section:last-of-type { border-bottom:none; }
+          .ed-section-title { font-size:11px; font-weight:800; color:#888; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+          .ed-lbl { display:block; font-size:11px; font-weight:700; color:#555; margin-bottom:5px; text-transform:uppercase; letter-spacing:.5px; }
+          .ed-inp { width:100%; padding:9px 11px; border:1px solid #ddd; border-radius:6px; font-size:13px; box-sizing:border-box; outline:none; font-family:inherit; background:#fff; }
+          .ed-inp:focus { border-color:#e8194b; }
+          .ed-counter { font-size:10px; color:#999; margin-top:3px; text-align:right; }
+          .ed-counter.over { color:#e8194b; font-weight:700; }
+          .ed-tb-btn { background:#fff; border:1px solid #ddd; border-radius:4px; padding:4px 10px; font-size:12px; cursor:pointer; font-family:inherit; }
+          .ed-tb-btn:hover { background:#f0f0f0; }
+          .ed-img-card { position:relative; aspect-ratio:1; background:#f5f5f5; border-radius:6px; overflow:hidden; border:1px solid #e0e0e0; }
+          .ed-img-card img { width:100%; height:100%; object-fit:cover; display:block; }
+          .ed-img-badge { position:absolute; top:4px; left:4px; background:#e8194b; color:#fff; font-size:9px; font-weight:800; padding:2px 6px; border-radius:3px; }
+          .ed-img-actions { position:absolute; top:4px; right:4px; display:flex; flex-direction:column; gap:3px; opacity:0; transition:opacity .15s; }
+          .ed-img-card:hover .ed-img-actions { opacity:1; }
+          .ed-img-actions button { width:22px; height:22px; border:none; border-radius:4px; cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center; }
+          .ed-img-actions .up { background:rgba(0,0,0,0.6); color:#fff; }
+          .ed-img-actions .rm { background:#e8194b; color:#fff; }
+          .ed-img-pending { position:absolute; bottom:4px; left:4px; background:#ffb300; color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:3px; }
+          #edit-img-drop.drag-over { border-color:#e8194b; background:#fef0f3; }
+        </style>
 
         <!-- ═══ NEW PRODUCT ═══ -->
         <div class="tab-panel" id="tab-newproduct">
@@ -5417,27 +5483,87 @@
     import { buildProductPage, ghCommit, generateAllVariants, fmtPrice } from '/assets/product-utils.js';
 
     const DB = 'https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app';
-    // Read repo slug from the GitHub config form (saved in localStorage by saveGhConfig)
-    const REPO = localStorage.getItem('nova_gh_repo') || 'your-org/novastyle';
+    const REPO = 'energiemogador-max/novastyle';
+    const GH_BRANCH = 'main';
     let _editingSlug = null;
-    let _allAdminProducts = {};
+    let _editingFull = null;       // full /products/{slug}.json
+    let _allAdminProducts = {};    // slug → index entry from products-index.json
     let _panelOpen = false;
+    let _editImages = [];          // [{ src, file?, name, isNew }]
+    let _indexCache = null;        // products-index.json cache (reduces fetches)
 
+    // ── GitHub helpers ────────────────────────────────────────────────────
+    async function ghReadFile(token, path) {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,
+        { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github+json' }});
+      if (r.status === 404) return { sha: null, content: null };
+      if (!r.ok) throw new Error(`GH read ${path}: ${r.status}`);
+      const d = await r.json();
+      return { sha: d.sha, content: atob(d.content.replace(/\n/g, '')) };
+    }
+
+    async function ghPutFile(token, path, content, message, sha) {
+      const body = { message, branch: GH_BRANCH,
+        content: btoa(unescape(encodeURIComponent(content))) };
+      if (sha) body.sha = sha;
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json',
+                   Accept: 'application/vnd.github+json' },
+        body: JSON.stringify(body)
+      });
+      if (!r.ok) {
+        const t = await r.text().catch(() => '');
+        throw new Error(`GH put ${path}: ${r.status} ${t.slice(0, 150)}`);
+      }
+    }
+
+    async function ghDeleteFile(token, path, sha) {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+        method: 'DELETE',
+        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json',
+                   Accept: 'application/vnd.github+json' },
+        body: JSON.stringify({ message: `delete ${path}`, sha, branch: GH_BRANCH })
+      });
+      if (!r.ok && r.status !== 404 && r.status !== 422) {
+        throw new Error(`GH delete ${path}: ${r.status}`);
+      }
+    }
+
+    function fileToBase64(file) {
+      return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+    }
+
+    // ── Toggle full edit panel ────────────────────────────────────────────
     window.toggleFullProductPanel = function () {
       _panelOpen = !_panelOpen;
       document.getElementById('product-list-panel').style.display = _panelOpen ? 'block' : 'none';
       if (_panelOpen) loadProductList();
     };
 
+    // ── Load product list from products-index.json (canonical source) ────
     window.loadProductList = async function () {
-      const token = localStorage.getItem('nova_admin_token');
-      const res = await fetch(`${DB}/catalog.json?auth=${token}`);
-      _allAdminProducts = await res.json() || {};
-      const cats = [...new Set(Object.values(_allAdminProducts).map(p => p && p.category).filter(Boolean))].sort();
-      const catSel = document.getElementById('prod-cat-filter');
-      catSel.innerHTML = '<option value="">Toutes catégories</option>' +
-        cats.map(c => `<option>${c}</option>`).join('');
-      renderProductTable();
+      const tbody = document.getElementById('product-tbody');
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:#888">Chargement…</td></tr>';
+      try {
+        const r = await fetch('/products-index.json?_=' + Date.now());
+        const idx = await r.json();
+        _indexCache = idx;
+        _allAdminProducts = {};
+        (idx.products || []).forEach(p => { _allAdminProducts[p.slug] = p; });
+        const cats = [...new Set((idx.products || []).map(p => p.category).filter(Boolean))].sort();
+        const catSel = document.getElementById('prod-cat-filter');
+        catSel.innerHTML = '<option value="">Toutes catégories</option>' +
+          cats.map(c => `<option>${c}</option>`).join('');
+        renderProductTable();
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="6" style="padding:20px;text-align:center;color:#e8194b">Erreur: ${e.message}</td></tr>`;
+      }
     };
 
     function renderProductTable() {
@@ -5447,19 +5573,23 @@
       let html = '';
       Object.entries(_allAdminProducts).forEach(([slug, p]) => {
         if (!p) return;
-        if (q && !(p.title || '').toLowerCase().includes(q) && !slug.includes(q)) return;
+        if (q && !(p.name || '').toLowerCase().includes(q) && !slug.includes(q)) return;
         if (cat && p.category !== cat) return;
-        const pMin = p.price_min || 0, pMax = p.price_max || 0;
-        const vCount = (p.variants || []).length;
+        const pMin = p.price?.min || 0, pMax = p.price?.max || 0;
+        const vCount = p.variantCount || (p.variants ? p.variants.length : 0);
         html += `<tr style="border-bottom:1px solid #f0f0f0">
-          <td style="padding:10px"><strong>${p.title}</strong><br><span style="font-size:11px;color:#999">${slug}</span></td>
+          <td style="padding:10px;display:flex;align-items:center;gap:10px">
+            <img src="${p.image || ''}" style="width:48px;height:48px;object-fit:cover;border-radius:5px;background:#f5f5f5" onerror="this.style.display='none'">
+            <div><strong>${p.name || ''}</strong><br><span style="font-size:11px;color:#999">${slug}</span></div>
+          </td>
           <td style="padding:10px">${p.category || '—'}</td>
-          <td style="padding:10px;text-align:right">${pMin}–${pMax} MAD</td>
+          <td style="padding:10px;text-align:right">${Math.round(pMin)}–${Math.round(pMax)} MAD</td>
           <td style="padding:10px;text-align:center">${vCount}</td>
           <td style="padding:10px;text-align:center">
             <input type="checkbox" ${p.active !== false ? 'checked' : ''} onchange="window.toggleActive('${slug}', this.checked)">
           </td>
-          <td style="padding:10px;text-align:center">
+          <td style="padding:10px;text-align:center;white-space:nowrap">
+            <a href="/produits/${slug}/" target="_blank" style="text-decoration:none;font-size:12px;color:#2563eb;margin-right:8px">↗ Voir</a>
             <button onclick="window.openProductModal('${slug}')" style="padding:5px 12px;border:1px solid #ddd;border-radius:5px;cursor:pointer;font-size:12px">✏️ Éditer</button>
           </td>
         </tr>`;
@@ -5471,119 +5601,375 @@
     document.getElementById('prod-search').addEventListener('input', renderProductTable);
     document.getElementById('prod-cat-filter').addEventListener('change', renderProductTable);
 
-    window.openProductModal = function (slug) {
+    // ── Open edit modal: fetch full product JSON ─────────────────────────
+    window.openProductModal = async function (slug) {
       _editingSlug = slug;
-      const p = _allAdminProducts[slug];
-      document.getElementById('modal-title').textContent = `Éditer — ${p.title}`;
-      document.getElementById('edit-title').value = p.title || '';
-      document.getElementById('edit-category').value = p.category || '';
-      document.getElementById('edit-desc').value = p.description || '';
-      document.getElementById('edit-seo-title').value = (p.seo && p.seo.title) || p.title || '';
-      document.getElementById('edit-seo-desc').value = (p.seo && p.seo.description) || '';
-      const allCombos = generateAllVariants({ axis_order: p.axis_order || [], axes: p.axes || {} });
-      let tableHTML = '<table style="width:100%;border-collapse:collapse;font-size:12px">';
-      tableHTML += '<tr style="background:#f9f9f9">';
-      (p.axis_order || []).forEach(a => tableHTML += `<th style="padding:8px;text-align:left;border-bottom:1px solid #eee">${a}</th>`);
-      tableHTML += '<th style="padding:8px;text-align:right;border-bottom:1px solid #eee">Prix (MAD)</th></tr>';
-      allCombos.forEach((combo, idx) => {
-        const existing = (p.variants || []).find(v => (p.axis_order || []).every(a => v.axes[a] === combo[a]));
-        const price = existing ? existing.price : 0;
-        tableHTML += '<tr>';
-        (p.axis_order || []).forEach(a => tableHTML += `<td style="padding:8px;border-bottom:1px solid #f5f5f5">${combo[a]}</td>`);
-        tableHTML += `<td style="padding:8px;border-bottom:1px solid #f5f5f5;text-align:right">
-          <input type="number" value="${price}" min="0" style="width:90px;padding:4px 6px;border:1px solid #ddd;border-radius:4px;text-align:right"
-            data-combo-idx="${idx}"></td></tr>`;
-      });
-      tableHTML += '</table>';
-      document.getElementById('variant-price-table').innerHTML = tableHTML;
-      document.getElementById('product-edit-modal').style.display = 'block';
+      const modal = document.getElementById('product-edit-modal');
+      modal.style.display = 'block';
+      document.getElementById('modal-title').textContent = 'Chargement…';
+      document.getElementById('modal-slug').textContent = slug;
       document.getElementById('modal-status').textContent = '';
-    };
 
-    window.saveProduct = async function () {
-      const token = localStorage.getItem('nova_admin_token');
-      const p = _allAdminProducts[_editingSlug];
-      const allCombos = generateAllVariants({ axis_order: p.axis_order || [], axes: p.axes || {} });
-      const inputs = document.querySelectorAll('#variant-price-table input[data-combo-idx]');
-      const variants = [];
-      inputs.forEach((inp, idx) => {
-        variants.push({ axes: allCombos[idx], price: parseFloat(inp.value) || 0, sku: '' });
-      });
-      const prices = variants.map(v => v.price).filter(pr => pr > 0);
-      const updated = {
-        ...p,
-        title: document.getElementById('edit-title').value.trim(),
-        category: document.getElementById('edit-category').value,
-        description: document.getElementById('edit-desc').value.trim(),
-        seo: {
-          title: document.getElementById('edit-seo-title').value.trim(),
-          description: document.getElementById('edit-seo-desc').value.trim(),
-        },
-        variants,
-        price_min: prices.length ? Math.min(...prices) : 0,
-        price_max: prices.length ? Math.max(...prices) : 0,
-      };
-      _allAdminProducts[_editingSlug] = updated;
-      const status = document.getElementById('modal-status');
       try {
-        const res = await fetch(`${DB}/catalog/${_editingSlug}.json?auth=${token}`, {
-          method: 'PUT', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updated)
+        const r = await fetch(`/products/${slug}.json?_=` + Date.now());
+        if (!r.ok) throw new Error(`Cannot load product (HTTP ${r.status})`);
+        const p = await r.json();
+        _editingFull = p;
+
+        document.getElementById('modal-title').textContent = `Éditer — ${p.name || slug}`;
+        document.getElementById('edit-title').value = p.name || '';
+        document.getElementById('edit-category').value = p.categoryId || 'sdb-premium';
+        document.getElementById('edit-active').checked = p.active !== false;
+        document.getElementById('edit-seo-title').value = (p.seo?.title) || p.name || '';
+        document.getElementById('edit-seo-desc').value = (p.seo?.description) || '';
+        updateSeoCounters();
+
+        // Description: visual + raw
+        const desc = p.description || '';
+        document.getElementById('edit-desc-visual').innerHTML = desc;
+        document.getElementById('edit-desc-raw').value = desc;
+        document.getElementById('edit-desc-visual').style.display = 'block';
+        document.getElementById('edit-desc-raw').style.display = 'none';
+        document.getElementById('edit-desc-html-toggle').textContent = '</> HTML';
+
+        // Images
+        _editImages = (p.images || []).map(src => ({ src, isNew: false, name: src.split('/').pop() }));
+        renderImageGrid();
+
+        // Variants
+        const order = p.axes?.order || p.axis_order || [];
+        const opts  = p.axes?.options || p.axes || {};
+        const allCombos = generateAllVariants({ axis_order: order, axes: opts });
+        let tHTML = '<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#f9f9f9;position:sticky;top:0">';
+        order.forEach(a => tHTML += `<th style="padding:8px;text-align:left;border-bottom:1px solid #eee">${a}</th>`);
+        tHTML += '<th style="padding:8px;text-align:right;border-bottom:1px solid #eee">Prix (MAD)</th></tr></thead><tbody>';
+        allCombos.forEach((combo, idx) => {
+          const existing = (p.variants || []).find(v => order.every(a => v.axes[a] === combo[a]));
+          const price = existing ? existing.price : 0;
+          tHTML += '<tr>';
+          order.forEach(a => tHTML += `<td style="padding:7px 8px;border-bottom:1px solid #f5f5f5">${combo[a]}</td>`);
+          tHTML += `<td style="padding:5px 8px;border-bottom:1px solid #f5f5f5;text-align:right">
+            <input type="number" value="${price}" min="0" step="10" style="width:90px;padding:4px 6px;border:1px solid #ddd;border-radius:4px;text-align:right"
+              data-combo-idx="${idx}"></td></tr>`;
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        status.style.color = 'green';
-        status.textContent = '✓ Enregistré dans Firebase';
+        tHTML += '</tbody></table>';
+        document.getElementById('variant-price-table').innerHTML = tHTML;
       } catch (e) {
-        status.style.color = 'red';
-        status.textContent = `Erreur: ${e.message}`;
+        document.getElementById('modal-title').textContent = '⚠ Erreur';
+        document.getElementById('modal-status').style.color = '#e8194b';
+        document.getElementById('modal-status').textContent = e.message;
       }
     };
 
-    window.regeneratePage = async function () {
-      if (!confirm('Régénérer et écraser la page GitHub pour ce produit ?')) return;
-      const ghToken = localStorage.getItem('nova_github_token');
-      const p = _allAdminProducts[_editingSlug];
-      const status = document.getElementById('modal-status');
-      try {
-        const variants = p.variants || [];
-        const prices = variants.map(v => v.price).filter(pr => pr > 0);
-        const info = {
-          name: p.title, slug: _editingSlug, category: p.category,
-          seoTitle: p.seo?.title || p.title, seoDesc: p.seo?.description || '',
-          desc: p.description || '', imageCount: p.images?.length || 2,
-        };
-        const pageHTML = buildProductPage(info, { axis_order: p.axis_order, axes: p.axes },
-          variants, prices.length ? Math.min(...prices) : 0, prices.length ? Math.max(...prices) : 0);
-        await ghCommit(ghToken, REPO, `produits/${_editingSlug}/index.html`, pageHTML,
-          `regen: regenerate product page for ${_editingSlug}`);
-        status.style.color = 'green';
-        status.textContent = '✓ Page régénérée et commitée sur GitHub';
-      } catch (e) {
-        status.style.color = 'red';
-        status.textContent = `Erreur régénération: ${e.message}`;
-      }
+    // ── Image grid management ────────────────────────────────────────────
+    function renderImageGrid() {
+      const grid = document.getElementById('edit-img-grid');
+      grid.innerHTML = _editImages.map((im, i) => {
+        const url = im.isNew ? im.preview : im.src;
+        return `<div class="ed-img-card">
+          <img src="${url}" loading="lazy" onerror="this.style.opacity=.3">
+          <div class="ed-img-badge">${i+1}</div>
+          ${im.isNew ? '<div class="ed-img-pending">NOUVEAU</div>' : ''}
+          <div class="ed-img-actions">
+            ${i > 0 ? `<button class="up" onclick="moveImage(${i}, -1)" title="Monter">↑</button>` : ''}
+            <button class="rm" onclick="removeImage(${i})" title="Supprimer">×</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    window.moveImage = (i, dir) => {
+      const j = i + dir;
+      if (j < 0 || j >= _editImages.length) return;
+      [_editImages[i], _editImages[j]] = [_editImages[j], _editImages[i]];
+      renderImageGrid();
+    };
+    window.removeImage = (i) => {
+      _editImages.splice(i, 1);
+      renderImageGrid();
     };
 
-    window.deleteProduct = async function () {
-      if (!confirm(`Supprimer "${_editingSlug}" de Firebase ? Cette action est irréversible.`)) return;
-      const token = localStorage.getItem('nova_admin_token');
-      await fetch(`${DB}/catalog/${_editingSlug}.json?auth=${token}`, { method: 'DELETE' });
-      delete _allAdminProducts[_editingSlug];
-      window.closeProductModal();
-      renderProductTable();
-    };
-
-    window.toggleActive = async function (slug, active) {
-      const token = localStorage.getItem('nova_admin_token');
-      if (_allAdminProducts[slug]) _allAdminProducts[slug].active = active;
-      await fetch(`${DB}/catalog/${slug}/active.json?auth=${token}`, {
-        method: 'PUT', body: JSON.stringify(active)
+    // Drop zone + file input
+    (function(){
+      const drop = document.getElementById('edit-img-drop');
+      const inp  = document.getElementById('edit-img-input');
+      const addFiles = (files) => {
+        Array.from(files).forEach(file => {
+          if (!file.type.startsWith('image/')) return;
+          _editImages.push({
+            file, preview: URL.createObjectURL(file), name: file.name, isNew: true
+          });
+        });
+        renderImageGrid();
+      };
+      drop.addEventListener('click', () => inp.click());
+      drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag-over'); });
+      drop.addEventListener('dragleave', () => drop.classList.remove('drag-over'));
+      drop.addEventListener('drop', e => {
+        e.preventDefault(); drop.classList.remove('drag-over');
+        addFiles(e.dataTransfer.files);
       });
+      inp.addEventListener('change', e => addFiles(e.target.files));
+    })();
+
+    // ── HTML editor: toolbar + visual/raw toggle ─────────────────────────
+    document.getElementById('edit-desc-toolbar').addEventListener('click', e => {
+      const b = e.target.closest('button[data-cmd]');
+      if (!b) return;
+      e.preventDefault();
+      document.execCommand(b.dataset.cmd, false, b.dataset.arg || null);
+      document.getElementById('edit-desc-visual').focus();
+    });
+    document.getElementById('edit-desc-html-toggle').addEventListener('click', () => {
+      const visual = document.getElementById('edit-desc-visual');
+      const raw = document.getElementById('edit-desc-raw');
+      const btn = document.getElementById('edit-desc-html-toggle');
+      if (raw.style.display === 'none') {
+        raw.value = visual.innerHTML;
+        raw.style.display = 'block';
+        visual.style.display = 'none';
+        btn.textContent = '👁 Visuel';
+      } else {
+        visual.innerHTML = raw.value;
+        visual.style.display = 'block';
+        raw.style.display = 'none';
+        btn.textContent = '</> HTML';
+      }
+    });
+
+    // SEO counters
+    function updateSeoCounters() {
+      const t = document.getElementById('edit-seo-title').value.length;
+      const d = document.getElementById('edit-seo-desc').value.length;
+      const tc = document.getElementById('edit-seo-title-count');
+      const dc = document.getElementById('edit-seo-desc-count');
+      tc.textContent = `${t}/60`; tc.classList.toggle('over', t > 60);
+      dc.textContent = `${d}/160`; dc.classList.toggle('over', d > 160);
+    }
+    document.getElementById('edit-seo-title').addEventListener('input', updateSeoCounters);
+    document.getElementById('edit-seo-desc').addEventListener('input', updateSeoCounters);
+
+    // ── Binary image upload (PUTs base64 directly, no re-encoding) ──────
+    async function ghPutBinary(token, path, base64, message) {
+      // Check if file exists for SHA
+      let sha;
+      try {
+        const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,
+          { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github+json' } });
+        if (r.ok) sha = (await r.json()).sha;
+      } catch {}
+      const body = { message, content: base64, branch: GH_BRANCH };
+      if (sha) body.sha = sha;
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json',
+                   Accept: 'application/vnd.github+json' },
+        body: JSON.stringify(body)
+      });
+      if (!r.ok) throw new Error(`Image upload ${path}: ${r.status}`);
+    }
+
+    // ── SAVE: auto-publish everything (images, JSON, page, index, Firebase) ─
+    window.saveProduct = async function () {
+      const slug = _editingSlug;
+      const ghToken = localStorage.getItem('nova_github_token');
+      const fbToken = localStorage.getItem('nova_admin_token');
+      const status  = document.getElementById('modal-status');
+      const saveBtn = document.getElementById('save-product-btn');
+      const setStatus = (color, msg) => { status.style.color = color; status.innerHTML = msg; };
+
+      if (!ghToken) { setStatus('#e8194b', '❌ Token GitHub manquant — ajoutez-le dans Paramètres.'); return; }
+      if (_editImages.length === 0) { setStatus('#e8194b', '❌ Au moins 1 image requise.'); return; }
+
+      saveBtn.disabled = true;
+      const oldText = saveBtn.textContent;
+      saveBtn.textContent = '⏳ Publication…';
+
+      try {
+        const p = _editingFull;
+        const order = p.axes?.order || p.axis_order || [];
+        const opts  = p.axes?.options || p.axes || {};
+        const allCombos = generateAllVariants({ axis_order: order, axes: opts });
+        const inputs = document.querySelectorAll('#variant-price-table input[data-combo-idx]');
+        const variants = [];
+        inputs.forEach((inp, idx) => {
+          variants.push({ axes: allCombos[idx], price: parseFloat(inp.value) || 0, sku: '' });
+        });
+        const validP = variants.map(v => v.price).filter(pr => pr > 0);
+        const pmin = validP.length ? Math.min(...validP) : 0;
+        const pmax = validP.length ? Math.max(...validP) : 0;
+        const rawVisible = document.getElementById('edit-desc-raw').style.display !== 'none';
+        const description = rawVisible
+          ? document.getElementById('edit-desc-raw').value
+          : document.getElementById('edit-desc-visual').innerHTML;
+        const newName = document.getElementById('edit-title').value.trim();
+        const newCatId = document.getElementById('edit-category').value;
+        const catLabelMap = { 'sdb-premium':'Miroirs SDB Premium', 'sdb-essentiel':'Miroirs SDB Essentiel',
+          'salon':'Salon & Dressing', 'consoles':'Consoles & Entrée', 'douches':'Douches Italiennes', 'tables':'Tables de Séjour' };
+        const newCatLabel = catLabelMap[newCatId] || newCatId;
+        const isActive = document.getElementById('edit-active').checked;
+
+        // ── 1. Upload new images (binary, no re-encoding) ─────────────
+        setStatus('#666', '⏳ 1/5 — Upload des nouvelles images…');
+        const usedNums = new Set(_editImages.filter(i => !i.isNew).map(i => {
+          const m = i.src.match(/\/(\d+)\.(?:webp|jpg|jpeg|png)$/i);
+          return m ? parseInt(m[1]) : 0;
+        }));
+        let nextNum = 1;
+        const finalImages = [];
+        for (const im of _editImages) {
+          if (im.isNew) {
+            while (usedNums.has(nextNum)) nextNum++;
+            usedNums.add(nextNum);
+            const path = `images/${slug}/${nextNum}.webp`;
+            const b64 = await fileToBase64(im.file);
+            await ghPutBinary(ghToken, path, b64, `Add image ${nextNum} for ${slug}`);
+            finalImages.push('/' + path);
+          } else {
+            finalImages.push(im.src);
+          }
+        }
+
+        // ── 2. Update products/{slug}.json ───────────────────────────
+        setStatus('#666', '⏳ 2/5 — Mise à jour /products/' + slug + '.json…');
+        const updatedJson = {
+          slug, name: newName, categoryId: newCatId, category: newCatLabel,
+          active: isActive, images: finalImages, description,
+          seo: {
+            title: document.getElementById('edit-seo-title').value.trim() || newName,
+            description: document.getElementById('edit-seo-desc').value.trim()
+          },
+          axes: { order, options: opts },
+          variants
+        };
+        const productPath = `products/${slug}.json`;
+        const cur = await ghReadFile(ghToken, productPath);
+        await ghPutFile(ghToken, productPath, JSON.stringify(updatedJson, null, 2),
+          `Update product ${slug}`, cur.sha);
+
+        // ── 3. Update products-index.json ────────────────────────────
+        setStatus('#666', '⏳ 3/5 — Mise à jour products-index.json…');
+        const indexFile = await ghReadFile(ghToken, 'products-index.json');
+        const indexData = JSON.parse(indexFile.content);
+        const newEntry = {
+          slug, name: newName, categoryId: newCatId, category: newCatLabel,
+          image: finalImages[0], images: finalImages, active: isActive,
+          price: { min: pmin, max: pmax },
+          axes: { order, options: opts },
+          hasVariants: variants.length > 0, variantCount: variants.length
+        };
+        indexData.products = (indexData.products || []).filter(x => x.slug !== slug);
+        indexData.products.push(newEntry);
+        await ghPutFile(ghToken, 'products-index.json', JSON.stringify(indexData, null, 2),
+          `Update index for ${slug}`, indexFile.sha);
+
+        // ── 4. Regenerate page ───────────────────────────────────────
+        setStatus('#666', '⏳ 4/5 — Régénération de la page HTML…');
+        const pageHtml = buildProductPage(updatedJson);
+        const pagePath = `produits/${slug}/index.html`;
+        const curPage = await ghReadFile(ghToken, pagePath);
+        await ghPutFile(ghToken, pagePath, pageHtml, `Regenerate page ${slug}`, curPage.sha);
+
+        // ── 5. Firebase /catalog ─────────────────────────────────────
+        if (fbToken) {
+          setStatus('#666', '⏳ 5/5 — Firebase /catalog…');
+          await fetch(`${DB}/catalog/${slug}.json?auth=${fbToken}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ...updatedJson, title: newName, axis_order: order, axes: opts,
+              price_min: pmin, price_max: pmax
+            })
+          });
+        }
+
+        setStatus('#16a34a',
+          `✅ Tout publié !<br>
+           <a href="/produits/${slug}/" target="_blank" style="color:#2563eb">↗ Voir la page produit</a>`);
+        _allAdminProducts[slug] = newEntry;
+        renderProductTable();
+      } catch (e) {
+        console.error(e);
+        setStatus('#e8194b', `❌ ${e.message}`);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = oldText;
+      }
+    };
+
+    // ── DELETE: remove from index, JSON, page, Firebase ──────────────────
+    window.deleteProduct = async function () {
+      if (!confirm(`Supprimer "${_editingSlug}" partout (Firebase + GitHub) ? Action irréversible.`)) return;
+      const ghToken = localStorage.getItem('nova_github_token');
+      const fbToken = localStorage.getItem('nova_admin_token');
+      const status  = document.getElementById('modal-status');
+      const slug = _editingSlug;
+      try {
+        // 1. Remove from products-index.json
+        if (ghToken) {
+          const idxF = await ghReadFile(ghToken, 'products-index.json');
+          const idxD = JSON.parse(idxF.content);
+          idxD.products = (idxD.products || []).filter(x => x.slug !== slug);
+          await ghPutFile(ghToken, 'products-index.json', JSON.stringify(idxD, null, 2),
+            `Remove ${slug} from index`, idxF.sha);
+
+          // 2. Delete products/{slug}.json
+          const jf = await ghReadFile(ghToken, `products/${slug}.json`);
+          if (jf.sha) await ghDeleteFile(ghToken, `products/${slug}.json`, jf.sha);
+
+          // 3. Delete produits/{slug}/index.html
+          const pf = await ghReadFile(ghToken, `produits/${slug}/index.html`);
+          if (pf.sha) await ghDeleteFile(ghToken, `produits/${slug}/index.html`, pf.sha);
+        }
+
+        // 4. Firebase
+        if (fbToken) {
+          await fetch(`${DB}/catalog/${slug}.json?auth=${fbToken}`, { method: 'DELETE' });
+        }
+
+        delete _allAdminProducts[slug];
+        window.closeProductModal();
+        renderProductTable();
+      } catch (e) {
+        status.style.color = '#e8194b';
+        status.textContent = `Erreur suppression: ${e.message}`;
+      }
+    };
+
+    // ── Toggle active without opening modal ──────────────────────────────
+    window.toggleActive = async function (slug, active) {
+      const ghToken = localStorage.getItem('nova_github_token');
+      const fbToken = localStorage.getItem('nova_admin_token');
+      if (_allAdminProducts[slug]) _allAdminProducts[slug].active = active;
+      try {
+        if (ghToken) {
+          // Update products-index.json
+          const idxF = await ghReadFile(ghToken, 'products-index.json');
+          const idxD = JSON.parse(idxF.content);
+          const ent = (idxD.products || []).find(x => x.slug === slug);
+          if (ent) ent.active = active;
+          await ghPutFile(ghToken, 'products-index.json', JSON.stringify(idxD, null, 2),
+            `Toggle ${slug} active=${active}`, idxF.sha);
+          // Also update products/{slug}.json
+          const jf = await ghReadFile(ghToken, `products/${slug}.json`);
+          if (jf.content) {
+            const jd = JSON.parse(jf.content);
+            jd.active = active;
+            await ghPutFile(ghToken, `products/${slug}.json`, JSON.stringify(jd, null, 2),
+              `Toggle ${slug} active=${active}`, jf.sha);
+          }
+        }
+        if (fbToken) {
+          await fetch(`${DB}/catalog/${slug}/active.json?auth=${fbToken}`, {
+            method: 'PUT', body: JSON.stringify(active)
+          });
+        }
+      } catch(e) { console.warn('toggleActive failed:', e); }
     };
 
     window.closeProductModal = function () {
       document.getElementById('product-edit-modal').style.display = 'none';
       _editingSlug = null;
+      _editingFull = null;
+      _editImages = [];
     };
   </script>
 
