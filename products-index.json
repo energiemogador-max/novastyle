@@ -1181,69 +1181,6 @@
       },
       "hasVariants": true,
       "variantCount": 60
-    },
-    {
-      "slug": "miroir-eclipse-essentiel",
-      "name": "Miroir pas cher avec led ECLIPSE essentiel",
-      "categoryId": "sdb-essentiel",
-      "category": "Miroirs SDB Essentiel",
-      "image": "/images/miroir-eclipse-essentiel/1.webp",
-      "images": [
-        "/images/miroir-eclipse-essentiel/1.webp"
-      ],
-      "active": true,
-      "price": {
-        "min": 350,
-        "max": 350
-      },
-      "axes": {
-        "order": [],
-        "options": {}
-      },
-      "hasVariants": true,
-      "variantCount": 1
-    },
-    {
-      "slug": "miroir-anfa-essentiel",
-      "name": "Miroir pas cher au maroc ANFA essentiel",
-      "categoryId": "sdb-essentiel",
-      "category": "Miroirs SDB Essentiel",
-      "image": "/images/miroir-anfa-essentiel/1.webp",
-      "images": [
-        "/images/miroir-anfa-essentiel/1.webp"
-      ],
-      "active": true,
-      "price": {
-        "min": 350,
-        "max": 350
-      },
-      "axes": {
-        "order": [],
-        "options": {}
-      },
-      "hasVariants": true,
-      "variantCount": 1
-    },
-    {
-      "slug": "miroir-magnum-essentiel",
-      "name": "Miroir pas cher MAGNUM essentiel",
-      "categoryId": "sdb-essentiel",
-      "category": "Miroirs SDB Essentiel",
-      "image": "/images/miroir-magnum-essentiel/1.webp",
-      "images": [
-        "/images/miroir-magnum-essentiel/1.webp"
-      ],
-      "active": false,
-      "price": {
-        "min": 350,
-        "max": 350
-      },
-      "axes": {
-        "order": [],
-        "options": {}
-      },
-      "hasVariants": true,
-      "variantCount": 1
     }
   ]
 }
