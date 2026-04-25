@@ -4,7 +4,10 @@ Disallow: /admin.html
 Disallow: /cart.html
 Disallow: /confirmation.html
 Disallow: /404.html
-Disallow: /products.json
-Disallow: /descriptions_enhanced.json
+Disallow: /ministore.html
+Disallow: /scripts/
+Disallow: /*.json$
+Disallow: /*.csv$
+Disallow: /*.py$
 
 Sitemap: https://novastyle.ma/sitemap.xml
