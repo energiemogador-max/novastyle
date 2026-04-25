@@ -2874,7 +2874,6 @@
           <div class="sidebar-item" data-tab="customers"><span class="sidebar-icon">👥</span>Clients</div>
           <div class="sidebar-item" data-tab="reviews"><span class="sidebar-icon">⭐</span>Avis<span
               class="sidebar-badge" id="reviews-tab-badge" style="display:none">0</span></div>
-          <div class="sidebar-item" data-tab="visitors"><span class="sidebar-icon">👁️</span>Visiteurs</div>
           <div class="sidebar-item" data-tab="ads"><span class="sidebar-icon">📣</span>Ads Manager</div>
         </div>
         <div class="sidebar-footer">
@@ -2959,6 +2958,40 @@
               </div>
             </div>
 
+            <!-- Session stats: daily / weekly / monthly -->
+            <div class="session-stats" style="margin-bottom:18px">
+              <div class="sess-card"><div class="slbl">Sessions aujourd'hui</div><div class="sval" id="sess-daily">—</div></div>
+              <div class="sess-card"><div class="slbl">Cette semaine</div><div class="sval" id="sess-weekly">—</div></div>
+              <div class="sess-card"><div class="slbl">Ce mois</div><div class="sval" id="sess-monthly">—</div></div>
+            </div>
+
+            <!-- Visitor analytics: pages + cities + countries -->
+            <div class="visitors-grid" style="margin-bottom:16px">
+              <div class="vis-panel">
+                <div class="vis-panel-head"><span>Pages populaires</span></div>
+                <div class="chart-wrap" id="vis-pages-chart"></div>
+              </div>
+              <div class="vis-panel">
+                <div class="vis-panel-head"><span>📍 Villes</span></div>
+                <div class="chart-wrap" id="vis-cities-chart"></div>
+              </div>
+              <div class="vis-panel">
+                <div class="vis-panel-head"><span>🌍 Pays</span></div>
+                <div class="chart-wrap" id="vis-countries-chart"></div>
+              </div>
+            </div>
+
+            <!-- Visitor session history -->
+            <div class="vis-panel" style="margin-bottom:20px">
+              <div class="vis-panel-head" style="display:flex;align-items:center;justify-content:space-between">
+                <span>📋 Historique des sessions aujourd'hui</span>
+                <button onclick="window.loadVisitorHistory()" style="background:none;border:1.5px solid #e5e7eb;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">🔄 Actualiser</button>
+              </div>
+              <div id="visitor-history-list" style="max-height:380px;overflow-y:auto;padding:4px 0">
+                <div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Cliquez Actualiser pour charger l'historique</div>
+              </div>
+            </div>
+
             <!-- Sessions chart + Recent orders -->
             <div class="home-grid">
               <div class="h-panel">
@@ -3024,7 +3057,10 @@
           <div class="container">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
               <div class="section-title">Clients</div>
-              <input class="search-input" id="customer-search" placeholder="🔍 Rechercher client, ville, téléphone…" style="width:260px">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <input class="search-input" id="customer-search" placeholder="🔍 Rechercher client, ville, téléphone…" style="width:220px">
+                <button onclick="window.openCreateOrder()" style="background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">➕ Ajouter client</button>
+              </div>
             </div>
             <!-- KPI row -->
             <div style="display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap">
@@ -3085,77 +3121,6 @@
             </div>
           </div>
 
-        </div>
-
-        <!-- ═══ VISITORS ═══ -->
-        <div class="tab-panel" id="tab-visitors">
-          <div class="container">
-
-            <!-- Session stats: daily / weekly / monthly -->
-            <div class="section-title" style="margin-bottom:10px">Sessions</div>
-            <div class="session-stats">
-              <div class="sess-card">
-                <div class="slbl">Aujourd'hui</div>
-                <div class="sval" id="sess-daily">—</div>
-              </div>
-              <div class="sess-card">
-                <div class="slbl">Cette semaine</div>
-                <div class="sval" id="sess-weekly">—</div>
-              </div>
-              <div class="sess-card">
-                <div class="slbl">Ce mois</div>
-                <div class="sval" id="sess-monthly">—</div>
-              </div>
-            </div>
-
-            <div class="visitors-grid">
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>Visiteurs actifs</span><span class="count" id="vis-count">0</span>
-                </div>
-                <div class="vis-list" id="vis-list">
-                  <div class="no-visitors">Aucun visiteur en ce moment</div>
-                </div>
-              </div>
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>Pages populaires</span></div>
-                <div class="chart-wrap" id="vis-pages-chart"></div>
-              </div>
-            </div>
-            <div class="visitors-grid">
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>Appareils</span></div>
-                <div class="chart-wrap" id="vis-devices-chart"></div>
-              </div>
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>Sources de trafic</span></div>
-                <div class="chart-wrap" id="vis-sources-chart"></div>
-              </div>
-            </div>
-            <div class="visitors-grid">
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>📍 Villes</span></div>
-                <div class="chart-wrap" id="vis-cities-chart"></div>
-              </div>
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>🌍 Pays</span></div>
-                <div class="chart-wrap" id="vis-countries-chart"></div>
-              </div>
-            </div>
-
-            <!-- Session history for today -->
-            <div style="margin-top:20px">
-              <div class="vis-panel" style="grid-column:1/-1">
-                <div class="vis-panel-head" style="display:flex;align-items:center;justify-content:space-between">
-                  <span>📋 Historique des sessions aujourd'hui</span>
-                  <button onclick="window.loadVisitorHistory()" style="background:none;border:1.5px solid #e5e7eb;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">🔄 Actualiser</button>
-                </div>
-                <div id="visitor-history-list" style="max-height:420px;overflow-y:auto;padding:4px 0">
-                  <div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Cliquez Actualiser pour charger l'historique</div>
-                </div>
-              </div>
-            </div>
-
-          </div>
         </div>
 
         <!-- ═══ REVIEWS ═══ -->
@@ -3647,6 +3612,37 @@
       </div><!-- /main-content -->
     </div><!-- /admin-body -->
 
+    <!-- ═══ EDIT CUSTOMER MODAL ═══ -->
+    <div id="customer-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;padding:20px">
+      <div style="background:#fff;border-radius:12px;width:100%;max-width:440px;padding:28px;position:relative">
+        <button onclick="document.getElementById('customer-modal-overlay').style.display='none'" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#888">✕</button>
+        <h3 style="margin:0 0 20px;font-size:18px;font-weight:700">✏️ Modifier le client</h3>
+        <div style="display:grid;gap:12px">
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Nom complet</label>
+            <input id="cm-name" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Téléphone</label>
+            <input id="cm-phone" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Ville</label>
+            <input id="cm-city" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Email</label>
+            <input id="cm-email" type="email" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+        <div style="margin-top:18px;display:flex;justify-content:flex-end;gap:10px">
+          <button onclick="document.getElementById('customer-modal-overlay').style.display='none'" style="padding:9px 18px;border:1.5px solid #e5e7eb;background:#fff;border-radius:8px;font-size:13px;cursor:pointer">Annuler</button>
+          <button id="cm-save-btn" onclick="window.saveCustomer()" style="padding:9px 20px;background:#e8194b;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">💾 Enregistrer</button>
+        </div>
+        <div id="cm-status" style="margin-top:10px;font-size:13px;text-align:center"></div>
+      </div>
+    </div>
+
     <!-- ═══ CREATE / EDIT ORDER MODAL ═══ -->
     <div id="order-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;overflow-y:auto;padding:20px">
       <div style="background:#fff;border-radius:12px;max-width:600px;margin:0 auto;padding:28px;position:relative">
@@ -3723,6 +3719,49 @@
     setPersistence(auth, browserSessionPersistence).catch(() => { });
 
     const DB_REST = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
+
+    // ── EmailJS (same credentials as cart.js) ────────────────────────────────────
+    const EJS_KEY      = "k3e_LOpxkERLpQnz1";
+    const EJS_SERVICE  = "service_e66tthp";
+    const EJS_ADMIN_T  = "template_hi0ana5";
+    const EJS_CLIENT_T = "template_pbrlanl";
+    const ADMIN_EMAIL  = "abdelillah.nova@gmail.com";
+
+    function loadEJS() {
+      return new Promise(resolve => {
+        if (window.emailjs) { resolve(true); return; }
+        const s = document.createElement("script");
+        s.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
+        s.onload = () => { window.emailjs.init(EJS_KEY); resolve(true); };
+        s.onerror = () => resolve(false);
+        document.head.appendChild(s);
+      });
+    }
+
+    async function sendOrderEmails(order, orderId) {
+      const ok = await loadEJS(); if (!ok) return;
+      const itemsText = (order.items || []).map(i => `• ${i.name} ×${i.quantity||1} = ${((i.price||0)*(i.quantity||1)).toLocaleString("fr-MA")} MAD`).join("\n");
+      const p = {
+        order_id: orderId.slice(-6).toUpperCase(), id: orderId.slice(-6).toUpperCase(),
+        customer_name: order.customer?.name || "—", name: order.customer?.name || "—",
+        customer_phone: order.customer?.phone || "—", phone: order.customer?.phone || "—",
+        customer_city: order.customer?.city || "—", city: order.customer?.city || "—",
+        customer_address: order.customer?.address || "—", address: order.customer?.address || "—",
+        customer_notes: order.customer?.notes || "Aucune", notes: order.customer?.notes || "Aucune",
+        customer_email: order.customer?.email || "—", email: order.customer?.email || "—",
+        items_html: itemsText, items: itemsText, message: itemsText,
+        total: (order.total || 0).toLocaleString("fr-MA") + " MAD",
+        deposit: Math.round((order.total || 0) * .5).toLocaleString("fr-MA") + " MAD",
+        order_date: new Date(order.timestamp || Date.now()).toLocaleString("fr-MA"),
+        date: new Date(order.timestamp || Date.now()).toLocaleString("fr-MA"),
+        reply_to: ADMIN_EMAIL,
+      };
+      try { await window.emailjs.send(EJS_SERVICE, EJS_ADMIN_T, { ...p, email: ADMIN_EMAIL }); } catch (e) { console.warn("Admin email:", e.message); }
+      const clientEmail = order.customer?.email;
+      if (clientEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clientEmail)) {
+        try { await window.emailjs.send(EJS_SERVICE, EJS_CLIENT_T, { ...p, email: clientEmail }); } catch (e) { console.warn("Client email:", e.message); }
+      }
+    }
 
     // Expose minimal Firebase helpers for the Babel/React tab
     window.__NOVA_FIREBASE__ = { db, ref, set, update, remove, get, push, auth };
@@ -4189,15 +4228,12 @@
         const withCart = visitors.filter(v => v.cartCount > 0).length;
         document.getElementById("stat-visitors").textContent = count;
         document.getElementById("stat-cart").textContent = withCart;
-        document.getElementById("vis-count").textContent = count;
         const hvc = document.getElementById("home-vis-count"); if (hvc) hvc.textContent = count;
-        const listEl = document.getElementById("vis-list");
         const homeListEl = document.getElementById("home-vis-list");
+        const noVisMsg = "<div class='no-visitors'>Aucun visiteur en ce moment</div>";
         if (!count) {
-          listEl.innerHTML = "<div class='no-visitors'>Aucun visiteur en ce moment</div>";
-          if (homeListEl) homeListEl.innerHTML = "<div class='no-visitors'>Aucun visiteur en ce moment</div>";
-        }
-        else {
+          if (homeListEl) homeListEl.innerHTML = noVisMsg;
+        } else {
           const sorted = [...visitors].sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
           const rowsHTML = sorted.map(v => {
             const flag = flagOf(v.country_code);
@@ -4210,23 +4246,19 @@
           <div class="vis-meta">${esc(v.browser || "")} · ${esc(v.referrer || "")}${v.duration ? ` · ${formatDur(v.duration)}` : ""}</div>
         </div>`;
           }).join("");
-          listEl.innerHTML = rowsHTML;
           if (homeListEl) homeListEl.innerHTML = rowsHTML;
         }
+        // Charts now live in the home tab using vis-* IDs
         renderBarChart("vis-pages-chart", countBy(visitors, "pageLabel"), "#e8194b");
-        renderBarChart("vis-devices-chart", countBy(visitors, "device"), "#4da6ff");
-        renderBarChart("vis-sources-chart", countBy(visitors, "referrer"), "#00c853");
-        // Location charts — city labels include flag, country labels include flag
+        renderBarChart("home-vis-devices-chart", countBy(visitors, "device"), "#4da6ff");
+        renderBarChart("home-vis-sources-chart", countBy(visitors, "referrer"), "#00c853");
         const cityEntries = countByFn(visitors, v => v.city ? `${flagOf(v.country_code)} ${v.city}` : null);
         const countryEntries = countByFn(visitors, v => v.country ? `${flagOf(v.country_code)} ${v.country}` : null);
         renderBarChart("vis-cities-chart", cityEntries, "#f59e0b");
         renderBarChart("vis-countries-chart", countryEntries, "#8b5cf6");
-        // Also update home tab live charts (renamed to avoid duplicate ID collision)
-        renderBarChart("home-vis-devices-chart", countBy(visitors, "device"), "#4da6ff");
-        renderBarChart("home-vis-sources-chart", countBy(visitors, "referrer"), "#00c853");
       }, (err) => {
-        const listEl = document.getElementById("vis-list");
-        if (listEl) listEl.innerHTML = `<div class="no-visitors">Erreur Firebase: ${esc(err?.message || String(err))}</div>`;
+        const homeListEl = document.getElementById("home-vis-list");
+        if (homeListEl) homeListEl.innerHTML = `<div class="no-visitors">Erreur Firebase: ${esc(err?.message || String(err))}</div>`;
       });
     }
 
@@ -4563,6 +4595,7 @@
             <th style="padding:8px 10px;font-weight:600;text-align:center">Commandes</th>
             <th style="padding:8px 10px;font-weight:600;text-align:right">CA total</th>
             <th style="padding:8px 10px;font-weight:600">Dernière commande</th>
+            <th style="padding:8px 10px;font-weight:600">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -4585,6 +4618,10 @@
                 <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:${stC[lastSt]}22;color:${stC[lastSt]}">${stL[lastSt] || lastSt}</span>
                 <div style="font-size:10px;color:var(--text4);margin-top:2px">${lastDt}</div>
               </td>
+              <td style="padding:10px 10px;white-space:nowrap">
+                <button onclick='window.editCustomer(${JSON.stringify({name:c.name,phone:c.phone,city:c.city,email:c.email})})' style="background:none;border:1.5px solid #4da6ff;color:#4da6ff;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600;margin-right:4px">✏️ Modifier</button>
+                ${c.phone && c.phone !== "—" ? `<button onclick='window.waOrderClient("${esc(c.name||"")}", "${esc(c.phone||"")}")' style="background:none;border:1.5px solid #25d366;color:#25d366;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">💬 WA</button>` : ""}
+              </td>
             </tr>`;
           }).join("")}
         </tbody>
@@ -4592,6 +4629,45 @@
     }
 
     document.getElementById("customer-search").addEventListener("input", () => { if (customersLoaded) renderCustomers(); });
+
+    let _editingCustomerPhone = null;
+    window.editCustomer = function (c) {
+      _editingCustomerPhone = c.phone;
+      document.getElementById("cm-name").value = c.name || "";
+      document.getElementById("cm-phone").value = c.phone || "";
+      document.getElementById("cm-city").value = c.city || "";
+      document.getElementById("cm-email").value = c.email || "";
+      document.getElementById("cm-status").textContent = "";
+      const ov = document.getElementById("customer-modal-overlay");
+      ov.style.display = "flex";
+    };
+
+    window.saveCustomer = async function () {
+      const name = document.getElementById("cm-name").value.trim();
+      const phone = document.getElementById("cm-phone").value.trim();
+      if (!name) { document.getElementById("cm-status").innerHTML = `<span style="color:#e8194b">Le nom est obligatoire.</span>`; return; }
+      const btn = document.getElementById("cm-save-btn");
+      btn.disabled = true; btn.textContent = "⏳ Enregistrement…";
+      try {
+        // Update all orders matching the original phone number
+        const updates = {};
+        allOrders.forEach(([id, o]) => {
+          const p = (o.customer?.phone || "").toLowerCase();
+          if (p === (_editingCustomerPhone || "").toLowerCase()) {
+            updates[`orders/${id}/customer`] = { ...(o.customer || {}), name, phone, city: document.getElementById("cm-city").value.trim(), email: document.getElementById("cm-email").value.trim() };
+          }
+        });
+        if (Object.keys(updates).length) {
+          await update(ref(db, "/"), updates);
+        }
+        document.getElementById("cm-status").innerHTML = `<span style="color:#00c853">✅ ${Object.keys(updates).length} commande(s) mise(s) à jour</span>`;
+        btn.disabled = false; btn.textContent = "💾 Enregistrer";
+        setTimeout(() => { document.getElementById("customer-modal-overlay").style.display = "none"; }, 1200);
+      } catch (e) {
+        document.getElementById("cm-status").innerHTML = `<span style="color:#e8194b">Erreur: ${esc(e.message)}</span>`;
+        btn.disabled = false; btn.textContent = "💾 Enregistrer";
+      }
+    };
     const PRODUCT_CATEGORIES = [
       "Miroirs SDB Premium",
       "Miroirs SDB Essentiel",
@@ -4811,7 +4887,9 @@
           document.getElementById("om-status").innerHTML = `<span style="color:#00c853">✅ Commande mise à jour !</span>`;
         } else {
           const newRef = push(ref(db, "orders"));
-          await update(newRef, { customer, items, total, timestamp: Date.now(), status: "pending", source: "admin" });
+          const orderData = { customer, items, total, timestamp: Date.now(), status: "pending", source: "admin" };
+          await update(newRef, orderData);
+          sendOrderEmails(orderData, newRef.key).catch(() => {});
           document.getElementById("om-status").innerHTML = `<span style="color:#00c853">✅ Commande créée !</span>`;
           // Offer WhatsApp to client
           if (phone && total > 0) {
