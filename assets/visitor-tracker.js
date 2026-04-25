@@ -50,6 +50,9 @@ const visRef=ref(db,"online_visitors/"+vid);
 const arrival=Date.now();
 
 async function initTracker(){
+  // Never track the admin's own visits
+  if(localStorage.getItem("nova_is_admin")==="1") return;
+
   const geo=await getLocation();
 
   function write(){
@@ -73,13 +76,27 @@ async function initTracker(){
   document.addEventListener("cartUpdated",write);
   document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){write();clearInterval(hb);}});
 
-  // ── Session counting ──
+  // ── Session recording (history) ──
   try{
     const today=new Date().toISOString().slice(0,10);
     const sessRef=ref(db,"sessions/"+today+"/"+sid);
-    const sess={visitorId:vid,referrer:getReferrer(),device:getDevice(),startedAt:arrival};
-    if(geo){sess.city=geo.city;sess.country=geo.country;sess.country_code=geo.country_code;}
+    const pl=window.location.pathname;
+    const sess={
+      visitorId:vid,referrer:getReferrer(),device:getDevice(),browser:getBrowser(),
+      page:pl,pageLabel:pageLabel(pl),startedAt:arrival
+    };
+    if(geo){sess.city=geo.city;sess.country=geo.country;sess.country_code=geo.country_code;sess.ip=geo.ip;}
     set(sessRef,sess).catch(()=>{});
+    // Update duration + endedAt on leave
+    document.addEventListener("visibilitychange",()=>{
+      if(document.visibilityState==="hidden"){
+        try{
+          import("https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js").then(({update})=>{
+            update(sessRef,{duration:Math.round((Date.now()-arrival)/1000),endedAt:Date.now()}).catch(()=>{});
+          });
+        }catch{}
+      }
+    });
   }catch{}
 }
 

@@ -2874,7 +2874,7 @@
           <div class="sidebar-item" data-tab="customers"><span class="sidebar-icon">👥</span>Clients</div>
           <div class="sidebar-item" data-tab="reviews"><span class="sidebar-icon">⭐</span>Avis<span
               class="sidebar-badge" id="reviews-tab-badge" style="display:none">0</span></div>
-          <div class="sidebar-item" data-tab="import"><span class="sidebar-icon">🚀</span>Import</div>
+          <div class="sidebar-item" data-tab="visitors"><span class="sidebar-icon">👁️</span>Visiteurs</div>
           <div class="sidebar-item" data-tab="ads"><span class="sidebar-icon">📣</span>Ads Manager</div>
         </div>
         <div class="sidebar-footer">
@@ -3053,8 +3053,11 @@
               <div
                 style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
                 <div class="section-title">Commandes actives</div>
-                <input class="search-input" id="order-search" placeholder="🔍 Rechercher client, ville…"
-                  style="width:220px">
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                  <input class="search-input" id="order-search" placeholder="🔍 Rechercher client, ville…"
+                    style="width:200px">
+                  <button onclick="window.openCreateOrder()" style="background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">➕ Créer commande</button>
+                </div>
               </div>
               <div id="orders-display">
                 <div class="loading">Connexion Firebase…</div>
@@ -3138,6 +3141,20 @@
                 <div class="chart-wrap" id="vis-countries-chart"></div>
               </div>
             </div>
+
+            <!-- Session history for today -->
+            <div style="margin-top:20px">
+              <div class="vis-panel" style="grid-column:1/-1">
+                <div class="vis-panel-head" style="display:flex;align-items:center;justify-content:space-between">
+                  <span>📋 Historique des sessions aujourd'hui</span>
+                  <button onclick="window.loadVisitorHistory()" style="background:none;border:1.5px solid #e5e7eb;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">🔄 Actualiser</button>
+                </div>
+                <div id="visitor-history-list" style="max-height:420px;overflow-y:auto;padding:4px 0">
+                  <div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Cliquez Actualiser pour charger l'historique</div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -3512,57 +3529,6 @@
           </div>
         </div>
 
-        <!-- ═══ IMPORT ═══ -->
-        <div class="tab-panel" id="tab-import">
-          <div class="container" style="max-width:800px">
-
-            <div class="rules-banner">
-              <div class="rules-title">⚠️ Règles Firebase Realtime Database</div>
-              <div style="font-size:12px;color:#6b7280;line-height:1.7;margin-bottom:8px">
-                Ouvrir <a
-                  href="https://console.firebase.google.com/project/nova-9ac76/database/nova-9ac76-default-rtdb/rules"
-                  target="_blank" style="color:#e8194b">Firebase Console → Realtime Database → Règles</a> et appliquer :
-              </div>
-              <pre class="rules-pre"
-                id="rules-code">{"rules":{".read":false,".write":false,"reviews":{".read":true,".write":"auth != null"},"pending_reviews":{".read":"auth != null",".write":true},"online_visitors":{".read":true,".write":true},"sessions":{".read":"auth != null",".write":true},"catalog":{".read":true,".write":"auth != null"},"products":{".read":true,".write":"auth != null"},"orders":{".read":"auth != null",".write":true},"drafts":{".read":"auth != null",".write":"auth != null"}}}</pre>
-              <button
-                onclick="navigator.clipboard.writeText(document.getElementById('rules-code').textContent).then(()=>{this.textContent='✅ Copié !';setTimeout(()=>this.textContent='📋 Copier',2000)})"
-                style="background:#f9fafb;color:#374151;border:1.5px solid #e5e7eb;padding:5px 12px;border-radius:5px;font-size:11px;cursor:pointer">📋
-                Copier</button>
-            </div>
-
-            <div class="tool-card">
-              <div class="tool-card-head">
-                <div>
-                  <div class="tool-card-title">Import des avis</div>
-                  <div class="tool-card-sub">Importer reviews_import.json vers Firebase (avis approuvés)</div>
-                </div>
-                <button class="btn-primary" id="btn-import">🚀 Lancer l'import</button>
-              </div>
-              <div class="progress-wrap" id="import-wrap">
-                <div class="progress-row"><span id="import-status">Chargement…</span><span id="import-pct">0%</span>
-                </div>
-                <div class="progress-track">
-                  <div class="progress-bar" id="import-bar"></div>
-                </div>
-                <div class="import-log" id="import-log"></div>
-              </div>
-            </div>
-
-            <div class="tool-card">
-              <div class="tool-card-head">
-                <div>
-                  <div class="tool-card-title">Statistiques avis Firebase</div>
-                  <div class="tool-card-sub">Vue globale du contenu en base</div>
-                </div>
-                <button class="btn-secondary" id="btn-reload-stats">🔄 Actualiser</button>
-              </div>
-              <div id="reviews-stats" style="font-size:13px;color:#6b7280">Cliquez Actualiser pour charger.</div>
-            </div>
-
-          </div>
-        </div>
-
         <!-- ═══ ADS MANAGER ═══ -->
         <div class="tab-panel" id="tab-ads">
           <div class="container" style="max-width:760px">
@@ -3681,6 +3647,55 @@
       </div><!-- /main-content -->
     </div><!-- /admin-body -->
 
+    <!-- ═══ CREATE / EDIT ORDER MODAL ═══ -->
+    <div id="order-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;overflow-y:auto;padding:20px">
+      <div style="background:#fff;border-radius:12px;max-width:600px;margin:0 auto;padding:28px;position:relative">
+        <button onclick="window.closeOrderModal()" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#888">✕</button>
+        <h3 id="order-modal-title" style="margin:0 0 20px;font-size:18px;font-weight:700">➕ Créer une commande</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Nom complet *</label>
+            <input id="om-name" placeholder="Nom du client" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Téléphone *</label>
+            <input id="om-phone" placeholder="0612345678" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Ville</label>
+            <input id="om-city" placeholder="Casablanca" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Email</label>
+            <input id="om-email" type="email" placeholder="client@email.com" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div style="grid-column:1/-1">
+            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Adresse</label>
+            <input id="om-address" placeholder="Rue, quartier…" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div style="grid-column:1/-1">
+            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Notes</label>
+            <textarea id="om-notes" rows="2" placeholder="Instructions spéciales, couleur, dimensions…" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box;resize:vertical"></textarea>
+          </div>
+        </div>
+        <div style="margin-top:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <strong style="font-size:13px">Produits</strong>
+            <button onclick="window.addOrderItem()" style="background:none;border:1.5px solid #e8194b;color:#e8194b;padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600">+ Ajouter produit</button>
+          </div>
+          <div id="om-items"></div>
+        </div>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:15px;font-weight:700">Total : <span id="om-total" style="color:#e8194b">0 MAD</span></div>
+          <div style="display:flex;gap:10px">
+            <button onclick="window.closeOrderModal()" style="padding:9px 18px;border:1.5px solid #e5e7eb;background:#fff;border-radius:8px;font-size:13px;cursor:pointer">Annuler</button>
+            <button id="om-save-btn" onclick="window.saveOrderModal()" style="padding:9px 20px;background:#e8194b;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">💾 Enregistrer</button>
+          </div>
+        </div>
+        <div id="om-status" style="margin-top:10px;font-size:13px;text-align:center"></div>
+      </div>
+    </div>
+
     <!-- ═══ CATEGORY EDIT MODAL ═══ -->
     <div id="cat-modal-overlay">
       <div id="cat-modal">
@@ -3699,7 +3714,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, set, update, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, set, update, remove, get, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = { apiKey: "AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc", authDomain: "nova-9ac76.firebaseapp.com", projectId: "nova-9ac76", databaseURL: "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app", storageBucket: "nova-9ac76.firebasestorage.app", messagingSenderId: "645613145752", appId: "1:645613145752:web:775e6f8ffce64ae12c4aed" };
@@ -3710,7 +3725,7 @@
     const DB_REST = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
 
     // Expose minimal Firebase helpers for the Babel/React tab
-    window.__NOVA_FIREBASE__ = { db, ref, set, update, remove, get, auth };
+    window.__NOVA_FIREBASE__ = { db, ref, set, update, remove, get, push, auth };
 
     // Show a visible error if the module fails after load
     window.addEventListener("error", (e) => {
@@ -3751,12 +3766,12 @@
       if (isLocked()) { updAttempts(); return; }
       if (!em.value.trim() || !pw.value) { er.textContent = "Remplissez tous les champs."; return; }
       bt.disabled = true; bt.textContent = "Connexion…";
-      try { await signInWithEmailAndPassword(auth, em.value.trim(), pw.value); clrFails(); pw.value = ""; }
+      try { await signInWithEmailAndPassword(auth, em.value.trim(), pw.value); clrFails(); localStorage.setItem("nova_is_admin","1"); pw.value = ""; }
       catch { recFail(); bt.disabled = false; bt.textContent = "Se connecter"; er.textContent = "Email ou mot de passe incorrect."; }
     }
     document.getElementById("btn-login").addEventListener("click", doLogin);
     ["login-password", "login-email"].forEach(id => document.getElementById(id).addEventListener("keydown", e => e.key === "Enter" && doLogin()));
-    document.getElementById("btn-logout").addEventListener("click", () => signOut(auth));
+    document.getElementById("btn-logout").addEventListener("click", () => { localStorage.removeItem("nova_is_admin"); signOut(auth); });
 
     // ── Sidebar navigation ────────────────────────────────────────────────────────
     document.querySelectorAll(".sidebar-item").forEach(item => {
@@ -3822,7 +3837,7 @@
       return `<div class="order-card status-${st} ${isNew ? "new-order" : ""}">
     <div class="order-head">
       <div class="order-id">#${id.slice(-6).toUpperCase()}</div>
-      <select class="order-status-badge ${st}" onchange="window.updateOrderStatus('${id}',this.value,this)">
+      <select class="order-status-badge ${st}" data-prev="${st}" onchange="window.updateOrderStatus('${id}',this.value,this)">
         <option value="pending"   ${st === "pending" ? "selected" : ""}>⏳ En attente</option>
         <option value="confirmed" ${st === "confirmed" ? "selected" : ""}>✅ Confirmée</option>
         <option value="delivered" ${st === "delivered" ? "selected" : ""}>📦 Livrée</option>
@@ -3843,6 +3858,8 @@
     </div>
     <div class="order-foot">
       <button class="btn-sm" onclick='window.printOrder("${id}",${JSON.stringify(o).replace(/'/g, "&apos;")})' style="border-color:#e8194b;color:#e8194b">🖨️ Imprimer</button>
+      <button class="btn-sm" onclick='window.editOrder("${id}")' style="border-color:#4da6ff;color:#4da6ff">✏️ Modifier</button>
+      ${c.phone ? `<button class="btn-sm" onclick='window.waOrderClient("${esc(c.name||"")}", "${esc(c.phone||"")}")' style="border-color:#25d366;color:#25d366">💬 WhatsApp</button>` : ""}
       <span class="foot-deposit">Acompte: ${deposit.toLocaleString("fr-MA")} MAD</span>
       <span class="foot-label">Total:</span>
       <span class="foot-total">${total.toLocaleString("fr-MA")} MAD</span>
@@ -3851,11 +3868,28 @@
     }
 
     window.updateOrderStatus = async function (id, newStatus, selectEl) {
+      const prevStatus = selectEl.dataset.prev || "pending";
+      selectEl.dataset.prev = newStatus;
       try {
-        await update(ref(db, `orders/${id}`), { status: newStatus });
-        selectEl.className = `order-status-badge ${newStatus}`;
-        selectEl.closest(".order-card").className = `order-card status-${newStatus}`;
-      } catch (e) { alert("Erreur: " + e.message); selectEl.value = selectEl.dataset.prev || "pending"; }
+        if (newStatus === "cancelled") {
+          const card = selectEl.closest(".order-card");
+          const name = card?.querySelector(".customer-name")?.textContent?.trim() || "Client";
+          const phone = card?.querySelector(".customer-phone")?.textContent?.trim() || "";
+          if (!confirm(`Annuler la commande de ${name} ?`)) { selectEl.value = prevStatus; selectEl.dataset.prev = prevStatus; return; }
+          await update(ref(db, `orders/${id}`), { status: newStatus });
+          selectEl.className = `order-status-badge ${newStatus}`;
+          card.className = `order-card status-${newStatus}`;
+          if (phone) {
+            const intl = phone.replace(/[^0-9]/g,"").replace(/^0/,"212");
+            const msg = encodeURIComponent(`Bonjour ${name},\n\nNous vous informons que votre commande Nova Style a été annulée.\nPour plus d'informations, contactez-nous : +212707074748\n\nMerci.`);
+            window.open(`https://wa.me/${intl}?text=${msg}`,"_blank");
+          }
+        } else {
+          await update(ref(db, `orders/${id}`), { status: newStatus });
+          selectEl.className = `order-status-badge ${newStatus}`;
+          selectEl.closest(".order-card").className = `order-card status-${newStatus}`;
+        }
+      } catch (e) { alert("Erreur: " + e.message); selectEl.value = prevStatus; selectEl.dataset.prev = prevStatus; }
     };
 
     function renderOrders(list) {
@@ -4689,66 +4723,147 @@
       setTimeout(() => window.closeCatModal(), 1200);
     };
 
-    // ── IMPORT TOOL ───────────────────────────────────────────────────────────────
-    document.getElementById("btn-import")?.addEventListener("click", runImport);
-    document.getElementById("btn-reload-stats")?.addEventListener("click", loadImportStats);
+    // ── CREATE / EDIT ORDER MODAL ────────────────────────────────────────────────
+    let _orderModalId = null; // null = create, string = edit
 
-    async function runImport() {
-      const btn = document.getElementById("btn-import"), wrap = document.getElementById("import-wrap"),
-        status = document.getElementById("import-status"), pctEl = document.getElementById("import-pct"),
-        bar = document.getElementById("import-bar"), log = document.getElementById("import-log");
-      btn.disabled = true; btn.textContent = "⏳ Import en cours…";
-      wrap.style.display = "block"; log.innerHTML = "";
-      const addLog = (msg, color = "#555") => { log.innerHTML += `<div style="color:${color}">${esc(msg)}</div>`; log.scrollTop = log.scrollHeight; };
+    window.openCreateOrder = function () {
+      _orderModalId = null;
+      document.getElementById("order-modal-title").textContent = "➕ Créer une commande";
+      document.getElementById("om-save-btn").textContent = "💾 Enregistrer";
+      ["om-name","om-phone","om-city","om-email","om-address","om-notes"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
+      document.getElementById("om-items").innerHTML = "";
+      document.getElementById("om-total").textContent = "0 MAD";
+      document.getElementById("om-status").textContent = "";
+      window.addOrderItem();
+      document.getElementById("order-modal-overlay").style.display = "block";
+    };
+
+    window.editOrder = function (id) {
+      const o = allOrders.find(([oid]) => oid === id);
+      if (!o) return;
+      _orderModalId = id;
+      const [, data] = o;
+      const c = data.customer || {};
+      document.getElementById("order-modal-title").textContent = "✏️ Modifier la commande #" + id.slice(-6).toUpperCase();
+      document.getElementById("om-save-btn").textContent = "💾 Mettre à jour";
+      document.getElementById("om-name").value = c.name || "";
+      document.getElementById("om-phone").value = c.phone || "";
+      document.getElementById("om-city").value = c.city || "";
+      document.getElementById("om-email").value = c.email || "";
+      document.getElementById("om-address").value = c.address || "";
+      document.getElementById("om-notes").value = c.notes || "";
+      document.getElementById("om-items").innerHTML = "";
+      (data.items || []).forEach(it => window.addOrderItem(it));
+      if (!(data.items || []).length) window.addOrderItem();
+      window._recalcOrderTotal();
+      document.getElementById("om-status").textContent = "";
+      document.getElementById("order-modal-overlay").style.display = "block";
+    };
+
+    window.closeOrderModal = function () {
+      document.getElementById("order-modal-overlay").style.display = "none";
+    };
+
+    window.addOrderItem = function (prefill) {
+      const container = document.getElementById("om-items");
+      const idx = container.children.length;
+      const row = document.createElement("div");
+      row.style.cssText = "display:grid;grid-template-columns:1fr 90px 90px 30px;gap:8px;margin-bottom:8px;align-items:center";
+      row.innerHTML = `
+        <input class="om-item-name" placeholder="Nom du produit" value="${esc(prefill?.name||"")}" style="padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px">
+        <input class="om-item-price" type="number" min="0" placeholder="Prix" value="${prefill?.price||""}" style="padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px" oninput="window._recalcOrderTotal()">
+        <input class="om-item-qty" type="number" min="1" placeholder="Qté" value="${prefill?.quantity||1}" style="padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px" oninput="window._recalcOrderTotal()">
+        <button onclick="this.closest('div').remove();window._recalcOrderTotal()" style="background:none;border:none;font-size:18px;cursor:pointer;color:#bbb;padding:0">✕</button>`;
+      container.appendChild(row);
+      window._recalcOrderTotal();
+    };
+
+    window._recalcOrderTotal = function () {
+      let total = 0;
+      document.querySelectorAll("#om-items > div").forEach(row => {
+        const price = parseFloat(row.querySelector(".om-item-price")?.value) || 0;
+        const qty = parseInt(row.querySelector(".om-item-qty")?.value) || 1;
+        total += price * qty;
+      });
+      document.getElementById("om-total").textContent = total.toLocaleString("fr-MA") + " MAD";
+    };
+
+    window.saveOrderModal = async function () {
+      const name = document.getElementById("om-name").value.trim();
+      const phone = document.getElementById("om-phone").value.trim();
+      if (!name || !phone) { document.getElementById("om-status").innerHTML = `<span style="color:#e8194b">Nom et téléphone obligatoires.</span>`; return; }
+      const items = [];
+      let total = 0;
+      document.querySelectorAll("#om-items > div").forEach(row => {
+        const n = row.querySelector(".om-item-name")?.value.trim();
+        const price = parseFloat(row.querySelector(".om-item-price")?.value) || 0;
+        const qty = parseInt(row.querySelector(".om-item-qty")?.value) || 1;
+        if (n) { items.push({ name: n, price, quantity: qty }); total += price * qty; }
+      });
+      const customer = { name, phone, city: document.getElementById("om-city").value.trim(), email: document.getElementById("om-email").value.trim(), address: document.getElementById("om-address").value.trim(), notes: document.getElementById("om-notes").value.trim() };
+      Object.keys(customer).forEach(k => { if (!customer[k]) delete customer[k]; });
+      const btn = document.getElementById("om-save-btn");
+      btn.disabled = true; btn.textContent = "⏳ Enregistrement…";
+      document.getElementById("om-status").textContent = "";
       try {
-        status.textContent = "Chargement de reviews_import.json…";
-        const data = await fetch("/reviews_import.json").then(r => { if (!r.ok) throw new Error("reviews_import.json introuvable"); return r.json(); });
-        const products = Object.entries(data); let done = 0, errors = 0;
-        for (const [prodId, reviews] of products) {
-          const entries = Object.entries(reviews);
-          for (const [revId, review] of entries) {
-            try {
-              const url = `${DB_REST}/reviews/${encodeURIComponent(prodId)}/${encodeURIComponent(revId)}.json`;
-              // Mark imported reviews as approved:true
-              const r = await fetch(url, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...review, approved: true }) });
-              if (!r.ok) { const t = await r.text(); if (r.status === 401 || r.status === 403) throw new Error("Permission refusée (403)"); throw new Error(`HTTP ${r.status}: ${t.slice(0, 60)}`); }
-            } catch (e) { errors++; addLog(`✗ ${prodId}/${revId}: ${e.message}`, "#e8194b"); if (e.message.includes("Permission")) { status.textContent = "❌ Erreur de permission"; bar.style.background = "#e8194b"; btn.disabled = false; btn.textContent = "🚀 Réessayer"; return; } }
+        if (_orderModalId) {
+          await update(ref(db, `orders/${_orderModalId}`), { customer, items, total, updatedAt: Date.now() });
+          document.getElementById("om-status").innerHTML = `<span style="color:#00c853">✅ Commande mise à jour !</span>`;
+        } else {
+          const newRef = push(ref(db, "orders"));
+          await update(newRef, { customer, items, total, timestamp: Date.now(), status: "pending", source: "admin" });
+          document.getElementById("om-status").innerHTML = `<span style="color:#00c853">✅ Commande créée !</span>`;
+          // Offer WhatsApp to client
+          if (phone && total > 0) {
+            const intl = phone.replace(/[^0-9]/g,"").replace(/^0/,"212");
+            const msg = encodeURIComponent(`Bonjour ${name},\n\nVotre commande Nova Style a bien été enregistrée.\nTotal : ${total.toLocaleString("fr-MA")} MAD\nAcompte (50%) : ${Math.round(total*.5).toLocaleString("fr-MA")} MAD\n\nNous vous contacterons pour confirmer les détails.\n📞 +212707074748`);
+            if (confirm("Envoyer la confirmation au client par WhatsApp ?")) window.open(`https://wa.me/${intl}?text=${msg}`,"_blank");
           }
-          done++;
-          const pct = Math.round(done / products.length * 100);
-          bar.style.width = pct + "%"; pctEl.textContent = pct + "%"; status.textContent = `${done}/${products.length} produits…`;
-          addLog(`✓ ${prodId} (${entries.length} avis)`, "#4CAF50");
         }
-        bar.style.background = "#4CAF50"; bar.style.width = "100%"; status.textContent = `✅ ${done} produits, ${errors} erreurs`; pctEl.textContent = "100%"; btn.textContent = "✅ Terminé";
-        addLog(`🎉 Import complet !`, "#ffb400");
-        setTimeout(loadImportStats, 800);
-      } catch (e) { status.textContent = "❌ " + e.message; addLog(e.message, "#e8194b"); btn.disabled = false; btn.textContent = "🚀 Lancer l'import"; }
-    }
+        btn.disabled = false; btn.textContent = _orderModalId ? "💾 Mettre à jour" : "💾 Enregistrer";
+        setTimeout(window.closeOrderModal, 1500);
+      } catch (e) {
+        document.getElementById("om-status").innerHTML = `<span style="color:#e8194b">Erreur: ${esc(e.message)}</span>`;
+        btn.disabled = false; btn.textContent = _orderModalId ? "💾 Mettre à jour" : "💾 Enregistrer";
+      }
+    };
 
-    async function loadImportStats() {
-      const el = document.getElementById("reviews-stats"); if (!el) return;
-      el.innerHTML = `<span style="color:#6b7280">Chargement…</span>`;
+    window.waOrderClient = function (name, phone) {
+      if (!phone) return;
+      const intl = phone.replace(/[^0-9]/g,"").replace(/^0/,"212");
+      const msg = encodeURIComponent(`Bonjour ${name || ""},\n\nNova Style vous contacte concernant votre commande. N'hésitez pas à nous contacter au +212707074748.`);
+      window.open(`https://wa.me/${intl}?text=${msg}`,"_blank");
+    };
+
+    // ── VISITOR HISTORY ──────────────────────────────────────────────────────────
+    window.loadVisitorHistory = async function () {
+      const el = document.getElementById("visitor-history-list");
+      if (!el) return;
+      el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Chargement…</div>`;
       try {
-        const res = await fetch(`${DB_REST}/reviews.json?shallow=true`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        if (!data) { el.innerHTML = `<span style="color:#6b7280">Aucun avis en base.</span>`; return; }
-        const prods = Object.keys(data).length;
-        const res2 = await fetch(`${DB_REST}/reviews.json`);
-        const full = await res2.json();
-        const counts = Object.entries(full || {}).map(([k, v]) => [k, typeof v === "object" ? Object.keys(v).length : 0]);
-        counts.sort((a, b) => b[1] - a[1]);
-        const total = counts.reduce((s, [, c]) => s + c, 0);
-        const approved = Object.values(full || {}).flatMap(pr => Object.values(pr || {})).filter(r => r && r.approved === true).length;
-        el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px">
-      ${[["Avis total", total, "#e8194b"], ["Approuvés", approved, "#00c853"], ["Produits", prods, "#ffb300"]].map(([l, v, c]) => `<div style="background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:8px;padding:12px;text-align:center"><div style="font-size:24px;font-weight:800;color:${c}">${v}</div><div style="font-size:10px;color:#6b7280;margin-top:4px">${l}</div></div>`).join("")}
-    </div>
-    <div style="font-size:11px;color:#6b7280;margin-bottom:8px">Top 10 produits :</div>
-    <div style="display:flex;flex-direction:column;gap:5px">
-      ${counts.slice(0, 10).map(([k, c]) => `<div style="display:flex;align-items:center;gap:8px"><div style="flex:1;font-size:10px;color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(k)}">${esc(k)}</div><div style="background:#e8194b;border-radius:2px;height:5px;width:${Math.round(c / counts[0][1] * 80) + 10}px"></div><div style="font-size:10px;color:#6b7280;width:16px;text-align:right">${c}</div></div>`).join("")}
-    </div>`;
-      } catch (e) { el.innerHTML = `<span style="color:#e8194b">Erreur: ${esc(e.message)}</span>`; }
-    }
+        const today = new Date().toISOString().slice(0,10);
+        const snap = await get(ref(db, `sessions/${today}`));
+        const data = snap.val();
+        if (!data) { el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Aucune session aujourd'hui.</div>`; return; }
+        const sessions = Object.values(data).filter(s => s && s.startedAt);
+        sessions.sort((a,b) => b.startedAt - a.startedAt);
+        const rows = sessions.map(s => {
+          const time = new Date(s.startedAt).toLocaleTimeString("fr-MA",{hour:"2-digit",minute:"2-digit"});
+          const flag = flagOf(s.country_code);
+          const loc = s.city ? `${flag} ${s.city}` : (s.country ? `${flag} ${s.country}` : "—");
+          const dur = s.duration ? formatDur(s.duration) : "—";
+          return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;flex-wrap:wrap">
+            <span style="color:#888;white-space:nowrap;min-width:42px">${time}</span>
+            <span style="flex:1;min-width:120px;font-weight:500;color:#333">${esc(s.pageLabel||s.page||"—")}</span>
+            <span style="color:#555;white-space:nowrap">${loc}</span>
+            <span style="color:#777;white-space:nowrap">${esc(s.device||"—")} · ${esc(s.browser||"—")}</span>
+            <span style="color:#aaa;white-space:nowrap">📡 ${esc(s.referrer||"Direct")}</span>
+            <span style="color:#aaa;white-space:nowrap">⏱ ${dur}</span>
+          </div>`;
+        }).join("");
+        el.innerHTML = `<div style="font-size:11px;color:#888;padding:8px 12px">${sessions.length} session(s)</div>` + rows;
+      } catch(e) { el.innerHTML = `<div style="color:#e8194b;text-align:center;padding:24px;font-size:13px">Erreur: ${esc(e.message)}</div>`; }
+    };
 
     // ── DRAFT ORDERS ──────────────────────────────────────────────────────────────
 
