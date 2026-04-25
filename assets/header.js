@@ -63,7 +63,7 @@
 '@media(max-width:860px){\n' +
 '  .header-wa{display:none;}\n' +
 '  .menu-toggle{display:flex;}\n' +
-'  #main-nav{display:flex;flex-direction:column;gap:0;position:fixed;top:0;left:-280px;width:280px;height:100dvh;background:#fff;z-index:300;box-shadow:4px 0 24px rgba(0,0,0,.13);transition:left .25s ease;padding-top:56px;overflow-y:auto;}\n' +
+'  #main-nav{display:flex;flex-direction:column;gap:0;position:fixed;top:0;left:-280px;width:280px;height:100dvh;background:#fff;z-index:300;box-shadow:4px 0 24px rgba(0,0,0,.13);transition:left .25s ease;padding-top:56px;overflow-y:auto;-webkit-overflow-scrolling:touch;}\n' +
 '  #main-nav.open{left:0;}\n' +
 '  #main-nav a{padding:16px 24px;border-bottom:1px solid var(--border);font-size:15px;border-radius:0;color:var(--text);}\n' +
 '  #main-nav a:last-child{border-bottom:none;}\n' +
@@ -88,13 +88,11 @@
       nav.classList.add("open");
       if (overlay) overlay.classList.add("open");
       toggle.setAttribute("aria-expanded", "true");
-      document.body.style.overflow = "hidden";
     }
     function closeNav() {
       nav.classList.remove("open");
       if (overlay) overlay.classList.remove("open");
       toggle.setAttribute("aria-expanded", "false");
-      document.body.style.overflow = "";
     }
 
     toggle.addEventListener("click", function (e) {

@@ -150,11 +150,19 @@ class NSReviewsWidget extends HTMLElement {
           <input type="hidden" id="ns-rating" value="5">
         </div>
 
-        <div style="margin-bottom:12px;">
-          <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.4px;">Votre nom :</label>
-          <input id="ns-name" type="text" placeholder="Ex : Karim B." maxlength="60"
-            style="width:100%;padding:10px 13px;border:1px solid #ddd;border-radius:6px;font-size:14px;outline:none;box-sizing:border-box;"
-            onfocus="this.style.borderColor='#cc2366'" onblur="this.style.borderColor='#ddd'">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+          <div>
+            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.4px;">Votre nom :</label>
+            <input id="ns-name" type="text" placeholder="Ex : Karim B." maxlength="60"
+              style="width:100%;padding:10px 13px;border:1px solid #ddd;border-radius:6px;font-size:14px;outline:none;box-sizing:border-box;"
+              onfocus="this.style.borderColor='#cc2366'" onblur="this.style.borderColor='#ddd'">
+          </div>
+          <div>
+            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.4px;">Ville :</label>
+            <input id="ns-city" type="text" placeholder="Ex : Casablanca" maxlength="40"
+              style="width:100%;padding:10px 13px;border:1px solid #ddd;border-radius:6px;font-size:14px;outline:none;box-sizing:border-box;"
+              onfocus="this.style.borderColor='#cc2366'" onblur="this.style.borderColor='#ddd'">
+          </div>
         </div>
 
         <div style="margin-bottom:16px;">
@@ -239,8 +247,10 @@ class NSReviewsWidget extends HTMLElement {
 
     btn.addEventListener('click', async () => {
       const nameEl = this.querySelector('#ns-name');
+      const cityEl = this.querySelector('#ns-city');
       const textEl = this.querySelector('#ns-text');
       const name   = nameEl?.value.trim();
+      const city   = cityEl?.value.trim();
       const text   = textEl?.value.trim();
 
       if (!name) { nameEl.style.borderColor='#cc2366'; nameEl.focus(); return; }
@@ -253,6 +263,7 @@ class NSReviewsWidget extends HTMLElement {
       try {
         await this.submitReview({
           name,
+          city    : city || '',
           rating  : parseInt(ratingEl?.value || '5'),
           text,
           date    : new Date().toISOString(),
@@ -260,6 +271,7 @@ class NSReviewsWidget extends HTMLElement {
         });
         this._msg(msg, '✅ Merci ! Votre avis a bien été envoyé.', '#2e7d32');
         if (nameEl) nameEl.value = '';
+        if (cityEl) cityEl.value = '';
         if (textEl) textEl.value = '';
         await this.fetchReviews();
         setTimeout(() => this.render(), 1800);

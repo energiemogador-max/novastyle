@@ -131,7 +131,20 @@
 
 /* Social card grid responsive */
 @media (max-width: 700px) {
-  .social-grid-4 { grid-template-columns: repeat(2,1fr) !important; }
+  .social-grid-4 { grid-template-columns: repeat(2,1fr) !important; gap: 8px !important; }
+  .social-grid-4 > a { padding: 10px !important; gap: 6px !important; }
+  .social-grid-4 > a > div:first-child > div:first-child { width:28px !important; height:28px !important; }
+}
+
+/* Collections: max 9 products on phone */
+@media (max-width: 580px) {
+  .home-collection-grid .product-card:nth-child(n+10) { display: none; }
+}
+
+/* Atelier buttons responsive */
+@media (max-width: 600px) {
+  .atelier-btns { flex-direction: column !important; width: 100% !important; }
+  .atelier-btns a { font-size: 12px !important; padding: 8px 12px !important; text-align: center; }
 }
 
 @media (max-width: 600px) {
@@ -219,11 +232,11 @@
         </div>
         <div style="display:flex;gap:16px">
           <div style="text-align:center">
-            <div style="font-size:18px;font-weight:800;color:#cc2366;line-height:1">11.7K</div>
+            <div style="font-size:15px;font-weight:800;color:#cc2366;line-height:1">11.7K</div>
             <div style="font-size:10px;color:#888;margin-top:2px">Abonnés</div>
           </div>
           <div style="text-align:center">
-            <div style="font-size:18px;font-weight:800;color:#cc2366;line-height:1">241</div>
+            <div style="font-size:15px;font-weight:800;color:#cc2366;line-height:1">241</div>
             <div style="font-size:10px;color:#888;margin-top:2px">Posts</div>
           </div>
         </div>
@@ -306,7 +319,7 @@
         Fabrication sur mesure · Verre AGC Belgique · Lun–Sam 9h–18h
       </div>
     </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0">
+    <div class="atelier-btns" style="display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0">
       <a href="https://maps.google.com/?q=Bd+Oued+Sebou+Rue+13+Casablanca" target="_blank" rel="noopener"
         style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid #ddd;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;color:#1a1a1a;transition:border-color .15s"
         onmouseover="this.style.borderColor='#6b2929'" onmouseout="this.style.borderColor='#ddd'">

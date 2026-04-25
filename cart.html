@@ -430,6 +430,10 @@
           <span>Total:</span>
           <span id="total">0 MAD</span>
         </div>
+        <div class="summary-line" style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#6b2929;font-weight:600">
+          <span>Acompte 50% à régler :</span>
+          <span id="deposit-amount">0 MAD</span>
+        </div>
       </div>
       
       <div id="order-note" class="notification" style="display: none; background: var(--accent-dim); color: var(--text); border: 1px solid var(--accent);">
@@ -604,6 +608,8 @@ function updateSummary() {
   const fmt   = window.formatPrice;
   document.getElementById('subtotal').textContent    = fmt(total);
   document.getElementById('total').textContent       = fmt(total);
+  const depositEl = document.getElementById('deposit-amount');
+  if (depositEl) depositEl.textContent = fmt(Math.round(total / 2));
   document.getElementById('modal-total').textContent = fmt(total);
   updateCheckoutButtons();
 }

@@ -157,7 +157,7 @@
   const priceEl = document.getElementById('current-price');
   if (priceEl && !document.getElementById('ns-deposit-hint')) {
     priceEl.insertAdjacentHTML('afterend',
-      '<div class="ns-deposit-hint" id="ns-deposit-hint">Calculant le montant…</div>'
+      '<div class="ns-deposit-hint" id="ns-deposit-hint">Réservez avec <strong>50% à la commande</strong> — solde en cash à la livraison après inspection</div>'
     );
   }
 
@@ -217,30 +217,7 @@
     return isNaN(n) || n < 10 ? null : n;
   }
 
-  function updateDeposit() {
-    const priceEl = document.getElementById('current-price');
-    const hintEl  = document.getElementById('ns-deposit-hint');
-    const stickyEl = document.getElementById('ns-sticky-price');
-    if (!priceEl || !hintEl) return;
-
-    const price = parseFirstPrice(priceEl.textContent);
-    if (!price) return;
-
-    const deposit = Math.round(price / 2);
-    const fmt = d => d.toLocaleString('fr-FR') + ' MAD';
-
-    hintEl.innerHTML = `Soit <strong>${fmt(deposit)} à la commande</strong> — solde en cash à la livraison`;
-    if (stickyEl) stickyEl.textContent = '· ' + fmt(deposit) + ' acompte';
-  }
-
-  // Hook into updateUI to recalculate whenever options change
-  const origUpdateUI = window.updateUI;
-  window.updateUI = function (...args) {
-    if (typeof origUpdateUI === 'function') origUpdateUI(...args);
-    setTimeout(updateDeposit, 30);
-  };
-
-  // Initial update (after hydration completes)
-  setTimeout(updateDeposit, 400);
-  setTimeout(updateDeposit, 1200); // fallback if hydration is slow
+  // Sticky bar shows static 50% message — amount is shown in cart
+  const stickyEl = document.getElementById('ns-sticky-price');
+  if (stickyEl) stickyEl.textContent = '· Acompte 50%';
 })();
