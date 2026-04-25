@@ -97,9 +97,12 @@
 
     toggle.addEventListener("click", function (e) {
       e.stopPropagation();
+      e.preventDefault();
       nav.classList.contains("open") ? closeNav() : openNav();
     });
-    if (overlay) overlay.addEventListener("click", closeNav);
+    if (overlay) overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closeNav();
+    });
     nav.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", closeNav); });
 
     // Mark active link

@@ -84,9 +84,11 @@
       });
     });
 
-    document.addEventListener("click", function () {
-      nav.classList.remove("open");
-      toggle.setAttribute("aria-expanded", "false");
+    document.addEventListener("click", function (e) {
+      if (!nav.contains(e.target) && e.target !== toggle && !toggle.contains(e.target)) {
+        nav.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
     });
 
     var path = window.location.pathname.replace(/\/$/, "") || "/";

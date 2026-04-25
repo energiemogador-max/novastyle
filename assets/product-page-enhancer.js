@@ -2,10 +2,9 @@
  * product-page-enhancer.js
  * Upgrades all product pages with:
  *  1. "Commander maintenant" primary CTA (full-width, bold)
- *  2. Live deposit amount (50% of current selected price)
+ *  2. Deposit hint line (50% à la commande)
  *  3. 4-step prepayment trust block
- *  4. Sticky mobile order bar (order-only, no WhatsApp in primary flow)
- *  5. Trust badge strip below CTA
+ *  4. Trust badge strip below CTA
  */
 (function () {
   if (!document.querySelector('.product-info, .product-page, [class*="product"]')) return;
@@ -103,45 +102,6 @@
     border-radius: 20px;
     padding: 4px 10px;
   }
-
-  /* ── Sticky mobile order bar ──────────────────────── */
-  .ns-sticky-order {
-    display: none;
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 300;
-    background: #fff;
-    border-top: 1.5px solid #e8e8e8;
-    padding: 10px 16px max(10px, env(safe-area-inset-bottom));
-    box-shadow: 0 -4px 20px rgba(0,0,0,.10);
-  }
-  .ns-sticky-order button {
-    width: 100%;
-    background: #6b2929;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 700;
-    padding: 15px 20px;
-    cursor: pointer;
-    letter-spacing: 0.01em;
-    box-shadow: 0 3px 14px rgba(107,41,41,.30);
-    transition: opacity .15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .ns-sticky-order button:active { opacity: .88; }
-  .ns-sticky-order .sticky-sub {
-    font-size: 12px;
-    font-weight: 500;
-    opacity: .82;
-  }
-  @media (min-width: 900px) {
-    .ns-sticky-order { display: none !important; }
-  }
   `;
   const styleEl = document.createElement('style');
   styleEl.textContent = css;
@@ -188,36 +148,4 @@
 </div>`
     );
   }
-
-  // ── Sticky mobile order bar ───────────────────────────────────────────────
-  if (!document.getElementById('ns-sticky-order')) {
-    const bar = document.createElement('div');
-    bar.className = 'ns-sticky-order';
-    bar.id = 'ns-sticky-order';
-    bar.innerHTML = `<button onclick="window.addProductToCart && addProductToCart()">
-      Commander maintenant
-      <span class="sticky-sub" id="ns-sticky-price"></span>
-    </button>`;
-    document.body.appendChild(bar);
-
-    // Show only after scrolling past the main CTA
-    if (btn) {
-      const obs = new IntersectionObserver(([entry]) => {
-        bar.style.display = entry.isIntersecting ? 'none' : 'block';
-      }, { threshold: 0 });
-      obs.observe(btn);
-    }
-  }
-
-  // ── Price parsing + deposit update ───────────────────────────────────────
-  function parseFirstPrice(text) {
-    const m = text.replace(/ /g, '').match(/[\d ]+/);
-    if (!m) return null;
-    const n = parseInt(m[0].replace(/\s/g, ''), 10);
-    return isNaN(n) || n < 10 ? null : n;
-  }
-
-  // Sticky bar shows static 50% message — amount is shown in cart
-  const stickyEl = document.getElementById('ns-sticky-price');
-  if (stickyEl) stickyEl.textContent = '· Acompte 50%';
 })();
