@@ -91,9 +91,25 @@
     document.body.appendChild(frag);
   }
 
+  function fixCardImages() {
+    document.querySelectorAll('.card-img img').forEach(function (img) {
+      function markReady() {
+        img.classList.add('img-ready');
+        var wrap = img.closest('.card-img');
+        if (wrap) wrap.classList.add('img-ready');
+      }
+      if (img.complete && img.naturalWidth > 0) { markReady(); }
+      else {
+        img.addEventListener('load', markReady);
+        img.addEventListener('error', markReady);
+      }
+    });
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", inject);
+    document.addEventListener("DOMContentLoaded", function () { inject(); fixCardImages(); });
   } else {
     inject();
+    fixCardImages();
   }
 })();
