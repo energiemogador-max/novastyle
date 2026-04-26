@@ -132,15 +132,19 @@ h1, h2, h3 { font-weight: 600; line-height: 1.3; }
 .see-more:hover { text-decoration: underline; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
-.product-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: all .2s; display: block; }
+.product-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: all .2s; display: block; contain: layout style; }
 .product-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); border-color: var(--border-strong); }
 .card-img { aspect-ratio: 1; background: var(--bg-soft); overflow: hidden; position: relative; }
 .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; position: relative; }
 .product-card:hover .card-img img { transform: scale(1.04); }
-/* shimmer skeleton while image loads — hidden once card-img gets img-ready */
-.card-img::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg,#f0f0f0 25%,#e4e4e4 50%,#f0f0f0 75%); background-size: 200% 100%; animation: ns-shimmer 1.4s infinite; }
+/* shimmer skeleton — animation paused until visible; stopped once loaded */
+.card-img::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg,#f0f0f0 25%,#e4e4e4 50%,#f0f0f0 75%); background-size: 200% 100%; animation: ns-shimmer 1.4s infinite; animation-play-state: paused; }
+.card-img:not(.img-ready)::before { animation-play-state: running; }
 .card-img.img-ready::before { display: none; }
 @keyframes ns-shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+/* Off-screen sections: skip rendering until near viewport */
+.home-collection { content-visibility: auto; contain-intrinsic-size: 0 520px; }
+.home-collection:first-child { content-visibility: visible; }
 .card-info { padding: 12px; text-align: center; }
 .card-name { font-size: 13px; font-weight: 500; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 36px; text-align: center; }
 .card-price { margin-top: 6px; color: var(--accent); font-weight: 600; font-size: 14px; text-align: center; }
@@ -151,7 +155,7 @@ h1, h2, h3 { font-weight: 600; line-height: 1.3; }
 .p-gallery-wrap { position: relative; }
 .p-gallery-main-wrap { position: relative; background: var(--bg-soft); border-radius: 10px; overflow: hidden; aspect-ratio: 1; }
 .p-gallery-main-wrap::before { content:''; position:absolute; inset:0; background:linear-gradient(90deg,#f0f0f0 25%,#e4e4e4 50%,#f0f0f0 75%); background-size:200% 100%; animation:ns-shimmer 1.4s infinite; }
-.p-gallery-main-wrap.img-ready::before { display:none; }
+.p-gallery-main-wrap.img-ready::before { display:none; animation:none; }
 .p-gallery-main-wrap img#main-img { width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .25s; display:block; }
 .p-gallery-main-wrap.img-ready img#main-img { opacity:1; }
 .thumbs { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
