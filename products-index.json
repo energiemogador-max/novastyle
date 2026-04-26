@@ -1307,6 +1307,37 @@
       },
       "hasVariants": true,
       "variantCount": 2
+    },
+    {
+      "slug": "nova-style-miroir-yasmine-miroir-mural-silhouette-femme-avec-decor-perles",
+      "name": "Miroir YASMINE — Miroir Mural Silhouette Femme avec Décor Perles",
+      "categoryId": "salon",
+      "category": "Salon & Dressing",
+      "image": "/images/nova-style-miroir-yasmine-miroir-mural-silhouette-femme-avec-decor-perles/1.webp",
+      "images": [
+        "/images/nova-style-miroir-yasmine-miroir-mural-silhouette-femme-avec-decor-perles/1.webp"
+      ],
+      "active": true,
+      "price": {
+        "min": 1650,
+        "max": 1650
+      },
+      "axes": {
+        "order": [
+          "Dimension"
+        ],
+        "options": {
+          "Dimension": [
+            "70 cm * 130 cm"
+          ]
+        }
+      },
+      "seo": {
+        "title": "Miroir YASMINE — Miroir Mural Silhouette Femme avec Décor Perles",
+        "description": "Nova Style : Miroir YASMINE — Miroir mural silhouette femme avec décor perles fait main, fabriqué sur mesure à Casablanca. L 70 cm × H 130 cm."
+      },
+      "hasVariants": true,
+      "variantCount": 1
     }
   ]
 }
