@@ -1261,6 +1261,45 @@
       },
       "hasVariants": true,
       "variantCount": 1
+    },
+    {
+      "slug": "nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle",
+      "name": "Miroir de salon et dressing RITAL — Grand Miroir de Sol Sculptural en Tissu Bouclé",
+      "categoryId": "salon",
+      "category": "Salon & Dressing",
+      "image": "/images/nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle/1.webp",
+      "images": [
+        "/images/nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle/1.webp",
+        "/images/nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle/2.webp",
+        "/images/nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle/3.webp",
+        "/images/nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle/4.webp"
+      ],
+      "active": true,
+      "price": {
+        "min": 1750,
+        "max": 1850
+      },
+      "axes": {
+        "order": [
+          "Dimension",
+          "Installation"
+        ],
+        "options": {
+          "Dimension": [
+            "L 74 x H 170 cm"
+          ],
+          "Installation": [
+            "Sans Installation",
+            "Avec Installation"
+          ]
+        }
+      },
+      "seo": {
+        "title": "Miroir de salon et dressing RITAL — Grand Miroir de Sol Sculptural en Tissu Bouclé",
+        "description": "Nova Style : Miroir RITAL — Grand miroir de sol sculptural en tissu bouclé, fabriqué sur mesure à Casablanca."
+      },
+      "hasVariants": true,
+      "variantCount": 2
     }
   ]
 }
