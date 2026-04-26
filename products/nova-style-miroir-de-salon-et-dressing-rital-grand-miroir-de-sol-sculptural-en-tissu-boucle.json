@@ -1,0 +1,51 @@
+{
+  "slug": "nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle",
+  "name": "Miroir de salon et dressing RITAL — Grand Miroir de Sol Sculptural en Tissu Bouclé",
+  "categoryId": "salon",
+  "category": "Salon & Dressing",
+  "active": true,
+  "images": [
+    "/images/nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle/1.webp",
+    "/images/nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle/2.webp",
+    "/images/nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle/3.webp",
+    "/images/nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle/4.webp"
+  ],
+  "description": "<h1>Nova Style : Miroir RITAL — Grand Miroir de Sol Sculptural en Tissu Bouclé</h1>\n\n<h2>Le miroir statement qui redéfinit votre intérieur</h2>\n<p>\n  Le Miroir RITAL Nova Style est notre grand miroir de sol sculptural, entièrement recouvert de tissu bouclé moelleux. Sa forme organique et ondulante, avec ses courbes généreuses et asymétriques, en fait une pièce unique qui transforme instantanément n'importe quelle pièce. Bien plus qu'un miroir, le RITAL est une sculpture décorative à part entière.\n</p>\n\n<h2>Une forme sculpturale unique — Miroir de Sol Bouclé Grand Format</h2>\n<p>\n  Le RITAL se pose directement au sol et s'appuie contre le mur sans aucune fixation. Son cadre épais et arrondi, recouvert d'un tissu bouclé doux au toucher, apporte chaleur, volume et caractère à votre salon, chambre ou dressing. Ses dimensions généreuses — 80 cm de large pour 180 cm de hauteur — en font un miroir pleine longueur idéal pour les grands espaces.\n</p>\n\n<h2>Disponible en Plusieurs Coloris — Miroir Bouclé Sur Mesure au Maroc</h2>\n<p>\n  Le RITAL est disponible en plusieurs coloris pour s'adapter à tous les styles d'intérieur : blanc cassé, blanc pur, beige naturel, rose fuchsia et d'autres teintes sur demande. Que votre déco soit minimaliste, scandinave, maximale ou colorée, le RITAL s'impose avec élégance.\n</p>\n\n<h2>Qualité de Fabrication — Verre AGC Belgique 6mm, Fabriqué à Casablanca</h2>\n<p>\n  Fabriqué avec du verre AGC Belgique 6mm, le Miroir RITAL offre une surface de réflexion d'une qualité exceptionnelle. Le cadre est entièrement recouvert d'un tissu bouclé haute qualité, doux et résistant. Chaque pièce est fabriquée sur mesure dans notre atelier de Casablanca. Garantie 3 ans Nova Style contre la corrosion.\n</p>\n\n<h2>Caractéristiques Techniques du Miroir RITAL</h2>\n<ul>\n  <li>Dimensions : L 80 cm × H 180 cm</li>\n  <li>Épaisseur du cadre bouclé : 12 à 15 cm</li>\n  <li>Verre AGC Belgique 6mm haute qualité</li>\n  <li>Cadre entièrement recouvert de tissu bouclé (teddy)</li>\n  <li>Disponible en plusieurs coloris : blanc cassé, blanc, beige, rose fuchsia…</li>\n  <li>Traitement anticorrosion</li>\n  <li>Garantie 3 ans contre la corrosion</li>\n  <li>Miroir de sol — pose debout sans fixation murale</li>\n  <li>Fabrication 100% sur mesure à Casablanca</li>\n  <li>Livraison partout au Maroc</li>\n</ul>\n\n<h2>Livraison et Installation du Miroir RITAL partout au Maroc</h2>\n<p>\n  Le Miroir RITAL Nova Style est fabriqué dans notre atelier de Casablanca puis livré partout au Maroc — Rabat, Marrakech, Tanger, Fès, Agadir, Tétouan et plus. L'installation est disponible en option à Casablanca et sa région (Mohammedia, Bouskoura, Dar Bouazza, Ain Diab). Délai de livraison : 5 à 10 jours ouvrables.\n</p>\n<p>\n  Pour un coloris personnalisé ou des dimensions sur mesure, contactez Nova Style sur WhatsApp pour un devis gratuit.\n</p>",
+  "seo": {
+    "title": "Miroir de salon et dressing RITAL — Grand Miroir de Sol Sculptural en Tissu Bouclé",
+    "description": "Nova Style : Miroir RITAL — Grand miroir de sol sculptural en tissu bouclé, fabriqué sur mesure à Casablanca."
+  },
+  "axes": {
+    "order": [
+      "Dimension",
+      "Installation"
+    ],
+    "options": {
+      "Dimension": [
+        "L 74 x H 170 cm"
+      ],
+      "Installation": [
+        "Sans Installation",
+        "Avec Installation"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "L 74 x H 170 cm",
+        "Installation": "Sans Installation"
+      },
+      "price": 1750,
+      "sku": ""
+    },
+    {
+      "axes": {
+        "Dimension": "L 74 x H 170 cm",
+        "Installation": "Avec Installation"
+      },
+      "price": 1850,
+      "sku": ""
+    }
+  ]
+}
