@@ -8,6 +8,7 @@
     { href: "/categorie/sdb-premium/",   label: "Miroir salle de bain premium" },
     { href: "/categorie/sdb-essentiel/", label: "Miroir entrée de gamme" },
     { href: "/categorie/salon/",         label: "Miroir de salon &amp; dressing" },
+    { href: "/categorie/consoles/",       label: "Console &amp; miroir" },
     { href: "/categorie/tables/",        label: "Table &amp; chaise" },
     { href: "/categorie/douches/",       label: "Douches italiennes" },
     { href: "/blog/",                    label: "Blog" },
