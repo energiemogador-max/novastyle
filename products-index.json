@@ -779,16 +779,28 @@
       "variantCount": 32
     },
     {
-      "id": "deco-miroir-mural-nova-style-miroir-rital",
       "slug": "deco-miroir-mural-nova-style-miroir-rital",
       "name": "Deco miroir mural Nova Style : Miroir RITAL",
-      "category": "Miroirs SDB Premium",
-      "categoryId": "sdb-premium",
-      "active": true,
+      "categoryId": "salon",
+      "category": "Salon & Dressing",
       "image": "/images/deco-miroir-mural-nova-style-miroir-rital/1.webp",
+      "images": [
+        "/images/deco-miroir-mural-nova-style-miroir-rital/1.webp"
+      ],
+      "active": true,
       "price": {
         "min": 1650,
-        "max": null
+        "max": 1650
+      },
+      "axes": {
+        "order": [
+          "Dimension"
+        ],
+        "options": {
+          "Dimension": [
+            "L 74 x H 170 cm"
+          ]
+        }
       },
       "hasVariants": true,
       "variantCount": 1
