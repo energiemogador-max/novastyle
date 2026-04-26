@@ -4014,26 +4014,23 @@
 
         let errors = 0;
         try {
-          // ① Load catalog.json
-          regenLog('📥 Chargement de catalog.json…', 'info');
-          const catFile = await regenGhGet('catalog.json');
-          const catalog  = JSON.parse(regenB64(catFile.content));
-          regenLog(`✅ catalog.json — ${catalog.products?.length || 0} produits`, 'ok');
+          // ① Load products-index.json (canonical source — correct categoryIds)
+          regenLog('📥 Chargement de products-index.json…', 'info');
+          const idxFile = await regenGhGet('products-index.json');
+          const index   = JSON.parse(regenB64(idxFile.content));
+          const idxSha  = idxFile.sha;
+          regenLog(`✅ products-index.json — ${index.products?.length || 0} produits`, 'ok');
           regenStep();
 
-          // ② Build & commit products-index.json
-          const index = regenBuildIndex(catalog);
+          // ② Group by categoryId for HTML patching (no re-commit needed — index unchanged)
           const byCat = {};
-          index.products.forEach(p => { if (!byCat[p.categoryId]) byCat[p.categoryId] = []; byCat[p.categoryId].push(p); });
+          (index.products || []).filter(p => p.active !== false).forEach(p => {
+            if (!byCat[p.categoryId]) byCat[p.categoryId] = [];
+            byCat[p.categoryId].push(p);
+          });
           regenRenderGrid(byCat);
-
-          regenLog('🚀 Commit products-index.json…', 'info');
-          let idxSha;
-          try { idxSha = (await regenGhGet('products-index.json')).sha; } catch {}
-          await regenGhPut('products-index.json', JSON.stringify(index, null, 2),
-            `⚡ Régénération products-index.json — ${index.products.length} produits`, idxSha);
-          regenLog(`✅ products-index.json commité (${index.products.length} produits)`, 'ok');
-          regenStep();
+          regenLog(`ℹ️ Catégories détectées : ${Object.keys(byCat).join(', ')}`, 'info');
+          regenStep(); // consume the step we'd have used for committing index
 
           // ③ Patch each category page
           for (const cat of REGEN_CATS) {
@@ -6081,6 +6078,8 @@
         _indexCache = idx;
         _allAdminProducts = {};
         (idx.products || []).forEach(p => { _allAdminProducts[p.slug] = p; });
+        // Expose for nouveau-produit.jsx (StepCopy) — same data, no extra fetch needed
+        window.__novaIndexData = idx;
         renderProductTable();
       } catch (e) {
         tbody.innerHTML = `<tr><td colspan="6" style="padding:20px;text-align:center;color:#e8194b">Erreur: ${e.message}</td></tr>`;

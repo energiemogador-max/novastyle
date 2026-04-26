@@ -529,10 +529,28 @@ function StepCopy({ onNext, onBack }) {
   const [fetchErr, setFetchErr] = useState("");
 
   useEffect(() => {
-    fetch("/products-index.json").then(r => r.json()).then(data => {
-      const list = (data.products || []).filter(p => p.active && !/[^\x00-\x7F]/.test(p.slug));
-      setProducts(list);
-    }).catch(() => {}).finally(() => setLoading(false));
+    async function loadProducts() {
+      try {
+        let data;
+        // Prefer already-loaded index from tab Produits (same fetch, no round-trip)
+        if (window.__novaIndexData && (window.__novaIndexData.products || []).length > 0) {
+          data = window.__novaIndexData;
+        } else {
+          // Fallback: fetch directly, same pattern as loadProductList in admin
+          const r = await fetch('/products-index.json?_=' + Date.now());
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          data = await r.json();
+          window.__novaIndexData = data; // cache for next time
+        }
+        const list = (data.products || []).filter(p => p.active !== false && !/[^\x00-\x7F]/.test(p.slug));
+        setProducts(list);
+      } catch(e) {
+        setFetchErr('Impossible de charger les produits : ' + e.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadProducts();
   }, []);
 
   const filtered = products.filter(p => {
