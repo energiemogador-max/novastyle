@@ -529,28 +529,10 @@ function StepCopy({ onNext, onBack }) {
   const [fetchErr, setFetchErr] = useState("");
 
   useEffect(() => {
-    async function loadProducts() {
-      try {
-        let data;
-        // Prefer already-loaded index from tab Produits (same fetch, no round-trip)
-        if (window.__novaIndexData && (window.__novaIndexData.products || []).length > 0) {
-          data = window.__novaIndexData;
-        } else {
-          // Fallback: fetch directly, same pattern as loadProductList in admin
-          const r = await fetch('/products-index.json?_=' + Date.now());
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          data = await r.json();
-          window.__novaIndexData = data; // cache for next time
-        }
-        const list = (data.products || []).filter(p => p.active !== false && !/[^\x00-\x7F]/.test(p.slug));
-        setProducts(list);
-      } catch(e) {
-        setFetchErr('Impossible de charger les produits : ' + e.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadProducts();
+    fetch("/products-index.json").then(r => r.json()).then(data => {
+      const list = (data.products || []).filter(p => p.active && !/[^\x00-\x7F]/.test(p.slug));
+      setProducts(list);
+    }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   const filtered = products.filter(p => {
@@ -894,11 +876,10 @@ function StepPrix({ axesConfig, copied, onNext, onBack }) {
 function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
   // tasks: { id, label, status: "pending"|"running"|"ok"|"error", detail }
   const [tasks, setTasks] = useState([
-    { id: "firebase", label: "Enregistrer dans Firebase",                      status: "pending", detail: "" },
-    { id: "product",  label: `Créer products/${info.slug}.json`,               status: "pending", detail: "" },
-    { id: "page",     label: `Créer la page produits/${info.slug}/index.html`,  status: "pending", detail: "" },
-    { id: "index",    label: "Mettre à jour products-index.json",              status: "pending", detail: "" },
-    { id: "regen",    label: "Régénérer les pages catégories",                 status: "pending", detail: "" },
+    { id: "firebase", label: "Enregistrer dans Firebase",                    status: "pending", detail: "" },
+    { id: "product",  label: `Créer products/${info.slug}.json`,             status: "pending", detail: "" },
+    { id: "page",     label: `Créer la page produits/${info.slug}/index.html`, status: "pending", detail: "" },
+    { id: "index",    label: "Mettre à jour products-index.json",            status: "pending", detail: "" },
   ]);
   const [done, setDone] = useState(false);
   const [copiedKey, setCopiedKey] = useState("");
@@ -1023,104 +1004,8 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
           }
         );
         setTask("index", { status: "ok", detail: `${products.length} produits dans l'index` });
-        // Invalidate local cache so StepCopy picks up fresh data next time
-        window.__novaIndexData = null;
       } catch(e) {
         setTask("index", { status: "error", detail: e.message });
-      }
-
-      // 5. Regenerate category pages from products-index.json (contains this new product)
-      setTask("regen", { status: "running", detail: "" });
-      try {
-        const regenTok = token || localStorage.getItem("nova_gh_pat") || "";
-        if (!regenTok) throw new Error("Token GitHub manquant");
-
-        const REGEN_CATS = [
-          { id: "sdb-premium",   path: "categorie/sdb-premium/index.html" },
-          { id: "sdb-essentiel", path: "categorie/sdb-essentiel/index.html" },
-          { id: "salon",         path: "categorie/salon/index.html" },
-          { id: "consoles",      path: "categorie/consoles/index.html" },
-          { id: "tables",        path: "categorie/tables/index.html" },
-          { id: "douches",       path: "categorie/douches/index.html" },
-        ];
-
-        const ghHeaders = { Authorization: `token ${regenTok}`, Accept: "application/vnd.github+json" };
-
-        // Read the just-committed products-index.json (already has the new product)
-        const idxRes = await fetch(
-          `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/products-index.json`,
-          { headers: ghHeaders }
-        );
-        if (!idxRes.ok) throw new Error(`Lecture products-index.json : ${idxRes.status}`);
-        const idxFile = await idxRes.json();
-        const idxBin  = atob(idxFile.content.replace(/
-/g, ""));
-        const idxBytes = new Uint8Array(idxBin.length);
-        for (let i = 0; i < idxBin.length; i++) idxBytes[i] = idxBin.charCodeAt(i);
-        const freshIndex = JSON.parse(new TextDecoder("utf-8").decode(idxBytes));
-
-        // Group active products by categoryId
-        const byCat = {};
-        (freshIndex.products || []).filter(p => p.active !== false).forEach(p => {
-          if (!byCat[p.categoryId]) byCat[p.categoryId] = [];
-          byCat[p.categoryId].push(p);
-        });
-
-        // Build product card HTML
-        const cardHTML = (p) => {
-          const price = p.price?.min != null
-            ? "À partir de " + Math.round(p.price.min).toLocaleString("fr-FR") + " MAD" : "";
-          return `<a class="product-card" href="/produits/${p.slug}/">\n  <div class="card-img"><img src="${p.image}" alt="${p.name.replace(/"/g, "&quot;")}" loading="lazy" width="400" height="400"></div>\n  <div class="card-info">\n    <div class="card-name">${p.name}</div>\n    <div class="card-price">${price}</div>\n  </div>\n</a>`;
-        };
-
-        // Patch each category page
-        let regenOk = 0, regenFail = 0;
-        for (const cat of REGEN_CATS) {
-          try {
-            const catRes = await fetch(
-              `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${cat.path}`,
-              { headers: ghHeaders }
-            );
-            if (!catRes.ok) throw new Error(catRes.status);
-            const catFile  = await catRes.json();
-            const catBin   = atob(catFile.content.replace(/
-/g, ""));
-            const catBytes = new Uint8Array(catBin.length);
-            for (let i = 0; i < catBin.length; i++) catBytes[i] = catBin.charCodeAt(i);
-            let catHTML = new TextDecoder("utf-8").decode(catBytes);
-
-            const catProds = byCat[cat.id] || [];
-            const cards    = catProds.map(cardHTML).join("\n");
-            catHTML = catHTML.replace(
-              /(<div id="products-grid"[^>]*>)([\s\S]*?)(<\/div>\s*
-
-<\/section>)/,
-              (_, open) => `${open}\n${cards}\n</div>\n\n</section>`
-            );
-            catHTML = catHTML.replace(/("numberOfItems"\s*:\s*)\d+/, `$1${catProds.length}`);
-
-            const newB64 = btoa(unescape(encodeURIComponent(catHTML)));
-            const putRes = await fetch(
-              `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${cat.path}`,
-              {
-                method: "PUT", headers: { ...ghHeaders, "Content-Type": "application/json" },
-                body: JSON.stringify({ message: `⚡ Regen ${cat.id} — ${catProds.length} produits`, content: newB64, sha: catFile.sha, branch: GH_BRANCH })
-              }
-            );
-            if (!putRes.ok) throw new Error(putRes.status);
-            regenOk++;
-          } catch { regenFail++; }
-        }
-
-        setTask("regen", {
-          status: regenFail === 0 ? "ok" : "error",
-          detail: regenFail === 0
-            ? `${regenOk} pages mises à jour — ${freshIndex.products?.length || 0} produits`
-            : `${regenOk} ok, ${regenFail} erreur(s)`
-        });
-        window.__novaIndexData = null;
-      } catch(e) {
-        setTask("regen", { status: "error", detail: e.message });
       }
 
       setDone(true);
