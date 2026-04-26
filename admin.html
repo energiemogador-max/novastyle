@@ -2875,6 +2875,7 @@
           <div class="sidebar-item" data-tab="reviews"><span class="sidebar-icon">⭐</span>Avis<span
               class="sidebar-badge" id="reviews-tab-badge" style="display:none">0</span></div>
           <div class="sidebar-item" data-tab="ads"><span class="sidebar-icon">📣</span>Ads Manager</div>
+          <div class="sidebar-item" data-tab="regen"><span class="sidebar-icon">⚡</span>Régénérer</div>
         </div>
         <div class="sidebar-footer">
           <span class="sidebar-email" id="admin-email-display"></span>
@@ -3609,6 +3610,31 @@
           </div>
         </div>
 
+        <div class="tab-panel" id="tab-regen">
+          <div class="container" style="max-width:780px">
+            <h2 style="font-size:20px;font-weight:700;margin:0 0 6px">⚡ Régénérer les catégories</h2>
+            <p style="font-size:13px;color:#6b7280;margin:0 0 24px;line-height:1.6">
+              Lit <code>products-index.json</code> → met à jour le HTML statique des 6 pages catégories → commit GitHub.
+            </p>
+            <div style="background:linear-gradient(135deg,#fff5f7 0%,#f5f6fa 60%,#eff6ff 100%);border:1.5px solid #fbd5df;border-radius:14px;padding:28px 24px;margin-bottom:20px;text-align:center">
+              <button id="regen-main-btn" onclick="window.runCategoryRegen()"
+                style="display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:#e8194b;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(232,25,75,.3);transition:all .2s">
+                <span id="regen-main-icon">🔄</span>
+                <span id="regen-main-label">Régénérer les catégories</span>
+              </button>
+            </div>
+            <div id="regen-summary" style="display:none;border-radius:10px;padding:14px 18px;font-size:14px;font-weight:600;margin-bottom:16px"></div>
+            <div id="regen-progress-wrap" style="display:none;height:4px;background:#e5e7eb;border-radius:99px;margin-bottom:20px;overflow:hidden">
+              <div id="regen-progress-bar" style="height:100%;background:#e8194b;border-radius:99px;width:0%;transition:width .3s"></div>
+            </div>
+            <div id="regen-cats-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:20px"></div>
+            <div id="regen-log-card" style="display:none;background:#0f172a;border-radius:10px;padding:16px">
+              <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Log</div>
+              <div id="regen-log-lines" style="font-family:monospace;font-size:12px;line-height:1.7"></div>
+            </div>
+          </div>
+        </div>
+
       </div><!-- /main-content -->
     </div><!-- /admin-body -->
 
@@ -3810,6 +3836,186 @@
     }
     document.getElementById("btn-login").addEventListener("click", doLogin);
     ["login-password", "login-email"].forEach(id => document.getElementById(id).addEventListener("keydown", e => e.key === "Enter" && doLogin()));
+
+    // ══ ⚡ CATEGORY REGEN ══════════════════════════════════════════════════════
+    (function () {
+      const CATS = [
+        { id: 'sdb-premium',   label: 'SDB Premium',        icon: '🪞', path: 'categorie/sdb-premium/index.html' },
+        { id: 'sdb-essentiel', label: 'SDB Essentiel',      icon: '✨', path: 'categorie/sdb-essentiel/index.html' },
+        { id: 'salon',         label: 'Salon & Dressing',   icon: '🛋️', path: 'categorie/salon/index.html' },
+        { id: 'consoles',      label: 'Consoles & Entrée',  icon: '🚪', path: 'categorie/consoles/index.html' },
+        { id: 'tables',        label: 'Tables de Séjour',   icon: '☕', path: 'categorie/tables/index.html' },
+        { id: 'douches',       label: 'Douches Italiennes', icon: '🚿', path: 'categorie/douches/index.html' },
+      ];
+
+      function creds() {
+        return {
+          pat:    localStorage.getItem('nova_gh_pat') || localStorage.getItem('nova_github_token') || '',
+          repo:   localStorage.getItem('nova_gh_repo') || '',
+          branch: localStorage.getItem('nova_gh_branch') || 'main',
+        };
+      }
+      async function ghGet(path) {
+        const { pat, repo } = creds();
+        const r = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`,
+          { headers: { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github+json' } });
+        if (!r.ok) throw new Error(`GET ${path} → ${r.status}`);
+        return r.json();
+      }
+      async function ghPut(path, content, message, sha) {
+        const { pat, repo, branch } = creds();
+        const r = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, content: btoa(unescape(encodeURIComponent(content))), branch, ...(sha ? { sha } : {}) }),
+        });
+        if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(`PUT ${path} → ${r.status}: ${e.message||''}`); }
+        return r.json();
+      }
+      function b64(str) { return decodeURIComponent(escape(atob(str.replace(/\n/g,'')))); }
+
+      function log(msg, type) {
+        const el = document.getElementById('regen-log-lines');
+        if (!el) return;
+        const d = document.createElement('div');
+        const c = { ok:'#4ade80', err:'#f87171', info:'#60a5fa', warn:'#fbbf24' };
+        d.style.color = c[type] || '#94a3b8';
+        d.textContent = `[${new Date().toLocaleTimeString('fr-FR')}] ${msg}`;
+        el.appendChild(d);
+        el.scrollTop = el.scrollHeight;
+        document.getElementById('regen-log-card').style.display = 'block';
+      }
+
+      let _tot = 0, _done = 0;
+      function initProg(n) { _tot=n; _done=0; document.getElementById('regen-progress-wrap').style.display='block'; document.getElementById('regen-progress-bar').style.width='0%'; }
+      function step()      { _done++; document.getElementById('regen-progress-bar').style.width=Math.round(_done/_tot*100)+'%'; }
+
+      function renderGrid(byCat) {
+        const g = document.getElementById('regen-cats-grid');
+        if (!g) return;
+        g.innerHTML = '';
+        CATS.forEach(cat => {
+          const n = byCat ? (byCat[cat.id]||[]).length : null;
+          const d = document.createElement('div');
+          d.id = `rcat-${cat.id}`;
+          d.style.cssText = 'background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px';
+          d.innerHTML = `<span style="font-size:20px">${cat.icon}</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700;color:#111827">${cat.label}</div>
+              <div style="font-size:11px;color:#9ca3af;font-family:monospace">${cat.id}</div>
+              ${n!=null?`<div style="font-size:12px;color:#6b7280;margin-top:2px">${n} produit${n!==1?'s':''}</div>`:''}
+            </div>
+            <span id="rst-${cat.id}" style="font-size:18px">⏸️</span>`;
+          g.appendChild(d);
+        });
+      }
+
+      function setCat(id, state) {
+        const el = document.getElementById(`rcat-${id}`);
+        const ic = document.getElementById(`rst-${id}`);
+        if (!el||!ic) return;
+        const s = { ok:'border-color:#16a34a;background:#f0fdf4', err:'border-color:#e8194b;background:#fef0f3', run:'border-color:#2563eb;background:#eff6ff' };
+        const i = { ok:'✅', err:'❌', run:'⏳', wait:'⏸️' };
+        el.style.cssText = `background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;${s[state]||''}`;
+        ic.textContent = i[state]||'⏸️';
+      }
+
+      function cardHTML(p) {
+        const price = p.price?.min!=null ? 'À partir de '+Math.round(p.price.min).toLocaleString('fr-FR')+' MAD' : '';
+        return `<a class="product-card" href="/produits/${p.slug}/">\n  <div class="card-img"><img src="${p.image}" alt="${(p.name||'').replace(/"/g,'&quot;')}" loading="lazy" width="400" height="400"></div>\n  <div class="card-info">\n    <div class="card-name">${p.name}</div>\n    <div class="card-price">${price}</div>\n  </div>\n</a>`;
+      }
+
+      function patchHTML(html, products) {
+        const cards = products.map(cardHTML).join('\n');
+        return html
+          .replace(/(<div id="products-grid"[^>]*>)[\s\S]*?(<\/div>\s*\n\n<\/section>)/,
+            (_, open, close) => `${open}\n${cards}\n</div>\n\n</section>`)
+          .replace(/("numberOfItems"\s*:\s*)\d+/, `$1${products.length}`);
+      }
+
+      window.runCategoryRegen = async function () {
+        const { pat, repo } = creds();
+        if (!pat || !repo) { alert('Configure les credentials GitHub (PAT + Repository) dans localStorage.'); return; }
+
+        const btn   = document.getElementById('regen-main-btn');
+        const icon  = document.getElementById('regen-main-icon');
+        const label = document.getElementById('regen-main-label');
+        const sum   = document.getElementById('regen-summary');
+
+        btn.disabled = true;
+        icon.textContent = '⏳';
+        label.textContent = 'Régénération en cours…';
+        document.getElementById('regen-log-lines').innerHTML = '';
+        sum.style.display = 'none';
+
+        // 1 fetch index + 6×(fetch+commit) = 13 steps
+        initProg(13);
+        renderGrid(null);
+        CATS.forEach(c => setCat(c.id, 'wait'));
+
+        let errors = 0;
+        try {
+          // ① products-index.json — source de vérité avec les bons categoryIds
+          log('📥 Chargement de products-index.json…', 'info');
+          const idxFile = await ghGet('products-index.json');
+          const index   = JSON.parse(b64(idxFile.content));
+          log(`✅ products-index.json — ${index.products?.length||0} produits`, 'ok');
+          step();
+
+          const byCat = {};
+          (index.products||[]).filter(p=>p.active!==false).forEach(p=>{
+            if(!byCat[p.categoryId]) byCat[p.categoryId]=[];
+            byCat[p.categoryId].push(p);
+          });
+          renderGrid(byCat);
+          log(`ℹ️ ${Object.entries(byCat).map(([k,v])=>k+': '+v.length).join(' | ')}`, 'info');
+
+          // ② Patch each category page
+          for (const cat of CATS) {
+            setCat(cat.id, 'run');
+            const prods = byCat[cat.id] || [];
+            log(`📄 ${cat.label} — ${prods.length} produit(s)…`, 'info');
+            try {
+              const f = await ghGet(cat.path);
+              step();
+              const newHTML = patchHTML(b64(f.content), prods);
+              await ghPut(cat.path, newHTML, `⚡ Regen ${cat.id} — ${prods.length} produits`, f.sha);
+              step();
+              log(`✅ ${cat.label} → OK`, 'ok');
+              setCat(cat.id, 'ok');
+            } catch(e) {
+              errors++;
+              step(); step();
+              log(`❌ ${cat.label} → ${e.message}`, 'err');
+              setCat(cat.id, 'err');
+            }
+          }
+
+          document.getElementById('regen-progress-bar').style.width = '100%';
+          sum.style.cssText = errors===0
+            ? 'display:block;border-radius:10px;padding:14px 18px;font-size:14px;font-weight:600;margin-bottom:16px;background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0'
+            : 'display:block;border-radius:10px;padding:14px 18px;font-size:14px;font-weight:600;margin-bottom:16px;background:#fef0f3;color:#e8194b;border:1.5px solid #fbd5df';
+          sum.textContent = errors===0
+            ? `✅ Terminé — ${index.products?.length||0} produits sur 6 catégories. Déploiement GitHub Pages démarré.`
+            : `⚠️ Terminé avec ${errors} erreur(s). Voir le log.`;
+          log(errors===0 ? '🎉 Tout est bon !' : `⚠️ ${errors} erreur(s).`, errors===0?'ok':'warn');
+
+        } catch(e) {
+          log(`❌ ERREUR: ${e.message}`, 'err');
+          sum.style.cssText = 'display:block;border-radius:10px;padding:14px 18px;font-size:14px;font-weight:600;margin-bottom:16px;background:#fef0f3;color:#e8194b;border:1.5px solid #fbd5df';
+          sum.textContent = `❌ ${e.message}`;
+        } finally {
+          btn.disabled = false;
+          icon.textContent = '🔄';
+          label.textContent = 'Régénérer les catégories';
+        }
+      };
+
+      document.addEventListener('click', e => {
+        if (e.target.closest('[data-tab="regen"]')) renderGrid(null);
+      });
+    })();
+
     document.getElementById("btn-logout").addEventListener("click", () => { localStorage.removeItem("nova_is_admin"); signOut(auth); });
 
     // ── Sidebar navigation ────────────────────────────────────────────────────────
