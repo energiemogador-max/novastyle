@@ -1,0 +1,38 @@
+{
+  "slug": "nova-style-miroir-de-salon-et-dressing-rital-nova-style",
+  "name": "Miroir de salon et dressing RITAL| Nova Style ",
+  "categoryId": "salon",
+  "category": "Salon & Dressing",
+  "active": true,
+  "images": [
+    "/images/nova-style-miroir-de-salon-et-dressing-rital-nova-style/1.webp",
+    "/images/nova-style-miroir-de-salon-et-dressing-rital-nova-style/2.webp",
+    "/images/nova-style-miroir-de-salon-et-dressing-rital-nova-style/3.webp",
+    "/images/nova-style-miroir-de-salon-et-dressing-rital-nova-style/4.webp",
+    "/images/nova-style-miroir-de-salon-et-dressing-rital-nova-style/5.webp"
+  ],
+  "description": "&lt;h1&gt;Nova Style : Miroir RITAL — Grand Miroir de Sol Sculptural en Tissu Bouclé&lt;/h1&gt;<div><br></div><div>&lt;h2&gt;Le miroir statement qui redéfinit votre intérieur&lt;/h2&gt;</div><div>&lt;p&gt;</div><div>&nbsp; Le Miroir RITAL Nova Style est notre grand miroir de sol sculptural, entièrement recouvert de tissu bouclé moelleux. Sa forme organique et ondulante, avec ses courbes généreuses et asymétriques, en fait une pièce unique qui transforme instantanément n'importe quelle pièce. Bien plus qu'un miroir, le RITAL est une sculpture décorative à part entière.</div><div>&lt;/p&gt;</div><div><br></div><div>&lt;h2&gt;Une forme sculpturale unique — Miroir de Sol Bouclé Grand Format&lt;/h2&gt;</div><div>&lt;p&gt;</div><div>&nbsp; Le RITAL se pose directement au sol et s'appuie contre le mur sans aucune fixation. Son cadre épais et arrondi, recouvert d'un tissu bouclé doux au toucher, apporte chaleur, volume et caractère à votre salon, chambre ou dressing. Ses dimensions généreuses — 80 cm de large pour 180 cm de hauteur — en font un miroir pleine longueur idéal pour les grands espaces.</div><div>&lt;/p&gt;</div><div><br></div><div>&lt;h2&gt;Disponible en Plusieurs Coloris — Miroir Bouclé Sur Mesure au Maroc&lt;/h2&gt;</div><div>&lt;p&gt;</div><div>&nbsp; Le RITAL est disponible en plusieurs coloris pour s'adapter à tous les styles d'intérieur : blanc cassé, blanc pur, beige naturel, rose fuchsia et d'autres teintes sur demande. Que votre déco soit minimaliste, scandinave, maximale ou colorée, le RITAL s'impose avec élégance.</div><div>&lt;/p&gt;</div><div><br></div><div>&lt;h2&gt;Qualité de Fabrication — Verre AGC Belgique 6mm, Fabriqué à Casablanca&lt;/h2&gt;</div><div>&lt;p&gt;</div><div>&nbsp; Fabriqué avec du verre AGC Belgique 6mm, le Miroir RITAL offre une surface de réflexion d'une qualité exceptionnelle. Le cadre est entièrement recouvert d'un tissu bouclé haute qualité, doux et résistant. Chaque pièce est fabriquée sur mesure dans notre atelier de Casablanca. Garantie 3 ans Nova Style contre la corrosion.</div><div>&lt;/p&gt;</div><div><br></div><div>&lt;h2&gt;</div>",
+  "seo": {
+    "title": "Miroir de salon et dressing RITAL| Nova Style ",
+    "description": "Nova Style : Miroir RITAL — Grand miroir de sol sculptural en tissu bouclé, fabriqué sur mesure à Casablanca."
+  },
+  "axes": {
+    "order": [
+      "Dimension"
+    ],
+    "options": {
+      "Dimension": [
+        "L 74 x H 170 cm"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "L 74 x H 170 cm"
+      },
+      "price": 1750,
+      "sku": ""
+    }
+  ]
+}
