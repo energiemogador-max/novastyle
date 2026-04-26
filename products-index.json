@@ -1338,6 +1338,55 @@
       },
       "hasVariants": true,
       "variantCount": 1
+    },
+    {
+      "slug": "nova-style-miroir-salle-de-bain-marrakech",
+      "name": "Miroir Salle de Bain Marrakech",
+      "categoryId": "sdb-premium",
+      "category": "Miroirs SDB Premium",
+      "image": "/images/nova-style-miroir-salle-de-bain-marrakech/1.webp",
+      "images": [
+        "/images/nova-style-miroir-salle-de-bain-marrakech/1.webp"
+      ],
+      "active": true,
+      "price": {
+        "min": 880,
+        "max": 2145
+      },
+      "axes": {
+        "order": [
+          "Dimension",
+          "LED",
+          "Installation"
+        ],
+        "options": {
+          "Dimension": [
+            "80 x 53 cm",
+            "110 x 73 cm",
+            "120 x 80 cm",
+            "140 x 93 cm",
+            "150 x 98 cm",
+            "190 x 126 cm"
+          ],
+          "LED": [
+            "Sans LED",
+            "6000K Blanc pur",
+            "4000K blanc lumière du jour",
+            "3000K Jaune",
+            "2000k Doré"
+          ],
+          "Installation": [
+            "Sans Installation",
+            "Avec Installation"
+          ]
+        }
+      },
+      "seo": {
+        "title": "Miroir Salle de Bain Marrakech",
+        "description": "Nova Style : Miroir salle de bain Marrakech — Miroir LED organique anti-buée sur mesure. Rétroéclairage chaud, Livraison et installation à Marrakech,."
+      },
+      "hasVariants": true,
+      "variantCount": 60
     }
   ]
 }
