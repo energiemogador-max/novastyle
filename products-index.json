@@ -1089,6 +1089,41 @@
       },
       "hasVariants": true,
       "variantCount": 40
+    },
+    {
+      "slug": "nova-style-miroir-de-salon-et-dressing-rital-nova-style",
+      "name": "Miroir de salon et dressing RITAL| Nova Style ",
+      "categoryId": "salon",
+      "category": "Salon & Dressing",
+      "image": "/images/nova-style-miroir-de-salon-et-dressing-rital-nova-style/1.webp",
+      "images": [
+        "/images/nova-style-miroir-de-salon-et-dressing-rital-nova-style/1.webp",
+        "/images/nova-style-miroir-de-salon-et-dressing-rital-nova-style/2.webp",
+        "/images/nova-style-miroir-de-salon-et-dressing-rital-nova-style/3.webp",
+        "/images/nova-style-miroir-de-salon-et-dressing-rital-nova-style/4.webp",
+        "/images/nova-style-miroir-de-salon-et-dressing-rital-nova-style/5.webp"
+      ],
+      "active": true,
+      "price": {
+        "min": 1750,
+        "max": 1750
+      },
+      "axes": {
+        "order": [
+          "Dimension"
+        ],
+        "options": {
+          "Dimension": [
+            "L 74 x H 170 cm"
+          ]
+        }
+      },
+      "seo": {
+        "title": "Miroir de salon et dressing RITAL| Nova Style ",
+        "description": "Nova Style : Miroir RITAL — Grand miroir de sol sculptural en tissu bouclé, fabriqué sur mesure à Casablanca."
+      },
+      "hasVariants": true,
+      "variantCount": 1
     }
   ]
 }
