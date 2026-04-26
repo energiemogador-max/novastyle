@@ -1229,6 +1229,38 @@
       },
       "hasVariants": true,
       "variantCount": 24
+    },
+    {
+      "slug": "nova-style-miroir-de-salon-teddy-duo-de-nova-style",
+      "name": "Miroir de salon TEDDY DUO de Nova Style",
+      "categoryId": "salon",
+      "category": "Salon & Dressing",
+      "image": "/images/nova-style-miroir-de-salon-teddy-duo-de-nova-style/1.webp",
+      "images": [
+        "/images/nova-style-miroir-de-salon-teddy-duo-de-nova-style/1.webp",
+        "/images/nova-style-miroir-de-salon-teddy-duo-de-nova-style/2.webp"
+      ],
+      "active": true,
+      "price": {
+        "min": 1850,
+        "max": 1850
+      },
+      "axes": {
+        "order": [
+          "Dimension"
+        ],
+        "options": {
+          "Dimension": [
+            "TEDDY FLOOR (grand miroir) L 80 cm × H 180 cm TEDDY OVAL (petit miroir) L 55 cm × H 65 cm"
+          ]
+        }
+      },
+      "seo": {
+        "title": "Miroir de salon TEDDY DUO de Nova Style",
+        "description": "Miroir TEDDY DUO Set de deux miroirs sculpturaux en tissu bouclé, fabriqués sur mesure à Casablanca. Grand miroir de sol TEDDY FLOOR et petit miroir TEDDY OVAL"
+      },
+      "hasVariants": true,
+      "variantCount": 1
     }
   ]
 }
