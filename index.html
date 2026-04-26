@@ -136,8 +136,11 @@
 
 /* Social card grid responsive */
 @media (max-width: 700px) {
-  .social-grid-4 { grid-template-columns: repeat(2,1fr) !important; gap: 8px !important; }
-  .social-grid-4 > a { padding: 10px !important; gap: 6px !important; }
+  .social-section-wrap { padding: 0 12px !important; }
+  .social-inner-card  { padding: 16px 14px !important; }
+  .social-grid-4 { grid-template-columns: repeat(2,1fr) !important; gap: 8px !important; max-width:100% !important; margin:0 !important; width:100% !important; box-sizing:border-box; }
+  .social-grid-4 > a { padding: 10px !important; gap: 6px !important; align-items:center !important; text-align:center !important; }
+  .social-grid-4 > a > div:first-child { justify-content:center !important; }
   .social-grid-4 > a > div:first-child > div:first-child { width:28px !important; height:28px !important; }
 }
 
@@ -210,8 +213,8 @@
 </section>
 
 <!-- Social proof card -->
-<div style="max-width:1340px;margin:24px auto 32px;padding:0 20px">
-  <div style="background:linear-gradient(135deg,#fafafa 0%,#f5f0ff 100%);border:1.5px solid #e8e0f0;border-radius:16px;padding:24px 28px">
+<div class="social-section-wrap" style="max-width:1340px;margin:24px auto 32px;padding:0 20px">
+  <div class="social-inner-card" style="background:linear-gradient(135deg,#fafafa 0%,#f5f0ff 100%);border:1.5px solid #e8e0f0;border-radius:16px;padding:24px 28px">
 
     <!-- Header row -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
