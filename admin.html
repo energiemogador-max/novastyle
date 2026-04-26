@@ -4014,7 +4014,7 @@
 
         let errors = 0;
         try {
-          // ① Load products-index.json (canonical source — correct categoryIds)
+          // ① Load products-index.json — source of truth (73 known validated products)
           regenLog('📥 Chargement de products-index.json…', 'info');
           const idxFile = await regenGhGet('products-index.json');
           const index   = JSON.parse(regenB64(idxFile.content));
@@ -4022,15 +4022,16 @@
           regenLog(`✅ products-index.json — ${index.products?.length || 0} produits`, 'ok');
           regenStep();
 
-          // ② Group by categoryId for HTML patching (no re-commit needed — index unchanged)
+          // ② Group active products by categoryId for HTML patching
           const byCat = {};
           (index.products || []).filter(p => p.active !== false).forEach(p => {
             if (!byCat[p.categoryId]) byCat[p.categoryId] = [];
             byCat[p.categoryId].push(p);
           });
           regenRenderGrid(byCat);
-          regenLog(`ℹ️ Catégories détectées : ${Object.keys(byCat).join(', ')}`, 'info');
-          regenStep(); // consume the step we'd have used for committing index
+          regenLog(`ℹ️ Catégories : ${Object.entries(byCat).map(([k,v])=>k+':'+v.length).join(', ')}`, 'info');
+          regenStep();
+          regenLog(`ℹ️ Catégories : ${Object.entries(byCat).map(([k,v])=>k+':'+v.length).join(', ')}`, 'info');
 
           // ③ Patch each category page
           for (const cat of REGEN_CATS) {
@@ -6413,6 +6414,8 @@
            <a href="/produits/${slug}/" target="_blank" style="color:#2563eb">↗ Voir la page produit</a>`);
         _allAdminProducts[slug] = newEntry;
         renderProductTable();
+        // Regenerate category pages in background so card updates immediately
+        regenCategoryPages(ghToken).catch(() => {});
       } catch (e) {
         console.error(e);
         setStatus('#e8194b', `❌ ${e.message}`);
@@ -6421,6 +6424,54 @@
         saveBtn.textContent = oldText;
       }
     };
+
+    // ── Shared: silently regenerate category pages from products-index.json ────
+    async function regenCategoryPages(ghToken) {
+      if (!ghToken) return;
+      const CATS = [
+        { id: 'sdb-premium',   path: 'categorie/sdb-premium/index.html' },
+        { id: 'sdb-essentiel', path: 'categorie/sdb-essentiel/index.html' },
+        { id: 'salon',         path: 'categorie/salon/index.html' },
+        { id: 'consoles',      path: 'categorie/consoles/index.html' },
+        { id: 'tables',        path: 'categorie/tables/index.html' },
+        { id: 'douches',       path: 'categorie/douches/index.html' },
+      ];
+      const idxF = await ghReadFile(ghToken, 'products-index.json');
+      const idx  = JSON.parse(idxF.content);
+      const byCat = {};
+      (idx.products || []).filter(p => p.active !== false).forEach(p => {
+        if (!byCat[p.categoryId]) byCat[p.categoryId] = [];
+        byCat[p.categoryId].push(p);
+      });
+      const card = (p) => {
+        const price = p.price?.min != null
+          ? 'À partir de ' + Math.round(p.price.min).toLocaleString('fr-FR') + ' MAD' : '';
+        const alt = (p.name || '').replace(/"/g, '&quot;');
+        return `<a class="product-card" href="/produits/${p.slug}/">
+  <div class="card-img"><img src="${p.image}" alt="${alt}" loading="lazy" width="400" height="400"></div>
+  <div class="card-info">
+    <div class="card-name">${p.name}</div>
+    <div class="card-price">${price}</div>
+  </div>
+</a>`;
+      };
+      for (const cat of CATS) {
+        try {
+          const f = await ghReadFile(ghToken, cat.path);
+          if (!f.content) continue;
+          const prods = byCat[cat.id] || [];
+          const cards = prods.map(card).join('\n');
+          let html = f.content
+            .replace(
+              /(<div id="products-grid"[^>]*>)[\s\S]*?(<\/div>\s*\n\n<\/section>)/,
+              (_, open, close) => `${open}\n${cards}\n</div>\n\n</section>`
+            )
+            .replace(/("numberOfItems"\s*:\s*)\d+/, `$1${prods.length}`);
+          await ghPutFile(ghToken, cat.path, html,
+            `⚡ Regen ${cat.id} — ${prods.length} produits`, f.sha);
+        } catch {}
+      }
+    }
 
     // ── DELETE: remove from index, JSON, page, Firebase ──────────────────
     window.deleteProduct = async function () {
@@ -6455,6 +6506,8 @@
         delete _allAdminProducts[slug];
         window.closeProductModal();
         renderProductTable();
+        // Remove card from category pages
+        regenCategoryPages(ghToken).catch(() => {});
       } catch (e) {
         status.style.color = '#e8194b';
         status.textContent = `Erreur suppression: ${e.message}`;
@@ -6489,6 +6542,8 @@
             method: 'PUT', body: JSON.stringify(active)
           });
         }
+      // Regenerate category pages (product may have been hidden/shown)
+      regenCategoryPages(ghToken).catch(() => {});
       } catch(e) { console.warn('toggleActive failed:', e); }
     };
 

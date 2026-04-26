@@ -1029,9 +1029,12 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
         setTask("index", { status: "error", detail: e.message });
       }
 
-      // 5. Regenerate category pages static HTML so new product appears immediately
+      // 5. Regenerate category pages from products-index.json (contains this new product)
       setTask("regen", { status: "running", detail: "" });
       try {
+        const regenTok = token || localStorage.getItem("nova_gh_pat") || "";
+        if (!regenTok) throw new Error("Token GitHub manquant");
+
         const REGEN_CATS = [
           { id: "sdb-premium",   path: "categorie/sdb-premium/index.html" },
           { id: "sdb-essentiel", path: "categorie/sdb-essentiel/index.html" },
@@ -1040,19 +1043,20 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
           { id: "tables",        path: "categorie/tables/index.html" },
           { id: "douches",       path: "categorie/douches/index.html" },
         ];
-        const regenTok = token || localStorage.getItem("nova_gh_pat") || "";
-        if (!regenTok) throw new Error("Token GitHub manquant pour la régénération");
 
-        // Fetch the just-committed products-index.json
+        const ghHeaders = { Authorization: `token ${regenTok}`, Accept: "application/vnd.github+json" };
+
+        // Read the just-committed products-index.json (already has the new product)
         const idxRes = await fetch(
           `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/products-index.json`,
-          { headers: { Authorization: `token ${regenTok}`, Accept: "application/vnd.github+json" } }
+          { headers: ghHeaders }
         );
         if (!idxRes.ok) throw new Error(`Lecture products-index.json : ${idxRes.status}`);
         const idxFile = await idxRes.json();
-        const idxBinary = atob(idxFile.content.replace(/\n/g, ""));
-        const idxBytes = new Uint8Array(idxBinary.length);
-        for (let i = 0; i < idxBinary.length; i++) idxBytes[i] = idxBinary.charCodeAt(i);
+        const idxBin  = atob(idxFile.content.replace(/
+/g, ""));
+        const idxBytes = new Uint8Array(idxBin.length);
+        for (let i = 0; i < idxBin.length; i++) idxBytes[i] = idxBin.charCodeAt(i);
         const freshIndex = JSON.parse(new TextDecoder("utf-8").decode(idxBytes));
 
         // Group active products by categoryId
@@ -1062,53 +1066,59 @@ function StepExport({ info, axesConfig, prices, allCombos, onBack }) {
           byCat[p.categoryId].push(p);
         });
 
-        // Build a product card (same as category-loader.js)
+        // Build product card HTML
         const cardHTML = (p) => {
-          const price = (p.price?.min != null)
+          const price = p.price?.min != null
             ? "À partir de " + Math.round(p.price.min).toLocaleString("fr-FR") + " MAD" : "";
           return `<a class="product-card" href="/produits/${p.slug}/">\n  <div class="card-img"><img src="${p.image}" alt="${p.name.replace(/"/g, "&quot;")}" loading="lazy" width="400" height="400"></div>\n  <div class="card-info">\n    <div class="card-name">${p.name}</div>\n    <div class="card-price">${price}</div>\n  </div>\n</a>`;
         };
 
+        // Patch each category page
         let regenOk = 0, regenFail = 0;
         for (const cat of REGEN_CATS) {
           try {
             const catRes = await fetch(
               `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${cat.path}`,
-              { headers: { Authorization: `token ${regenTok}`, Accept: "application/vnd.github+json" } }
+              { headers: ghHeaders }
             );
-            if (!catRes.ok) throw new Error(`${catRes.status}`);
-            const catFile = await catRes.json();
-            const catBin = atob(catFile.content.replace(/\n/g, ""));
+            if (!catRes.ok) throw new Error(catRes.status);
+            const catFile  = await catRes.json();
+            const catBin   = atob(catFile.content.replace(/
+/g, ""));
             const catBytes = new Uint8Array(catBin.length);
             for (let i = 0; i < catBin.length; i++) catBytes[i] = catBin.charCodeAt(i);
             let catHTML = new TextDecoder("utf-8").decode(catBytes);
 
-            // Replace static product cards inside #products-grid
             const catProds = byCat[cat.id] || [];
-            const cards = catProds.map(cardHTML).join("\n");
+            const cards    = catProds.map(cardHTML).join("\n");
             catHTML = catHTML.replace(
-              /(<div id="products-grid"[^>]*>)([\s\S]*?)(<\/div>\s*\n\n<\/section>)/,
-              (_, open, _old, close) => `${open}\n${cards}\n</div>\n\n</section>`
+              /(<div id="products-grid"[^>]*>)([\s\S]*?)(<\/div>\s*
+
+<\/section>)/,
+              (_, open) => `${open}\n${cards}\n</div>\n\n</section>`
             );
             catHTML = catHTML.replace(/("numberOfItems"\s*:\s*)\d+/, `$1${catProds.length}`);
 
             const newB64 = btoa(unescape(encodeURIComponent(catHTML)));
-            await fetch(
+            const putRes = await fetch(
               `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${cat.path}`,
               {
-                method: "PUT",
-                headers: { Authorization: `token ${regenTok}`, "Content-Type": "application/json", Accept: "application/vnd.github+json" },
-                body: JSON.stringify({ message: `⚡ Regen ${cat.id} after adding ${info.slug}`, content: newB64, sha: catFile.sha, branch: GH_BRANCH })
+                method: "PUT", headers: { ...ghHeaders, "Content-Type": "application/json" },
+                body: JSON.stringify({ message: `⚡ Regen ${cat.id} — ${catProds.length} produits`, content: newB64, sha: catFile.sha, branch: GH_BRANCH })
               }
             );
+            if (!putRes.ok) throw new Error(putRes.status);
             regenOk++;
           } catch { regenFail++; }
         }
-        if (regenFail === 0) {
-          setTask("regen", { status: "ok", detail: `${regenOk} pages mises à jour` });
-        } else {
-          setTask("regen", { status: "error", detail: `${regenOk} ok, ${regenFail} erreur(s)` });
-        }
+
+        setTask("regen", {
+          status: regenFail === 0 ? "ok" : "error",
+          detail: regenFail === 0
+            ? `${regenOk} pages mises à jour — ${freshIndex.products?.length || 0} produits`
+            : `${regenOk} ok, ${regenFail} erreur(s)`
+        });
+        window.__novaIndexData = null;
       } catch(e) {
         setTask("regen", { status: "error", detail: e.message });
       }
