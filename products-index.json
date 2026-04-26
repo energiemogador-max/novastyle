@@ -779,33 +779,6 @@
       "variantCount": 32
     },
     {
-      "slug": "deco-miroir-mural-nova-style-miroir-rital",
-      "name": "Deco miroir mural Nova Style : Miroir RITAL",
-      "categoryId": "salon",
-      "category": "Salon & Dressing",
-      "image": "/images/deco-miroir-mural-nova-style-miroir-rital/1.webp",
-      "images": [
-        "/images/deco-miroir-mural-nova-style-miroir-rital/1.webp"
-      ],
-      "active": true,
-      "price": {
-        "min": 1650,
-        "max": 1650
-      },
-      "axes": {
-        "order": [
-          "Dimension"
-        ],
-        "options": {
-          "Dimension": [
-            "L 74 x H 170 cm"
-          ]
-        }
-      },
-      "hasVariants": true,
-      "variantCount": 1
-    },
-    {
       "id": "douche-italienne-en-forme-droite",
       "slug": "douche-italienne-en-forme-droite",
       "name": "Douche italienne en forme droite",
