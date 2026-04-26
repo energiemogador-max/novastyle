@@ -3805,7 +3805,7 @@
       if (isLocked()) { updAttempts(); return; }
       if (!em.value.trim() || !pw.value) { er.textContent = "Remplissez tous les champs."; return; }
       bt.disabled = true; bt.textContent = "Connexion…";
-      try { await signInWithEmailAndPassword(auth, em.value.trim(), pw.value); clrFails(); localStorage.setItem("nova_is_admin","1"); pw.value = ""; }
+      try { await setPersistence(auth, browserLocalPersistence); await signInWithEmailAndPassword(auth, em.value.trim(), pw.value); clrFails(); localStorage.setItem("nova_is_admin","1"); pw.value = ""; }
       catch { recFail(); bt.disabled = false; bt.textContent = "Se connecter"; er.textContent = "Email ou mot de passe incorrect."; }
     }
     document.getElementById("btn-login").addEventListener("click", doLogin);
