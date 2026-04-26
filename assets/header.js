@@ -73,7 +73,18 @@
 '}\n' +
 '</style>';
 
+  function injectFavicon() {
+    if (!document.querySelector('link[rel~="icon"]')) {
+      var link = document.createElement("link");
+      link.rel  = "icon";
+      link.type = "image/png";
+      link.href = "/assets/favicon.png";
+      document.head.appendChild(link);
+    }
+  }
+
   function inject() {
+    injectFavicon();
     var frag = document.createRange().createContextualFragment(html);
     document.body.insertBefore(frag, document.body.firstChild);
     init();
