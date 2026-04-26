@@ -142,8 +142,8 @@
       ],
       "active": true,
       "price": {
-        "min": 0,
-        "max": 0
+        "min": 3500,
+        "max": 3500
       },
       "axes": {
         "order": [],
