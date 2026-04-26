@@ -133,8 +133,8 @@
     {
       "slug": "nova-style-ensemble-meuble-et-miroir-retroeclaire",
       "name": "Nova Style : Ensemble Meuble et Miroir rétroéclairé",
-      "categoryId": "salon",
-      "category": "Salon & Dressing",
+      "categoryId": "consoles",
+      "category": "Consoles & Entrée",
       "image": "/images/nova-style-ensemble-meuble-et-miroir-retroeclaire/1.webp",
       "images": [
         "/images/nova-style-ensemble-meuble-et-miroir-retroeclaire/1.webp",
@@ -142,8 +142,8 @@
       ],
       "active": true,
       "price": {
-        "min": 4500,
-        "max": 4500
+        "min": 0,
+        "max": 0
       },
       "axes": {
         "order": [],
