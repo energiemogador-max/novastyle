@@ -3711,12 +3711,12 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, set, update, remove, get, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = { apiKey: "AIzaSyB2RjmI_KcLc5j9mcmcyAjdCQjrBNlQjlc", authDomain: "nova-9ac76.firebaseapp.com", projectId: "nova-9ac76", databaseURL: "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app", storageBucket: "nova-9ac76.firebasestorage.app", messagingSenderId: "645613145752", appId: "1:645613145752:web:775e6f8ffce64ae12c4aed" };
     const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getDatabase(app);
     // Avoid top-level await (some browsers/environments fail silently and the page appears stuck on "Connexion Firebase…")
-    setPersistence(auth, browserSessionPersistence).catch(() => { });
+    setPersistence(auth, browserLocalPersistence).catch(() => { });
 
     const DB_REST = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
 

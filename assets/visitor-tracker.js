@@ -28,21 +28,47 @@ function getBrowser(){const u=navigator.userAgent;if(u.includes("Chrome")&&!u.in
 function getReferrer(){const r=document.referrer;if(!r)return"Direct";if(r.includes("google"))return"Google";if(r.includes("facebook")||r.includes("fb."))return"Facebook";if(r.includes("instagram"))return"Instagram";if(r.includes("whatsapp"))return"WhatsApp";try{return new URL(r).hostname.replace("www.","");}catch{return"Autre";}}
 function getCartCount(){try{const i=JSON.parse(localStorage.getItem("nova_style_cart")||"[]");return Array.isArray(i)?i.reduce((s,x)=>s+(x.quantity||1),0):0;}catch{return 0;}}
 
-// ── IP Geolocation: cached 24h to avoid hammering the API ──
-// Uses ipwho.is — free, CORS-enabled, no API key required.
+// ── IP Geolocation: cached 24h, tries 3 APIs in sequence until one succeeds ──
 async function getLocation(){
   const KEY="nova_geo_cache",TTL=86400000;
   try{
     const cached=JSON.parse(localStorage.getItem(KEY)||"null");
     if(cached&&Date.now()-cached.ts<TTL) return cached.data;
-    const res=await fetch("https://ipwho.is/",{signal:AbortSignal.timeout(4000)});
-    if(!res.ok) return null;
-    const j=await res.json();
-    if(!j.success) return null;
-    const data={ip:j.ip||"",city:j.city||"",country:j.country||"",country_code:j.country_code||""};
-    localStorage.setItem(KEY,JSON.stringify({ts:Date.now(),data}));
-    return data;
-  }catch{return null;}
+  }catch{}
+
+  // Try each provider in order; return first success
+  const providers=[
+    async ()=>{
+      const r=await fetch("https://ipwho.is/",{signal:AbortSignal.timeout(5000)});
+      if(!r.ok) throw 0;
+      const j=await r.json();
+      if(!j.success||!j.city) throw 0;
+      return {ip:j.ip||"",city:j.city||"",country:j.country||"",country_code:j.country_code||""};
+    },
+    async ()=>{
+      const r=await fetch("https://freeipapi.com/api/json",{signal:AbortSignal.timeout(5000)});
+      if(!r.ok) throw 0;
+      const j=await r.json();
+      if(!j.cityName) throw 0;
+      return {ip:j.ipAddress||"",city:j.cityName||"",country:j.countryName||"",country_code:j.countryCode||""};
+    },
+    async ()=>{
+      const r=await fetch("https://ipapi.co/json/",{signal:AbortSignal.timeout(5000)});
+      if(!r.ok) throw 0;
+      const j=await r.json();
+      if(!j.city) throw 0;
+      return {ip:j.ip||"",city:j.city||"",country:j.country_name||"",country_code:j.country_code||""};
+    },
+  ];
+
+  for(const fn of providers){
+    try{
+      const data=await fn();
+      try{localStorage.setItem("nova_geo_cache",JSON.stringify({ts:Date.now(),data}));}catch{}
+      return data;
+    }catch{}
+  }
+  return null;
 }
 
 // ── Firebase refs ──
