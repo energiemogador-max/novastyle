@@ -1,0 +1,35 @@
+{
+  "slug": "nova-style-miroir-de-salon-teddy-duo-de-nova-style",
+  "name": "Miroir de salon TEDDY DUO de Nova Style",
+  "categoryId": "salon",
+  "category": "Salon & Dressing",
+  "active": true,
+  "images": [
+    "/images/nova-style-miroir-de-salon-teddy-duo-de-nova-style/1.webp",
+    "/images/nova-style-miroir-de-salon-teddy-duo-de-nova-style/2.webp"
+  ],
+  "description": "<h1>Nova Style : Miroir TEDDY DUO — Set de Deux Miroirs Sculpturaux en Tissu Bouclé</h1>\n\n<h2>Le design sculptural qui transforme votre intérieur</h2>\n<p>\n  Le Miroir TEDDY DUO Nova Style est notre création la plus distinctive : un ensemble de deux miroirs sculpturaux entièrement recouverts de tissu bouclé moelleux, conçus pour se compléter et créer un véritable point focal dans votre intérieur. Bien plus qu'un miroir, le TEDDY DUO est une œuvre d'art décorative à part entière.\n</p>\n\n<h2>TEDDY FLOOR — Le Grand Miroir de Sol Sculptural</h2>\n<p>\n  De grand format, le TEDDY FLOOR se pose directement au sol et s'appuie contre le mur sans fixation. Sa forme organique et ondulante, avec ses courbes généreuses et asymétriques, transforme instantanément n'importe quelle pièce. Son cadre épais et arrondi, recouvert d'un tissu bouclé doux au toucher, apporte chaleur, volume et caractère à votre salon, chambre ou dressing.\n</p>\n\n<h2>TEDDY OVAL — Le Petit Miroir Sculptural d'Appoint</h2>\n<p>\n  Posé devant le grand miroir, le TEDDY OVAL complète la composition avec sa forme ovale-boucle unique. Utilisable seul ou en duo, il peut également servir de miroir d'appoint dans une entrée, sur une commode ou dans un dressing. Ensemble, les deux miroirs forment une composition artistique qui fait de votre intérieur une véritable galerie.\n</p>\n\n<h2>Disponible en Plusieurs Coloris — Miroir Bouclé Sur Mesure au Maroc</h2>\n<p>\n  Le TEDDY DUO est disponible en plusieurs coloris pour s'adapter à tous les styles d'intérieur : blanc cassé, blanc pur, beige naturel, rose fuchsia et d'autres teintes sur demande. Que votre déco soit minimaliste, scandinave, maximale ou colorée, le TEDDY DUO trouve sa place avec élégance.\n</p>\n\n<h2>Qualité de Fabrication — Verre AGC Belgique 6mm, Fabriqué à Casablanca</h2>\n<p>\n  Fabriqués avec du verre AGC Belgique 6mm, les miroirs TEDDY DUO offrent une surface de réflexion d'une qualité exceptionnelle. Le cadre est entièrement recouvert d'un tissu bouclé haute qualité, doux et résistant. Chaque pièce est fabriquée sur mesure dans notre atelier de Casablanca. Garantie 3 ans Nova Style contre la corrosion.\n</p>\n\n<h2>Caractéristiques Techniques du Miroir TEDDY DUO</h2>\n<ul>\n  <li>Verre AGC Belgique 6mm haute qualité</li>\n  <li>Cadre entièrement recouvert de tissu bouclé (teddy)</li>\n  <li>Disponible en plusieurs coloris : blanc cassé, blanc, beige, rose fuchsia…</li>\n  <li>Traitement anticorrosion</li>\n  <li>Garantie 3 ans contre la corrosion</li>\n  <li>Miroirs de sol — pose debout sans fixation murale</li>\n  <li>Fabrication 100% sur mesure à Casablanca</li>\n  <li>Livraison partout au Maroc</li>\n</ul>\n\n<h2>Livraison et Installation du Miroir Bouclé partout au Maroc</h2>\n<p>\n  Le Miroir TEDDY DUO Nova Style est fabriqué dans notre atelier de Casablanca puis livré partout au Maroc — Rabat, Marrakech, Tanger, Fès, Agadir, Tétouan et plus. L'installation est disponible en option à Casablanca et sa région (Mohammedia, Bouskoura, Dar Bouazza, Ain Diab). Délai de livraison : 5 à 10 jours ouvrables.\n</p>\n<p>\n  Pour un coloris personnalisé ou des dimensions sur mesure, contactez Nova Style sur WhatsApp pour un devis gratuit.\n</p>",
+  "seo": {
+    "title": "Miroir de salon TEDDY DUO de Nova Style",
+    "description": "Miroir TEDDY DUO Set de deux miroirs sculpturaux en tissu bouclé, fabriqués sur mesure à Casablanca. Grand miroir de sol TEDDY FLOOR et petit miroir TEDDY OVAL"
+  },
+  "axes": {
+    "order": [
+      "Dimension"
+    ],
+    "options": {
+      "Dimension": [
+        "TEDDY FLOOR (grand miroir) L 80 cm × H 180 cm TEDDY OVAL (petit miroir) L 55 cm × H 65 cm"
+      ]
+    }
+  },
+  "variants": [
+    {
+      "axes": {
+        "Dimension": "TEDDY FLOOR (grand miroir) L 80 cm × H 180 cm TEDDY OVAL (petit miroir) L 55 cm × H 65 cm"
+      },
+      "price": 1850,
+      "sku": ""
+    }
+  ]
+}
