@@ -199,7 +199,7 @@
 
 <header class="site-header">
   <a href="/" class="brand">
-    <img src="/assets/logo.png" alt="Nova Style" class="logo">
+    <img src="/assets/favicon.png" alt="Nova Style" class="logo">
     <div>
       <div class="brand-name">Nova Style</div>
       <div class="tagline">La beauté dans le miroir</div>
@@ -249,7 +249,7 @@
       const price = p.price?.min != null ? 'À partir de ' + fmtPrice(p.price.min) : '';
       return `<a class="product-card" href="/produits/${p.slug}/" style="text-decoration:none;color:inherit">
         <div class="product-image">
-          <img src="${p.image || ''}" alt="${(p.name || '').replace(/"/g, '&quot;')}"${imgAttrs} decoding="async" onerror="this.src='/assets/logo.png'">
+          <img src="${p.image || ''}" alt="${(p.name || '').replace(/"/g, '&quot;')}"${imgAttrs} decoding="async" onerror="this.src='/assets/favicon.png'">
         </div>
         <div class="product-info">
           <div class="product-category">${p.category || ''}</div>
@@ -267,3 +267,4 @@
 
 </body>
 </html>
+

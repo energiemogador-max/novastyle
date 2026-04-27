@@ -20,7 +20,7 @@
   const html = '<div class="announce">' + ANNOUNCE + '</div>\n' +
 '<header class="site-header" id="nova-site-header">\n' +
 '  <a href="/" class="brand">\n' +
-'    <img src="/assets/logo.png" alt="Nova Style — Fabricant miroirs Casablanca" class="logo" width="160" height="50" fetchpriority="high">\n' +
+'    <img src="/assets/favicon.png" alt="Nova Style — Fabricant miroirs Casablanca" class="logo" width="160" height="50" fetchpriority="high">\n' +
 '    <div>\n' +
 '      <div class="brand-name">Nova Style</div>\n' +
 '      <div class="tagline">La beauté dans le miroir</div>\n' +
@@ -128,3 +128,4 @@
     document.dispatchEvent(new Event("cartUpdated"));
   };
 })();
+

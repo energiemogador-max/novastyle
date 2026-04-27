@@ -71,8 +71,8 @@
 '  "description": "Fabricant marocain spécialisé dans le miroir de salle de bain, le miroir de salle de bain avec LED, et le miroir de salle de bain antibuée sur mesure.",\n' +
 '  "url": "https://novastyle.ma",\n' +
 '  "telephone": "+212707074748",\n' +
-'  "image": "https://novastyle.ma/assets/logo.png",\n' +
-'  "logo": "https://novastyle.ma/assets/logo.png",\n' +
+'  "image": "https://novastyle.ma/assets/favicon.png",\n' +
+'  "logo": "https://novastyle.ma/assets/favicon.png",\n' +
 '  "sameAs": ["https://share.google/YUlF83PSlRCLlTy2K","https://www.instagram.com/nova_home_style/","https://wa.me/212707074748"],\n' +
 '  "address": {"@type":"PostalAddress","streetAddress":"Bd Oued Sebou, Rue 13 N°24","addressLocality":"Casablanca","addressRegion":"Grand Casablanca-Settat","postalCode":"20000","addressCountry":"MA"},\n' +
 '  "geo": {"@type":"GeoCoordinates","latitude":"33.5731","longitude":"-7.5898"},\n' +
@@ -113,3 +113,4 @@
     fixCardImages();
   }
 })();
+

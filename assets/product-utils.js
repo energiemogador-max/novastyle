@@ -123,7 +123,7 @@ export function buildProductPage(p) {
 <meta name="twitter:title" content="${title}">
 <meta name="twitter:description" content="${desc}">
 <meta name="twitter:image" content="${img}">
-<link rel="icon" type="image/png" href="/assets/logo.png">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="preconnect" href="https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app" crossorigin>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
@@ -169,3 +169,4 @@ export function buildProductPage(p) {
 </html>
 `;
 }
+

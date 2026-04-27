@@ -21,7 +21,7 @@
 '<div class="announce">' + ANNOUNCE + '</div>\n' +
 '<header class="site-header" id="nova-site-header">\n' +
 '  <a href="/" class="brand">\n' +
-'    <img src="/assets/logo.png" alt="Nova Style" class="logo" width="44" height="44" fetchpriority="high">\n' +
+'    <img src="/assets/favicon.png" alt="Nova Style" class="logo" width="44" height="44" fetchpriority="high">\n' +
 '    <span class="brand-name">Nova Style</span>\n' +
 '  </a>\n' +
 '  <nav class="main-nav" id="main-nav">\n' +
@@ -149,3 +149,4 @@
 
   window.refreshCartDisplay = function () { updateCartBadge(); };
 })();
+
