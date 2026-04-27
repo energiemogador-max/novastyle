@@ -68,6 +68,9 @@
       return p.categoryId === categoryId;
     });
 
+    // Reverse to show newest first (assuming JSON has newest at bottom)
+    products.reverse();
+
     if (!products.length) {
       grid.innerHTML = '<p class="no-products">Aucun produit dans cette catégorie.</p>';
       return;
