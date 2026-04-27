@@ -1,19 +1,195 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Redirecting...</title>
-<meta name="geo.position" content="33.5731;-7.5898">
-<meta name="ICBM" content="33.5731, -7.5898">
-    <meta http-equiv="refresh" content="0;URL='/'" />
-    <script type="text/javascript">
-      // 2. JavaScript fallback to ensure they land on the homepage
-      window.location.href = "/";
-    </script>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <meta name="geo.position" content="33.5731;-7.5898">
+  <meta name="ICBM" content="33.5731, -7.5898">
   <link rel="preconnect" href="https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app" crossorigin>
-<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <script type="text/javascript">
+    (function() {
+      var path = window.location.pathname;
+
+      // ── COLLECTIONS → CATEGORIES ──────────────────────────────────────────
+      var collections = {
+        "/collections/miroir-de-salle-de-bain-retroeclaire-led": "/categorie/sdb-premium/",
+        "/collections/consoles-et-miroirs-d-entree":             "/categorie/consoles/",
+        "/collections/douche-italienne-sur-mesure":              "/categorie/douches/",
+        "/collections/table-de-sejour":                          "/categorie/tables/",
+        "/collections/miroir-salle-de-bain-maroc":               "/categorie/sdb-premium/",
+        "/collections/miroirs-sdb":                              "/categorie/sdb-premium/",
+        "/collections/miroir-sdb-premium":                       "/categorie/sdb-premium/",
+        "/collections/sdb-premium":                              "/categorie/sdb-premium/",
+        "/collections/entree-de-gamme":                          "/categorie/sdb-essentiel/",
+        "/collections/salon":                                     "/categorie/salon/",
+        "/collections/dressing":                                  "/categorie/salon/",
+        "/collections/consoles":                                  "/categorie/consoles/",
+        "/collections/tables":                                    "/categorie/tables/",
+        "/collections/douches":                                   "/categorie/douches/",
+        "/collections/frontpage":                                 "/",
+        "/collections/all":                                       "/shop.html",
+        "/collections/miroir-avec-led":                          "/categorie/sdb-premium/",
+        "/collections/miroir-anti-buee":                         "/categorie/sdb-premium/"
+      };
+
+      // ── PRODUCTS → PRODUITS ───────────────────────────────────────────────
+      var products = {
+        // Alias slugs
+        "/products/nova-style-miroir-anfa":                                          "/produits/miroir-maroc-nova-style-miroir-anfa/",
+        "/products/nova-style-miroir-celia":                                         "/produits/miroir-marrakech-nova-style-miroir-celia/",
+        "/products/nova-style-miroir-horizon":                                       "/produits/miroire-nova-style-miroir-horizon/",
+        "/products/nova-style-miroir-eclipse":                                       "/produits/magasin-miroir-casablanca-nova-style-miroir-eclipse/",
+        "/products/nova-style-miroir-anfa-half":                                     "/produits/nova-style-miroir-anfa-half-plus/",
+        "/products/nova-style-miroir-pentagone":                                     "/produits/nova-style-miroir-pentagone-2/",
+        "/products/nova-style-miroir-rital":                                         "/produits/deco-miroir-mural-nova-style-miroir-rital/",
+        "/products/nova-style-miroir-elios":                                         "/categorie/sdb-premium/",
+        "/products/nova-style-miroir-pear-ii-cm":                                    "/produits/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/",
+        "/products/Miroir-salle-de-bain-nova-style-miroir-pear-ii-cm":              "/produits/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/",
+        "/products/Deco-miroir-mural-nova-style-miroir-rital":                      "/produits/deco-miroir-mural-nova-style-miroir-rital/",
+        "/products/miroir-rotin-led-oval-cadre-rotin-naturel":                      "/produits/nova-style-miroir-rotin-irregulier-bois-nova-style/",
+        "/products/miroir-de-salon-et-dressing-nova-style-miroir-bloom":            "/produits/nova-style-miroir-bloom/",
+        "/products/personnalisez-votre-douche-a-l-italienne-en-forme-droite":       "/produits/douche-italienne-en-forme-droite/",
+        "/products/miroir-de-salle-de-bain-salon-et-entree-galet-antibuee-anticorrosion": "/produits/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/",
+        "/products/miroir-de-salle-de-bain-ovale-anti-buee-et-anticorrosion":       "/produits/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/",
+        "/products/nova-style-miroir-silhouette-de-salon-et-console":               "/categorie/salon/",
+        "/products/nova-style-miroir-vitrail-de-salon-et-consol":                   "/categorie/salon/",
+
+        // Exact slug matches
+        "/products/nova-style-miroir-elvis":                                         "/produits/nova-style-miroir-elvis/",
+        "/products/nova-style-miroir-emeraude":                                      "/produits/nova-style-miroir-emeraude/",
+        "/products/nova-style-miroir-vega":                                          "/produits/nova-style-miroir-vega/",
+        "/products/nova-style-miroir-double-cercle":                                 "/produits/nova-style-miroir-double-cercle/",
+        "/products/nova-style-miroir-anfa-cm":                                       "/produits/nova-style-miroir-anfa-cm/",
+        "/products/nova-style-miroir-anfa-half-plus":                                "/produits/nova-style-miroir-anfa-half-plus/",
+        "/products/nova-style-ensemble-meuble-et-miroir-retroeclaire":               "/produits/nova-style-ensemble-meuble-et-miroir-retroeclaire/",
+        "/products/nova-style-miroir-archway":                                       "/produits/nova-style-miroir-archway/",
+        "/products/nova-style-miroir-iceberg":                                       "/produits/nova-style-miroir-iceberg/",
+        "/products/nova-style-miroir-croissant-de-lune-ii-finition-noyer":           "/produits/nova-style-miroir-croissant-de-lune-ii-finition-noyer/",
+        "/products/nova-style-miroir-croissant-de-lune":                             "/produits/nova-style-miroir-croissant-de-lune/",
+        "/products/nova-style-miroir-azalee":                                        "/produits/nova-style-miroir-azalee/",
+        "/products/nova-style-miroir-anfa-plus":                                     "/produits/nova-style-miroir-anfa-plus/",
+        "/products/nova-style-miroir-rond":                                          "/produits/nova-style-miroir-rond/",
+        "/products/nova-style-miroir-hawaii":                                        "/produits/nova-style-miroir-hawaii/",
+        "/products/nova-style-miroir-croissant-de-lune-ii":                          "/produits/nova-style-miroir-croissant-de-lune-ii/",
+        "/products/nova-style-miroir-victoria":                                      "/produits/nova-style-miroir-victoria/",
+        "/products/nova-style-miroir-bloom":                                         "/produits/nova-style-miroir-bloom/",
+        "/products/nova-style-miroir-magnum-sdb":                                    "/produits/nova-style-miroir-magnum-sdb/",
+        "/products/nova-style-deux-miroirs-anfa-medina":                             "/produits/nova-style-deux-miroirs-anfa-medina/",
+        "/products/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm":              "/produits/miroir-salle-de-bain-nova-style-miroir-pear-ii-cm/",
+        "/products/nova-style-deux-miroirs-triples":                                 "/produits/nova-style-deux-miroirs-triples/",
+        "/products/miroir-rectangulaire-bright-ii":                                  "/produits/miroir-rectangulaire-bright-ii/",
+        "/products/nova-style-miroir-rectangulaire":                                 "/produits/nova-style-miroir-rectangulaire/",
+        "/products/nova-style-miroir-pentagone-2":                                   "/produits/nova-style-miroir-pentagone-2/",
+        "/products/nova-style-miroir-vortex":                                        "/produits/nova-style-miroir-vortex/",
+        "/products/nova-style-miroir-halo":                                          "/produits/nova-style-miroir-halo/",
+        "/products/nova-style-miroir-pear":                                          "/produits/nova-style-miroir-pear/",
+        "/products/nova-style-miroir-eclipse-bright":                                "/produits/nova-style-miroir-eclipse-bright/",
+        "/products/nova-style-miroir-totem":                                         "/produits/nova-style-miroir-totem/",
+        "/products/nova-style-miroir-luxalight":                                     "/produits/nova-style-miroir-luxalight/",
+        "/products/nova-style-miroir-elvis-woody":                                   "/produits/nova-style-miroir-elvis-woody/",
+        "/products/nova-style-miroir-drizzle":                                       "/produits/nova-style-miroir-drizzle/",
+        "/products/nova-style-miroir-rectangulaire-bright":                          "/produits/nova-style-miroir-rectangulaire-bright/",
+        "/products/nova-style-miroir-split":                                         "/produits/nova-style-miroir-split/",
+        "/products/nova-style-miroir-galet-2":                                       "/produits/nova-style-miroir-galet-2/",
+        "/products/nova-style-miroir-zenith":                                        "/produits/nova-style-miroir-zenith/",
+        "/products/nova-style-miroir-havana":                                        "/produits/nova-style-miroir-havana/",
+        "/products/nova-style-miroir-magnum":                                        "/produits/nova-style-miroir-magnum/",
+        "/products/nova-style-miroir-sunrise":                                       "/produits/nova-style-miroir-sunrise/",
+        "/products/nova-style-miroir-pear-ii":                                       "/produits/nova-style-miroir-pear-ii/",
+        "/products/nova-style-miroir-cloud":                                         "/produits/nova-style-miroir-cloud/",
+        "/products/nova-style-miroir-pebble":                                        "/produits/nova-style-miroir-pebble/",
+        "/products/nova-style-miroir-eclipse-cm":                                    "/produits/nova-style-miroir-eclipse-cm/",
+        "/products/nova-style-miroir-hawaii-sdb":                                    "/produits/nova-style-miroir-hawaii-sdb/",
+        "/products/miroir-marrakech-nova-style-miroir-celia":                        "/produits/miroir-marrakech-nova-style-miroir-celia/",
+        "/products/deco-miroir-mural-nova-style-miroir-rital":                      "/produits/deco-miroir-mural-nova-style-miroir-rital/",
+        "/products/miroir-maroc-nova-style-miroir-anfa":                             "/produits/miroir-maroc-nova-style-miroir-anfa/",
+        "/products/miroir-magnum-essentiel":                                         "/produits/miroir-magnum-essentiel/",
+        "/products/miroir-anfa-essentiel":                                           "/produits/miroir-anfa-essentiel/",
+        "/products/miroire-nova-style-miroir-horizon":                               "/produits/miroire-nova-style-miroir-horizon/",
+        "/products/miroir-gale-salle-de-bain-led-antibuee-anticorrosion":           "/produits/miroir-gale-salle-de-bain-led-antibuee-anticorrosion/",
+        "/products/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm":           "/produits/miroir-avec-cadre-nova-style-miroir-rectangulaire-cm/",
+        "/products/nova-style-miroir-rectangulaire-1":                               "/produits/nova-style-miroir-rectangulaire-1/",
+        "/products/nova-style-miroir-lightning":                                     "/produits/nova-style-miroir-lightning/",
+        "/products/miroir-eclipse-essentiel":                                        "/produits/miroir-eclipse-essentiel/",
+        "/products/nova-style-miroir-asymetrique":                                   "/produits/nova-style-miroir-asymetrique/",
+        "/products/magasin-miroir-casablanca-nova-style-miroir-eclipse":             "/produits/magasin-miroir-casablanca-nova-style-miroir-eclipse/",
+        "/products/nova-style-miroir-octogonal":                                     "/produits/nova-style-miroir-octogonal/",
+        "/products/nova-style-miroir-upside-down":                                   "/produits/nova-style-miroir-upside-down/",
+        "/products/nova-style-miroir-dunes":                                         "/produits/nova-style-miroir-dunes/",
+        "/products/nova-style-miroir-galet-vertical":                                "/produits/nova-style-miroir-galet-vertical/",
+        "/products/consol-et-miroir-nova-style-ensemble":                            "/produits/consol-et-miroir-nova-style-ensemble/",
+        "/products/nova-style-ensemble-console-et-miroir":                           "/produits/nova-style-ensemble-console-et-miroir/",
+        "/products/douche-italienne-en-forme-droite":                                "/produits/douche-italienne-en-forme-droite/",
+        "/products/douche-italienne-en-l-verre-trempe":                              "/produits/douche-italienne-en-l-verre-trempe/",
+        "/products/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm":     "/produits/table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm/",
+        "/products/table-basse-de-sejour-en-bois-mdf-et-verre-trempe":              "/produits/table-basse-de-sejour-en-bois-mdf-et-verre-trempe/",
+        "/products/table-de-sejour-en-bois-mdf-et-verre-trempe":                    "/produits/table-de-sejour-en-bois-mdf-et-verre-trempe/"
+      };
+
+      // ── LOCAL KEYWORD HUB PAGES ───────────────────────────────────────────
+      var hubs = {
+        "/miroir-sur-mesure/":               "/categorie/sdb-premium/",
+        "/miroir-sur-mesure-casablanca/":    "/categorie/sdb-premium/",
+        "/miroir-led-casablanca/":           "/categorie/sdb-premium/",
+        "/miroir-salle-de-bain/":            "/categorie/sdb-premium/",
+        "/miroir-salle-de-bain-led/":        "/categorie/sdb-premium/",
+        "/miroir-salle-de-bain-anti-buee/":  "/categorie/sdb-premium/",
+        "/miroir-maroc/":                    "/categorie/sdb-premium/"
+      };
+
+      // ── PAGES ─────────────────────────────────────────────────────────────
+      var pages = {
+        "/pages/html-sitemap":              "/",
+        "/pages/html-sitemap-products":     "/",
+        "/pages/html-sitemap-collections":  "/",
+        "/pages/html-sitemap-articles":     "/",
+        "/pages/html-sitemap-blogs":        "/",
+        "/pages/html-sitemap-pages":        "/",
+        "/pages/partner-links":             "/",
+        "/pages/preferred-partners":        "/"
+      };
+
+      // ── STRIP QUERY STRING FOR MATCHING ───────────────────────────────────
+      var cleanPath = path.split("?")[0].replace(/\/$/, "") || "/";
+
+      // ── LOOKUP ORDER ──────────────────────────────────────────────────────
+      var destination =
+        collections[cleanPath] ||
+        collections[cleanPath + "/"] ||
+        products[cleanPath] ||
+        products[cleanPath + "/"] ||
+        hubs[cleanPath + "/"] ||
+        pages[cleanPath] ||
+        null;
+
+      // ── /collections/* wildcard fallback ──────────────────────────────────
+      if (!destination && cleanPath.indexOf("/collections/") === 0) {
+        destination = "/categorie/sdb-premium/";
+      }
+
+      // ── /products/* wildcard fallback ─────────────────────────────────────
+      if (!destination && cleanPath.indexOf("/products/") === 0) {
+        destination = "/categorie/sdb-premium/";
+      }
+
+      // ── /pages/* wildcard fallback ────────────────────────────────────────
+      if (!destination && cleanPath.indexOf("/pages/") === 0) {
+        destination = "/";
+      }
+
+      // ── /a/p/products/* AMP fallback ──────────────────────────────────────
+      if (!destination && cleanPath.indexOf("/a/p/products/") === 0) {
+        var ampSlug = cleanPath.replace("/a/p/products/", "");
+        destination = "/produits/" + ampSlug + "/";
+      }
+
+      // ── REDIRECT OR HOMEPAGE FALLBACK ─────────────────────────────────────
+      window.location.replace(destination || "/");
+    })();
+  </script>
 </head>
-  <body>
-    <p>Redirecting to the homepage... <a href="/">Click here</a> if you are not redirected.</p>
-  </body>
+<body>
+  <p>Redirecting... <a href="/">Click here</a> if you are not redirected.</p>
+</body>
 </html>
