@@ -65,12 +65,18 @@ export function addProductToCart() {
   const qtyInput = document.getElementById('qty-input');
   const qty = qtyInput ? Math.max(1, Math.min(99, parseInt(qtyInput.value) || 1)) : 1;
 
-  const item = { id: slug, name: PRODUCT.name, price, axes: { ...SELECTION }, image: PRODUCT.images?.[0] || '', quantity: qty };
+  // Build the same key format used by cart.js removeFromCart()
+  const cartKey = slug + '_' + JSON.stringify(Object.keys(SELECTION).length ? SELECTION : {});
+  const item = { key: cartKey, id: slug, name: PRODUCT.name, price, axes: { ...SELECTION }, image: PRODUCT.images?.[0] || '', quantity: qty };
   const cart = JSON.parse(localStorage.getItem('nova_style_cart') || '[]');
-  const key = JSON.stringify({ id: item.id, axes: item.axes });
-  const idx = cart.findIndex(c => JSON.stringify({ id: c.id, axes: c.axes }) === key);
-  if (idx >= 0) cart[idx].quantity = (cart[idx].quantity || 1) + qty;
-  else cart.push(item);
+  // Match by .key (new) or by id+axes (legacy items without .key)
+  const idx = cart.findIndex(c => c.key === cartKey || JSON.stringify({ id: c.id, axes: c.axes }) === JSON.stringify({ id: item.id, axes: item.axes }));
+  if (idx >= 0) {
+    cart[idx].quantity = (cart[idx].quantity || 1) + qty;
+    if (!cart[idx].key) cart[idx].key = cartKey; // repair legacy items
+  } else {
+    cart.push(item);
+  }
   localStorage.setItem('nova_style_cart', JSON.stringify(cart));
   document.dispatchEvent(new CustomEvent('cartUpdated'));
 

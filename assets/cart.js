@@ -57,7 +57,14 @@ function addToCart(productId,product,options,qty) {
   saveCart(cart);
   console.log(`✅ Produit ajouté (×${quantity}) :`,product.name);
 }
-function removeFromCart(k) { saveCart(getCart().filter(i=>i.key!==k)); }
+function removeFromCart(k) {
+  saveCart(getCart().filter(i => {
+    if (i.key) return i.key !== k;
+    // Legacy items (added via product-loader before fix): match by id+axes
+    const legacyKey = (i.id || '') + '_' + JSON.stringify(i.axes && Object.keys(i.axes).length ? i.axes : {});
+    return legacyKey !== k;
+  }));
+}
 function updateQuantity(k,qty) { const c=getCart(),i=c.find(x=>x.key===k); if(i){i.quantity=Math.max(1,Math.min(99,parseInt(qty)||1));saveCart(c);} }
 function clearCart() { saveCart([]); }
 
