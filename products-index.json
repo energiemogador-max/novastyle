@@ -1387,6 +1387,37 @@
       },
       "hasVariants": true,
       "variantCount": 60
+    },
+    {
+      "slug": "nova-style-ensemble-salle-a-manger-prestige-table-ovale-220-cm-ceramique-8-chaises-bois-massif-livraison-maroc",
+      "name": "Ensemble Salle à Manger Prestige – Table Ovale 220 cm Céramique & 8 Chaises Bois Massif | Livraison Maroc",
+      "categoryId": "tables",
+      "category": "Tables de Séjour",
+      "image": "/images/nova-style-ensemble-salle-a-manger-prestige-table-ovale-220-cm-ceramique-8-chaises-bois-massif-livraison-maroc/1.webp",
+      "images": [
+        "/images/nova-style-ensemble-salle-a-manger-prestige-table-ovale-220-cm-ceramique-8-chaises-bois-massif-livraison-maroc/1.webp"
+      ],
+      "active": true,
+      "price": {
+        "min": 12500,
+        "max": 12500
+      },
+      "axes": {
+        "order": [
+          "Dimension"
+        ],
+        "options": {
+          "Dimension": [
+            "220 Longueur x 110 Largueur x 75 hauteur "
+          ]
+        }
+      },
+      "seo": {
+        "title": "Ensemble Salle à Manger Prestige – Table Ovale 220 cm & 8 Chaises Bois Massif | Maroc",
+        "description": "Achetez votre ensemble salle à manger prestige au Maroc : table ovale 220 cm plateau céramique effet marbre + 8 chaises bois massif. Livraison Casablanca, Rabat, Marrakech et partout au Maroc. Qualité haut de gamme, prix compétitif."
+      },
+      "hasVariants": true,
+      "variantCount": 1
     }
   ]
 }
