@@ -1,144 +1,106 @@
 /**
  * header.js — Nova Style shared header
  * Layout: [Logo] [Nav — left-aligned] [→ auto] [WhatsApp] [Cart] [Hamburger]
- * Mobile: left-slide drawer
+ * TO UPDATE: edit ONLY this file. All pages update automatically.
  */
 (function () {
-  const NAV_LINKS = [
-    { href: "/categorie/sdb-premium/",   label: "Miroir salle de bain premium" },
-    { href: "/categorie/sdb-essentiel/", label: "Miroir entrée de gamme" },
-    { href: "/categorie/salon/",         label: "Miroir de salon &amp; dressing" },
-    { href: "/categorie/consoles/",       label: "Console &amp; miroir" },
-    { href: "/categorie/tables/",        label: "Table &amp; chaise" },
-    { href: "/categorie/douches/",       label: "Douches italiennes" },
+  var NAV_LINKS = [
+    { href: "/",                         label: "Accueil" },
+    { href: "/categorie/sdb-premium/",   label: "Miroirs SDB" },
+    { href: "/categorie/salon/",         label: "Salon &amp; Dressing" },
+    { href: "/categorie/douches/",       label: "Douches" },
+    { href: "/categorie/consoles/",      label: "Consoles" },
+    { href: "/categorie/tables/",        label: "Tables" },
+    { href: "/miroir-sur-mesure/",       label: "Sur Mesure" },
     { href: "/blog/",                    label: "Blog" },
   ];
 
-  const ANNOUNCE = "Fabrication sur mesure · Verre AGC Belgique · Livraison partout au Maroc";
-  const navItems = NAV_LINKS.map(l => '<a href="' + l.href + '">' + l.label + '</a>').join("\n    ");
+  var navItems = NAV_LINKS.map(function(l) {
+    return '<a href="' + l.href + '" class="nav-link">' + l.label + '</a>';
+  }).join('\n    ');
 
-  const html =
-'<div class="announce">' + ANNOUNCE + '</div>\n' +
-'<header class="site-header" id="nova-site-header">\n' +
-'  <a href="/" class="brand">\n' +
-'    <img src="logo.png" alt="Nova Style" class="logo" width="44" height="44" fetchpriority="high">\n' +
-'    <span class="brand-name">Nova Style</span>\n' +
-'  </a>\n' +
-'  <nav class="main-nav" id="main-nav">\n' +
-'    ' + navItems + '\n' +
-'  </nav>\n' +
-'  <div class="header-right">\n' +
-'    <a href="https://wa.me/212707074748" class="header-wa" target="_blank" rel="noopener">💬 WhatsApp</a>\n' +
-'    <a href="/cart.html" class="cart-icon-link" id="header-cart-link" title="Panier">\n' +
-'      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">\n' +
-'        <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>\n' +
-'        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>\n' +
-'      </svg>\n' +
-'      <span id="cart-icon-badge" class="cart-badge">0</span>\n' +
-'    </a>\n' +
-'    <button class="menu-toggle" id="menu-toggle" aria-label="Menu" aria-expanded="false" type="button">\n' +
-'      <span></span><span></span><span></span>\n' +
-'    </button>\n' +
-'  </div>\n' +
-'</header>\n' +
-'<div class="nav-overlay" id="nav-overlay"></div>\n' +
-'<style>\n' +
-'.site-header{display:flex;align-items:center;gap:28px;padding:12px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:400;}\n' +
-'.brand{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none;}\n' +
-'.logo{width:44px;height:44px;border-radius:6px;}\n' +
-'.brand-name{font-size:17px;font-weight:700;letter-spacing:1.5px;color:var(--text);}\n' +
-'.main-nav{display:flex;gap:2px;}\n' +
-'.main-nav a{font-size:13.5px;font-weight:500;color:var(--text-soft,#555);padding:7px 11px;border-radius:7px;transition:background .15s,color .15s;white-space:nowrap;}\n' +
-'.main-nav a:hover{background:var(--accent-dim);color:var(--accent);}\n' +
-'.main-nav a.nav-active{color:var(--accent);font-weight:700;}\n' +
-'.header-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0;}\n' +
-'.header-wa{display:inline-flex;align-items:center;gap:5px;background:#25d366;color:#fff;font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;white-space:nowrap;transition:opacity .15s;}\n' +
-'.header-wa:hover{opacity:.9;}\n' +
-'.menu-toggle{display:none;flex-direction:column;justify-content:space-between;width:32px;height:32px;padding:6px 4px;background:none;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}\n' +
-'.menu-toggle span{display:block;height:2px;width:100%;background:var(--text,#333);border-radius:2px;transition:transform .22s,opacity .22s;pointer-events:none;}\n' +
-'.menu-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(8px) rotate(45deg);}\n' +
-'.menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0;transform:scaleX(0);}\n' +
-'.menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}\n' +
-'.nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:299;}\n' +
-'.nav-overlay.open{display:block;}\n' +
-'@media(max-width:860px){\n' +
-'  .header-wa{display:none;}\n' +
-'  .menu-toggle{display:flex;}\n' +
-'  #main-nav{display:flex;flex-direction:column;gap:0;position:fixed;top:0;left:-280px;width:280px;height:100dvh;background:#fff;z-index:300;box-shadow:4px 0 24px rgba(0,0,0,.13);transition:left .25s ease;padding-top:56px;overflow-y:auto;-webkit-overflow-scrolling:touch;}\n' +
-'  #main-nav.open{left:0;}\n' +
-'  #main-nav a{padding:16px 24px;border-bottom:1px solid var(--border);font-size:15px;border-radius:0;color:var(--text);}\n' +
-'  #main-nav a:last-child{border-bottom:none;}\n' +
-'  #main-nav a:hover{background:var(--bg-soft);color:var(--accent);}\n' +
-'  .site-header{gap:12px;padding:12px 16px;}\n' +
-'}\n' +
-'</style>';
+  var html =
+    '<header class="site-header" id="site-header">\n' +
+    '  <div class="header-inner">\n' +
+    '    <a href="/" class="brand">\n' +
+    '      <img src="/assets/logo.png" alt="Nova Style" class="header-logo" width="120" height="40">\n' +
+    '      <span class="brand-name">Nova Style</span>\n' +
+    '    </a>\n' +
+    '    <nav id="main-nav" class="main-nav">\n' +
+    '      ' + navItems + '\n' +
+    '    </nav>\n' +
+    '    <div class="header-actions">\n' +
+    '      <a href="https://wa.me/212635228074" class="header-wa" target="_blank" rel="noopener">💬 WhatsApp</a>\n' +
+    '      <a href="/cart.html" class="cart-icon-wrap" id="cart-icon-wrap">\n' +
+    '        🛒<span class="cart-badge" id="cart-icon-badge" style="display:none">0</span>\n' +
+    '      </a>\n' +
+    '      <button class="hamburger" id="menu-toggle" aria-label="Menu">\n' +
+    '        <span></span><span></span><span></span>\n' +
+    '      </button>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '  <div class="nav-overlay" id="nav-overlay"></div>\n' +
+    '</header>\n';
 
-  function injectFavicon() {
-    if (!document.querySelector('link[rel~="icon"]')) {
-      var link = document.createElement("link");
-      link.rel  = "icon";
-      link.type = "image/png";
-      link.href = "/assets/favicon.png";
-      document.head.appendChild(link);
-    }
-  }
+  var css =
+    '.site-header{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid rgba(0,0,0,.07);box-shadow:0 1px 8px rgba(0,0,0,.06);}' +
+    '.header-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:24px;}' +
+    '.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex-shrink:0;}' +
+    '.header-logo{height:36px;width:auto;object-fit:contain;}' +
+    '.brand-name{font-size:17px;font-weight:700;letter-spacing:1.5px;color:var(--text);}' +
+    '.main-nav{display:flex;gap:4px;align-items:center;flex:1;}' +
+    '.nav-link{padding:6px 10px;font-size:13px;font-weight:500;color:#374151;text-decoration:none;border-radius:6px;white-space:nowrap;transition:background .15s,color .15s;}' +
+    '.nav-link:hover,.nav-link.active{background:#fef2f4;color:#e8194b;}' +
+    '.header-actions{display:flex;align-items:center;gap:12px;margin-left:auto;flex-shrink:0;}' +
+    '.header-wa{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;background:#25d366;color:#fff;border-radius:7px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;}' +
+    '.header-wa:hover{background:#20bb5a;}' +
+    '.cart-icon-wrap{position:relative;font-size:22px;text-decoration:none;cursor:pointer;}' +
+    '.cart-badge{position:absolute;top:-6px;right:-8px;background:#e8194b;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 3px;}' +
+    '.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}' +
+    '.hamburger span{display:block;width:22px;height:2px;background:#374151;border-radius:2px;transition:all .3s;}' +
+    '.nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:98;}' +
+    '@media(max-width:768px){' +
+    '.hamburger{display:flex;}' +
+    '.main-nav{position:fixed;top:0;left:-280px;height:100vh;width:260px;background:#fff;flex-direction:column;align-items:flex-start;gap:0;padding:70px 0 20px;z-index:99;box-shadow:4px 0 20px rgba(0,0,0,.15);transition:left .3s;overflow-y:auto;}' +
+    '.main-nav.open{left:0;}' +
+    '.nav-overlay.open{display:block;}' +
+    '.nav-link{padding:12px 24px;width:100%;border-radius:0;font-size:15px;}' +
+    '.brand-name{display:none;}' +
+    '}';
 
   function inject() {
-    injectFavicon();
+    var style = document.createElement('style');
+    style.textContent = css;
+    document.head.appendChild(style);
     var frag = document.createRange().createContextualFragment(html);
     document.body.insertBefore(frag, document.body.firstChild);
-    init();
-  }
 
-  function init() {
     var toggle  = document.getElementById("menu-toggle");
     var nav     = document.getElementById("main-nav");
     var overlay = document.getElementById("nav-overlay");
-    if (!toggle || !nav) return;
-
-    function openNav() {
-      nav.classList.add("open");
-      if (overlay) overlay.classList.add("open");
-      toggle.setAttribute("aria-expanded", "true");
-    }
-    function closeNav() {
-      nav.classList.remove("open");
-      if (overlay) overlay.classList.remove("open");
-      toggle.setAttribute("aria-expanded", "false");
-    }
-
-    toggle.addEventListener("click", function (e) {
-      e.stopPropagation();
-      e.preventDefault();
-      nav.classList.contains("open") ? closeNav() : openNav();
-    });
-    if (overlay) overlay.addEventListener("click", function (e) {
-      if (e.target === overlay) closeNav();
-    });
-    nav.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", closeNav); });
-
-    // Mark active link
     var path = window.location.pathname.replace(/\/$/, "") || "/";
-    nav.querySelectorAll("a").forEach(function (a) {
-      var href = (a.getAttribute("href") || "").replace(/\/$/, "") || "/";
-      if (href === path || (href !== "/" && path.startsWith(href))) {
-        a.classList.add("nav-active");
-      }
+    var badge = document.getElementById("cart-icon-badge");
+
+    document.querySelectorAll(".nav-link").forEach(function(a) {
+      var href = a.getAttribute("href").replace(/\/$/, "") || "/";
+      if (path === href || (href !== "/" && path.startsWith(href))) a.classList.add("active");
     });
 
-    updateCartBadge();
-    document.addEventListener("cartUpdated", updateCartBadge);
-  }
+    function openMenu() { nav.classList.add("open"); overlay.classList.add("open"); document.body.style.overflow = "hidden"; }
+    function closeMenu() { nav.classList.remove("open"); overlay.classList.remove("open"); document.body.style.overflow = ""; }
+    if (toggle) toggle.addEventListener("click", openMenu);
+    if (overlay) overlay.addEventListener("click", closeMenu);
 
-  function updateCartBadge() {
-    var badge = document.getElementById("cart-icon-badge");
-    if (!badge) return;
-    try {
-      var items = JSON.parse(localStorage.getItem("nova_style_cart") || "[]");
-      var count = Array.isArray(items) ? items.reduce(function(s,i){ return s+(i.quantity||1); }, 0) : 0;
-      badge.textContent   = count;
-      badge.style.display = count > 0 ? "inline-flex" : "none";
-    } catch (e) { badge.style.display = "none"; }
+    function updateBadge() {
+      try {
+        var cart = JSON.parse(localStorage.getItem("nova_cart") || "[]");
+        var total = cart.reduce(function(s, i) { return s + (i.qty || 1); }, 0);
+        if (badge) { badge.textContent = total; badge.style.display = total > 0 ? "flex" : "none"; }
+      } catch(e) {}
+    }
+    updateBadge();
+    window.addEventListener("storage", updateBadge);
+    window.addEventListener("nova-cart-updated", updateBadge);
   }
 
   if (document.readyState === "loading") {
@@ -146,7 +108,4 @@
   } else {
     inject();
   }
-
-  window.refreshCartDisplay = function () { updateCartBadge(); };
 })();
-
