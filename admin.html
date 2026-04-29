@@ -3678,7 +3678,7 @@
               </select>
               <button onclick="window.loadProductList?.()"
                 style="padding:8px 16px;background:#1a1a1a;color:#fff;border:none;border-radius:6px;cursor:pointer">🔄 Actualiser</button>
-              <button onclick="window.__mountNouveauProduit__?.()"
+              <button onclick="document.querySelector('.sidebar-item[data-tab=&quot;newproduct&quot;]')?.click()"
                 style="padding:8px 16px;background:var(--red);color:#fff;border:none;border-radius:6px;cursor:pointer">✨ Ajouter produit</button>
               <span id="product-count" style="font-size:11px;color:#6b7280;margin-left:auto"></span>
             </div>
