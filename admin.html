@@ -483,7 +483,8 @@
       margin: 0 auto
     }
 
-    .section-title {
+    .range-btn { padding:4px 10px;border:1.5px solid #e5e7eb;background:#fff;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;color:#6b7280;transition:all .15s; }
+    .range-btn.active,.range-btn:hover { background:#e8194b;border-color:#e8194b;color:#fff; }
       font-size: 11px;
       font-weight: 800;
       color: var(--text4);
@@ -3035,16 +3036,7 @@
         font-size: 12px;
       }
 
-      /* Mobile visitors tab specific */
-      #tab-visitors .visitors-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-      #tab-visitors .vis-panel {
-        margin-bottom: 0;
-      }
 
-      /* Show mobile visitor analytics in home tab on mobile */
       .mobile-visitor-analytics {
         display: block !important;
       }
@@ -3218,10 +3210,6 @@
         <span class="mob-nav-icon">🏠</span>
         <span>Accueil</span>
       </button>
-      <button class="mob-nav-item" data-tab="visitors">
-        <span class="mob-nav-icon">👁️</span>
-        <span>Visiteurs</span>
-      </button>
       <button class="mob-nav-item" data-tab="orders">
         <span class="mob-nav-icon">📦</span>
         <span>Commandes</span>
@@ -3262,8 +3250,6 @@
         <div class="sidebar-brand">Nova Style</div>
         <div class="sidebar-nav">
           <div class="sidebar-item active" data-tab="home"><span class="sidebar-icon">🏠</span>Accueil</div>
-          <div class="sidebar-item" data-tab="visitors"><span class="sidebar-icon">👁️</span>Visiteurs<span
-              class="sidebar-badge" id="visitors-tab-badge" style="display:none">0</span></div>
           <div class="sidebar-item" data-tab="orders"><span class="sidebar-icon">📦</span>Commandes</div>
           <div class="sidebar-item" data-tab="products"><span class="sidebar-icon">🪞</span>Produits</div>
           <div class="sidebar-item" data-tab="newproduct"><span class="sidebar-icon">✨</span>Ajouter produit</div>
@@ -3287,7 +3273,7 @@
         <div class="tab-panel active" id="tab-home">
           <div class="home-wrap">
 
-            <!-- Header + period selector -->
+            <!-- ── KPIs ── -->
             <div class="home-header">
               <div class="home-title">Aperçu</div>
               <div class="period-selector">
@@ -3298,28 +3284,13 @@
                 <button class="period-btn" data-period="3months">3 Mois</button>
               </div>
             </div>
-
-            <!-- KPI row -->
             <div class="kpi-row">
-              <div class="kpi-card">
-                <div class="kpi-lbl">Sessions</div>
-                <div class="kpi-val" id="kpi-sessions">—</div>
-              </div>
-              <div class="kpi-card">
-                <div class="kpi-lbl">Commandes</div>
-                <div class="kpi-val" id="kpi-orders">—</div>
-              </div>
-              <div class="kpi-card">
-                <div class="kpi-lbl">Chiffre d'affaires</div>
-                <div class="kpi-val" id="kpi-revenue">—</div>
-              </div>
-              <div class="kpi-card">
-                <div class="kpi-lbl">Avis en attente</div>
-                <div class="kpi-val amber" id="kpi-pending">—</div>
-              </div>
+              <div class="kpi-card"><div class="kpi-lbl">Sessions</div><div class="kpi-val" id="kpi-sessions">—</div></div>
+              <div class="kpi-card"><div class="kpi-lbl">Commandes</div><div class="kpi-val" id="kpi-orders">—</div></div>
+              <div class="kpi-card"><div class="kpi-lbl">Chiffre d'affaires</div><div class="kpi-val" id="kpi-revenue">—</div></div>
+              <div class="kpi-card"><div class="kpi-lbl">Avis en attente</div><div class="kpi-val amber" id="kpi-pending">—</div></div>
             </div>
-
-            <!-- Hidden compat elements (written by existing JS) -->
+            <!-- hidden compat spans -->
             <span id="stat-total" style="display:none"></span>
             <span id="stat-today" style="display:none"></span>
             <span id="stat-revenue" style="display:none"></span>
@@ -3330,136 +3301,46 @@
             <span id="stat-sess-weekly" style="display:none"></span>
             <span id="stat-sess-monthly" style="display:none"></span>
 
-            <!-- Live visitors -->
+            <!-- ── LIVE VISITORS ── -->
             <div class="live-section">
               <div class="live-section-head">
                 <div class="live-badge"><span class="live-dot"></span>Live</div>
-                <div class="live-section-title">Visiteurs sur votre boutique</div>
+                <div class="live-section-title">Visiteurs actifs</div>
                 <div class="live-online-count"><span id="home-vis-count">0</span> en ligne</div>
               </div>
-              <div class="live-grid">
-                <div class="live-feed-col">
-                  <div id="home-vis-list">
-                    <div class="no-visitors">Aucun visiteur en ce moment</div>
-                  </div>
-                </div>
-                <div class="live-charts-col">
-                  <div>
-                    <div class="live-chart-title">Sources de trafic</div>
-                    <div id="home-vis-sources-chart"></div>
-                  </div>
-                  <div>
-                    <div class="live-chart-title">Appareils</div>
-                    <div id="home-vis-devices-chart"></div>
-                  </div>
-                </div>
-              </div>
+              <div id="home-vis-list"><div class="no-visitors">Aucun visiteur en ce moment</div></div>
             </div>
 
-            <!-- Session stats: daily / weekly / monthly -->
-            <div class="session-stats" style="margin-bottom:18px">
-              <div class="sess-card"><div class="slbl">Sessions aujourd'hui</div><div class="sval" id="sess-daily">—</div></div>
-              <div class="sess-card"><div class="slbl">Cette semaine</div><div class="sval" id="sess-weekly">—</div></div>
-              <div class="sess-card"><div class="slbl">Ce mois</div><div class="sval" id="sess-monthly">—</div></div>
-            </div>
-
-            <!-- Visitor analytics: pages + cities + countries -->
-            <div class="visitors-grid" style="margin-bottom:16px">
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>Pages populaires</span></div>
-                <div class="chart-wrap" id="vis-pages-chart"></div>
-              </div>
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>📍 Villes</span></div>
-                <div class="chart-wrap" id="vis-cities-chart"></div>
-              </div>
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>🌍 Pays</span></div>
-                <div class="chart-wrap" id="vis-countries-chart"></div>
-              </div>
-            </div>
-
-            <!-- Additional analytics: referrers + devices -->
-            <div class="visitors-grid" style="margin-bottom:16px">
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>📡 Sources de trafic</span></div>
-                <div class="chart-wrap" id="vis-referrers-chart"></div>
-              </div>
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>📱 Appareils</span></div>
-                <div class="chart-wrap" id="vis-devices-chart"></div>
-              </div>
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>🛒 Paniers actifs</span></div>
-                <div class="chart-wrap" id="vis-cart-chart"></div>
-              </div>
-            </div>
-
-            <!-- Visitor session history -->
-            <div class="vis-panel" style="margin-bottom:20px">
+            <!-- ── HISTORIQUE SESSIONS ── -->
+            <div class="vis-panel" style="margin-bottom:16px">
               <div class="vis-panel-head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
                 <span>📋 Historique des sessions</span>
-                <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <input type="date" id="history-date" style="padding:4px 8px;border:1px solid #e5e7eb;border-radius:4px;font-size:12px" onchange="window.loadVisitorHistory()">
-                  <button onclick="window.loadVisitorHistory()" style="background:none;border:1.5px solid #e5e7eb;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">🔄 Actualiser</button>
-                  <button onclick="window.exportVisitorHistory()" style="background:#e8194b;color:white;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">📊 Exporter CSV</button>
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                  <button class="range-btn active" data-range="today" onclick="window.loadHistoryRange('today',this)">Aujourd'hui</button>
+                  <button class="range-btn" data-range="24h"   onclick="window.loadHistoryRange('24h',this)">24h</button>
+                  <button class="range-btn" data-range="7d"    onclick="window.loadHistoryRange('7d',this)">7 jours</button>
+                  <button class="range-btn" data-range="30d"   onclick="window.loadHistoryRange('30d',this)">30 jours</button>
+                  <button onclick="window.exportVisitorHistory()" style="background:#e8194b;color:white;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">📊 CSV</button>
                 </div>
               </div>
-              <div id="visitor-history-list" style="max-height:380px;overflow-y:auto;padding:4px 0">
+              <div id="visitor-history-list" style="max-height:400px;overflow-y:auto">
                 <div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Chargement…</div>
               </div>
             </div>
 
-            <!-- Mobile visitor analytics (shown only on mobile) -->
-            <div class="mobile-visitor-analytics" style="display:none">
-              <!-- Visitor analytics: pages + cities + countries -->
-              <div class="visitors-grid" style="margin-bottom:16px">
-                <div class="vis-panel">
-                  <div class="vis-panel-head"><span>Pages populaires</span></div>
-                  <div class="chart-wrap" id="mobile-vis-pages-chart"></div>
-                </div>
-                <div class="vis-panel">
-                  <div class="vis-panel-head"><span>📍 Villes</span></div>
-                  <div class="chart-wrap" id="mobile-vis-cities-chart"></div>
-                </div>
-                <div class="vis-panel">
-                  <div class="vis-panel-head"><span>🌍 Pays</span></div>
-                  <div class="chart-wrap" id="mobile-vis-countries-chart"></div>
-                </div>
-              </div>
-
-              <!-- Additional analytics: referrers + devices -->
-              <div class="visitors-grid" style="margin-bottom:16px">
-                <div class="vis-panel">
-                  <div class="vis-panel-head"><span>📡 Sources de trafic</span></div>
-                  <div class="chart-wrap" id="mobile-vis-referrers-chart"></div>
-                </div>
-                <div class="vis-panel">
-                  <div class="vis-panel-head"><span>📱 Appareils</span></div>
-                  <div class="chart-wrap" id="mobile-vis-devices-chart"></div>
-                </div>
-                <div class="vis-panel">
-                  <div class="vis-panel-head"><span>🛒 Paniers actifs</span></div>
-                  <div class="chart-wrap" id="mobile-vis-cart-chart"></div>
-                </div>
-              </div>
-
-              <!-- Visitor session history -->
-              <div class="vis-panel" style="margin-bottom:20px">
-                <div class="vis-panel-head">
-                  <span>📋 Historique des sessions aujourd'hui</span>
-                </div>
-                <div id="mobile-visitor-history-list" style="max-height:300px;overflow-y:auto;padding:4px 0">
-                  <div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Chargement…</div>
-                </div>
-              </div>
+            <!-- ── ANALYTICS 2×2 ── -->
+            <div class="visitors-grid" style="margin-bottom:16px">
+              <div class="vis-panel"><div class="vis-panel-head"><span>📄 Pages populaires</span></div><div class="chart-wrap" id="vis-pages-chart"></div></div>
+              <div class="vis-panel"><div class="vis-panel-head"><span>📍 Villes</span></div><div class="chart-wrap" id="vis-cities-chart"></div></div>
+              <div class="vis-panel"><div class="vis-panel-head"><span>📡 Sources</span></div><div class="chart-wrap" id="vis-referrers-chart"></div></div>
+              <div class="vis-panel"><div class="vis-panel-head"><span>📱 Appareils</span></div><div class="chart-wrap" id="vis-devices-chart"></div></div>
             </div>
 
-            <!-- Sessions chart + Recent orders -->
+            <!-- ── SESSIONS SPARKLINE + RECENT ORDERS ── -->
             <div class="home-grid">
               <div class="h-panel">
                 <div class="h-panel-head">
-                  <span class="h-panel-title">Sessions</span>
+                  <span class="h-panel-title">Sessions (30 jours)</span>
                   <span id="home-period-label" style="font-size:11px;color:var(--text4);font-weight:500"></span>
                 </div>
                 <div class="h-panel-body">
@@ -3478,7 +3359,7 @@
               </div>
             </div>
 
-            <!-- GitHub Configuration -->
+            <!-- ── GITHUB CONFIG ── -->
             <div class="gh-config-card open" id="gh-config-card">
               <div class="gh-config-head" onclick="toggleGhConfig()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text3)" style="flex-shrink:0"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -3489,21 +3370,15 @@
               <div class="gh-config-body">
                 <div class="gh-field full">
                   <label class="gh-label">Personal Access Token (PAT)</label>
-                  <input class="gh-input masked" id="gh-input-pat" type="password"
-                    placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-                    autocomplete="off" spellcheck="false">
+                  <input class="gh-input masked" id="gh-input-pat" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
                 </div>
                 <div class="gh-field">
                   <label class="gh-label">Dépôt (user/repo)</label>
-                  <input class="gh-input" id="gh-input-repo" type="text"
-                    placeholder="votre-org/novastyle"
-                    autocomplete="off" spellcheck="false">
+                  <input class="gh-input" id="gh-input-repo" type="text" placeholder="votre-org/novastyle" autocomplete="off" spellcheck="false">
                 </div>
                 <div class="gh-field">
                   <label class="gh-label">Branche</label>
-                  <input class="gh-input" id="gh-input-branch" type="text"
-                    placeholder="main"
-                    autocomplete="off" spellcheck="false">
+                  <input class="gh-input" id="gh-input-branch" type="text" placeholder="main" autocomplete="off" spellcheck="false">
                 </div>
                 <div class="gh-actions">
                   <button class="btn-gh-save" id="btn-gh-save" onclick="saveGhConfig()">💾 Enregistrer</button>
@@ -3511,71 +3386,6 @@
                   <button class="btn-gh-clear" onclick="clearGhConfig()">🗑️ Effacer</button>
                 </div>
                 <div class="gh-feedback" id="gh-feedback"></div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- ═══ VISITORS ═══ -->
-        <div class="tab-panel" id="tab-visitors">
-          <div class="home-wrap">
-
-            <!-- Live visitors section -->
-            <div class="h-panel">
-              <div class="h-panel-head">
-                <span>👥 Visiteurs en ligne</span>
-                <div class="live-online-count"><span id="visitors-vis-count">0</span> en ligne</div>
-              </div>
-              <div id="visitors-vis-list">
-                <div class="no-visitors">Aucun visiteur en ce moment</div>
-              </div>
-            </div>
-
-            <!-- Visitor analytics: pages + cities + countries -->
-            <div class="visitors-grid" style="margin-bottom:16px">
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>Pages populaires</span></div>
-                <div class="chart-wrap" id="visitors-pages-chart"></div>
-              </div>
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>📍 Villes</span></div>
-                <div class="chart-wrap" id="visitors-cities-chart"></div>
-              </div>
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>🌍 Pays</span></div>
-                <div class="chart-wrap" id="visitors-countries-chart"></div>
-              </div>
-            </div>
-
-            <!-- Additional analytics: referrers + devices -->
-            <div class="visitors-grid" style="margin-bottom:16px">
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>📡 Sources de trafic</span></div>
-                <div class="chart-wrap" id="visitors-referrers-chart"></div>
-              </div>
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>📱 Appareils</span></div>
-                <div class="chart-wrap" id="visitors-devices-chart"></div>
-              </div>
-              <div class="vis-panel">
-                <div class="vis-panel-head"><span>🛒 Paniers actifs</span></div>
-                <div class="chart-wrap" id="visitors-cart-chart"></div>
-              </div>
-            </div>
-
-            <!-- Visitor session history -->
-            <div class="vis-panel" style="margin-bottom:20px">
-              <div class="vis-panel-head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-                <span>📋 Historique des sessions</span>
-                <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <input type="date" id="visitors-history-date" style="padding:4px 8px;border:1px solid #e5e7eb;border-radius:4px;font-size:12px">
-                  <button onclick="window.loadVisitorsHistory()" style="background:none;border:1.5px solid #e5e7eb;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">🔄 Actualiser</button>
-                  <button onclick="window.exportVisitorsHistory()" style="background:#e8194b;color:white;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">📊 Exporter CSV</button>
-                </div>
-              </div>
-              <div id="visitors-history-list" style="max-height:380px;overflow-y:auto;padding:4px 0">
-                <div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Chargement…</div>
               </div>
             </div>
 
@@ -4578,6 +4388,7 @@
         ls.style.display = "none"; as.style.display = "block";
         document.getElementById("admin-email-display").textContent = user.email;
         startOrders(); startVisitors(); watchPendingReviews(); loadSessionStats();
+        window.loadHistoryRange('today');
         loadGhConfig();
       } else {
         ls.style.display = "flex"; as.style.display = "none";
@@ -4957,24 +4768,17 @@
         document.getElementById("stat-visitors").textContent = count;
         document.getElementById("stat-cart").textContent = withCart;
         const hvc = document.getElementById("home-vis-count"); if (hvc) hvc.textContent = count;
-        const vvc = document.getElementById("visitors-vis-count"); if (vvc) vvc.textContent = count;
-        // Update visitor badge
-        const visBadge = document.getElementById("visitors-tab-badge");
-        const mobVisBadge = document.getElementById("mob-visitors-badge");
-        if (visBadge) { visBadge.textContent = count; visBadge.style.display = count > 0 ? "inline-flex" : "none"; }
-        if (mobVisBadge) { mobVisBadge.textContent = count; mobVisBadge.style.display = count > 0 ? "inline-flex" : "none"; }
-        // Cart activity — silent toast, no alert popup
+        // Update live count in home tab only
+
         if (withCart > lastCartCount) {
           const diff = withCart - lastCartCount;
           _showToast(`🛒 ${diff} visiteur${diff > 1 ? 's' : ''} ${diff > 1 ? 'ont' : 'a'} ajouté au panier`, 'info');
         }
         lastCartCount = withCart;
         const homeListEl = document.getElementById("home-vis-list");
-        const visitorsListEl = document.getElementById("visitors-vis-list");
         const noVisMsg = "<div class='no-visitors'>Aucun visiteur en ce moment</div>";
         if (!count) {
           if (homeListEl) homeListEl.innerHTML = noVisMsg;
-          if (visitorsListEl) visitorsListEl.innerHTML = noVisMsg;
         } else {
           const sorted = [...visitors].sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
           const rowsHTML = sorted.map(v => {
@@ -4989,34 +4793,13 @@
         </div>`;
           }).join("");
           if (homeListEl) homeListEl.innerHTML = rowsHTML;
-          if (visitorsListEl) visitorsListEl.innerHTML = rowsHTML;
         }
-        // Charts now live in both home and visitors tabs
-        renderBarChart("vis-pages-chart", countBy(visitors, "pageLabel"), "#e8194b");
-        renderBarChart("visitors-pages-chart", countBy(visitors, "pageLabel"), "#e8194b");
-        renderBarChart("home-vis-devices-chart", countBy(visitors, "device"), "#4da6ff");
-        renderBarChart("home-vis-sources-chart", countBy(visitors, "referrer"), "#00c853");
-        const cityEntries = countByFn(visitors, v => v.city ? `${flagOf(v.country_code)} ${v.city}` : null);
-        const countryEntries = countByFn(visitors, v => v.country ? `${flagOf(v.country_code)} ${v.country}` : null);
-        renderBarChart("vis-cities-chart", cityEntries, "#f59e0b");
-        renderBarChart("visitors-cities-chart", cityEntries, "#f59e0b");
-        renderBarChart("vis-countries-chart", countryEntries, "#8b5cf6");
-        renderBarChart("visitors-countries-chart", countryEntries, "#8b5cf6");
-        // New charts
+        // Charts — single render, one set of IDs
+        renderBarChart("vis-pages-chart",    countBy(visitors, "pageLabel"), "#e8194b");
         renderBarChart("vis-referrers-chart", countBy(visitors, "referrer"), "#10b981");
-        renderBarChart("visitors-referrers-chart", countBy(visitors, "referrer"), "#10b981");
-        renderBarChart("vis-devices-chart", countBy(visitors, "device"), "#3b82f6");
-        renderBarChart("visitors-devices-chart", countBy(visitors, "device"), "#3b82f6");
-        const cartEntries = countByFn(visitors, v => v.cartCount > 0 ? "Avec panier" : "Sans panier");
-        renderBarChart("vis-cart-chart", cartEntries, "#f59e0b");
-        renderBarChart("visitors-cart-chart", cartEntries, "#f59e0b");
-        // Mobile charts for home tab
-        renderBarChart("mobile-vis-pages-chart", countBy(visitors, "pageLabel"), "#e8194b");
-        renderBarChart("mobile-vis-cities-chart", cityEntries, "#f59e0b");
-        renderBarChart("mobile-vis-countries-chart", countryEntries, "#8b5cf6");
-        renderBarChart("mobile-vis-referrers-chart", countBy(visitors, "referrer"), "#10b981");
-        renderBarChart("mobile-vis-devices-chart", countBy(visitors, "device"), "#3b82f6");
-        renderBarChart("mobile-vis-cart-chart", cartEntries, "#f59e0b");
+        renderBarChart("vis-devices-chart",  countBy(visitors, "device"),   "#3b82f6");
+        const cityEntries    = countByFn(visitors, v => v.city    ? `${flagOf(v.country_code)} ${v.city}`    : null);
+        renderBarChart("vis-cities-chart",   cityEntries, "#f59e0b");
       }, (err) => {
         const homeListEl = document.getElementById("home-vis-list");
         if (homeListEl) homeListEl.innerHTML = `<div class="no-visitors">Erreur Firebase: ${esc(err?.message || String(err))}</div>`;
@@ -5097,50 +4880,113 @@
     // Called by loadSessionStats for backwards compat (called in onAuthStateChanged)
     function loadSessionStats() { startSessionStats(); }
 
-    // Render session history rows into a container (shared by home + mobile + visitors tab)
+    // Render session history rows into the single history container
     function _renderSessionHistory(dateStr, rawData) {
-      const targets = ['visitor-history-list', 'mobile-visitor-history-list', 'visitors-history-list'];
-      targets.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        // Don't overwrite if user is viewing a different date
-        const dateInput = document.getElementById('history-date');
-        if (dateInput && dateInput.value !== dateStr) return;
-        if (!rawData) {
-          el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Aucune session pour cette date.</div>`;
-          return;
-        }
-        const sessions = Object.values(rawData).filter(s => s && s.startedAt);
-        sessions.sort((a, b) => b.startedAt - a.startedAt);
-        if (!sessions.length) {
-          el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Aucune session pour cette date.</div>`;
-          return;
-        }
-        const rows = sessions.map(s => {
-          const time = new Date(s.startedAt).toLocaleTimeString('fr-MA', { hour: '2-digit', minute: '2-digit' });
-          const flag = flagOf(s.country_code);
-          const loc = s.city ? `${flag} ${s.city}` : (s.country ? `${flag} ${s.country}` : '—');
-          const dur = s.duration ? formatDur(s.duration) : '—';
-          const journey = s.journey ? s.journey.join(' → ') : (s.pageLabel || s.page || '—');
-          return `<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid #f3f4f6;font-size:12px;flex-wrap:wrap">
-            <span style="color:#888;white-space:nowrap;min-width:40px">${time}</span>
-            <span style="flex:1;min-width:100px;font-weight:600;color:#1a1a1a" title="${esc(journey)}">${esc(s.pageLabel || s.page || '—')}</span>
-            <span style="color:#555;white-space:nowrap">${loc}</span>
-            <span style="color:#777;white-space:nowrap">${esc(s.device || '—')} · ${esc(s.browser || '—')}</span>
-            <span style="color:#aaa;white-space:nowrap">📡 ${esc(s.referrer || 'Direct')}</span>
-            <span style="color:#aaa;white-space:nowrap">⏱ ${dur}</span>
-          </div>`;
-        }).join('');
-        const label = dateStr === new Date().toISOString().slice(0, 10)
-          ? `<span style="color:#00c853">● Live</span> — ${sessions.length} session(s) aujourd'hui`
-          : `${sessions.length} session(s) le ${new Date(dateStr + 'T12:00:00').toLocaleDateString('fr-MA')}`;
-        el.innerHTML = `<div style="font-size:11px;color:#888;padding:8px 14px;display:flex;justify-content:space-between">
-          <span>${label}</span>
-          <span style="color:#aaa">Mis à jour ${new Date().toLocaleTimeString('fr-MA', {hour:'2-digit',minute:'2-digit'})}</span>
-        </div>` + rows;
-        window.currentSessions = sessions;
-      });
+      const el = document.getElementById('visitor-history-list');
+      if (!el) return;
+      if (!rawData) {
+        el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Aucune session pour cette date.</div>`;
+        return;
+      }
+      const sessions = Object.values(rawData).filter(s => s && s.startedAt);
+      sessions.sort((a, b) => b.startedAt - a.startedAt);
+      if (!sessions.length) {
+        el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Aucune session pour cette date.</div>`;
+        return;
+      }
+      const rows = sessions.map(s => {
+        const time = new Date(s.startedAt).toLocaleTimeString('fr-MA', { hour: '2-digit', minute: '2-digit' });
+        const flag = flagOf(s.country_code);
+        const loc = s.city ? `${flag} ${s.city}` : (s.country ? `${flag} ${s.country}` : '—');
+        const dur = s.duration ? formatDur(s.duration) : '—';
+        return `<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid #f3f4f6;font-size:12px;flex-wrap:wrap">
+          <span style="color:#888;white-space:nowrap;min-width:40px">${time}</span>
+          <span style="flex:1;min-width:100px;font-weight:600;color:#1a1a1a">${esc(s.pageLabel || s.page || '—')}</span>
+          <span style="color:#555;white-space:nowrap">${loc}</span>
+          <span style="color:#777;white-space:nowrap">${esc(s.device || '—')} · ${esc(s.browser || '—')}</span>
+          <span style="color:#aaa;white-space:nowrap">📡 ${esc(s.referrer || 'Direct')}</span>
+          <span style="color:#aaa;white-space:nowrap">⏱ ${dur}</span>
+        </div>`;
+      }).join('');
+      const isToday = dateStr === new Date().toISOString().slice(0, 10);
+      const label = isToday
+        ? `<span style="color:#00c853">● Live</span> — ${sessions.length} session(s) aujourd'hui`
+        : `${sessions.length} session(s) — ${new Date(dateStr + 'T12:00:00').toLocaleDateString('fr-MA')}`;
+      el.innerHTML = `<div style="font-size:11px;color:#888;padding:8px 14px;display:flex;justify-content:space-between">
+        <span>${label}</span>
+        <span style="color:#aaa">${new Date().toLocaleTimeString('fr-MA', {hour:'2-digit',minute:'2-digit'})}</span>
+      </div>` + rows;
+      window.currentSessions = sessions;
     }
+
+    // ── HISTORY BY RANGE ─────────────────────────────────────────────────────────
+    window.loadHistoryRange = async function (range, btn) {
+      // Update active button
+      document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const el = document.getElementById('visitor-history-list');
+      if (el) el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Chargement…</div>`;
+
+      const now = Date.now();
+      const today = new Date().toISOString().slice(0, 10);
+
+      // Determine date range
+      let days = 1;
+      if (range === 'today' || range === '24h') days = 1;
+      else if (range === '7d') days = 7;
+      else if (range === '30d') days = 30;
+
+      const dates = [];
+      for (let i = 0; i < days; i++) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        dates.push(d.toISOString().slice(0, 10));
+      }
+
+      try {
+        // For single day use existing mechanism; for multi-day fetch all at once
+        if (days === 1) {
+          const snap = await get(ref(db, `sessions/${today}`));
+          _renderSessionHistory(today, snap.val());
+        } else {
+          const snap = await get(ref(db, 'sessions'));
+          const allData = snap.val() || {};
+          const cutoff = Date.now() - days * 86400000;
+          const allSessions = [];
+          dates.forEach(d => {
+            const dayData = allData[d];
+            if (!dayData) return;
+            Object.values(dayData).forEach(s => {
+              if (s && s.startedAt && s.startedAt >= cutoff) allSessions.push(s);
+            });
+          });
+          allSessions.sort((a, b) => b.startedAt - a.startedAt);
+          if (!el) return;
+          if (!allSessions.length) {
+            el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Aucune session sur cette période.</div>`;
+            return;
+          }
+          const rows = allSessions.map(s => {
+            const dt = new Date(s.startedAt).toLocaleString('fr-MA', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+            const flag = flagOf(s.country_code);
+            const loc = s.city ? `${flag} ${s.city}` : (s.country ? `${flag} ${s.country}` : '—');
+            const dur = s.duration ? formatDur(s.duration) : '—';
+            return `<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid #f3f4f6;font-size:12px;flex-wrap:wrap">
+              <span style="color:#888;white-space:nowrap;min-width:80px">${dt}</span>
+              <span style="flex:1;min-width:100px;font-weight:600;color:#1a1a1a">${esc(s.pageLabel || s.page || '—')}</span>
+              <span style="color:#555;white-space:nowrap">${loc}</span>
+              <span style="color:#777;white-space:nowrap">${esc(s.device || '—')} · ${esc(s.browser || '—')}</span>
+              <span style="color:#aaa;white-space:nowrap">📡 ${esc(s.referrer || 'Direct')}</span>
+              <span style="color:#aaa;white-space:nowrap">⏱ ${dur}</span>
+            </div>`;
+          }).join('');
+          el.innerHTML = `<div style="font-size:11px;color:#888;padding:8px 14px">${allSessions.length} session(s) sur les ${days} derniers jours</div>` + rows;
+          window.currentSessions = allSessions;
+        }
+      } catch(e) {
+        if (el) el.innerHTML = `<div style="color:#e8194b;text-align:center;padding:24px;font-size:13px">Erreur: ${esc(e.message)}</div>`;
+      }
+    };
 
     // Mini sparkline for sessions chart (last 30 days)
     function _renderSessionsSparkline(data) {
@@ -5954,88 +5800,32 @@
     };
 
     // ── VISITOR HISTORY ──────────────────────────────────────────────────────────
-    window.loadVisitorHistory = async function () {
-      const dateInput = document.getElementById('history-date');
-      const selectedDate = dateInput ? dateInput.value : new Date().toISOString().slice(0, 10);
-      // Show loading spinner
-      ['visitor-history-list', 'mobile-visitor-history-list', 'visitors-history-list'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Chargement…</div>`;
-      });
-      try {
-        const snap = await get(ref(db, `sessions/${selectedDate}`));
-        _renderSessionHistory(selectedDate, snap.val());
-      } catch(e) {
-        ['visitor-history-list', 'mobile-visitor-history-list', 'visitors-history-list'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.innerHTML = `<div style="color:#e8194b;text-align:center;padding:24px;font-size:13px">Erreur: ${esc(e.message)}</div>`;
-        });
-      }
-    };
+    window.loadVisitorHistory = function() { window.loadHistoryRange('today'); };
+    window.loadMobileVisitorHistory = function() { window.loadHistoryRange('today'); };
+    window.loadVisitorsHistory = function() { window.loadHistoryRange('today'); };
 
-    // loadMobileVisitorHistory → unified via _renderSessionHistory (auto-called by live listener)
-    window.loadMobileVisitorHistory = function() { window.loadVisitorHistory(); };
-
-
-    window.loadVisitorsHistory = async function () {
-      const el = document.getElementById("visitors-history-list");
-      const dateInput = document.getElementById("visitors-history-date");
-      const selectedDate = dateInput ? dateInput.value : new Date().toISOString().slice(0,10);
-      if (!el) return;
-      el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Chargement…</div>`;
-      try {
-        const snap = await get(ref(db, `sessions/${selectedDate}`));
-        const data = snap.val();
-        if (!data) { el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Aucune session pour cette date.</div>`; return; }
-        const sessions = Object.values(data).filter(s => s && s.startedAt);
-        sessions.sort((a,b) => b.startedAt - a.startedAt);
-        const rows = sessions.map(s => {
-          const time = new Date(s.startedAt).toLocaleTimeString("fr-MA",{hour:"2-digit",minute:"2-digit"});
-          const flag = flagOf(s.country_code);
-          const loc = s.city ? `${flag} ${s.city}` : (s.country ? `${flag} ${s.country}` : "—");
-          const dur = s.duration ? formatDur(s.duration) : "—";
-          const journey = s.journey ? s.journey.join(" → ") : s.page;
-          return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;flex-wrap:wrap">
-            <span style="color:#888;white-space:nowrap;min-width:42px">${time}</span>
-            <span style="flex:1;min-width:120px;font-weight:500;color:#333" title="${esc(journey)}">${esc(s.pageLabel||s.page||"—")}</span>
-            <span style="color:#555;white-space:nowrap">${loc}</span>
-            <span style="color:#777;white-space:nowrap">${esc(s.device||"—")} · ${esc(s.browser||"—")}</span>
-            <span style="color:#aaa;white-space:nowrap">📡 ${esc(s.referrer||"Direct")}</span>
-            <span style="color:#aaa;white-space:nowrap">⏱ ${dur}</span>
-          </div>`;
-        }).join("");
-        el.innerHTML = `<div style="font-size:11px;color:#888;padding:8px 12px">${sessions.length} session(s) le ${new Date(selectedDate).toLocaleDateString('fr-MA')}</div>` + rows;
-        // Store sessions for export
-        window.visitorsCurrentSessions = sessions;
-      } catch(e) { el.innerHTML = `<div style="color:#e8194b;text-align:center;padding:24px;font-size:13px">Erreur: ${esc(e.message)}</div>`; }
-    };
-
-    window.exportVisitorsHistory = function () {
-      const sessions = window.visitorsCurrentSessions;
-      if (!sessions || !sessions.length) {
-        alert("Aucune donnée à exporter. Chargez d'abord l'historique.");
-        return;
-      }
+    window.exportVisitorHistory = function () {
+      const sessions = window.currentSessions;
+      if (!sessions?.length) { alert('Aucune donnée à exporter.'); return; }
       const csv = [
-        ["Heure", "Page", "Parcours", "Ville", "Pays", "Appareil", "Navigateur", "Source", "Durée"].join(","),
+        ['Date/Heure','Page','Ville','Pays','Appareil','Navigateur','Source','Durée'].join(','),
         ...sessions.map(s => [
-          new Date(s.startedAt).toLocaleString("fr-MA"),
-          `"${(s.pageLabel || s.page || "").replace(/"/g, '""')}"`,
-          `"${(s.journey ? s.journey.join(" → ") : s.page || "").replace(/"/g, '""')}"`,
-          `"${(s.city || "").replace(/"/g, '""')}"`,
-          `"${(s.country || "").replace(/"/g, '""')}"`,
-          `"${(s.device || "").replace(/"/g, '""')}"`,
-          `"${(s.browser || "").replace(/"/g, '""')}"`,
-          `"${(s.referrer || "").replace(/"/g, '""')}"`,
-          s.duration ? formatDur(s.duration) : ""
-        ].join(","))
-      ].join("\n");
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `visitors-history-${document.getElementById("visitors-history-date").value}.csv`;
-      link.click();
+          new Date(s.startedAt).toLocaleString('fr-MA'),
+          `"${(s.pageLabel||s.page||'').replace(/"/g,'""')}"`,
+          `"${(s.city||'').replace(/"/g,'""')}"`,
+          `"${(s.country||'').replace(/"/g,'""')}"`,
+          `"${(s.device||'').replace(/"/g,'""')}"`,
+          `"${(s.browser||'').replace(/"/g,'""')}"`,
+          `"${(s.referrer||'Direct').replace(/"/g,'""')}"`,
+          s.duration ? formatDur(s.duration) : ''
+        ].join(','))
+      ].join('\n');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'}));
+      a.download = `sessions-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
     };
+    window.exportVisitorsHistory = window.exportVisitorHistory;
 
     window.exportVisitorHistory = function () {
       const sessions = window.currentSessions;
