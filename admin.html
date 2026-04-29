@@ -2829,10 +2829,182 @@
 
     .gh-config-card.open .gh-chevron { transform: rotate(180deg) }
     .gh-config-card:not(.open) .gh-config-body { display: none }
-  </style>
+  
+    /* ── AUTH LOADING SPLASH ─────────────────────────────────────── */
+    #auth-loading {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px;
+    }
+    #auth-loading .al-logo {
+      font-size: 22px; font-weight: 800; color: #cc2366; letter-spacing: -0.5px;
+    }
+    #auth-loading .al-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #cc2366;
+      animation: al-pulse 1s ease-in-out infinite;
+    }
+    @keyframes al-pulse { 0%,100%{opacity:.3;transform:scale(.8)} 50%{opacity:1;transform:scale(1.1)} }
+    /* Hide login screen initially — show only after auth resolves */
+    #login-screen { display: none; }
+    
+    /* ══════════════════════════════════════════════════════════════
+       MOBILE RESPONSIVE — Admin Panel
+       ══════════════════════════════════════════════════════════════ */
+
+    /* Bottom nav for mobile */
+    #mobile-nav {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: none;
+      align-items: center;
+      justify-content: space-around;
+      padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 16px rgba(0,0,0,.06);
+    }
+    .mob-nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 6px 10px; border-radius: 10px; cursor: pointer;
+      font-size: 10px; color: var(--text3); font-weight: 600;
+      position: relative; min-width: 52px; text-align: center;
+      border: none; background: none;
+    }
+    .mob-nav-item .mob-nav-icon { font-size: 20px; line-height: 1; }
+    .mob-nav-item.active { color: var(--red); }
+    .mob-nav-item .mob-badge {
+      position: absolute; top: 2px; right: 8px;
+      background: var(--red); color: #fff;
+      font-size: 9px; font-weight: 800;
+      min-width: 16px; height: 16px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 4px;
+    }
+
+    /* Mobile hamburger in header */
+    #mob-menu-btn {
+      display: none;
+      background: none; border: none; cursor: pointer;
+      font-size: 22px; color: var(--text); padding: 4px;
+    }
+
+    /* Mobile sidebar overlay */
+    #sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 400;
+      background: rgba(0,0,0,.45);
+    }
+    #sidebar-overlay.open { display: block; }
+
+    @media (max-width: 768px) {
+      /* Header */
+      .admin-header {
+        padding: 0 14px;
+        height: 52px;
+      }
+      .admin-header h1 { font-size: 15px; }
+      #mob-menu-btn { display: block; }
+
+      /* Sidebar becomes drawer */
+      .admin-body {
+        height: calc(100vh - 52px);
+        padding-bottom: 62px; /* room for bottom nav */
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 52px; left: 0; bottom: 0;
+        z-index: 450;
+        transform: translateX(-100%);
+        transition: transform .25s cubic-bezier(.4,0,.2,1);
+        width: 240px;
+        box-shadow: 4px 0 24px rgba(0,0,0,.15);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      /* Main content full width */
+      .main-content { width: 100%; }
+
+      /* Home stats — 2 col grid */
+      .stats-bar {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .stat-card { padding: 12px 14px; }
+      .stat-val { font-size: 22px; }
+
+      /* Home header */
+      .home-wrap { padding: 14px; }
+      .home-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .period-selector { width: 100%; overflow-x: auto; }
+
+      /* Orders list */
+      .order-card { margin: 0 0 10px; border-radius: 10px; }
+
+      /* Bottom nav visible on mobile */
+      #mobile-nav { display: flex; }
+
+      /* Login card */
+      .login-card { padding: 28px 20px; width: 100%; max-width: 100%; }
+
+      /* Tables scroll */
+      .tab-panel { padding: 0; }
+      table { font-size: 12px; }
+
+      /* Draft layout */
+      .draft-layout { grid-template-columns: 1fr; }
+
+      /* Home recent orders */
+      .recent-orders-wrap { overflow-x: auto; }
+
+      /* Visitors grid */
+      .visitors-grid { grid-template-columns: 1fr; }
+
+      /* Regen buttons */
+      .regen-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+
+      /* Products grid */
+      .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+
+      /* Form inputs full width */
+      .form-row { flex-direction: column; }
+      .form-col { width: 100%; }
+
+      /* Reviews */
+      .review-body { grid-template-columns: 1fr; }
+
+      /* Tab panels */
+      .tab-panel { overflow-x: hidden; }
+      .tab-panel > * { max-width: 100%; }
+
+      /* Home title bar */
+      .home-title { font-size: 18px; }
+
+      /* Stat cards scroll row */
+      .stats-bar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 400px) {
+      .stats-bar { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: 1fr; }
+      .regen-grid { grid-template-columns: 1fr; }
+    }
+    </style>
 </head>
 
 <body>
+
+  <!-- AUTH LOADING SPLASH (hidden once Firebase resolves) -->
+  <div id="auth-loading">
+    <div class="al-logo">⬡ Nova Style</div>
+    <div class="al-dot"></div>
+  </div>
 
   <!-- LOGIN -->
   <div id="login-screen">
@@ -2854,6 +3026,35 @@
   <!-- ADMIN -->
   <div id="admin-screen">
 
+
+    <!-- MOBILE BOTTOM NAV -->
+    <div id="mobile-nav">
+      <button class="mob-nav-item active" data-tab="home">
+        <span class="mob-nav-icon">🏠</span>
+        <span>Accueil</span>
+      </button>
+      <button class="mob-nav-item" data-tab="orders">
+        <span class="mob-nav-icon">📦</span>
+        <span>Commandes</span>
+        <span class="mob-badge" id="mob-orders-badge" style="display:none">0</span>
+      </button>
+      <button class="mob-nav-item" data-tab="products">
+        <span class="mob-nav-icon">🪞</span>
+        <span>Produits</span>
+      </button>
+      <button class="mob-nav-item" data-tab="reviews">
+        <span class="mob-nav-icon">⭐</span>
+        <span>Avis</span>
+        <span class="mob-badge" id="mob-reviews-badge" style="display:none">0</span>
+      </button>
+      <button class="mob-nav-item" data-tab="newproduct">
+        <span class="mob-nav-icon">✨</span>
+        <span>Ajouter</span>
+      </button>
+    </div>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div id="sidebar-overlay"></div>
     <div class="admin-header">
       <h1>⬡ Nova Style Admin</h1>
       <div class="hright">
@@ -4053,6 +4254,8 @@
     let unsubOrders = null, unsubVisitors = null, unsubPending = null;
     onAuthStateChanged(auth, user => {
       const ls = document.getElementById("login-screen"), as = document.getElementById("admin-screen");
+      const al = document.getElementById("auth-loading");
+      if (al) al.style.display = "none"; // hide splash once Firebase resolved
       if (user) {
         ls.style.display = "none"; as.style.display = "block";
         document.getElementById("admin-email-display").textContent = user.email;
@@ -6592,7 +6795,75 @@
       window.loadProductList();
     }
 
-  </script>
+  
+    // ── MOBILE NAV & SIDEBAR ──────────────────────────────────────
+    (function() {
+      const overlay = document.getElementById('sidebar-overlay');
+      const sidebar = document.querySelector('.sidebar');
+      const menuBtn = document.getElementById('mob-menu-btn');
+
+      function openSidebar() {
+        sidebar.classList.add('open');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      if (menuBtn) menuBtn.addEventListener('click', () => {
+        sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+      });
+      if (overlay) overlay.addEventListener('click', closeSidebar);
+
+      // Sync mobile bottom nav active state with tab switches
+      function syncMobNav(tab) {
+        document.querySelectorAll('.mob-nav-item').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.tab === tab);
+        });
+      }
+
+      // Wire mobile bottom nav clicks
+      document.querySelectorAll('.mob-nav-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab;
+          if (tab) {
+            // Reuse existing sidebar-item click logic
+            const sidebarItem = document.querySelector(`.sidebar-item[data-tab="${tab}"]`);
+            if (sidebarItem) sidebarItem.click();
+            syncMobNav(tab);
+            closeSidebar();
+          }
+        });
+      });
+
+      // Also close sidebar when sidebar-item is clicked on mobile
+      document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.addEventListener('click', () => {
+          if (window.innerWidth <= 768) {
+            closeSidebar();
+            syncMobNav(item.dataset.tab);
+          }
+        });
+      });
+
+      // Sync reviews badge to mobile nav
+      const observer = new MutationObserver(() => {
+        const badge = document.getElementById('reviews-tab-badge');
+        const mobBadge = document.getElementById('mob-reviews-badge');
+        if (badge && mobBadge) {
+          const show = badge.style.display !== 'none' && badge.textContent !== '0';
+          mobBadge.style.display = show ? 'flex' : 'none';
+          mobBadge.textContent = badge.textContent;
+        }
+      });
+      const reviewsBadge = document.getElementById('reviews-tab-badge');
+      if (reviewsBadge) observer.observe(reviewsBadge, { attributes: true, childList: true });
+    })();
+
+    </script>
 
 </body>
 
