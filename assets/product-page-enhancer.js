@@ -102,6 +102,58 @@
     border-radius: 20px;
     padding: 4px 10px;
   }
+
+  /* ── Mobile optimizations ─────────────────────────── */
+  @media (max-width: 600px) {
+    #add-to-cart-btn {
+      font-size: 15px !important;
+      padding: 14px 20px !important;
+    }
+
+    .ns-deposit-hint {
+      font-size: 12px;
+      padding: 8px 12px;
+      margin: 4px 0 12px;
+    }
+    .ns-deposit-hint strong {
+      font-size: 13px;
+    }
+
+    .ns-trust-strip-mini {
+      gap: 6px;
+      margin: 8px 0 0;
+    }
+    .ns-trust-strip-mini span {
+      font-size: 10px;
+      padding: 3px 8px;
+    }
+
+    .ns-prepayment-trust {
+      margin: 16px 0 8px;
+      padding: 14px 16px;
+      border-radius: 10px;
+    }
+    .ns-prepayment-trust .pt-header {
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    .ns-prepayment-trust ol.pt-steps {
+      padding-left: 16px;
+      gap: 6px;
+    }
+    .ns-prepayment-trust ol.pt-steps li {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .ns-prepayment-trust .pt-badges {
+      gap: 6px;
+      padding-top: 10px;
+    }
+    .ns-prepayment-trust .pt-badges span {
+      font-size: 10px;
+      padding: 3px 8px;
+    }
+  }
   `;
   const styleEl = document.createElement('style');
   styleEl.textContent = css;
@@ -147,5 +199,21 @@
   </div>
 </div>`
     );
+  }
+
+  // ── Enhanced thumbs functionality ───────────────────────────────────────
+  const thumbs = document.querySelectorAll('.thumbs img');
+  const mainImg = document.getElementById('main-img');
+  if (thumbs.length && mainImg) {
+    thumbs.forEach((thumb, index) => {
+      if (index === 0) thumb.classList.add('active');
+      
+      const originalOnClick = thumb.onclick;
+      thumb.onclick = function() {
+        if (originalOnClick) originalOnClick.call(this);
+        thumbs.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      };
+    });
   }
 })();
