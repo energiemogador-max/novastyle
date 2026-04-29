@@ -51,6 +51,10 @@
     "sessions": {
       ".read": "auth != null",
       ".write": true
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null"
     }
   }
 }
