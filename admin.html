@@ -3040,6 +3040,11 @@
         margin-bottom: 0;
       }
 
+      /* Show mobile visitor analytics in home tab on mobile */
+      .mobile-visitor-analytics {
+        display: block !important;
+      }
+
       /* Regen buttons */
       .regen-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
 
@@ -3049,6 +3054,60 @@
       /* Form inputs full width */
       .form-row { flex-direction: column; }
       .form-col { width: 100%; }
+
+      /* Fix hidden elements on mobile */
+      .tab-panel { overflow-x: visible; }
+      .h-panel-body { padding: 16px; }
+      .home-grid { grid-template-columns: 1fr; gap: 16px; }
+
+      /* Fix chart containers */
+      .chart-wrap { min-height: 160px; position: relative; }
+
+      /* Fix button layouts */
+      .products-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      .products-toolbar > * {
+        width: 100%;
+        text-align: left;
+      }
+      .products-toolbar button {
+        width: auto;
+        align-self: flex-start;
+      }
+
+      /* Fix table scrolling */
+      .tab-panel table {
+        width: 100%;
+        min-width: 600px;
+        font-size: 11px;
+      }
+
+      /* Fix modal displays */
+      #product-edit-modal {
+        margin: 10px;
+        max-width: calc(100vw - 20px);
+        max-height: calc(100vh - 20px);
+        overflow-y: auto;
+      }
+
+      /* Fix KPI cards */
+      .kpi-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .kpi-card {
+        padding: 12px;
+        text-align: center;
+      }
+
+      /* Fix search inputs */
+      .search-input {
+        width: 100% !important;
+        max-width: none !important;
+      }
 
       /* Reviews */
       .review-body { grid-template-columns: 1fr; }
@@ -3099,6 +3158,23 @@
       .chart-wrap {
         min-height: 160px;
       }
+
+      /* Fix very small screens */
+      .kpi-row { grid-template-columns: 1fr; }
+      .admin-header h1 { font-size: 14px; }
+      .home-wrap { padding: 12px; }
+
+      /* Fix button sizes */
+      .mob-nav-item {
+        padding: 8px;
+        font-size: 11px;
+      }
+
+      /* Fix modal on very small screens */
+      #product-edit-modal {
+        margin: 5px;
+        padding: 16px;
+      }
     }
     </style>
 </head>
@@ -3137,11 +3213,6 @@
       <button class="mob-nav-item active" data-tab="home">
         <span class="mob-nav-icon">🏠</span>
         <span>Accueil</span>
-      </button>
-      <button class="mob-nav-item" data-tab="visitors">
-        <span class="mob-nav-icon">👥</span>
-        <span>Visiteurs</span>
-        <span class="mob-badge" id="mob-visitors-badge" style="display:none">0</span>
       </button>
       <button class="mob-nav-item" data-tab="orders">
         <span class="mob-nav-icon">📦</span>
@@ -3319,6 +3390,51 @@
               </div>
               <div id="visitor-history-list" style="max-height:380px;overflow-y:auto;padding:4px 0">
                 <div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Sélectionnez une date et cliquez Actualiser</div>
+              </div>
+            </div>
+
+            <!-- Mobile visitor analytics (shown only on mobile) -->
+            <div class="mobile-visitor-analytics" style="display:none">
+              <!-- Visitor analytics: pages + cities + countries -->
+              <div class="visitors-grid" style="margin-bottom:16px">
+                <div class="vis-panel">
+                  <div class="vis-panel-head"><span>Pages populaires</span></div>
+                  <div class="chart-wrap" id="mobile-vis-pages-chart"></div>
+                </div>
+                <div class="vis-panel">
+                  <div class="vis-panel-head"><span>📍 Villes</span></div>
+                  <div class="chart-wrap" id="mobile-vis-cities-chart"></div>
+                </div>
+                <div class="vis-panel">
+                  <div class="vis-panel-head"><span>🌍 Pays</span></div>
+                  <div class="chart-wrap" id="mobile-vis-countries-chart"></div>
+                </div>
+              </div>
+
+              <!-- Additional analytics: referrers + devices -->
+              <div class="visitors-grid" style="margin-bottom:16px">
+                <div class="vis-panel">
+                  <div class="vis-panel-head"><span>📡 Sources de trafic</span></div>
+                  <div class="chart-wrap" id="mobile-vis-referrers-chart"></div>
+                </div>
+                <div class="vis-panel">
+                  <div class="vis-panel-head"><span>📱 Appareils</span></div>
+                  <div class="chart-wrap" id="mobile-vis-devices-chart"></div>
+                </div>
+                <div class="vis-panel">
+                  <div class="vis-panel-head"><span>🛒 Paniers actifs</span></div>
+                  <div class="chart-wrap" id="mobile-vis-cart-chart"></div>
+                </div>
+              </div>
+
+              <!-- Visitor session history -->
+              <div class="vis-panel" style="margin-bottom:20px">
+                <div class="vis-panel-head">
+                  <span>📋 Historique des sessions aujourd'hui</span>
+                </div>
+                <div id="mobile-visitor-history-list" style="max-height:300px;overflow-y:auto;padding:4px 0">
+                  <div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Chargement…</div>
+                </div>
               </div>
             </div>
 
@@ -3562,6 +3678,8 @@
               </select>
               <button onclick="window.loadProductList?.()"
                 style="padding:8px 16px;background:#1a1a1a;color:#fff;border:none;border-radius:6px;cursor:pointer">🔄 Actualiser</button>
+              <button onclick="window.__mountNouveauProduit__?.()"
+                style="padding:8px 16px;background:var(--red);color:#fff;border:none;border-radius:6px;cursor:pointer">✨ Ajouter produit</button>
               <span id="product-count" style="font-size:11px;color:#6b7280;margin-left:auto"></span>
             </div>
             <table id="product-table" style="width:100%;border-collapse:collapse;font-size:13px;margin-top:16px">
@@ -4428,7 +4546,13 @@
         }
         if (tab === "newproduct") window.__mountNouveauProduit__?.();
         if (tab === "reviews" && !allReviewsFlat.length) loadReviews();
-        if (tab === "home") applyPeriod(currentPeriod);
+        if (tab === "home") {
+          applyPeriod(currentPeriod);
+          // Auto-load mobile visitor history on mobile
+          if (window.innerWidth <= 768) {
+            window.loadMobileVisitorHistory();
+          }
+        }
         if (tab === "customers") loadCustomers();
         if (tab === "visitors") {
           // Initialize visitors tab if needed
@@ -4891,6 +5015,13 @@
         const cartEntries = countByFn(visitors, v => v.cartCount > 0 ? "Avec panier" : "Sans panier");
         renderBarChart("vis-cart-chart", cartEntries, "#f59e0b");
         renderBarChart("visitors-cart-chart", cartEntries, "#f59e0b");
+        // Mobile charts for home tab
+        renderBarChart("mobile-vis-pages-chart", countBy(visitors, "pageLabel"), "#e8194b");
+        renderBarChart("mobile-vis-cities-chart", cityEntries, "#f59e0b");
+        renderBarChart("mobile-vis-countries-chart", countryEntries, "#8b5cf6");
+        renderBarChart("mobile-vis-referrers-chart", countBy(visitors, "referrer"), "#10b981");
+        renderBarChart("mobile-vis-devices-chart", countBy(visitors, "device"), "#3b82f6");
+        renderBarChart("mobile-vis-cart-chart", cartEntries, "#f59e0b");
       }, (err) => {
         const homeListEl = document.getElementById("home-vis-list");
         if (homeListEl) homeListEl.innerHTML = `<div class="no-visitors">Erreur Firebase: ${esc(err?.message || String(err))}</div>`;
@@ -5579,6 +5710,34 @@
         el.innerHTML = `<div style="font-size:11px;color:#888;padding:8px 12px">${sessions.length} session(s) le ${new Date(selectedDate).toLocaleDateString('fr-MA')}</div>` + rows;
         // Store sessions for export
         window.currentSessions = sessions;
+      } catch(e) { el.innerHTML = `<div style="color:#e8194b;text-align:center;padding:24px;font-size:13px">Erreur: ${esc(e.message)}</div>`; }
+    };
+
+    // Auto-load mobile visitor history
+    window.loadMobileVisitorHistory = async function () {
+      const el = document.getElementById("mobile-visitor-history-list");
+      if (!el) return;
+      el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Chargement…</div>`;
+      try {
+        const today = new Date().toISOString().slice(0,10);
+        const snap = await get(ref(db, `sessions/${today}`));
+        const data = snap.val();
+        if (!data) { el.innerHTML = `<div style="color:var(--text4,#aaa);text-align:center;padding:24px;font-size:13px">Aucune session aujourd'hui.</div>`; return; }
+        const sessions = Object.values(data).filter(s => s && s.startedAt);
+        sessions.sort((a,b) => b.startedAt - a.startedAt);
+        const rows = sessions.slice(0, 20).map(s => { // Limit to 20 for mobile
+          const time = new Date(s.startedAt).toLocaleTimeString("fr-MA",{hour:"2-digit",minute:"2-digit"});
+          const flag = flagOf(s.country_code);
+          const loc = s.city ? `${flag} ${s.city}` : (s.country ? `${flag} ${s.country}` : "—");
+          const dur = s.duration ? formatDur(s.duration) : "—";
+          return `<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;flex-wrap:wrap">
+            <span style="color:#888;white-space:nowrap;min-width:38px">${time}</span>
+            <span style="flex:1;min-width:100px;font-weight:500;color:#333">${esc(s.pageLabel||s.page||"—")}</span>
+            <span style="color:#555;white-space:nowrap">${loc}</span>
+            <span style="color:#aaa;white-space:nowrap">⏱ ${dur}</span>
+          </div>`;
+        }).join("");
+        el.innerHTML = `<div style="font-size:11px;color:#888;padding:8px 12px">${sessions.length} session(s) aujourd'hui</div>` + rows;
       } catch(e) { el.innerHTML = `<div style="color:#e8194b;text-align:center;padding:24px;font-size:13px">Erreur: ${esc(e.message)}</div>`; }
     };
 
