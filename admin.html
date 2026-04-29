@@ -5752,43 +5752,55 @@
       document.getElementById('pp-loading').style.display = 'block';
       document.getElementById('pp-list').innerHTML = '';
       try {
-        const [staticRes, fbRes] = await Promise.allSettled([
-          fetch('/catalog.json').then(r => r.json()),
-          fetch(`${DB_REST}/catalog.json`).then(r => r.json()),
-        ]);
-        let products = [];
-        if (staticRes.status === 'fulfilled') {
-          const d = staticRes.value;
-          const arr = Array.isArray(d) ? d : (d.products || Object.values(d));
-          arr.forEach(p => { if (p && (p.title || p.name)) products.push({ id: p.slug||p.id||p.title, name: p.title||p.name, price: p.price_min||p.price||0, image: (p.images||[])[0]||'', options: p.axes||p.options||null }); });
-        }
-        if (fbRes.status === 'fulfilled' && fbRes.value) {
-          Object.entries(fbRes.value).forEach(([slug, v]) => {
-            if (!v || v.active === false) return;
-            if (!products.find(p => p.id === slug)) {
-              products.push({ id: slug, name: v.title||slug, price: v.price_min||0, image: (v.images||[])[0]||'', options: v.axes||null });
-            }
-          });
-        }
-        _ppProducts = products.filter(p => p.name);
+        const res = await fetch('/products-index.json');
+        if (!res.ok) throw new Error('products-index.json introuvable');
+        const data = await res.json();
+        _ppProducts = (data.products || [])
+          .filter(p => p.active !== false)
+          .map(p => ({
+            id:    p.slug || p.id,
+            slug:  p.slug || p.id,
+            name:  p.name,
+            price: p.price?.min || p.price?.max || 0,
+            priceMax: p.price?.max || 0,
+            image: p.image || '',
+            categoryId: p.categoryId || '',
+            hasVariants: p.hasVariants || false,
+          }));
         renderProductPicker(_ppProducts);
       } catch(e) {
-        document.getElementById('pp-loading').textContent = 'Erreur chargement: ' + e.message;
+        document.getElementById('pp-loading').textContent = '❌ ' + e.message;
       }
     };
 
     function renderProductPicker(products) {
-      const list = document.getElementById('pp-list');
+      const list    = document.getElementById('pp-list');
       const loading = document.getElementById('pp-loading');
       loading.style.display = 'none';
-      if (!products.length) { list.innerHTML = '<div style="padding:20px;color:#9ca3af;text-align:center;grid-column:1/-1">Aucun produit trouvé</div>'; return; }
-      list.innerHTML = products.map(p => `
-        <div onclick="window.selectProduct('${esc(p.id)}')"
-          style="border:1.5px solid #e5e7eb;border-radius:9px;padding:10px;cursor:pointer;transition:border-color .15s;hover:border-color:#e8194b">
-          ${p.image ? `<img src="${esc(p.image)}" style="width:100%;height:90px;object-fit:cover;border-radius:6px;margin-bottom:8px" onerror="this.style.display='none'">` : `<div style="width:100%;height:60px;background:#f3f4f6;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:22px">🪞</div>`}
+      if (!products.length) {
+        list.innerHTML = '<div style="padding:20px;color:#9ca3af;text-align:center;grid-column:1/-1">Aucun produit trouvé</div>';
+        return;
+      }
+      list.innerHTML = products.map(p => {
+        const priceStr = p.price
+          ? (p.priceMax && p.priceMax !== p.price
+              ? `${p.price.toLocaleString('fr-MA')} – ${p.priceMax.toLocaleString('fr-MA')} MAD`
+              : `${p.price.toLocaleString('fr-MA')} MAD`)
+          : '';
+        const imgSrc = p.image.startsWith('http') ? p.image : p.image;
+        return `<div onclick="window.selectProduct('${esc(p.slug)}')"
+          style="border:1.5px solid #e5e7eb;border-radius:9px;padding:10px;cursor:pointer;transition:all .15s"
+          onmouseover="this.style.borderColor='#e8194b';this.style.background='#fff5f7'"
+          onmouseout="this.style.borderColor='#e5e7eb';this.style.background=''"
+        >
+          ${imgSrc
+            ? `<img src="${esc(imgSrc)}" style="width:100%;height:90px;object-fit:cover;border-radius:6px;margin-bottom:8px" onerror="this.style.display='none'">`
+            : `<div style="width:100%;height:60px;background:#f3f4f6;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:22px">🪞</div>`}
           <div style="font-size:12px;font-weight:600;color:#111;line-height:1.3;margin-bottom:4px">${esc(p.name)}</div>
-          <div style="font-size:11px;color:#e8194b;font-weight:700">${p.price ? p.price.toLocaleString('fr-MA') + ' MAD' : ''}</div>
-        </div>`).join('');
+          <div style="font-size:11px;color:#e8194b;font-weight:700">${priceStr}</div>
+          ${p.hasVariants ? '<div style="font-size:10px;color:#9ca3af;margin-top:2px">Variantes disponibles</div>' : ''}
+        </div>`;
+      }).join('');
     }
 
     window.filterProductPicker = function () {
@@ -5796,37 +5808,54 @@
       renderProductPicker(q ? _ppProducts.filter(p => p.name.toLowerCase().includes(q)) : _ppProducts);
     };
 
-    window.selectProduct = function (id) {
-      _ppSelected = _ppProducts.find(p => p.id === id);
+    window.selectProduct = async function (slug) {
+      _ppSelected = _ppProducts.find(p => p.slug === slug);
       if (!_ppSelected) return;
       document.getElementById('product-picker-overlay').style.display = 'none';
+
+      // Load full product data for axes + per-variant prices
+      try {
+        const res = await fetch(`/products/${slug}.json`);
+        if (res.ok) {
+          const full = await res.json();
+          _ppSelected._axes     = full.axes || null;
+          _ppSelected._variants = full.variants || [];
+        }
+      } catch(e) { /* no variants, use base price */ }
+
       openVariantPicker(_ppSelected);
     };
 
     function openVariantPicker(product) {
       document.getElementById('vp-title').textContent = product.name;
-      document.getElementById('vp-price-hint').textContent = product.price ? 'Prix de base : ' + product.price.toLocaleString('fr-MA') + ' MAD' : '';
+      const priceHint = product.priceMax && product.priceMax !== product.price
+        ? `${product.price.toLocaleString('fr-MA')} – ${product.priceMax.toLocaleString('fr-MA')} MAD`
+        : `${product.price.toLocaleString('fr-MA')} MAD`;
+      document.getElementById('vp-price-hint').textContent = `Prix de base : ${priceHint}`;
       document.getElementById('vp-price').value = product.price || '';
       document.getElementById('vp-qty').value = 1;
       document.getElementById('vp-remise').value = 0;
 
       const optionsEl = document.getElementById('vp-options');
       optionsEl.innerHTML = '';
-      const opts = product.options;
-      if (opts) {
-        const entries = Array.isArray(opts)
-          ? opts.map(ax => [ax.label||ax.name, ax.values||ax.options||[]])
-          : Object.entries(opts);
-        entries.forEach(([label, values]) => {
+
+      const axes = product._axes;
+      if (axes?.options) {
+        const order = axes.order || Object.keys(axes.options);
+        order.forEach(axisName => {
+          const values = axes.options[axisName];
           if (!values?.length) return;
           const div = document.createElement('div');
-          div.innerHTML = `<div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:6px">${esc(label)}</div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px">${(values||[]).map(v => {
-              const val = typeof v === 'object' ? (v.label||v.value||JSON.stringify(v)) : v;
-              return `<button type="button" class="vp-opt-btn" data-axis="${esc(label)}" data-value="${esc(val)}"
-                onclick="window.selectVariantOpt(this)"
-                style="padding:5px 11px;border:1.5px solid #e5e7eb;border-radius:6px;font-size:12px;cursor:pointer;background:#fff;transition:all .15s">${esc(val)}</button>`;
-            }).join('')}</div>`;
+          div.innerHTML = `
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:6px">${esc(axisName)}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              ${values.map(v => `
+                <button type="button" class="vp-opt-btn" data-axis="${esc(axisName)}" data-value="${esc(v)}"
+                  onclick="window.selectVariantOpt(this)"
+                  style="padding:5px 11px;border:1.5px solid #e5e7eb;border-radius:6px;font-size:12px;cursor:pointer;background:#fff;transition:all .15s">
+                  ${esc(v)}
+                </button>`).join('')}
+            </div>`;
           optionsEl.appendChild(div);
         });
       }
@@ -5836,10 +5865,22 @@
 
     window.selectVariantOpt = function (btn) {
       const axis = btn.dataset.axis;
-      btn.closest('div').querySelectorAll('.vp-opt-btn[data-axis="'+axis+'"]').forEach(b => {
+      btn.closest('div').querySelectorAll(`.vp-opt-btn[data-axis="${axis}"]`).forEach(b => {
         b.style.background = '#fff'; b.style.borderColor = '#e5e7eb'; b.style.color = '#374151';
       });
       btn.style.background = '#e8194b'; btn.style.borderColor = '#e8194b'; btn.style.color = '#fff';
+
+      // Auto-update price if matching variant found
+      if (_ppSelected?._variants?.length) {
+        const selected = {};
+        document.querySelectorAll('#vp-options .vp-opt-btn').forEach(b => {
+          if (b.style.background === 'rgb(232, 25, 75)') selected[b.dataset.axis] = b.dataset.value;
+        });
+        const match = _ppSelected._variants.find(v =>
+          Object.entries(selected).every(([k, val]) => v.axes?.[k] === val)
+        );
+        if (match?.price) document.getElementById('vp-price').value = match.price;
+      }
     };
 
     window.confirmVariantPick = function () {
@@ -5848,10 +5889,10 @@
       document.querySelectorAll('#vp-options .vp-opt-btn').forEach(btn => {
         if (btn.style.background === 'rgb(232, 25, 75)') selectedOpts[btn.dataset.axis] = btn.dataset.value;
       });
-      const variantStr = Object.entries(selectedOpts).map(([k,v]) => `${k}: ${v}`).join(' · ');
-      const price   = parseFloat(document.getElementById('vp-price').value) || 0;
-      const qty     = parseInt(document.getElementById('vp-qty').value) || 1;
-      const remise  = parseFloat(document.getElementById('vp-remise').value) || 0;
+      const variantStr = Object.entries(selectedOpts).map(([k, v]) => `${k}: ${v}`).join(' · ');
+      const price  = parseFloat(document.getElementById('vp-price').value) || 0;
+      const qty    = parseInt(document.getElementById('vp-qty').value) || 1;
+      const remise = parseFloat(document.getElementById('vp-remise').value) || 0;
       window.addCustomItem({ name: _ppSelected.name, variant: variantStr || null, price, quantity: qty, remise });
       document.getElementById('variant-picker-overlay').style.display = 'none';
       _ppSelected = null;
