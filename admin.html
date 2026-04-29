@@ -3593,13 +3593,6 @@
         <!-- ═══ ORDERS ═══ -->
         <div class="tab-panel" id="tab-orders">
 
-          <!-- Sub-tab bar -->
-          <div class="sub-tab-bar">
-            <div class="sub-tab active" data-sub="active">📦 Commandes actives</div>
-            <div class="sub-tab" data-sub="drafts">📝 Brouillons <span id="draft-tab-badge" class="tab-badge"
-                style="position:relative;top:0;right:0;background:var(--amber);font-size:9px">0</span></div>
-          </div>
-
           <!-- ── Active Orders sub-panel ── -->
           <div class="sub-panel active" id="sub-active">
             <div class="container">
@@ -3614,26 +3607,6 @@
               </div>
               <div id="orders-display">
                 <div class="loading">Connexion Firebase…</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ── Drafts sub-panel ── -->
-          <div class="sub-panel" id="sub-drafts">
-            <div class="container">
-              <div
-                style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-                <div class="section-title" style="display:flex;align-items:center;gap:8px">Brouillons <span
-                    id="draft-count-label"
-                    style="font-size:11px;font-weight:500;color:var(--text4);text-transform:none;letter-spacing:0"></span>
-                </div>
-                <button onclick="window.toggleAddOrderPanel()"
-                  style="background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:800;cursor:pointer">
-                  ➕ Nouveau brouillon
-                </button>
-              </div>
-              <div id="orders-draft-list">
-                <div class="loading">Chargement des brouillons…</div>
               </div>
             </div>
           </div>
@@ -4302,50 +4275,116 @@
 
     <!-- ═══ CREATE / EDIT ORDER MODAL ═══ -->
     <div id="order-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;overflow-y:auto;padding:20px">
-      <div style="background:#fff;border-radius:12px;max-width:600px;margin:0 auto;padding:28px;position:relative">
+      <div style="background:#fff;border-radius:14px;max-width:680px;margin:0 auto;padding:28px;position:relative">
         <button onclick="window.closeOrderModal()" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#888">✕</button>
         <h3 id="order-modal-title" style="margin:0 0 20px;font-size:18px;font-weight:700">➕ Créer une commande</h3>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+        <!-- Customer fields -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
           <div>
-            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Nom complet *</label>
+            <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px">Nom complet *</label>
             <input id="om-name" placeholder="Nom du client" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
           </div>
           <div>
-            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Téléphone *</label>
+            <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px">Téléphone *</label>
             <input id="om-phone" placeholder="0612345678" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
           </div>
           <div>
-            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Ville</label>
+            <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px">Ville</label>
             <input id="om-city" placeholder="Casablanca" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
           </div>
           <div>
-            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Email</label>
+            <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px">Email</label>
             <input id="om-email" type="email" placeholder="client@email.com" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
           </div>
           <div style="grid-column:1/-1">
-            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Adresse</label>
+            <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px">Adresse</label>
             <input id="om-address" placeholder="Rue, quartier…" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box">
           </div>
           <div style="grid-column:1/-1">
-            <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Notes</label>
+            <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px">Notes</label>
             <textarea id="om-notes" rows="2" placeholder="Instructions spéciales, couleur, dimensions…" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box;resize:vertical"></textarea>
           </div>
         </div>
-        <div style="margin-top:18px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <strong style="font-size:13px">Produits</strong>
-            <button onclick="window.addOrderItem()" style="background:none;border:1.5px solid #e8194b;color:#e8194b;padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600">+ Ajouter produit</button>
+
+        <!-- Products section -->
+        <div style="border-top:1.5px solid #f3f4f6;padding-top:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+            <strong style="font-size:13px;color:#111">Produits</strong>
+            <div style="display:flex;gap:8px">
+              <button onclick="window.openProductPicker()" style="display:inline-flex;align-items:center;gap:5px;background:#eff6ff;color:#2563eb;border:1.5px solid #bfdbfe;padding:6px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer">📦 Catalogue</button>
+              <button onclick="window.addCustomItem()" style="display:inline-flex;align-items:center;gap:5px;background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0;padding:6px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer">✏️ Personnalisé</button>
+            </div>
           </div>
-          <div id="om-items"></div>
+
+          <!-- Items list -->
+          <div id="om-items" style="display:flex;flex-direction:column;gap:8px;min-height:40px"></div>
+          <div id="om-items-empty" style="text-align:center;padding:20px;color:#9ca3af;font-size:13px;border:1.5px dashed #e5e7eb;border-radius:8px">Aucun produit ajouté</div>
+
+          <!-- Summary -->
+          <div style="margin-top:14px;padding:14px 16px;background:#f8fafc;border-radius:10px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#6b7280">
+              <span>Sous-total</span><span id="om-subtotal">0 MAD</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#6b7280">
+              <span>Remise globale</span>
+              <div style="display:flex;align-items:center;gap:6px">
+                <input id="om-global-remise" type="number" min="0" max="100" value="0" placeholder="0"
+                  style="width:60px;padding:4px 8px;border:1.5px solid #e5e7eb;border-radius:6px;font-size:13px;text-align:center"
+                  oninput="window._recalcOrderTotal()"> %
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;color:#111;border-top:1px solid #e5e7eb;padding-top:8px">
+              <span>Total</span><span id="om-total" style="color:#e8194b">0 MAD</span>
+            </div>
+          </div>
         </div>
-        <div style="margin-top:14px;padding-top:14px;border-top:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between">
-          <div style="font-size:15px;font-weight:700">Total : <span id="om-total" style="color:#e8194b">0 MAD</span></div>
-          <div style="display:flex;gap:10px">
-            <button onclick="window.closeOrderModal()" style="padding:9px 18px;border:1.5px solid #e5e7eb;background:#fff;border-radius:8px;font-size:13px;cursor:pointer">Annuler</button>
-            <button id="om-save-btn" onclick="window.saveOrderModal()" style="padding:9px 20px;background:#e8194b;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">💾 Enregistrer</button>
-          </div>
+
+        <div style="margin-top:16px;display:flex;justify-content:flex-end;gap:10px">
+          <button onclick="window.closeOrderModal()" style="padding:9px 18px;border:1.5px solid #e5e7eb;background:#fff;border-radius:8px;font-size:13px;cursor:pointer">Annuler</button>
+          <button id="om-save-btn" onclick="window.saveOrderModal()" style="padding:9px 20px;background:#e8194b;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">💾 Enregistrer</button>
         </div>
         <div id="om-status" style="margin-top:10px;font-size:13px;text-align:center"></div>
+      </div>
+    </div>
+
+    <!-- ═══ PRODUCT PICKER MODAL ═══ -->
+    <div id="product-picker-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1100;overflow-y:auto;padding:20px">
+      <div style="background:#fff;border-radius:14px;max-width:720px;margin:0 auto;padding:24px;position:relative">
+        <button onclick="document.getElementById('product-picker-overlay').style.display='none'" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#888">✕</button>
+        <h3 style="margin:0 0 16px;font-size:16px;font-weight:700">📦 Choisir un produit</h3>
+        <input id="pp-search" placeholder="🔍 Rechercher un produit…" oninput="window.filterProductPicker()"
+          style="width:100%;padding:9px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box;margin-bottom:14px">
+        <div id="pp-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;max-height:420px;overflow-y:auto"></div>
+        <div id="pp-loading" style="text-align:center;padding:30px;color:#9ca3af;font-size:13px">Chargement du catalogue…</div>
+      </div>
+    </div>
+
+    <!-- ═══ VARIANT PICKER MODAL ═══ -->
+    <div id="variant-picker-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1200;overflow-y:auto;padding:20px">
+      <div style="background:#fff;border-radius:14px;max-width:420px;margin:0 auto;padding:24px;position:relative">
+        <button onclick="document.getElementById('variant-picker-overlay').style.display='none'" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#888">✕</button>
+        <h3 id="vp-title" style="margin:0 0 4px;font-size:15px;font-weight:700"></h3>
+        <div id="vp-price-hint" style="font-size:12px;color:#9ca3af;margin-bottom:16px"></div>
+        <div id="vp-options" style="display:flex;flex-direction:column;gap:14px;margin-bottom:18px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <div>
+            <label style="font-size:11px;font-weight:700;color:#6b7280;display:block;margin-bottom:4px">Prix unitaire (MAD)</label>
+            <input id="vp-price" type="number" min="0" style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:700;color:#6b7280;display:block;margin-bottom:4px">Quantité</label>
+            <input id="vp-qty" type="number" min="1" value="1" style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <label style="font-size:11px;font-weight:700;color:#6b7280;display:block;margin-bottom:4px">Remise sur ce produit (%)</label>
+          <input id="vp-remise" type="number" min="0" max="100" value="0" style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px;box-sizing:border-box">
+        </div>
+        <button onclick="window.confirmVariantPick()"
+          style="width:100%;padding:11px;background:#e8194b;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer">
+          ✅ Ajouter à la commande
+        </button>
       </div>
     </div>
 
@@ -5769,9 +5808,11 @@
       document.getElementById("om-save-btn").textContent = "💾 Enregistrer";
       ["om-name","om-phone","om-city","om-email","om-address","om-notes"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
       document.getElementById("om-items").innerHTML = "";
+      document.getElementById("om-global-remise").value = 0;
       document.getElementById("om-total").textContent = "0 MAD";
+      document.getElementById("om-subtotal").textContent = "0 MAD";
       document.getElementById("om-status").textContent = "";
-      window.addOrderItem();
+      omUpdateEmptyState();
       document.getElementById("order-modal-overlay").style.display = "block";
     };
 
@@ -5790,10 +5831,11 @@
       document.getElementById("om-address").value = c.address || "";
       document.getElementById("om-notes").value = c.notes || "";
       document.getElementById("om-items").innerHTML = "";
-      (data.items || []).forEach(it => window.addOrderItem(it));
-      if (!(data.items || []).length) window.addOrderItem();
+      document.getElementById("om-global-remise").value = data.globalRemise || 0;
+      (data.items || []).forEach(it => window.addCustomItem(it));
       window._recalcOrderTotal();
       document.getElementById("om-status").textContent = "";
+      omUpdateEmptyState();
       document.getElementById("order-modal-overlay").style.display = "block";
     };
 
@@ -5801,28 +5843,181 @@
       document.getElementById("order-modal-overlay").style.display = "none";
     };
 
+    // ── Item rendering ────────────────────────────────────────────────────────────
+    function omUpdateEmptyState() {
+      const items = document.getElementById('om-items');
+      const empty = document.getElementById('om-items-empty');
+      if (!items || !empty) return;
+      empty.style.display = items.children.length ? 'none' : 'block';
+    }
+
     window.addOrderItem = function (prefill) {
-      const container = document.getElementById("om-items");
-      const idx = container.children.length;
-      const row = document.createElement("div");
-      row.style.cssText = "display:grid;grid-template-columns:1fr 90px 90px 30px;gap:8px;margin-bottom:8px;align-items:center";
+      window.addCustomItem(prefill);
+    };
+
+    window.addCustomItem = function (prefill) {
+      const container = document.getElementById('om-items');
+      const row = document.createElement('div');
+      row.className = 'om-item-row';
+      row.style.cssText = 'display:grid;grid-template-columns:1fr 90px 70px 70px auto;gap:8px;align-items:center;background:#f8fafc;border:1.5px solid #e5e7eb;border-radius:9px;padding:10px 12px';
       row.innerHTML = `
-        <input class="om-item-name" placeholder="Nom du produit" value="${esc(prefill?.name||"")}" style="padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px">
-        <input class="om-item-price" type="number" min="0" placeholder="Prix" value="${prefill?.price||""}" style="padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px" oninput="window._recalcOrderTotal()">
-        <input class="om-item-qty" type="number" min="1" placeholder="Qté" value="${prefill?.quantity||1}" style="padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:7px;font-size:13px" oninput="window._recalcOrderTotal()">
-        <button onclick="this.closest('div').remove();window._recalcOrderTotal()" style="background:none;border:none;font-size:18px;cursor:pointer;color:#bbb;padding:0">✕</button>`;
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:3px">Produit</div>
+          <input class="om-item-name" placeholder="Nom du produit / description" value="${esc(prefill?.name||'')}"
+            style="width:100%;padding:6px 8px;border:1.5px solid #e5e7eb;border-radius:6px;font-size:12px;box-sizing:border-box">
+          ${prefill?.variant ? `<div class="om-item-variant" style="font-size:11px;color:#6b7280;margin-top:3px">↳ ${esc(prefill.variant)}</div>` : ''}
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:3px">Prix MAD</div>
+          <input class="om-item-price" type="number" min="0" placeholder="0" value="${prefill?.price||''}"
+            style="width:100%;padding:6px 8px;border:1.5px solid #e5e7eb;border-radius:6px;font-size:12px;box-sizing:border-box" oninput="window._recalcOrderTotal()">
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:3px">Remise%</div>
+          <input class="om-item-remise" type="number" min="0" max="100" value="${prefill?.remise||0}"
+            style="width:100%;padding:6px 8px;border:1.5px solid #e5e7eb;border-radius:6px;font-size:12px;box-sizing:border-box" oninput="window._recalcOrderTotal()">
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:3px">Qté</div>
+          <input class="om-item-qty" type="number" min="1" value="${prefill?.quantity||1}"
+            style="width:100%;padding:6px 8px;border:1.5px solid #e5e7eb;border-radius:6px;font-size:12px;box-sizing:border-box" oninput="window._recalcOrderTotal()">
+        </div>
+        <button onclick="this.closest('.om-item-row').remove();window._recalcOrderTotal()"
+          style="background:none;border:none;font-size:18px;cursor:pointer;color:#d1d5db;padding:2px;line-height:1" title="Supprimer">✕</button>`;
       container.appendChild(row);
+      omUpdateEmptyState();
       window._recalcOrderTotal();
     };
 
     window._recalcOrderTotal = function () {
-      let total = 0;
-      document.querySelectorAll("#om-items > div").forEach(row => {
-        const price = parseFloat(row.querySelector(".om-item-price")?.value) || 0;
-        const qty = parseInt(row.querySelector(".om-item-qty")?.value) || 1;
-        total += price * qty;
+      let subtotal = 0;
+      document.querySelectorAll('#om-items .om-item-row').forEach(row => {
+        const price  = parseFloat(row.querySelector('.om-item-price')?.value) || 0;
+        const remise = parseFloat(row.querySelector('.om-item-remise')?.value) || 0;
+        const qty    = parseInt(row.querySelector('.om-item-qty')?.value) || 1;
+        subtotal += price * qty * (1 - remise / 100);
       });
-      document.getElementById("om-total").textContent = total.toLocaleString("fr-MA") + " MAD";
+      const globalRemise = parseFloat(document.getElementById('om-global-remise')?.value) || 0;
+      const total = subtotal * (1 - globalRemise / 100);
+      if (document.getElementById('om-subtotal')) document.getElementById('om-subtotal').textContent = subtotal.toLocaleString('fr-MA') + ' MAD';
+      if (document.getElementById('om-total'))    document.getElementById('om-total').textContent    = Math.round(total).toLocaleString('fr-MA') + ' MAD';
+    };
+
+    // ── Product Picker ────────────────────────────────────────────────────────────
+    let _ppProducts = [];
+    let _ppSelected = null;
+
+    window.openProductPicker = async function () {
+      document.getElementById('product-picker-overlay').style.display = 'block';
+      document.getElementById('pp-search').value = '';
+      if (_ppProducts.length) { renderProductPicker(_ppProducts); return; }
+
+      document.getElementById('pp-loading').style.display = 'block';
+      document.getElementById('pp-list').innerHTML = '';
+      try {
+        const [staticRes, fbRes] = await Promise.allSettled([
+          fetch('/catalog.json').then(r => r.json()),
+          fetch(`${DB_REST}/catalog.json`).then(r => r.json()),
+        ]);
+        let products = [];
+        if (staticRes.status === 'fulfilled') {
+          const d = staticRes.value;
+          const arr = Array.isArray(d) ? d : (d.products || Object.values(d));
+          arr.forEach(p => { if (p && (p.title || p.name)) products.push({ id: p.slug||p.id||p.title, name: p.title||p.name, price: p.price_min||p.price||0, image: (p.images||[])[0]||'', options: p.axes||p.options||null }); });
+        }
+        if (fbRes.status === 'fulfilled' && fbRes.value) {
+          Object.entries(fbRes.value).forEach(([slug, v]) => {
+            if (!v || v.active === false) return;
+            if (!products.find(p => p.id === slug)) {
+              products.push({ id: slug, name: v.title||slug, price: v.price_min||0, image: (v.images||[])[0]||'', options: v.axes||null });
+            }
+          });
+        }
+        _ppProducts = products.filter(p => p.name);
+        renderProductPicker(_ppProducts);
+      } catch(e) {
+        document.getElementById('pp-loading').textContent = 'Erreur chargement: ' + e.message;
+      }
+    };
+
+    function renderProductPicker(products) {
+      const list = document.getElementById('pp-list');
+      const loading = document.getElementById('pp-loading');
+      loading.style.display = 'none';
+      if (!products.length) { list.innerHTML = '<div style="padding:20px;color:#9ca3af;text-align:center;grid-column:1/-1">Aucun produit trouvé</div>'; return; }
+      list.innerHTML = products.map(p => `
+        <div onclick="window.selectProduct('${esc(p.id)}')"
+          style="border:1.5px solid #e5e7eb;border-radius:9px;padding:10px;cursor:pointer;transition:border-color .15s;hover:border-color:#e8194b">
+          ${p.image ? `<img src="${esc(p.image)}" style="width:100%;height:90px;object-fit:cover;border-radius:6px;margin-bottom:8px" onerror="this.style.display='none'">` : `<div style="width:100%;height:60px;background:#f3f4f6;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:22px">🪞</div>`}
+          <div style="font-size:12px;font-weight:600;color:#111;line-height:1.3;margin-bottom:4px">${esc(p.name)}</div>
+          <div style="font-size:11px;color:#e8194b;font-weight:700">${p.price ? p.price.toLocaleString('fr-MA') + ' MAD' : ''}</div>
+        </div>`).join('');
+    }
+
+    window.filterProductPicker = function () {
+      const q = document.getElementById('pp-search').value.toLowerCase();
+      renderProductPicker(q ? _ppProducts.filter(p => p.name.toLowerCase().includes(q)) : _ppProducts);
+    };
+
+    window.selectProduct = function (id) {
+      _ppSelected = _ppProducts.find(p => p.id === id);
+      if (!_ppSelected) return;
+      document.getElementById('product-picker-overlay').style.display = 'none';
+      openVariantPicker(_ppSelected);
+    };
+
+    function openVariantPicker(product) {
+      document.getElementById('vp-title').textContent = product.name;
+      document.getElementById('vp-price-hint').textContent = product.price ? 'Prix de base : ' + product.price.toLocaleString('fr-MA') + ' MAD' : '';
+      document.getElementById('vp-price').value = product.price || '';
+      document.getElementById('vp-qty').value = 1;
+      document.getElementById('vp-remise').value = 0;
+
+      const optionsEl = document.getElementById('vp-options');
+      optionsEl.innerHTML = '';
+      const opts = product.options;
+      if (opts) {
+        const entries = Array.isArray(opts)
+          ? opts.map(ax => [ax.label||ax.name, ax.values||ax.options||[]])
+          : Object.entries(opts);
+        entries.forEach(([label, values]) => {
+          if (!values?.length) return;
+          const div = document.createElement('div');
+          div.innerHTML = `<div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:6px">${esc(label)}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">${(values||[]).map(v => {
+              const val = typeof v === 'object' ? (v.label||v.value||JSON.stringify(v)) : v;
+              return `<button type="button" class="vp-opt-btn" data-axis="${esc(label)}" data-value="${esc(val)}"
+                onclick="window.selectVariantOpt(this)"
+                style="padding:5px 11px;border:1.5px solid #e5e7eb;border-radius:6px;font-size:12px;cursor:pointer;background:#fff;transition:all .15s">${esc(val)}</button>`;
+            }).join('')}</div>`;
+          optionsEl.appendChild(div);
+        });
+      }
+
+      document.getElementById('variant-picker-overlay').style.display = 'block';
+    }
+
+    window.selectVariantOpt = function (btn) {
+      const axis = btn.dataset.axis;
+      btn.closest('div').querySelectorAll('.vp-opt-btn[data-axis="'+axis+'"]').forEach(b => {
+        b.style.background = '#fff'; b.style.borderColor = '#e5e7eb'; b.style.color = '#374151';
+      });
+      btn.style.background = '#e8194b'; btn.style.borderColor = '#e8194b'; btn.style.color = '#fff';
+    };
+
+    window.confirmVariantPick = function () {
+      if (!_ppSelected) return;
+      const selectedOpts = {};
+      document.querySelectorAll('#vp-options .vp-opt-btn').forEach(btn => {
+        if (btn.style.background === 'rgb(232, 25, 75)') selectedOpts[btn.dataset.axis] = btn.dataset.value;
+      });
+      const variantStr = Object.entries(selectedOpts).map(([k,v]) => `${k}: ${v}`).join(' · ');
+      const price   = parseFloat(document.getElementById('vp-price').value) || 0;
+      const qty     = parseInt(document.getElementById('vp-qty').value) || 1;
+      const remise  = parseFloat(document.getElementById('vp-remise').value) || 0;
+      window.addCustomItem({ name: _ppSelected.name, variant: variantStr || null, price, quantity: qty, remise });
+      document.getElementById('variant-picker-overlay').style.display = 'none';
+      _ppSelected = null;
     };
 
     window.saveOrderModal = async function () {
@@ -5830,32 +6025,38 @@
       const phone = document.getElementById("om-phone").value.trim();
       if (!name || !phone) { document.getElementById("om-status").innerHTML = `<span style="color:#e8194b">Nom et téléphone obligatoires.</span>`; return; }
       const items = [];
-      let total = 0;
-      document.querySelectorAll("#om-items > div").forEach(row => {
-        const n = row.querySelector(".om-item-name")?.value.trim();
-        const price = parseFloat(row.querySelector(".om-item-price")?.value) || 0;
-        const qty = parseInt(row.querySelector(".om-item-qty")?.value) || 1;
-        if (n) { items.push({ name: n, price, quantity: qty }); total += price * qty; }
+      let subtotal = 0;
+      document.querySelectorAll("#om-items .om-item-row").forEach(row => {
+        const n      = row.querySelector(".om-item-name")?.value.trim();
+        const price  = parseFloat(row.querySelector(".om-item-price")?.value) || 0;
+        const remise = parseFloat(row.querySelector(".om-item-remise")?.value) || 0;
+        const qty    = parseInt(row.querySelector(".om-item-qty")?.value) || 1;
+        const variantEl = row.querySelector('.om-item-variant');
+        const variant = variantEl ? variantEl.textContent.replace('↳ ','').trim() : null;
+        if (n) { const lineTotal = price * qty * (1 - remise/100); items.push({ name: n, variant: variant||undefined, price, remise: remise||undefined, quantity: qty, lineTotal: Math.round(lineTotal) }); subtotal += lineTotal; }
       });
+      const globalRemise = parseFloat(document.getElementById("om-global-remise").value) || 0;
+      const total = Math.round(subtotal * (1 - globalRemise / 100));
       const customer = { name, phone, city: document.getElementById("om-city").value.trim(), email: document.getElementById("om-email").value.trim(), address: document.getElementById("om-address").value.trim(), notes: document.getElementById("om-notes").value.trim() };
       Object.keys(customer).forEach(k => { if (!customer[k]) delete customer[k]; });
       const btn = document.getElementById("om-save-btn");
       btn.disabled = true; btn.textContent = "⏳ Enregistrement…";
       document.getElementById("om-status").textContent = "";
       try {
+        const orderPayload = { customer, items, subtotal: Math.round(subtotal), globalRemise: globalRemise||undefined, total, updatedAt: Date.now() };
         if (_orderModalId) {
-          await update(ref(db, `orders/${_orderModalId}`), { customer, items, total, updatedAt: Date.now() });
+          await update(ref(db, `orders/${_orderModalId}`), orderPayload);
           document.getElementById("om-status").innerHTML = `<span style="color:#00c853">✅ Commande mise à jour !</span>`;
         } else {
           const newRef = push(ref(db, "orders"));
-          const orderData = { customer, items, total, timestamp: Date.now(), status: "pending", source: "admin" };
+          const orderData = { ...orderPayload, timestamp: Date.now(), status: "pending", source: "admin" };
           await update(newRef, orderData);
           sendOrderEmails(orderData, newRef.key).catch(() => {});
           document.getElementById("om-status").innerHTML = `<span style="color:#00c853">✅ Commande créée !</span>`;
-          // Offer WhatsApp to client
           if (phone && total > 0) {
             const intl = phone.replace(/[^0-9]/g,"").replace(/^0/,"212");
-            const msg = encodeURIComponent(`Bonjour ${name},\n\nVotre commande Nova Style a bien été enregistrée.\nTotal : ${total.toLocaleString("fr-MA")} MAD\nAcompte (50%) : ${Math.round(total*.5).toLocaleString("fr-MA")} MAD\n\nNous vous contacterons pour confirmer les détails.\n📞 +212707074748`);
+            const itemsSummary = items.map(it => `• ${it.name}${it.variant?' ('+it.variant+')':''} × ${it.quantity} = ${it.lineTotal?.toLocaleString('fr-MA')} MAD`).join('\n');
+            const msg = encodeURIComponent(`Bonjour ${name},\n\nVotre commande Nova Style a bien été enregistrée.\n\n${itemsSummary}\n\nTotal : ${total.toLocaleString("fr-MA")} MAD\nAcompte (50%) : ${Math.round(total*.5).toLocaleString("fr-MA")} MAD\n\nNous vous contacterons pour confirmer les détails.\n📞 +212635228074`);
             if (confirm("Envoyer la confirmation au client par WhatsApp ?")) window.open(`https://wa.me/${intl}?text=${msg}`,"_blank");
           }
         }
