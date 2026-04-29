@@ -4237,17 +4237,40 @@
         ic.textContent = i[state]||'⏸️';
       }
 
-      function cardHTML(p) {
-        const price = p.price?.min!=null ? 'À partir de '+Math.round(p.price.min).toLocaleString('fr-FR')+' MAD' : '';
-        return `<a class="product-card" href="/produits/${p.slug}/">\n  <div class="card-img"><img src="${p.image}" alt="${(p.name||'').replace(/"/g,'&quot;')}" loading="lazy" width="400" height="400"></div>\n  <div class="card-info">\n    <div class="card-name">${p.name}</div>\n    <div class="card-price">${price}</div>\n  </div>\n</a>`;
+      function cardHTML(p, idx) {
+        const price = p.price?.min != null ? 'À partir de ' + Math.round(p.price.min).toLocaleString('fr-FR') + ' MAD' : '';
+        const loadAttr = idx < 4 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
+        const badge = p.featured ? '<span class="card-badge">⭐ Vedette</span>' : '';
+        return `<a class="product-card${p.featured ? ' product-card--featured' : ''}" href="/produits/${p.slug}/">\n  <div class="card-img">${badge}<img src="${p.image}" alt="${(p.name||'').replace(/"/g,'&quot;')}" ${loadAttr} width="400" height="400"></div>\n  <div class="card-info">\n    <div class="card-name">${p.name}</div>\n    <div class="card-price">${price}</div>\n  </div>\n</a>`;
       }
 
-      function patchHTML(html, products) {
-        const cards = products.map(cardHTML).join('\n');
+      async function getStorePhone() {
+        try { const r = await fetch(DB_REST+'/settings/whatsapp.json'); if (r.ok) { const v = await r.json(); if (v) return String(v); } } catch(e) {}
+        return '212635228074';
+      }
+      async function getStorePhoneDisplay() {
+        try { const r = await fetch(DB_REST+'/settings/phoneDisplay.json'); if (r.ok) { const v = await r.json(); if (v) return String(v); } } catch(e) {}
+        return '06 35 22 80 74';
+      }
+
+      function patchHTML(html, products, waPhone, phoneDisplay) {
+        const wa  = waPhone || '212635228074';
+        const tel = phoneDisplay || '06 35 22 80 74';
+        const featured = products.filter(p => p.featured);
+        const regular  = products.filter(p => !p.featured);
+        const ordered  = [...featured, ...regular];
+        const cards = ordered.map((p, idx) => cardHTML(p, idx)).join('\n');
+        let featuredSection = '';
+        if (featured.length > 0) {
+          featuredSection = `\n<section class="featured-section">\n  <h2 class="featured-title">\u2b50 Produits vedettes</h2>\n  <div class="featured-grid">\n${featured.map((p,i)=>cardHTML(p,i)).join('\n')}\n  </div>\n</section>\n`;
+        }
         return html
           .replace(/(<div id="products-grid"[^>]*>)[\s\S]*?(<\/div>\s*\n\n<\/section>)/,
-            (_, open, close) => `${open}\n${cards}\n</div>\n\n</section>`)
-          .replace(/("numberOfItems"\s*:\s*)\d+/, `$1${products.length}`);
+            (_, open, close) => `${featuredSection}${open}\n${cards}\n</div>\n\n</section>`)
+          .replace(/(\"numberOfItems\"\s*:\s*)\d+/, `$1${products.length}`)
+          .replace(/wa\.me\/\d{9,15}/g, `wa.me/${wa}`)
+          .replace(/tel:\+?\d{9,15}/g, `tel:+${wa}`)
+          .replace(/\d{2}\s\d{2}\s\d{2}\s\d{2}\s\d{2}/g, tel);
       }
 
       window.runCategoryRegen = async function () {
@@ -4265,10 +4288,17 @@
         document.getElementById('regen-log-lines').innerHTML = '';
         sum.style.display = 'none';
 
-        // 1 fetch index + 6×(fetch+commit) = 13 steps
-        initProg(13);
+        initProg(14);
         renderGrid(null);
         CATS.forEach(c => setCat(c.id, 'wait'));
+
+        let errors = 0;
+        try {
+          // ① Fetch phone from settings
+          log('📱 Lecture du numéro depuis Firebase Settings…', 'info');
+          const [waPhone, phoneDisplay] = await Promise.all([getStorePhone(), getStorePhoneDisplay()]);
+          log(`✅ Téléphone: ${phoneDisplay} (${waPhone})`, 'ok');
+          step();
 
         let errors = 0;
         try {
@@ -4295,7 +4325,7 @@
             try {
               const f = await ghGet(cat.path);
               step();
-              const newHTML = patchHTML(b64(f.content), prods);
+              const newHTML = patchHTML(b64(f.content), prods, waPhone, phoneDisplay);
               await ghPut(cat.path, newHTML, `⚡ Regen ${cat.id} — ${prods.length} produits`, f.sha);
               step();
               log(`✅ ${cat.label} → OK`, 'ok');
