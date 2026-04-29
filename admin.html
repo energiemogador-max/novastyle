@@ -2858,12 +2858,16 @@
       position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
       background: var(--surface);
       border-top: 1px solid var(--border);
-      display: none;
       align-items: center;
-      justify-content: space-around;
-      padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 6px 4px max(6px, env(safe-area-inset-bottom));
       box-shadow: 0 -4px 16px rgba(0,0,0,.06);
+      gap: 2px;
     }
+    #mobile-nav::-webkit-scrollbar { display: none; }
     .mob-nav-item {
       display: flex; flex-direction: column; align-items: center; gap: 3px;
       padding: 6px 10px; border-radius: 10px; cursor: pointer;
@@ -3214,10 +3218,18 @@
         <span class="mob-nav-icon">🏠</span>
         <span>Accueil</span>
       </button>
+      <button class="mob-nav-item" data-tab="visitors">
+        <span class="mob-nav-icon">👁️</span>
+        <span>Visiteurs</span>
+      </button>
       <button class="mob-nav-item" data-tab="orders">
         <span class="mob-nav-icon">📦</span>
         <span>Commandes</span>
         <span class="mob-badge" id="mob-orders-badge" style="display:none">0</span>
+      </button>
+      <button class="mob-nav-item" data-tab="customers">
+        <span class="mob-nav-icon">👥</span>
+        <span>Clients</span>
       </button>
       <button class="mob-nav-item" data-tab="products">
         <span class="mob-nav-icon">🪞</span>
@@ -3388,7 +3400,7 @@
               <div class="vis-panel-head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
                 <span>📋 Historique des sessions</span>
                 <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <input type="date" id="history-date" style="padding:4px 8px;border:1px solid #e5e7eb;border-radius:4px;font-size:12px" value="${new Date().toISOString().slice(0,10)}" onchange="window.loadVisitorHistory()">
+                  <input type="date" id="history-date" style="padding:4px 8px;border:1px solid #e5e7eb;border-radius:4px;font-size:12px" onchange="window.loadVisitorHistory()">
                   <button onclick="window.loadVisitorHistory()" style="background:none;border:1.5px solid #e5e7eb;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">🔄 Actualiser</button>
                   <button onclick="window.exportVisitorHistory()" style="background:#e8194b;color:white;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">📊 Exporter CSV</button>
                 </div>
@@ -3557,7 +3569,7 @@
               <div class="vis-panel-head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
                 <span>📋 Historique des sessions</span>
                 <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <input type="date" id="visitors-history-date" style="padding:4px 8px;border:1px solid #e5e7eb;border-radius:4px;font-size:12px" value="${new Date().toISOString().slice(0,10)}">
+                  <input type="date" id="visitors-history-date" style="padding:4px 8px;border:1px solid #e5e7eb;border-radius:4px;font-size:12px">
                   <button onclick="window.loadVisitorsHistory()" style="background:none;border:1.5px solid #e5e7eb;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">🔄 Actualiser</button>
                   <button onclick="window.exportVisitorsHistory()" style="background:#e8194b;color:white;border:none;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">📊 Exporter CSV</button>
                 </div>
@@ -3576,7 +3588,7 @@
               <div class="section-title">Clients</div>
               <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                 <input class="search-input" id="customer-search" placeholder="🔍 Rechercher client, ville, téléphone…" style="width:220px">
-                <button onclick="window.openCreateOrder()" style="background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">➕ Ajouter client</button>
+                <button onclick="window.openCreateOrder()" style="background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">➕ Créer commande</button>
               </div>
             </div>
             <!-- KPI row -->
@@ -3810,181 +3822,6 @@
           </div>
         </div>
 
-        <!-- ═══ DRAFT ORDERS (inline panel — triggered from orders tab) ═══ -->
-        <div id="tab-draftorder" style="display:none"><!-- kept for JS compat --></div>
-        <div id="inline-draft-panel"
-          style="display:none;position:fixed;inset:0;z-index:200;overflow-y:auto;background:var(--bg);padding:20px 0">
-          <div class="container" style="max-width:1200px">
-
-            <!-- Top bar -->
-            <div
-              style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-              <div class="section-title" style="margin:0">Ajouter une commande</div>
-              <div style="display:flex;gap:8px">
-                <button class="btn-secondary" id="btn-new-draft" onclick="window.startNewDraft()">+ Nouveau
-                  brouillon</button>
-                <button onclick="window.toggleAddOrderPanel()"
-                  style="background:#f3f4f6;color:#6b7280;border:1.5px solid #e5e7eb;padding:8px 14px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer">✕
-                  Fermer</button>
-              </div>
-            </div>
-
-            <!-- Editor (shown when creating/editing a draft) -->
-            <div id="draft-editor" style="display:none">
-              <div class="draft-layout">
-
-                <!-- LEFT: Products + items -->
-                <div style="display:flex;flex-direction:column;gap:12px">
-
-                  <!-- Add products -->
-                  <div class="draft-panel">
-                    <div class="draft-panel-head">
-                      <span class="draft-panel-title">Ajouter des produits</span>
-                      <button onclick="window.refreshDraftProducts()" title="Actualiser le catalogue"
-                        style="background:none;border:none;cursor:pointer;color:var(--text4);font-size:14px;padding:2px 4px"
-                        title="Actualiser">🔄</button>
-                    </div>
-                    <div class="draft-search-wrap">
-                      <span class="draft-search-icon">🔍</span>
-                      <input type="text" id="draft-product-search" placeholder="Rechercher dans le catalogue…"
-                        oninput="window.filterDraftProducts(this.value)">
-                    </div>
-                    <div class="draft-product-list" id="draft-product-list">
-                      <div class="draft-empty-items" style="padding:16px">Chargement des produits…</div>
-                    </div>
-                  </div>
-
-                  <!-- Custom item -->
-                  <div class="draft-panel">
-                    <div class="draft-panel-head">
-                      <span class="draft-panel-title">Article personnalisé</span>
-                    </div>
-                    <div class="draft-custom-form">
-                      <div class="dcf-row">
-                        <div class="dcf-field">
-                          <label class="dcf-label">Désignation</label>
-                          <input class="dcf-input" id="dcf-name" placeholder="ex: Miroir sur mesure 80×120cm">
-                        </div>
-                        <div class="dcf-field">
-                          <label class="dcf-label">Prix (MAD)</label>
-                          <input class="dcf-input" id="dcf-price" type="number" min="0" placeholder="0">
-                        </div>
-                        <button class="btn-add-custom" onclick="window.addCustomItem()">+ Ajouter</button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Line items -->
-                  <div class="draft-panel">
-                    <div class="draft-panel-head">
-                      <span class="draft-panel-title">Articles commandés</span>
-                      <span id="draft-items-count" style="font-size:11px;color:#6b7280">0 article</span>
-                    </div>
-                    <div class="draft-items-area" id="draft-items-area">
-                      <div class="draft-empty-items">Ajoutez des produits ci-dessus.</div>
-                    </div>
-                    <!-- Discount -->
-                    <div class="draft-summary">
-                      <div class="ds-row"><span>Sous-total</span><span id="ds-subtotal">0 MAD</span></div>
-                      <div class="ds-row ds-discount-row">
-                        <span>Remise</span>
-                        <div style="display:flex;gap:4px;align-items:center">
-                          <input class="ds-discount-input" id="ds-discount-val" type="number" min="0" placeholder="0"
-                            oninput="window.recalcDraftTotal()">
-                          <select class="ds-discount-type" id="ds-discount-type" onchange="window.recalcDraftTotal()">
-                            <option value="fixed">MAD</option>
-                            <option value="percent">%</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="ds-row total">
-                        <span>Total</span>
-                        <span id="ds-total">0 MAD</span>
-                      </div>
-                    </div>
-                  </div>
-
-                </div><!-- /left -->
-
-                <!-- RIGHT: Customer + notes + actions -->
-                <div style="display:flex;flex-direction:column;gap:12px">
-
-                  <div class="draft-panel">
-                    <div class="draft-panel-head"><span class="draft-panel-title">Client</span></div>
-                    <div class="draft-customer-fields">
-                      <div class="dcf2-row">
-                        <div class="dcf-field">
-                          <label class="dcf-label">Nom complet</label>
-                          <input class="dcf-input" id="dc-name" placeholder="Prénom Nom">
-                        </div>
-                        <div class="dcf-field">
-                          <label class="dcf-label">Téléphone</label>
-                          <input class="dcf-input" id="dc-phone" placeholder="06 XX XX XX XX">
-                        </div>
-                      </div>
-                      <div class="dcf2-row">
-                        <div class="dcf-field">
-                          <label class="dcf-label">Ville</label>
-                          <input class="dcf-input" id="dc-city" placeholder="Casablanca">
-                        </div>
-                        <div class="dcf-field">
-                          <label class="dcf-label">Email (optionnel)</label>
-                          <input class="dcf-input" id="dc-email" type="email" placeholder="client@mail.com">
-                        </div>
-                      </div>
-                      <div class="dcf-field">
-                        <label class="dcf-label">Adresse</label>
-                        <input class="dcf-input" id="dc-address" placeholder="Adresse complète">
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="draft-panel">
-                    <div class="draft-panel-head"><span class="draft-panel-title">Notes internes</span></div>
-                    <div style="padding:12px 14px">
-                      <textarea class="draft-note-field" id="dc-notes"
-                        placeholder="Notes visibles uniquement par l'équipe…"></textarea>
-                    </div>
-                  </div>
-
-                  <!-- Summary card -->
-                  <div class="draft-panel">
-                    <div style="padding:14px 16px">
-                      <div class="ds-row" style="margin-bottom:6px"><span
-                          style="color:#6b7280;font-size:12px">Client</span><span id="ds-customer-preview"
-                          style="font-size:12px;color:#111827">—</span></div>
-                      <div class="ds-row" style="margin-bottom:6px"><span
-                          style="color:#6b7280;font-size:12px">Articles</span><span id="ds-items-preview"
-                          style="font-size:12px;color:#111827">0</span></div>
-                      <div class="ds-row total" style="margin-top:10px"><span>Total TTC</span><span id="ds-total-2">0
-                          MAD</span></div>
-                    </div>
-                    <div class="draft-actions">
-                      <button class="btn-draft-save" onclick="window.saveDraft()">💾 Sauvegarder brouillon</button>
-                      <button class="btn-draft-order" id="btn-convert-order" onclick="window.convertDraftToOrder()">✅
-                        Confirmer commande</button>
-                    </div>
-                  </div>
-
-                </div><!-- /right -->
-
-              </div><!-- /layout -->
-            </div><!-- /draft-editor -->
-
-            <!-- Saved drafts list -->
-            <div id="draft-list-section">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-                <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:1px">
-                  Brouillons sauvegardés</div>
-                <span id="draft-count-label" style="font-size:11px;color:#6b7280"></span>
-              </div>
-              <div id="draft-list" class="drafts-list">
-                <div class="no-order">Aucun brouillon. Cliquez « + Nouveau brouillon » pour commencer.</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
 
         <!-- ═══ ADS MANAGER ═══ -->
         <div class="tab-panel" id="tab-ads">
@@ -6196,22 +6033,18 @@
 
     // ── Init ──────────────────────────────────────────────────────────────────────
     // ── Toggle inline add-order panel ────────────────────────────────────────────
-    window.toggleAddOrderPanel = function () {
-      const panel = document.getElementById('inline-draft-panel');
-      const isOpen = panel.style.display !== 'none';
-      if (!isOpen) {
-        panel.style.display = 'block';
-        window.initDraftTab?.();
-        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        panel.style.display = 'none';
-      }
-    };
+    // ── Date inputs: set today's date ────────────────────────────────────────────
+    (function() {
+      const today = new Date().toISOString().slice(0, 10);
+      const hd = document.getElementById('history-date');
+      const vhd = document.getElementById('visitors-history-date');
+      if (hd) hd.value = today;
+      if (vhd) vhd.value = today;
+    })();
 
-    window.initDraftTab = async function () {
-      await loadDraftProducts();
-      loadDraftList();
-    };
+    // ── Stub: draft panel removed ─────────────────────────────────────────────────
+    window.toggleAddOrderPanel = function () { window.openCreateOrder(); };
+    window.initDraftTab = function () {};
 
     // ── Load product catalog (static + Firebase /catalog merged) ─────────────────
     async function loadDraftProducts() {
@@ -6577,11 +6410,7 @@
       document.getElementById('draft-editor').style.display = 'none';
       document.getElementById('draft-list-section').style.display = 'block';
     }
-    // Hide inline panel and go back to orders list
-    function closeInlineDraftPanel() {
-      const panel = document.getElementById('inline-draft-panel');
-      if (panel) panel.style.display = 'none';
-    }
+    function closeInlineDraftPanel() { /* panel removed — no-op */ }
 
     // ── Read customer form ────────────────────────────────────────────────────────
     function readCustomer() {
