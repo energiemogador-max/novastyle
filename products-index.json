@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated": "2026-04-23",
+  "generated": "2026-04-29",
   "categories": [
     {
       "id": "sdb-premium",
@@ -53,7 +53,8 @@
         "max": 2500
       },
       "hasVariants": true,
-      "variantCount": 8
+      "variantCount": 8,
+      "featured": true
     },
     {
       "id": "nova-style-miroir-emeraude",
@@ -68,7 +69,8 @@
         "max": 1850
       },
       "hasVariants": true,
-      "variantCount": 80
+      "variantCount": 80,
+      "featured": true
     },
     {
       "id": "nova-style-miroir-vega",
@@ -83,7 +85,8 @@
         "max": 2300
       },
       "hasVariants": true,
-      "variantCount": 80
+      "variantCount": 80,
+      "featured": true
     },
     {
       "id": "nova-style-miroir-double-cercle",
@@ -98,7 +101,8 @@
         "max": 2000
       },
       "hasVariants": true,
-      "variantCount": 70
+      "variantCount": 70,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-anfa-cm",
@@ -113,7 +117,8 @@
         "max": 2200
       },
       "hasVariants": true,
-      "variantCount": 32
+      "variantCount": 32,
+      "featured": true
     },
     {
       "id": "nova-style-miroir-anfa-half-plus",
@@ -128,7 +133,8 @@
         "max": 1350
       },
       "hasVariants": true,
-      "variantCount": 40
+      "variantCount": 40,
+      "featured": false
     },
     {
       "slug": "nova-style-ensemble-meuble-et-miroir-retroeclaire",
@@ -150,7 +156,8 @@
         "options": {}
       },
       "hasVariants": true,
-      "variantCount": 1
+      "variantCount": 1,
+      "featured": true
     },
     {
       "id": "nova-style-miroir-archway",
@@ -165,7 +172,8 @@
         "max": 2500
       },
       "hasVariants": true,
-      "variantCount": 8
+      "variantCount": 8,
+      "featured": true
     },
     {
       "id": "nova-style-miroir-iceberg",
@@ -180,7 +188,8 @@
         "max": 1600
       },
       "hasVariants": true,
-      "variantCount": 40
+      "variantCount": 40,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-croissant-de-lune-ii-finition-noyer",
@@ -195,7 +204,8 @@
         "max": 3700
       },
       "hasVariants": true,
-      "variantCount": 10
+      "variantCount": 10,
+      "featured": true
     },
     {
       "id": "nova-style-miroir-croissant-de-lune",
@@ -210,7 +220,8 @@
         "max": 2000
       },
       "hasVariants": true,
-      "variantCount": 20
+      "variantCount": 20,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-azalee",
@@ -225,7 +236,8 @@
         "max": 3000
       },
       "hasVariants": true,
-      "variantCount": 14
+      "variantCount": 14,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-anfa-plus",
@@ -240,7 +252,8 @@
         "max": 1350
       },
       "hasVariants": true,
-      "variantCount": 60
+      "variantCount": 60,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-rond",
@@ -255,7 +268,8 @@
         "max": 2200
       },
       "hasVariants": true,
-      "variantCount": 10
+      "variantCount": 10,
+      "featured": false
     },
     {
       "slug": "nova-style-miroir-hawaii",
@@ -288,7 +302,8 @@
         }
       },
       "hasVariants": true,
-      "variantCount": 2
+      "variantCount": 2,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-croissant-de-lune-ii",
@@ -303,7 +318,8 @@
         "max": 2000
       },
       "hasVariants": true,
-      "variantCount": 80
+      "variantCount": 80,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-victoria",
@@ -318,7 +334,8 @@
         "max": 1700
       },
       "hasVariants": true,
-      "variantCount": 24
+      "variantCount": 24,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-bloom",
@@ -333,7 +350,8 @@
         "max": 1250
       },
       "hasVariants": true,
-      "variantCount": 50
+      "variantCount": 50,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-magnum-sdb",
@@ -348,7 +366,8 @@
         "max": 1400
       },
       "hasVariants": true,
-      "variantCount": 40
+      "variantCount": 40,
+      "featured": false
     },
     {
       "id": "nova-style-ensemble-console-et-miroir",
@@ -363,7 +382,8 @@
         "max": null
       },
       "hasVariants": false,
-      "variantCount": 0
+      "variantCount": 0,
+      "featured": true
     },
     {
       "id": "nova-style-deux-miroirs-anfa-medina",
@@ -378,7 +398,8 @@
         "max": 1450
       },
       "hasVariants": true,
-      "variantCount": 40
+      "variantCount": 40,
+      "featured": false
     },
     {
       "id": "miroir-salle-de-bain-nova-style-miroir-pear-ii-cm",
@@ -393,7 +414,8 @@
         "max": 2250
       },
       "hasVariants": true,
-      "variantCount": 50
+      "variantCount": 50,
+      "featured": false
     },
     {
       "id": "nova-style-deux-miroirs-triples",
@@ -408,7 +430,8 @@
         "max": 2300
       },
       "hasVariants": true,
-      "variantCount": 30
+      "variantCount": 30,
+      "featured": false
     },
     {
       "id": "miroir-rectangulaire-bright-ii",
@@ -423,7 +446,8 @@
         "max": 2300
       },
       "hasVariants": true,
-      "variantCount": 88
+      "variantCount": 88,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-rectangulaire",
@@ -438,7 +462,8 @@
         "max": 1250
       },
       "hasVariants": true,
-      "variantCount": 50
+      "variantCount": 50,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-pentagone-2",
@@ -453,7 +478,8 @@
         "max": 1300
       },
       "hasVariants": true,
-      "variantCount": 30
+      "variantCount": 30,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-vortex",
@@ -468,7 +494,8 @@
         "max": 1250
       },
       "hasVariants": true,
-      "variantCount": 3
+      "variantCount": 3,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-halo",
@@ -483,7 +510,8 @@
         "max": 1250
       },
       "hasVariants": true,
-      "variantCount": 50
+      "variantCount": 50,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-pear",
@@ -498,7 +526,8 @@
         "max": 1390
       },
       "hasVariants": true,
-      "variantCount": 60
+      "variantCount": 60,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-eclipse-bright",
@@ -513,7 +542,8 @@
         "max": 1850
       },
       "hasVariants": true,
-      "variantCount": 80
+      "variantCount": 80,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-totem",
@@ -528,7 +558,8 @@
         "max": 1100
       },
       "hasVariants": true,
-      "variantCount": 40
+      "variantCount": 40,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-luxalight",
@@ -543,7 +574,8 @@
         "max": 900
       },
       "hasVariants": true,
-      "variantCount": 60
+      "variantCount": 60,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-elvis-woody",
@@ -558,7 +590,8 @@
         "max": 1700
       },
       "hasVariants": true,
-      "variantCount": 2
+      "variantCount": 2,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-drizzle",
@@ -573,7 +606,8 @@
         "max": 1600
       },
       "hasVariants": true,
-      "variantCount": 48
+      "variantCount": 48,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-rectangulaire-bright",
@@ -588,7 +622,8 @@
         "max": 2300
       },
       "hasVariants": true,
-      "variantCount": 80
+      "variantCount": 80,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-split",
@@ -603,7 +638,8 @@
         "max": 3900
       },
       "hasVariants": true,
-      "variantCount": 6
+      "variantCount": 6,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-galet-2",
@@ -618,7 +654,8 @@
         "max": 1800
       },
       "hasVariants": true,
-      "variantCount": 40
+      "variantCount": 40,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-zenith",
@@ -633,7 +670,8 @@
         "max": 1400
       },
       "hasVariants": true,
-      "variantCount": 40
+      "variantCount": 40,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-havana",
@@ -648,7 +686,8 @@
         "max": 1250
       },
       "hasVariants": true,
-      "variantCount": 50
+      "variantCount": 50,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-magnum",
@@ -663,7 +702,8 @@
         "max": 1300
       },
       "hasVariants": true,
-      "variantCount": 2
+      "variantCount": 2,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-sunrise",
@@ -678,7 +718,8 @@
         "max": 1980
       },
       "hasVariants": true,
-      "variantCount": 70
+      "variantCount": 70,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-pear-ii",
@@ -693,7 +734,8 @@
         "max": 1250
       },
       "hasVariants": true,
-      "variantCount": 50
+      "variantCount": 50,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-cloud",
@@ -708,7 +750,8 @@
         "max": null
       },
       "hasVariants": true,
-      "variantCount": 1
+      "variantCount": 1,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-pebble",
@@ -723,7 +766,8 @@
         "max": 1100
       },
       "hasVariants": true,
-      "variantCount": 30
+      "variantCount": 30,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-eclipse-cm",
@@ -738,7 +782,8 @@
         "max": 3700
       },
       "hasVariants": true,
-      "variantCount": 64
+      "variantCount": 64,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-hawaii-sdb",
@@ -753,7 +798,8 @@
         "max": 1650
       },
       "hasVariants": true,
-      "variantCount": 10
+      "variantCount": 10,
+      "featured": false
     },
     {
       "id": "table-basse-de-sejour-en-bois-de-hetre-et-verre-trempe-8mm",
@@ -768,7 +814,8 @@
         "max": 1700
       },
       "hasVariants": true,
-      "variantCount": 2
+      "variantCount": 2,
+      "featured": true
     },
     {
       "id": "miroir-marrakech-nova-style-miroir-celia",
@@ -783,7 +830,8 @@
         "max": 2200
       },
       "hasVariants": true,
-      "variantCount": 32
+      "variantCount": 32,
+      "featured": false
     },
     {
       "id": "douche-italienne-en-forme-droite",
@@ -798,7 +846,8 @@
         "max": null
       },
       "hasVariants": false,
-      "variantCount": 0
+      "variantCount": 0,
+      "featured": true
     },
     {
       "id": "miroir-maroc-nova-style-miroir-anfa",
@@ -813,7 +862,8 @@
         "max": 1250
       },
       "hasVariants": true,
-      "variantCount": 80
+      "variantCount": 80,
+      "featured": false
     },
     {
       "id": "miroir-magnum-essentiel",
@@ -828,7 +878,8 @@
         "max": null
       },
       "hasVariants": false,
-      "variantCount": 0
+      "variantCount": 0,
+      "featured": false
     },
     {
       "id": "consol-et-miroir-nova-style-ensemble",
@@ -843,7 +894,8 @@
         "max": null
       },
       "hasVariants": false,
-      "variantCount": 0
+      "variantCount": 0,
+      "featured": false
     },
     {
       "id": "miroir-anfa-essentiel",
@@ -858,7 +910,8 @@
         "max": null
       },
       "hasVariants": false,
-      "variantCount": 0
+      "variantCount": 0,
+      "featured": true
     },
     {
       "id": "table-basse-de-sejour-en-bois-mdf-et-verre-trempe",
@@ -873,7 +926,8 @@
         "max": 1290
       },
       "hasVariants": true,
-      "variantCount": 2
+      "variantCount": 2,
+      "featured": false
     },
     {
       "id": "miroire-nova-style-miroir-horizon",
@@ -888,7 +942,8 @@
         "max": 1250
       },
       "hasVariants": true,
-      "variantCount": 80
+      "variantCount": 80,
+      "featured": false
     },
     {
       "id": "douche-italienne-en-l-verre-trempe",
@@ -903,7 +958,8 @@
         "max": null
       },
       "hasVariants": false,
-      "variantCount": 0
+      "variantCount": 0,
+      "featured": true
     },
     {
       "id": "table-de-sejour-en-bois-mdf-et-verre-trempe",
@@ -918,7 +974,8 @@
         "max": null
       },
       "hasVariants": true,
-      "variantCount": 1
+      "variantCount": 1,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-rotin-irregulier-bois-nova-style",
@@ -933,7 +990,8 @@
         "max": 1925
       },
       "hasVariants": true,
-      "variantCount": 80
+      "variantCount": 80,
+      "featured": false
     },
     {
       "id": "miroir-gale-salle-de-bain-led-antibuee-anticorrosion",
@@ -948,7 +1006,8 @@
         "max": 1950
       },
       "hasVariants": true,
-      "variantCount": 60
+      "variantCount": 60,
+      "featured": false
     },
     {
       "id": "miroir-avec-cadre-nova-style-miroir-rectangulaire-cm",
@@ -963,7 +1022,8 @@
         "max": 2200
       },
       "hasVariants": true,
-      "variantCount": 32
+      "variantCount": 32,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-rectangulaire-1",
@@ -978,7 +1038,8 @@
         "max": 1300
       },
       "hasVariants": true,
-      "variantCount": 70
+      "variantCount": 70,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-lightning",
@@ -993,7 +1054,8 @@
         "max": 1250
       },
       "hasVariants": true,
-      "variantCount": 40
+      "variantCount": 40,
+      "featured": false
     },
     {
       "id": "miroir-eclipse-essentiel",
@@ -1008,7 +1070,8 @@
         "max": null
       },
       "hasVariants": false,
-      "variantCount": 0
+      "variantCount": 0,
+      "featured": true
     },
     {
       "id": "nova-style-miroir-asymetrique",
@@ -1023,7 +1086,8 @@
         "max": 1250
       },
       "hasVariants": true,
-      "variantCount": 24
+      "variantCount": 24,
+      "featured": false
     },
     {
       "id": "magasin-miroir-casablanca-nova-style-miroir-eclipse",
@@ -1038,7 +1102,8 @@
         "max": 1850
       },
       "hasVariants": true,
-      "variantCount": 80
+      "variantCount": 80,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-octogonal",
@@ -1053,7 +1118,8 @@
         "max": 900
       },
       "hasVariants": true,
-      "variantCount": 60
+      "variantCount": 60,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-upside-down",
@@ -1068,7 +1134,8 @@
         "max": 1450
       },
       "hasVariants": true,
-      "variantCount": 40
+      "variantCount": 40,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-dunes",
@@ -1083,7 +1150,8 @@
         "max": 2150
       },
       "hasVariants": true,
-      "variantCount": 70
+      "variantCount": 70,
+      "featured": false
     },
     {
       "id": "nova-style-miroir-galet-vertical",
@@ -1098,7 +1166,8 @@
         "max": 890
       },
       "hasVariants": true,
-      "variantCount": 40
+      "variantCount": 40,
+      "featured": false
     },
     {
       "slug": "nova-style-miroir-de-salon-rotin-anfa-bois-nova-style",
@@ -1145,7 +1214,8 @@
             "Avec Installation"
           ]
         }
-      }
+      },
+      "featured": false
     },
     {
       "slug": "miroir-de-salle-de-bain-ovale-anti-buee-et-anticorrosion",
@@ -1190,7 +1260,8 @@
         }
       },
       "hasVariants": true,
-      "variantCount": 60
+      "variantCount": 60,
+      "featured": false
     },
     {
       "slug": "nova-style-oducts-miroir-de-salle-de-bain-anti-buee-et-anticorrosion-miroir-noura",
@@ -1235,7 +1306,8 @@
         "description": "Miroir NOURA anti-buée et anticorrosion avec LED 6000K. Fabrication sur mesure à Casablanca. Livraison rapide partout au Maroc. Design moderne et durable."
       },
       "hasVariants": true,
-      "variantCount": 24
+      "variantCount": 24,
+      "featured": false
     },
     {
       "slug": "nova-style-miroir-de-salon-teddy-duo-de-nova-style",
@@ -1267,7 +1339,8 @@
         "description": "Miroir TEDDY DUO Set de deux miroirs sculpturaux en tissu bouclé, fabriqués sur mesure à Casablanca. Grand miroir de sol TEDDY FLOOR et petit miroir TEDDY OVAL"
       },
       "hasVariants": true,
-      "variantCount": 1
+      "variantCount": 1,
+      "featured": false
     },
     {
       "slug": "nova-style-miroir-de-salon-et-dressing-rital-grand-miroir-de-sol-sculptural-en-tissu-boucle",
@@ -1306,7 +1379,8 @@
         "description": "Nova Style : Miroir RITAL — Grand miroir de sol sculptural en tissu bouclé, fabriqué sur mesure à Casablanca."
       },
       "hasVariants": true,
-      "variantCount": 2
+      "variantCount": 2,
+      "featured": false
     },
     {
       "slug": "nova-style-miroir-yasmine-miroir-mural-silhouette-femme-avec-decor-perles",
@@ -1337,7 +1411,8 @@
         "description": "Nova Style : Miroir YASMINE — Miroir mural silhouette femme avec décor perles fait main, fabriqué sur mesure à Casablanca. L 70 cm × H 130 cm."
       },
       "hasVariants": true,
-      "variantCount": 1
+      "variantCount": 1,
+      "featured": false
     },
     {
       "slug": "nova-style-miroir-salle-de-bain-marrakech",
@@ -1386,7 +1461,8 @@
         "description": "Nova Style : Miroir salle de bain Marrakech — Miroir LED organique anti-buée sur mesure. Rétroéclairage chaud, Livraison et installation à Marrakech,."
       },
       "hasVariants": true,
-      "variantCount": 60
+      "variantCount": 60,
+      "featured": false
     },
     {
       "slug": "nova-style-ensemble-salle-a-manger-prestige-table-ovale-220-cm-ceramique-8-chaises-bois-massif-livraison-maroc",
@@ -1417,7 +1493,8 @@
         "description": "Achetez votre ensemble salle à manger prestige au Maroc : table ovale 220 cm plateau céramique effet marbre + 8 chaises bois massif. Livraison Casablanca, Rabat, Marrakech et partout au Maroc. Qualité haut de gamme, prix compétitif."
       },
       "hasVariants": true,
-      "variantCount": 1
+      "variantCount": 1,
+      "featured": true
     }
   ]
 }
