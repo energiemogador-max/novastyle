@@ -102,17 +102,34 @@ async function initTracker(){
   document.addEventListener("cartUpdated",write);
   document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){write();clearInterval(hb);}});
 
-  // ── Session recording (history) ──
+// ── Session recording (history) ──
   try{
     const today=new Date().toISOString().slice(0,10);
     const sessRef=ref(db,"sessions/"+today+"/"+sid);
     const pl=window.location.pathname;
     const sess={
       visitorId:vid,referrer:getReferrer(),device:getDevice(),browser:getBrowser(),
-      page:pl,pageLabel:pageLabel(pl),startedAt:arrival
+      page:pl,pageLabel:pageLabel(pl),startedAt:arrival,
+      journey:[pl] // Track page journey
     };
     if(geo){sess.city=geo.city;sess.country=geo.country;sess.country_code=geo.country_code;sess.ip=geo.ip;}
     set(sessRef,sess).catch(()=>{});
+    // Update journey on navigation
+    let currentJourney = [pl];
+    window.addEventListener('popstate', () => updateJourney(window.location.pathname));
+    // Override pushState/replaceState to track SPA navigation
+    const origPush = history.pushState;
+    const origReplace = history.replaceState;
+    history.pushState = function(...args) { origPush.apply(this, args); updateJourney(window.location.pathname); };
+    history.replaceState = function(...args) { origReplace.apply(this, args); updateJourney(window.location.pathname); };
+    function updateJourney(newPath) {
+      if (!currentJourney.includes(newPath)) {
+        currentJourney.push(newPath);
+        import("https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js").then(({update})=>{
+          update(sessRef, {journey: currentJourney}).catch(()=>{});
+        });
+      }
+    }
     // Update duration + endedAt on leave
     document.addEventListener("visibilitychange",()=>{
       if(document.visibilityState==="hidden"){
