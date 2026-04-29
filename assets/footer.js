@@ -50,8 +50,8 @@
 '      <div class="foot-brand">Nova Style</div>\n' +
 '      <div class="foot-tag">La beauté dans le miroir</div>\n' +
 '      <p>Fabricant de miroirs à Casablanca. Verre AGC Belgique, traitement anti-buée, anticorrosion. Livraison partout au Maroc.</p>\n' +
-'      <p style="margin-top:10px"><a href="tel:+212707074748">📞 07 07 07 47 48</a> · <a href="https://wa.me/212707074748" target="_blank" rel="noopener">💬 WhatsApp</a></p>\n' +
-'      <p style="margin-top:6px;font-size:12px;color:var(--muted,#888)">Showroom : Bd Oued Sebou, Rue 13 N°24, 20000 Casablanca, Maroc<br>Lun–Sam · 9h00–18h00</p>\n' +
+'      <p style="margin-top:10px"><a href="tel:+212635228074">📞 06 35 22 80 74</a> · <a href="https://wa.me/212635228074" target="_blank" rel="noopener">💬 WhatsApp</a></p>\n' +
+'      <p style="margin-top:6px;font-size:12px;color:var(--muted,#888)">Showroom : Bd Oued Sebou, Rue 13 N°24, 20000 Casablanca, Maroc<br>Lun–Sam · 09h00–18h0000</p>\n' +
 '    </div>\n' +
 '    <div><strong>Catégories</strong>\n      ' + catLinks + '\n    </div>\n' +
 '    <div><strong>Pages SEO</strong>\n      ' + seoLinks + '\n    </div>\n' +
@@ -70,10 +70,10 @@
 '  "name": "Nova Style",\n' +
 '  "description": "Fabricant marocain spécialisé dans le miroir de salle de bain, le miroir de salle de bain avec LED, et le miroir de salle de bain antibuée sur mesure.",\n' +
 '  "url": "https://novastyle.ma",\n' +
-'  "telephone": "+212707074748",\n' +
+'  "telephone": "+212635228074",\n' +
 '  "image": "https://novastyle.ma/assets/favicon.png",\n' +
 '  "logo": "https://novastyle.ma/assets/favicon.png",\n' +
-'  "sameAs": ["https://share.google/YUlF83PSlRCLlTy2K","https://www.instagram.com/nova_home_style/","https://wa.me/212707074748"],\n' +
+'  "sameAs": ["https://share.google/YUlF83PSlRCLlTy2K","https://www.instagram.com/nova_home_style/","https://wa.me/212635228074"],\n' +
 '  "address": {"@type":"PostalAddress","streetAddress":"Bd Oued Sebou, Rue 13 N°24","addressLocality":"Casablanca","addressRegion":"Grand Casablanca-Settat","postalCode":"20000","addressCountry":"MA"},\n' +
 '  "geo": {"@type":"GeoCoordinates","latitude":"33.5731","longitude":"-7.5898"},\n' +
 '  "hasMap": "https://share.google/YUlF83PSlRCLlTy2K",\n' +
@@ -113,4 +113,3 @@
     fixCardImages();
   }
 })();
-
