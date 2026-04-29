@@ -7387,7 +7387,7 @@
       facebook:     '',
     };
 
-    const S_FIELDS = ['whatsapp','phoneDisplay','street','city','postal','country','maps','days','opens','closes','instagram','tiktok','facebook'];
+    const S_ID_MAP = { whatsapp: 's-whatsapp', phoneDisplay: 's-phone-display', street: 's-street', city: 's-city', postal: 's-postal', country: 's-country', maps: 's-maps', days: 's-days', opens: 's-opens', closes: 's-closes', instagram: 's-instagram', tiktok: 's-tiktok', facebook: 's-facebook' };
 
     function settingsStatus(msg, color) {
       const el = document.getElementById('s-status');
@@ -7396,26 +7396,23 @@
 
     async function loadSettingsIntoForm() {
       try {
-        const { db, ref, get } = window.__NOVA_FIREBASE__;
-        const snap = await get(ref(db, 'settings'));
-        const data = snap.exists() ? snap.val() : SETTINGS_DEFAULTS;
-        S_FIELDS.forEach(k => {
-          const el = document.getElementById('s-' + k.replace(/([A-Z])/g, c => '-' + c.toLowerCase()));
-          if (el) el.value = data[k] || SETTINGS_DEFAULTS[k] || '';
+        const res = await fetch(`${DB}/settings.json`);
+        const data = (res.ok ? await res.json() : null) || SETTINGS_DEFAULTS;
+        Object.entries(S_ID_MAP).forEach(([k, id]) => {
+          const el = document.getElementById(id);
+          if (el) el.value = data[k] ?? SETTINGS_DEFAULTS[k] ?? '';
         });
       } catch (e) {
-        // fallback: load defaults
-        S_FIELDS.forEach(k => {
-          const el = document.getElementById('s-' + k.replace(/([A-Z])/g, c => '-' + c.toLowerCase()));
+        Object.entries(S_ID_MAP).forEach(([k, id]) => {
+          const el = document.getElementById(id);
           if (el) el.value = SETTINGS_DEFAULTS[k] || '';
         });
       }
     }
 
     function readSettingsFromForm() {
-      const map = { whatsapp: 's-whatsapp', phoneDisplay: 's-phone-display', street: 's-street', city: 's-city', postal: 's-postal', country: 's-country', maps: 's-maps', days: 's-days', opens: 's-opens', closes: 's-closes', instagram: 's-instagram', tiktok: 's-tiktok', facebook: 's-facebook' };
       const out = {};
-      Object.entries(map).forEach(([k, id]) => { const el = document.getElementById(id); out[k] = el ? el.value.trim() : ''; });
+      Object.entries(S_ID_MAP).forEach(([k, id]) => { const el = document.getElementById(id); out[k] = el ? el.value.trim() : ''; });
       return out;
     }
 
@@ -7424,13 +7421,19 @@
       btn.disabled = true;
       settingsStatus('⏳ Enregistrement…', '#6b7280');
       try {
-        const { db, ref, set } = window.__NOVA_FIREBASE__;
+        const fbToken = await window.__NOVA_FIREBASE__?.auth?.currentUser?.getIdToken();
+        if (!fbToken) throw new Error('Token Firebase manquant — reconnectez-vous.');
         const s = readSettingsFromForm();
-        await set(ref(db, 'settings'), s);
+        const res = await fetch(`${DB}/settings.json?auth=${fbToken}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(s)
+        });
+        if (!res.ok) throw new Error(`Firebase HTTP ${res.status}`);
         settingsStatus('✅ Sauvegardé dans Firebase. Cliquez "Appliquer au site" pour pousser sur GitHub.', '#16a34a');
         renderSettingsPreview(s);
       } catch (e) {
-        settingsStatus('❌ Erreur : ' + e.message, '#e8194b');
+        settingsStatus('❌ ' + e.message, '#e8194b');
       } finally { btn.disabled = false; }
     };
 
@@ -7689,41 +7692,37 @@
       const btn = document.getElementById('s-apply-btn');
       btn.disabled = true;
 
-      const pat  = localStorage.getItem('nova_gh_pat') || localStorage.getItem('nova_github_token') || '';
-      const repo = localStorage.getItem('nova_gh_repo') || '';
-      if (!pat || !repo) {
-        settingsStatus('⚠️ Configure d\'abord le token GitHub PAT + repository dans l\'onglet Accueil.', '#e8194b');
+      const ghToken = localStorage.getItem('nova_gh_pat') || localStorage.getItem('nova_github_token') || '';
+      if (!ghToken) {
+        settingsStatus('⚠️ Configure d\'abord le token GitHub PAT dans l\'onglet Accueil.', '#e8194b');
         btn.disabled = false; return;
       }
 
-      settingsStatus('⏳ Lecture des settings Firebase…', '#6b7280');
+      settingsStatus('⏳ Lecture des settings…', '#6b7280');
       try {
-        const { db, ref, get } = window.__NOVA_FIREBASE__;
-        const snap = await get(ref(db, 'settings'));
-        if (!snap.exists()) { settingsStatus('⚠️ Enregistrez d\'abord les settings dans Firebase.', '#e8194b'); btn.disabled = false; return; }
-        const s = snap.val();
+        const res = await fetch(`${DB}/settings.json`);
+        if (!res.ok) throw new Error('Impossible de lire les settings Firebase.');
+        const s = await res.json();
+        if (!s) throw new Error('Enregistrez d\'abord les settings dans Firebase.');
 
-        const filesToCommit = [
+        const files = [
           { path: 'assets/footer.js', content: buildFooterJs(s) },
           { path: 'assets/header.js', content: buildHeaderJs(s) },
         ];
 
-        const headers = { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' };
-
-        for (const file of filesToCommit) {
+        for (const file of files) {
           settingsStatus(`⏳ Commit ${file.path}…`, '#6b7280');
-          const getR = await fetch(`https://api.github.com/repos/${repo}/contents/${file.path}`, { headers });
+          // get current sha
+          const getR = await fetch(`https://api.github.com/repos/${REPO}/contents/${file.path}`, {
+            headers: { Authorization: `token ${ghToken}`, Accept: 'application/vnd.github+json' }
+          });
           const existing = getR.ok ? await getR.json() : null;
-          const sha = existing?.sha;
-          const body = { message: `⚙️ Settings: update ${file.path}`, content: btoa(unescape(encodeURIComponent(file.content))) };
-          if (sha) body.sha = sha;
-          const putR = await fetch(`https://api.github.com/repos/${repo}/contents/${file.path}`, { method: 'PUT', headers, body: JSON.stringify(body) });
-          if (!putR.ok) { const e = await putR.json(); throw new Error(e.message || putR.status); }
+          await window._ghPutFile(ghToken, file.path, file.content, `⚙️ Settings: update ${file.path}`, existing?.sha || null);
         }
 
         settingsStatus('✅ footer.js + header.js mis à jour sur GitHub. Déploiement GitHub Pages en cours (1–2 min).', '#16a34a');
       } catch (e) {
-        settingsStatus('❌ Erreur GitHub : ' + e.message, '#e8194b');
+        settingsStatus('❌ ' + e.message, '#e8194b');
       } finally { btn.disabled = false; }
     };
 
