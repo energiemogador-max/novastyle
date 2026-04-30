@@ -6602,6 +6602,407 @@
         pre.textContent = JSON.stringify(rules, null, 0);
       } catch { }
     })();
+  
+    // ── SETTINGS ──────────────────────────────────────────────────────────────────
+
+    const SETTINGS_DEFAULTS = {
+      whatsapp:     '212707074748',
+      phoneDisplay: '07 07 07 47 48',
+      street:       'Bd Oued Sebou, Rue 13 N°24',
+      city:         'Casablanca',
+      postal:       '20000',
+      country:      'Maroc',
+      maps:         'https://share.google/YUlF83PSlRCLlTy2K',
+      days:         'Lun–Sam',
+      opens:        '09:00',
+      closes:       '18:00',
+      instagram:    'https://www.instagram.com/nova_home_style/',
+      tiktok:       '',
+      facebook:     '',
+    };
+
+    const S_ID_MAP = { whatsapp: 's-whatsapp', phoneDisplay: 's-phone-display', street: 's-street', city: 's-city', postal: 's-postal', country: 's-country', maps: 's-maps', days: 's-days', opens: 's-opens', closes: 's-closes', instagram: 's-instagram', tiktok: 's-tiktok', facebook: 's-facebook' };
+
+    function settingsStatus(msg, color) {
+      const el = document.getElementById('s-status');
+      if (el) { el.textContent = msg; el.style.color = color || '#111'; }
+    }
+
+    async function loadSettingsIntoForm() {
+      try {
+        const res = await fetch(`${DB}/settings.json`);
+        const data = (res.ok ? await res.json() : null) || SETTINGS_DEFAULTS;
+        Object.entries(S_ID_MAP).forEach(([k, id]) => {
+          const el = document.getElementById(id);
+          if (el) el.value = data[k] ?? SETTINGS_DEFAULTS[k] ?? '';
+        });
+      } catch (e) {
+        Object.entries(S_ID_MAP).forEach(([k, id]) => {
+          const el = document.getElementById(id);
+          if (el) el.value = SETTINGS_DEFAULTS[k] || '';
+        });
+      }
+    }
+
+    function readSettingsFromForm() {
+      const out = {};
+      Object.entries(S_ID_MAP).forEach(([k, id]) => { const el = document.getElementById(id); out[k] = el ? el.value.trim() : ''; });
+      return out;
+    }
+
+    window.saveSettings = async function () {
+      const btn = document.getElementById('s-save-btn');
+      btn.disabled = true;
+      settingsStatus('⏳ Enregistrement…', '#6b7280');
+      try {
+        const fbToken = await window.__NOVA_FIREBASE__?.auth?.currentUser?.getIdToken();
+        if (!fbToken) throw new Error('Token Firebase manquant — reconnectez-vous.');
+        const s = readSettingsFromForm();
+        const res = await fetch(`${DB}/settings.json?auth=${fbToken}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(s)
+        });
+        if (!res.ok) throw new Error(`Firebase HTTP ${res.status}`);
+        settingsStatus('✅ Sauvegardé dans Firebase. Cliquez "Appliquer au site" pour pousser sur GitHub.', '#16a34a');
+        renderSettingsPreview(s);
+      } catch (e) {
+        settingsStatus('❌ ' + e.message, '#e8194b');
+      } finally { btn.disabled = false; }
+    };
+
+    function renderSettingsPreview(s) {
+      const socialLinks = [s.instagram, s.tiktok, s.facebook].filter(Boolean).map(u => `<a href="${u}" target="_blank" style="color:#e8194b">${u.replace('https://www.','').split('/')[0]}</a>`).join(' · ');
+      document.getElementById('s-preview').style.display = 'block';
+      document.getElementById('s-preview-content').innerHTML =
+        `📞 <a href="tel:+${s.whatsapp}" style="color:#e8194b">+${s.whatsapp}</a> · 💬 <a href="https://wa.me/${s.whatsapp}" style="color:#e8194b">WhatsApp</a><br>` +
+        `📍 ${s.street}, ${s.postal} ${s.city}, ${s.country}<br>` +
+        `🕐 ${s.days} · ${s.opens}–${s.closes}<br>` +
+        (socialLinks ? `🌐 ${socialLinks}` : '');
+    }
+
+    function buildFooterJs(s) {
+      const socialArr = [s.instagram, s.tiktok, s.facebook].filter(Boolean).map(u => `"${u}"`);
+      const socialSameAs = [
+        s.maps ? `"${s.maps}"` : null,
+        ...socialArr,
+        `"https://wa.me/${s.whatsapp}"`
+      ].filter(Boolean).join(',');
+
+      return `/**
+ * footer.js — Nova Style shared footer
+ * PERF: DOM insertion only (no document.write) — safe to load with defer
+ * TO UPDATE: edit ONLY this file. All pages update automatically.
+ */
+(function () {
+  var YEAR = new Date().getFullYear();
+
+  var CATS = [
+    { href: "/categorie/sdb-premium/",   label: "Miroirs SDB Premium" },
+    { href: "/categorie/sdb-essentiel/", label: "Miroirs entrée de gamme" },
+    { href: "/categorie/salon/",         label: "Miroirs salon &amp; dressing" },
+    { href: "/categorie/consoles/",      label: "Consoles &amp; entrée" },
+    { href: "/categorie/tables/",        label: "Tables de séjour" },
+    { href: "/categorie/douches/",       label: "Douches italiennes" },
+  ];
+
+  var SEO_PAGES = [
+    { href: "/miroir-salle-de-bain/",          label: "Miroir salle de bain" },
+    { href: "/miroir-salle-de-bain-led/",       label: "Miroir LED" },
+    { href: "/miroir-salle-de-bain-anti-buee/", label: "Miroir anti-buée" },
+    { href: "/miroir-sur-mesure/",              label: "Miroir sur mesure" },
+    { href: "/miroir-led-casablanca/",          label: "Miroir LED Casablanca" },
+    { href: "/miroir-maroc/",                   label: "Miroir Maroc" },
+    { href: "/blog/",                           label: "📖 Blog" },
+  ];
+
+  var CITIES = [
+    { href: "/miroir-salle-de-bain-casablanca/",  label: "Casablanca" },
+    { href: "/miroir-salle-de-bain-rabat/",        label: "Rabat" },
+    { href: "/miroir-salle-de-bain-marrakech/",    label: "Marrakech" },
+    { href: "/miroir-salle-de-bain-tanger/",       label: "Tanger" },
+    { href: "/miroir-salle-de-bain-fes/",          label: "Fès" },
+    { href: "/miroir-salle-de-bain-agadir/",       label: "Agadir" },
+    { href: "/miroir-salle-de-bain-meknes/",       label: "Meknès" },
+    { href: "/miroir-salle-de-bain-oujda/",        label: "Oujda" },
+    { href: "/miroir-salle-de-bain-kenitra/",      label: "Kénitra" },
+    { href: "/miroir-salle-de-bain-eljadida/",     label: "El Jadida" },
+    { href: "/miroir-salle-de-bain-tetouan/",      label: "Tétouan" },
+    { href: "/miroir-salle-de-bain-mohammedia/",   label: "Mohammedia" },
+  ];
+
+  var catLinks  = CATS.map(function(l){ return '<a href="' + l.href + '">' + l.label + '</a>'; }).join("\\n      ");
+  var seoLinks  = SEO_PAGES.map(function(l){ return '<a href="' + l.href + '">' + l.label + '</a>'; }).join("\\n      ");
+  var cityLinks = CITIES.map(function(l){ return '<a href="' + l.href + '">' + l.label + '</a>'; }).join(" · \\n      ");
+
+  var html = '<footer class="site-footer">\\n' +
+'  <div class="foot-grid">\\n' +
+'    <div>\\n' +
+'      <div class="foot-brand">Nova Style</div>\\n' +
+'      <div class="foot-tag">La beauté dans le miroir</div>\\n' +
+'      <p>Fabricant de miroirs à Casablanca. Verre AGC Belgique, traitement anti-buée, anticorrosion. Livraison partout au Maroc.</p>\\n' +
+'      <p style="margin-top:10px"><a href="tel:+${s.whatsapp}">📞 ${s.phoneDisplay}</a> · <a href="https://wa.me/${s.whatsapp}" target="_blank" rel="noopener">💬 WhatsApp</a></p>\\n' +
+'      <p style="margin-top:6px;font-size:12px;color:var(--muted,#888)">Showroom : ${s.street}, ${s.postal} ${s.city}, ${s.country}<br>${s.days} · ${s.opens.replace(':','h')}–${s.closes.replace(':','h')}00</p>\\n' +
+'    </div>\\n' +
+'    <div><strong>Catégories</strong>\\n      ' + catLinks + '\\n    </div>\\n' +
+'    <div><strong>Pages SEO</strong>\\n      ' + seoLinks + '\\n    </div>\\n' +
+'    <div><strong>Villes desservies</strong>\\n      <div class="cities-inline">' + cityLinks + '</div>\\n    </div>\\n' +
+'  </div>\\n' +
+'  <div class="geo-seo-block" style="margin-top:40px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.05);font-size:12px;color:#666;line-height:1.5;">\\n' +
+'    <strong>À propos de Nova Style :</strong> Nova Style est le fabricant marocain de référence spécialisé dans le <strong>miroir de salle de bain</strong>, le <strong>miroir de salle de bain avec LED</strong>, et le <strong>miroir de salle de bain antibuée</strong>. Situés à ${s.city} (${s.street}), nous concevons des miroirs sur mesure de très haute qualité utilisant du verre AGC Belgique. Nos miroirs allient design moderne, éclairage LED, et traitement anti-corrosion, avec une livraison et installation disponibles partout au Maroc.\\n' +
+'  </div>\\n' +
+'  <div class="foot-legal">© ' + YEAR + ' Nova Style · Fabrication à ${s.city}, Maroc · Livraison nationale</div>\\n' +
+'</footer>\\n' +
+'<script type="application/ld+json">\\n' +
+'{\\n' +
+'  "@context": "https://schema.org",\\n' +
+'  "@type": ["LocalBusiness", "Organization", "Manufacturer"],\\n' +
+'  "@id": "https://novastyle.ma/#organization",\\n' +
+'  "name": "Nova Style",\\n' +
+'  "description": "Fabricant marocain spécialisé dans le miroir de salle de bain, le miroir de salle de bain avec LED, et le miroir de salle de bain antibuée sur mesure.",\\n' +
+'  "url": "https://novastyle.ma",\\n' +
+'  "telephone": "+${s.whatsapp}",\\n' +
+'  "image": "https://novastyle.ma/assets/favicon.png",\\n' +
+'  "logo": "https://novastyle.ma/assets/favicon.png",\\n' +
+'  "sameAs": [${socialSameAs}],\\n' +
+'  "address": {"@type":"PostalAddress","streetAddress":"${s.street}","addressLocality":"${s.city}","addressRegion":"Grand Casablanca-Settat","postalCode":"${s.postal}","addressCountry":"MA"},\\n' +
+'  "geo": {"@type":"GeoCoordinates","latitude":"33.5731","longitude":"-7.5898"},\\n' +
+'  "hasMap": "${s.maps}",\\n' +
+'  "openingHoursSpecification": [{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"${s.opens}","closes":"${s.closes}"}],\\n' +
+'  "priceRange": "450 - 5000 MAD",\\n' +
+'  "currenciesAccepted": "MAD",\\n' +
+'  "paymentAccepted": "Cash, Virement bancaire",\\n' +
+'  "areaServed": {"@type":"Country","name":"Maroc"},\\n' +
+'  "knowsAbout": ["Miroir de salle de bain","Miroir de salle de bain avec LED","Miroir de salle de bain antibuée","Miroir sur mesure","Verre AGC Belgique","Décoration d\\'intérieur"]\\n' +
+'}\\n' +
+'<\\/script>';
+
+  function inject() {
+    var frag = document.createRange().createContextualFragment(html);
+    document.body.appendChild(frag);
+  }
+
+  function fixCardImages() {
+    document.querySelectorAll('.card-img img').forEach(function (img) {
+      function markReady() {
+        img.classList.add('img-ready');
+        var wrap = img.closest('.card-img');
+        if (wrap) wrap.classList.add('img-ready');
+      }
+      if (img.complete && img.naturalWidth > 0) { markReady(); }
+      else {
+        img.addEventListener('load', markReady);
+        img.addEventListener('error', markReady);
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { inject(); fixCardImages(); });
+  } else {
+    inject();
+    fixCardImages();
+  }
+})();
+`;
+    }
+
+    function buildHeaderJs(s) {
+      return `/**
+ * header.js — Nova Style shared header
+ * Layout: [Logo] [Nav — left-aligned] [→ auto] [WhatsApp] [Cart] [Hamburger]
+ * TO UPDATE: edit ONLY this file. All pages update automatically.
+ */
+(function () {
+  var NAV_LINKS = [
+    { href: "/",                         label: "Accueil" },
+    { href: "/categorie/sdb-premium/",   label: "Miroirs SDB" },
+    { href: "/categorie/salon/",         label: "Salon &amp; Dressing" },
+    { href: "/categorie/douches/",       label: "Douches" },
+    { href: "/categorie/consoles/",      label: "Consoles" },
+    { href: "/categorie/tables/",        label: "Tables" },
+    { href: "/miroir-sur-mesure/",       label: "Sur Mesure" },
+    { href: "/blog/",                    label: "Blog" },
+  ];
+
+  var navItems = NAV_LINKS.map(function(l) {
+    return '<a href="' + l.href + '" class="nav-link">' + l.label + '</a>';
+  }).join('\\n    ');
+
+  var html =
+    '<header class="site-header" id="site-header">\\n' +
+    '  <div class="header-inner">\\n' +
+    '    <a href="/" class="brand">\\n' +
+    '      <img src="/assets/logo.png" alt="Nova Style" class="header-logo" width="120" height="40">\\n' +
+    '      <span class="brand-name">Nova Style</span>\\n' +
+    '    </a>\\n' +
+    '    <nav id="main-nav" class="main-nav">\\n' +
+    '      ' + navItems + '\\n' +
+    '    </nav>\\n' +
+    '    <div class="header-actions">\\n' +
+    '      <a href="https://wa.me/${s.whatsapp}" class="header-wa" target="_blank" rel="noopener">💬 WhatsApp</a>\\n' +
+    '      <a href="/cart.html" class="cart-icon-wrap" id="cart-icon-wrap">\\n' +
+    '        🛒<span class="cart-badge" id="cart-icon-badge" style="display:none">0</span>\\n' +
+    '      </a>\\n' +
+    '      <button class="hamburger" id="menu-toggle" aria-label="Menu">\\n' +
+    '        <span></span><span></span><span></span>\\n' +
+    '      </button>\\n' +
+    '    </div>\\n' +
+    '  </div>\\n' +
+    '  <div class="nav-overlay" id="nav-overlay"></div>\\n' +
+    '</header>\\n';
+
+  var css =
+    '.site-header{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid rgba(0,0,0,.07);box-shadow:0 1px 8px rgba(0,0,0,.06);}' +
+    '.header-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:24px;}' +
+    '.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex-shrink:0;}' +
+    '.header-logo{height:36px;width:auto;object-fit:contain;}' +
+    '.brand-name{font-size:17px;font-weight:700;letter-spacing:1.5px;color:var(--text);}' +
+    '.main-nav{display:flex;gap:4px;align-items:center;flex:1;}' +
+    '.nav-link{padding:6px 10px;font-size:13px;font-weight:500;color:#374151;text-decoration:none;border-radius:6px;white-space:nowrap;transition:background .15s,color .15s;}' +
+    '.nav-link:hover,.nav-link.active{background:#fef2f4;color:#e8194b;}' +
+    '.header-actions{display:flex;align-items:center;gap:12px;margin-left:auto;flex-shrink:0;}' +
+    '.header-wa{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;background:#25d366;color:#fff;border-radius:7px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;}' +
+    '.header-wa:hover{background:#20bb5a;}' +
+    '.cart-icon-wrap{position:relative;font-size:22px;text-decoration:none;cursor:pointer;}' +
+    '.cart-badge{position:absolute;top:-6px;right:-8px;background:#e8194b;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 3px;}' +
+    '.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}' +
+    '.hamburger span{display:block;width:22px;height:2px;background:#374151;border-radius:2px;transition:all .3s;}' +
+    '.nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:98;}' +
+    '@media(max-width:768px){' +
+    '.hamburger{display:flex;}' +
+    '.main-nav{position:fixed;top:0;left:-280px;height:100vh;width:260px;background:#fff;flex-direction:column;align-items:flex-start;gap:0;padding:70px 0 20px;z-index:99;box-shadow:4px 0 20px rgba(0,0,0,.15);transition:left .3s;overflow-y:auto;}' +
+    '.main-nav.open{left:0;}' +
+    '.nav-overlay.open{display:block;}' +
+    '.nav-link{padding:12px 24px;width:100%;border-radius:0;font-size:15px;}' +
+    '.brand-name{display:none;}' +
+    '}';
+
+  function inject() {
+    var style = document.createElement('style');
+    style.textContent = css;
+    document.head.appendChild(style);
+    var frag = document.createRange().createContextualFragment(html);
+    document.body.insertBefore(frag, document.body.firstChild);
+
+    var toggle  = document.getElementById("menu-toggle");
+    var nav     = document.getElementById("main-nav");
+    var overlay = document.getElementById("nav-overlay");
+    var path = window.location.pathname.replace(/\\/$/, "") || "/";
+    var badge = document.getElementById("cart-icon-badge");
+
+    document.querySelectorAll(".nav-link").forEach(function(a) {
+      var href = a.getAttribute("href").replace(/\\/$/, "") || "/";
+      if (path === href || (href !== "/" && path.startsWith(href))) a.classList.add("active");
+    });
+
+    function openMenu() { nav.classList.add("open"); overlay.classList.add("open"); document.body.style.overflow = "hidden"; }
+    function closeMenu() { nav.classList.remove("open"); overlay.classList.remove("open"); document.body.style.overflow = ""; }
+    if (toggle) toggle.addEventListener("click", openMenu);
+    if (overlay) overlay.addEventListener("click", closeMenu);
+
+    function updateBadge() {
+      try {
+        var cart = JSON.parse(localStorage.getItem("nova_cart") || "[]");
+        var total = cart.reduce(function(s, i) { return s + (i.qty || 1); }, 0);
+        if (badge) { badge.textContent = total; badge.style.display = total > 0 ? "flex" : "none"; }
+      } catch(e) {}
+    }
+    updateBadge();
+    window.addEventListener("storage", updateBadge);
+    window.addEventListener("nova-cart-updated", updateBadge);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", inject);
+  } else {
+    inject();
+  }
+})();
+`;
+    }
+
+    window.applySettingsToGithub = async function () {
+      const btn = document.getElementById('s-apply-btn');
+      btn.disabled = true;
+
+      const ghToken = localStorage.getItem('nova_gh_pat') || localStorage.getItem('nova_github_token') || '';
+      if (!ghToken) {
+        settingsStatus('⚠️ Configure d\'abord le token GitHub PAT dans l\'onglet Accueil.', '#e8194b');
+        btn.disabled = false; return;
+      }
+
+      settingsStatus('⏳ Lecture des settings…', '#6b7280');
+      try {
+        const res = await fetch(`${DB}/settings.json`);
+        if (!res.ok) throw new Error('Impossible de lire les settings Firebase.');
+        const s = await res.json();
+        if (!s) throw new Error('Enregistrez d\'abord les settings dans Firebase.');
+
+        const files = [
+          { path: 'assets/footer.js', content: buildFooterJs(s) },
+          { path: 'assets/header.js', content: buildHeaderJs(s) },
+        ];
+
+        for (const file of files) {
+          settingsStatus(`⏳ Commit ${file.path}…`, '#6b7280');
+          // get current sha
+          const getR = await fetch(`https://api.github.com/repos/${REPO}/contents/${file.path}`, {
+            headers: { Authorization: `token ${ghToken}`, Accept: 'application/vnd.github+json' }
+          });
+          const existing = getR.ok ? await getR.json() : null;
+          await window._ghPutFile(ghToken, file.path, file.content, `⚙️ Settings: update ${file.path}`, existing?.sha || null);
+        }
+
+        settingsStatus('✅ footer.js + header.js mis à jour sur GitHub. Déploiement GitHub Pages en cours (1–2 min).', '#16a34a');
+      } catch (e) {
+        settingsStatus('❌ ' + e.message, '#e8194b');
+      } finally { btn.disabled = false; }
+    };
+
+    // Auto-load settings when tab is opened
+    document.querySelectorAll('.sidebar-item[data-tab="settings"]').forEach(el => {
+      el.addEventListener('click', () => setTimeout(loadSettingsIntoForm, 100));
+    });
+
+    window.saveAdsConfig = async function () {
+      const statusEl = document.getElementById('ads-save-status');
+      statusEl.style.color = '#6b7280';
+      statusEl.textContent = '⏳ Sauvegarde…';
+      try {
+        const fbToken = await window.__NOVA_FIREBASE__?.auth?.currentUser?.getIdToken();
+        if (!fbToken) throw new Error('Token Firebase manquant — reconnectez-vous.');
+        const cfg = {};
+        ADS_FIELDS.forEach(({ id, key }) => {
+          cfg[key] = document.getElementById(id)?.value.trim() || '';
+        });
+        const res = await fetch(`${DB}/ads_config.json?auth=${fbToken}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(cfg)
+        });
+        if (!res.ok) throw new Error(`Firebase HTTP ${res.status}`);
+        updateAdsBadges();
+
+        // Also write static ads_config.json to GitHub so ads-loader.js can read it without auth
+        const ghToken = localStorage.getItem('nova_github_token') || localStorage.getItem('nova_gh_pat');
+        if (ghToken && window._ghPutFile) {
+          try {
+            await window._ghPutFile(ghToken, 'ads_config.json', JSON.stringify(cfg, null, 2), 'Update ads_config.json', null);
+          } catch (ghErr) {
+            console.warn('ads_config.json GitHub write failed:', ghErr);
+          }
+        }
+
+        statusEl.style.color = '#16a34a';
+        statusEl.textContent = '✅ Pixels sauvegardés et déployés automatiquement !';
+        setTimeout(() => { statusEl.textContent = ''; }, 4000);
+      } catch (e) {
+        statusEl.style.color = '#e8194b';
+        statusEl.textContent = '❌ ' + e.message;
+      }
+    };
+
   </script>
 
   <!-- React (CDN) + Babel standalone for Nouveau Produit -->
@@ -7264,405 +7665,6 @@
       if (ttBadge) ttBadge.style.display = ttVal ? '' : 'none';
     }
 
-    // ── SETTINGS ──────────────────────────────────────────────────────────────────
-
-    const SETTINGS_DEFAULTS = {
-      whatsapp:     '212707074748',
-      phoneDisplay: '07 07 07 47 48',
-      street:       'Bd Oued Sebou, Rue 13 N°24',
-      city:         'Casablanca',
-      postal:       '20000',
-      country:      'Maroc',
-      maps:         'https://share.google/YUlF83PSlRCLlTy2K',
-      days:         'Lun–Sam',
-      opens:        '09:00',
-      closes:       '18:00',
-      instagram:    'https://www.instagram.com/nova_home_style/',
-      tiktok:       '',
-      facebook:     '',
-    };
-
-    const S_ID_MAP = { whatsapp: 's-whatsapp', phoneDisplay: 's-phone-display', street: 's-street', city: 's-city', postal: 's-postal', country: 's-country', maps: 's-maps', days: 's-days', opens: 's-opens', closes: 's-closes', instagram: 's-instagram', tiktok: 's-tiktok', facebook: 's-facebook' };
-
-    function settingsStatus(msg, color) {
-      const el = document.getElementById('s-status');
-      if (el) { el.textContent = msg; el.style.color = color || '#111'; }
-    }
-
-    async function loadSettingsIntoForm() {
-      try {
-        const res = await fetch(`${DB}/settings.json`);
-        const data = (res.ok ? await res.json() : null) || SETTINGS_DEFAULTS;
-        Object.entries(S_ID_MAP).forEach(([k, id]) => {
-          const el = document.getElementById(id);
-          if (el) el.value = data[k] ?? SETTINGS_DEFAULTS[k] ?? '';
-        });
-      } catch (e) {
-        Object.entries(S_ID_MAP).forEach(([k, id]) => {
-          const el = document.getElementById(id);
-          if (el) el.value = SETTINGS_DEFAULTS[k] || '';
-        });
-      }
-    }
-
-    function readSettingsFromForm() {
-      const out = {};
-      Object.entries(S_ID_MAP).forEach(([k, id]) => { const el = document.getElementById(id); out[k] = el ? el.value.trim() : ''; });
-      return out;
-    }
-
-    window.saveSettings = async function () {
-      const btn = document.getElementById('s-save-btn');
-      btn.disabled = true;
-      settingsStatus('⏳ Enregistrement…', '#6b7280');
-      try {
-        const fbToken = await window.__NOVA_FIREBASE__?.auth?.currentUser?.getIdToken();
-        if (!fbToken) throw new Error('Token Firebase manquant — reconnectez-vous.');
-        const s = readSettingsFromForm();
-        const res = await fetch(`${DB}/settings.json?auth=${fbToken}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(s)
-        });
-        if (!res.ok) throw new Error(`Firebase HTTP ${res.status}`);
-        settingsStatus('✅ Sauvegardé dans Firebase. Cliquez "Appliquer au site" pour pousser sur GitHub.', '#16a34a');
-        renderSettingsPreview(s);
-      } catch (e) {
-        settingsStatus('❌ ' + e.message, '#e8194b');
-      } finally { btn.disabled = false; }
-    };
-
-    function renderSettingsPreview(s) {
-      const socialLinks = [s.instagram, s.tiktok, s.facebook].filter(Boolean).map(u => `<a href="${u}" target="_blank" style="color:#e8194b">${u.replace('https://www.','').split('/')[0]}</a>`).join(' · ');
-      document.getElementById('s-preview').style.display = 'block';
-      document.getElementById('s-preview-content').innerHTML =
-        `📞 <a href="tel:+${s.whatsapp}" style="color:#e8194b">+${s.whatsapp}</a> · 💬 <a href="https://wa.me/${s.whatsapp}" style="color:#e8194b">WhatsApp</a><br>` +
-        `📍 ${s.street}, ${s.postal} ${s.city}, ${s.country}<br>` +
-        `🕐 ${s.days} · ${s.opens}–${s.closes}<br>` +
-        (socialLinks ? `🌐 ${socialLinks}` : '');
-    }
-
-    function buildFooterJs(s) {
-      const socialArr = [s.instagram, s.tiktok, s.facebook].filter(Boolean).map(u => `"${u}"`);
-      const socialSameAs = [
-        s.maps ? `"${s.maps}"` : null,
-        ...socialArr,
-        `"https://wa.me/${s.whatsapp}"`
-      ].filter(Boolean).join(',');
-
-      return `/**
- * footer.js — Nova Style shared footer
- * PERF: DOM insertion only (no document.write) — safe to load with defer
- * TO UPDATE: edit ONLY this file. All pages update automatically.
- */
-(function () {
-  var YEAR = new Date().getFullYear();
-
-  var CATS = [
-    { href: "/categorie/sdb-premium/",   label: "Miroirs SDB Premium" },
-    { href: "/categorie/sdb-essentiel/", label: "Miroirs entrée de gamme" },
-    { href: "/categorie/salon/",         label: "Miroirs salon &amp; dressing" },
-    { href: "/categorie/consoles/",      label: "Consoles &amp; entrée" },
-    { href: "/categorie/tables/",        label: "Tables de séjour" },
-    { href: "/categorie/douches/",       label: "Douches italiennes" },
-  ];
-
-  var SEO_PAGES = [
-    { href: "/miroir-salle-de-bain/",          label: "Miroir salle de bain" },
-    { href: "/miroir-salle-de-bain-led/",       label: "Miroir LED" },
-    { href: "/miroir-salle-de-bain-anti-buee/", label: "Miroir anti-buée" },
-    { href: "/miroir-sur-mesure/",              label: "Miroir sur mesure" },
-    { href: "/miroir-led-casablanca/",          label: "Miroir LED Casablanca" },
-    { href: "/miroir-maroc/",                   label: "Miroir Maroc" },
-    { href: "/blog/",                           label: "📖 Blog" },
-  ];
-
-  var CITIES = [
-    { href: "/miroir-salle-de-bain-casablanca/",  label: "Casablanca" },
-    { href: "/miroir-salle-de-bain-rabat/",        label: "Rabat" },
-    { href: "/miroir-salle-de-bain-marrakech/",    label: "Marrakech" },
-    { href: "/miroir-salle-de-bain-tanger/",       label: "Tanger" },
-    { href: "/miroir-salle-de-bain-fes/",          label: "Fès" },
-    { href: "/miroir-salle-de-bain-agadir/",       label: "Agadir" },
-    { href: "/miroir-salle-de-bain-meknes/",       label: "Meknès" },
-    { href: "/miroir-salle-de-bain-oujda/",        label: "Oujda" },
-    { href: "/miroir-salle-de-bain-kenitra/",      label: "Kénitra" },
-    { href: "/miroir-salle-de-bain-eljadida/",     label: "El Jadida" },
-    { href: "/miroir-salle-de-bain-tetouan/",      label: "Tétouan" },
-    { href: "/miroir-salle-de-bain-mohammedia/",   label: "Mohammedia" },
-  ];
-
-  var catLinks  = CATS.map(function(l){ return '<a href="' + l.href + '">' + l.label + '</a>'; }).join("\\n      ");
-  var seoLinks  = SEO_PAGES.map(function(l){ return '<a href="' + l.href + '">' + l.label + '</a>'; }).join("\\n      ");
-  var cityLinks = CITIES.map(function(l){ return '<a href="' + l.href + '">' + l.label + '</a>'; }).join(" · \\n      ");
-
-  var html = '<footer class="site-footer">\\n' +
-'  <div class="foot-grid">\\n' +
-'    <div>\\n' +
-'      <div class="foot-brand">Nova Style</div>\\n' +
-'      <div class="foot-tag">La beauté dans le miroir</div>\\n' +
-'      <p>Fabricant de miroirs à Casablanca. Verre AGC Belgique, traitement anti-buée, anticorrosion. Livraison partout au Maroc.</p>\\n' +
-'      <p style="margin-top:10px"><a href="tel:+${s.whatsapp}">📞 ${s.phoneDisplay}</a> · <a href="https://wa.me/${s.whatsapp}" target="_blank" rel="noopener">💬 WhatsApp</a></p>\\n' +
-'      <p style="margin-top:6px;font-size:12px;color:var(--muted,#888)">Showroom : ${s.street}, ${s.postal} ${s.city}, ${s.country}<br>${s.days} · ${s.opens.replace(':','h')}–${s.closes.replace(':','h')}00</p>\\n' +
-'    </div>\\n' +
-'    <div><strong>Catégories</strong>\\n      ' + catLinks + '\\n    </div>\\n' +
-'    <div><strong>Pages SEO</strong>\\n      ' + seoLinks + '\\n    </div>\\n' +
-'    <div><strong>Villes desservies</strong>\\n      <div class="cities-inline">' + cityLinks + '</div>\\n    </div>\\n' +
-'  </div>\\n' +
-'  <div class="geo-seo-block" style="margin-top:40px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.05);font-size:12px;color:#666;line-height:1.5;">\\n' +
-'    <strong>À propos de Nova Style :</strong> Nova Style est le fabricant marocain de référence spécialisé dans le <strong>miroir de salle de bain</strong>, le <strong>miroir de salle de bain avec LED</strong>, et le <strong>miroir de salle de bain antibuée</strong>. Situés à ${s.city} (${s.street}), nous concevons des miroirs sur mesure de très haute qualité utilisant du verre AGC Belgique. Nos miroirs allient design moderne, éclairage LED, et traitement anti-corrosion, avec une livraison et installation disponibles partout au Maroc.\\n' +
-'  </div>\\n' +
-'  <div class="foot-legal">© ' + YEAR + ' Nova Style · Fabrication à ${s.city}, Maroc · Livraison nationale</div>\\n' +
-'</footer>\\n' +
-'<script type="application/ld+json">\\n' +
-'{\\n' +
-'  "@context": "https://schema.org",\\n' +
-'  "@type": ["LocalBusiness", "Organization", "Manufacturer"],\\n' +
-'  "@id": "https://novastyle.ma/#organization",\\n' +
-'  "name": "Nova Style",\\n' +
-'  "description": "Fabricant marocain spécialisé dans le miroir de salle de bain, le miroir de salle de bain avec LED, et le miroir de salle de bain antibuée sur mesure.",\\n' +
-'  "url": "https://novastyle.ma",\\n' +
-'  "telephone": "+${s.whatsapp}",\\n' +
-'  "image": "https://novastyle.ma/assets/favicon.png",\\n' +
-'  "logo": "https://novastyle.ma/assets/favicon.png",\\n' +
-'  "sameAs": [${socialSameAs}],\\n' +
-'  "address": {"@type":"PostalAddress","streetAddress":"${s.street}","addressLocality":"${s.city}","addressRegion":"Grand Casablanca-Settat","postalCode":"${s.postal}","addressCountry":"MA"},\\n' +
-'  "geo": {"@type":"GeoCoordinates","latitude":"33.5731","longitude":"-7.5898"},\\n' +
-'  "hasMap": "${s.maps}",\\n' +
-'  "openingHoursSpecification": [{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"${s.opens}","closes":"${s.closes}"}],\\n' +
-'  "priceRange": "450 - 5000 MAD",\\n' +
-'  "currenciesAccepted": "MAD",\\n' +
-'  "paymentAccepted": "Cash, Virement bancaire",\\n' +
-'  "areaServed": {"@type":"Country","name":"Maroc"},\\n' +
-'  "knowsAbout": ["Miroir de salle de bain","Miroir de salle de bain avec LED","Miroir de salle de bain antibuée","Miroir sur mesure","Verre AGC Belgique","Décoration d\\'intérieur"]\\n' +
-'}\\n' +
-'<\\/script>';
-
-  function inject() {
-    var frag = document.createRange().createContextualFragment(html);
-    document.body.appendChild(frag);
-  }
-
-  function fixCardImages() {
-    document.querySelectorAll('.card-img img').forEach(function (img) {
-      function markReady() {
-        img.classList.add('img-ready');
-        var wrap = img.closest('.card-img');
-        if (wrap) wrap.classList.add('img-ready');
-      }
-      if (img.complete && img.naturalWidth > 0) { markReady(); }
-      else {
-        img.addEventListener('load', markReady);
-        img.addEventListener('error', markReady);
-      }
-    });
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { inject(); fixCardImages(); });
-  } else {
-    inject();
-    fixCardImages();
-  }
-})();
-`;
-    }
-
-    function buildHeaderJs(s) {
-      return `/**
- * header.js — Nova Style shared header
- * Layout: [Logo] [Nav — left-aligned] [→ auto] [WhatsApp] [Cart] [Hamburger]
- * TO UPDATE: edit ONLY this file. All pages update automatically.
- */
-(function () {
-  var NAV_LINKS = [
-    { href: "/",                         label: "Accueil" },
-    { href: "/categorie/sdb-premium/",   label: "Miroirs SDB" },
-    { href: "/categorie/salon/",         label: "Salon &amp; Dressing" },
-    { href: "/categorie/douches/",       label: "Douches" },
-    { href: "/categorie/consoles/",      label: "Consoles" },
-    { href: "/categorie/tables/",        label: "Tables" },
-    { href: "/miroir-sur-mesure/",       label: "Sur Mesure" },
-    { href: "/blog/",                    label: "Blog" },
-  ];
-
-  var navItems = NAV_LINKS.map(function(l) {
-    return '<a href="' + l.href + '" class="nav-link">' + l.label + '</a>';
-  }).join('\\n    ');
-
-  var html =
-    '<header class="site-header" id="site-header">\\n' +
-    '  <div class="header-inner">\\n' +
-    '    <a href="/" class="brand">\\n' +
-    '      <img src="/assets/logo.png" alt="Nova Style" class="header-logo" width="120" height="40">\\n' +
-    '      <span class="brand-name">Nova Style</span>\\n' +
-    '    </a>\\n' +
-    '    <nav id="main-nav" class="main-nav">\\n' +
-    '      ' + navItems + '\\n' +
-    '    </nav>\\n' +
-    '    <div class="header-actions">\\n' +
-    '      <a href="https://wa.me/${s.whatsapp}" class="header-wa" target="_blank" rel="noopener">💬 WhatsApp</a>\\n' +
-    '      <a href="/cart.html" class="cart-icon-wrap" id="cart-icon-wrap">\\n' +
-    '        🛒<span class="cart-badge" id="cart-icon-badge" style="display:none">0</span>\\n' +
-    '      </a>\\n' +
-    '      <button class="hamburger" id="menu-toggle" aria-label="Menu">\\n' +
-    '        <span></span><span></span><span></span>\\n' +
-    '      </button>\\n' +
-    '    </div>\\n' +
-    '  </div>\\n' +
-    '  <div class="nav-overlay" id="nav-overlay"></div>\\n' +
-    '</header>\\n';
-
-  var css =
-    '.site-header{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid rgba(0,0,0,.07);box-shadow:0 1px 8px rgba(0,0,0,.06);}' +
-    '.header-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:24px;}' +
-    '.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex-shrink:0;}' +
-    '.header-logo{height:36px;width:auto;object-fit:contain;}' +
-    '.brand-name{font-size:17px;font-weight:700;letter-spacing:1.5px;color:var(--text);}' +
-    '.main-nav{display:flex;gap:4px;align-items:center;flex:1;}' +
-    '.nav-link{padding:6px 10px;font-size:13px;font-weight:500;color:#374151;text-decoration:none;border-radius:6px;white-space:nowrap;transition:background .15s,color .15s;}' +
-    '.nav-link:hover,.nav-link.active{background:#fef2f4;color:#e8194b;}' +
-    '.header-actions{display:flex;align-items:center;gap:12px;margin-left:auto;flex-shrink:0;}' +
-    '.header-wa{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;background:#25d366;color:#fff;border-radius:7px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;}' +
-    '.header-wa:hover{background:#20bb5a;}' +
-    '.cart-icon-wrap{position:relative;font-size:22px;text-decoration:none;cursor:pointer;}' +
-    '.cart-badge{position:absolute;top:-6px;right:-8px;background:#e8194b;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 3px;}' +
-    '.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}' +
-    '.hamburger span{display:block;width:22px;height:2px;background:#374151;border-radius:2px;transition:all .3s;}' +
-    '.nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:98;}' +
-    '@media(max-width:768px){' +
-    '.hamburger{display:flex;}' +
-    '.main-nav{position:fixed;top:0;left:-280px;height:100vh;width:260px;background:#fff;flex-direction:column;align-items:flex-start;gap:0;padding:70px 0 20px;z-index:99;box-shadow:4px 0 20px rgba(0,0,0,.15);transition:left .3s;overflow-y:auto;}' +
-    '.main-nav.open{left:0;}' +
-    '.nav-overlay.open{display:block;}' +
-    '.nav-link{padding:12px 24px;width:100%;border-radius:0;font-size:15px;}' +
-    '.brand-name{display:none;}' +
-    '}';
-
-  function inject() {
-    var style = document.createElement('style');
-    style.textContent = css;
-    document.head.appendChild(style);
-    var frag = document.createRange().createContextualFragment(html);
-    document.body.insertBefore(frag, document.body.firstChild);
-
-    var toggle  = document.getElementById("menu-toggle");
-    var nav     = document.getElementById("main-nav");
-    var overlay = document.getElementById("nav-overlay");
-    var path = window.location.pathname.replace(/\\/$/, "") || "/";
-    var badge = document.getElementById("cart-icon-badge");
-
-    document.querySelectorAll(".nav-link").forEach(function(a) {
-      var href = a.getAttribute("href").replace(/\\/$/, "") || "/";
-      if (path === href || (href !== "/" && path.startsWith(href))) a.classList.add("active");
-    });
-
-    function openMenu() { nav.classList.add("open"); overlay.classList.add("open"); document.body.style.overflow = "hidden"; }
-    function closeMenu() { nav.classList.remove("open"); overlay.classList.remove("open"); document.body.style.overflow = ""; }
-    if (toggle) toggle.addEventListener("click", openMenu);
-    if (overlay) overlay.addEventListener("click", closeMenu);
-
-    function updateBadge() {
-      try {
-        var cart = JSON.parse(localStorage.getItem("nova_cart") || "[]");
-        var total = cart.reduce(function(s, i) { return s + (i.qty || 1); }, 0);
-        if (badge) { badge.textContent = total; badge.style.display = total > 0 ? "flex" : "none"; }
-      } catch(e) {}
-    }
-    updateBadge();
-    window.addEventListener("storage", updateBadge);
-    window.addEventListener("nova-cart-updated", updateBadge);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", inject);
-  } else {
-    inject();
-  }
-})();
-`;
-    }
-
-    window.applySettingsToGithub = async function () {
-      const btn = document.getElementById('s-apply-btn');
-      btn.disabled = true;
-
-      const ghToken = localStorage.getItem('nova_gh_pat') || localStorage.getItem('nova_github_token') || '';
-      if (!ghToken) {
-        settingsStatus('⚠️ Configure d\'abord le token GitHub PAT dans l\'onglet Accueil.', '#e8194b');
-        btn.disabled = false; return;
-      }
-
-      settingsStatus('⏳ Lecture des settings…', '#6b7280');
-      try {
-        const res = await fetch(`${DB}/settings.json`);
-        if (!res.ok) throw new Error('Impossible de lire les settings Firebase.');
-        const s = await res.json();
-        if (!s) throw new Error('Enregistrez d\'abord les settings dans Firebase.');
-
-        const files = [
-          { path: 'assets/footer.js', content: buildFooterJs(s) },
-          { path: 'assets/header.js', content: buildHeaderJs(s) },
-        ];
-
-        for (const file of files) {
-          settingsStatus(`⏳ Commit ${file.path}…`, '#6b7280');
-          // get current sha
-          const getR = await fetch(`https://api.github.com/repos/${REPO}/contents/${file.path}`, {
-            headers: { Authorization: `token ${ghToken}`, Accept: 'application/vnd.github+json' }
-          });
-          const existing = getR.ok ? await getR.json() : null;
-          await window._ghPutFile(ghToken, file.path, file.content, `⚙️ Settings: update ${file.path}`, existing?.sha || null);
-        }
-
-        settingsStatus('✅ footer.js + header.js mis à jour sur GitHub. Déploiement GitHub Pages en cours (1–2 min).', '#16a34a');
-      } catch (e) {
-        settingsStatus('❌ ' + e.message, '#e8194b');
-      } finally { btn.disabled = false; }
-    };
-
-    // Auto-load settings when tab is opened
-    document.querySelectorAll('.sidebar-item[data-tab="settings"]').forEach(el => {
-      el.addEventListener('click', () => setTimeout(loadSettingsIntoForm, 100));
-    });
-
-    window.saveAdsConfig = async function () {
-      const statusEl = document.getElementById('ads-save-status');
-      statusEl.style.color = '#6b7280';
-      statusEl.textContent = '⏳ Sauvegarde…';
-      try {
-        const fbToken = await window.__NOVA_FIREBASE__?.auth?.currentUser?.getIdToken();
-        if (!fbToken) throw new Error('Token Firebase manquant — reconnectez-vous.');
-        const cfg = {};
-        ADS_FIELDS.forEach(({ id, key }) => {
-          cfg[key] = document.getElementById(id)?.value.trim() || '';
-        });
-        const res = await fetch(`${DB}/ads_config.json?auth=${fbToken}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(cfg)
-        });
-        if (!res.ok) throw new Error(`Firebase HTTP ${res.status}`);
-        updateAdsBadges();
-
-        // Also write static ads_config.json to GitHub so ads-loader.js can read it without auth
-        const ghToken = localStorage.getItem('nova_github_token') || localStorage.getItem('nova_gh_pat');
-        if (ghToken && window._ghPutFile) {
-          try {
-            await window._ghPutFile(ghToken, 'ads_config.json', JSON.stringify(cfg, null, 2), 'Update ads_config.json', null);
-          } catch (ghErr) {
-            console.warn('ads_config.json GitHub write failed:', ghErr);
-          }
-        }
-
-        statusEl.style.color = '#16a34a';
-        statusEl.textContent = '✅ Pixels sauvegardés et déployés automatiquement !';
-        setTimeout(() => { statusEl.textContent = ''; }, 4000);
-      } catch (e) {
-        statusEl.style.color = '#e8194b';
-        statusEl.textContent = '❌ ' + e.message;
-      }
-    };
 
     // Hook into tab switching to load ads config on first open
     let _adsLoaded = false;
