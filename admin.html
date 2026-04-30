@@ -4293,15 +4293,14 @@
         CATS.forEach(c => setCat(c.id, 'wait'));
 
         let errors = 0;
+        let waPhone = '212635228074', phoneDisplay = '06 35 22 80 74';
         try {
           // ① Fetch phone from settings
           log('📱 Lecture du numéro depuis Firebase Settings…', 'info');
-          const [waPhone, phoneDisplay] = await Promise.all([getStorePhone(), getStorePhoneDisplay()]);
+          [waPhone, phoneDisplay] = await Promise.all([getStorePhone(), getStorePhoneDisplay()]);
           log(`✅ Téléphone: ${phoneDisplay} (${waPhone})`, 'ok');
           step();
 
-        let errors = 0;
-        try {
           // ① products-index.json — source de vérité avec les bons categoryIds
           log('📥 Chargement de products-index.json…', 'info');
           const idxFile = await ghGet('products-index.json');
