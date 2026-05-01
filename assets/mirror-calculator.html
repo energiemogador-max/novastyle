@@ -524,17 +524,25 @@
 
     <!-- Prix de vente -->
     <div class="modal-section dark">
-      <div class="section-label">Prix de vente (pour le devis)</div>
-      <div class="prix-btns">
-        <button class="prix-btn" id="btn-prix-min" onclick="selectPrix('min')">Prix min. — <span id="lbl-btn-min">0</span> dh</button>
-        <button class="prix-btn active-pub" id="btn-prix-pub" onclick="selectPrix('pub')">Prix public — <span id="lbl-btn-pub">0</span> dh</button>
-      </div>
-      <div class="custom-prix-row">
-        <label>Prix personnalisé :</label>
-        <div class="custom-prix-inner">
-          <input type="number" id="inp-prix-custom" placeholder="0" oninput="selectPrix('custom')">
-          <span class="unit">dh</span>
+      <div class="section-label">Prix de vente client</div>
+      <div style="display:flex;gap:24px;margin-bottom:14px;flex-wrap:wrap;">
+        <div style="font-size:11px;color:var(--dimmer)">
+          Prix de revient<br>
+          <span id="ref-revient" style="font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#555">— dh</span>
         </div>
+        <div style="font-size:11px;color:var(--green-dark)">
+          Min. vente (×1.3)<br>
+          <span id="ref-min" style="font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:var(--green)">— dh</span>
+        </div>
+        <div style="font-size:11px;color:var(--gold-dim)">
+          Prix public (×2)<br>
+          <span id="ref-pub" style="font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:var(--gold)">— dh</span>
+        </div>
+      </div>
+      <label style="font-size:11px;color:var(--dimmer);display:block;margin-bottom:6px;">Prix choisi pour le devis :</label>
+      <div class="custom-prix-inner" style="max-width:260px;">
+        <input type="number" id="inp-prix-custom" placeholder="Saisir le prix…" oninput="onPrixInput()" style="font-size:18px;font-weight:700;">
+        <span class="unit" style="font-size:14px;">dh</span>
       </div>
       <div class="warn-prix" id="warn-prix" style="display:none">⚠️ Ce prix est inférieur au prix minimum de vente</div>
     </div>
@@ -597,7 +605,6 @@ let state = {
   type: "clair", thickness: "6",
   antifog: false, sablage: false, led: false, cadre: false,
   finition: "simple", installation: false,
-  prixMode: "pub", prixCustom: 0,
 };
 
 let devisNum = `NS-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`;
@@ -641,8 +648,7 @@ function calc() {
 }
 
 function getPrixDevis(prixMin, prixPublic) {
-  if (state.prixMode === "min") return prixMin;
-  if (state.prixMode === "custom" && state.prixCustom > 0) return state.prixCustom;
+  // Legacy — kept for safety, not used
   return prixPublic;
 }
 
@@ -701,21 +707,29 @@ function render() {
   document.getElementById("val-min").innerHTML     = `${fmt(prixMin)} <span style="font-size:13px;color:#5a8020">dh</span>`;
   document.getElementById("val-public").innerHTML  = `${fmt(prixPublic)} <span style="font-size:14px;color:var(--gold-dim)">dh</span>`;
 
-  // Devis modal buttons
-  document.getElementById("lbl-btn-min").textContent = fmt(prixMin);
-  document.getElementById("lbl-btn-pub").textContent = fmt(prixPublic);
-
   refreshPreview();
 }
 
 function refreshPreview() {
   const { surface, perimeter, revient, prixMin, prixPublic, lines } = calc();
   const { w, h, type, thickness, finition, cadre, antifog, sablage, led, installation } = state;
-  const prixDevis = getPrixDevis(prixMin, prixPublic);
+
+  // Update reference labels in modal
+  const refR = document.getElementById("ref-revient");
+  const refM = document.getElementById("ref-min");
+  const refP = document.getElementById("ref-pub");
+  if (refR) refR.textContent = fmt(revient) + " dh";
+  if (refM) refM.textContent = fmt(prixMin)  + " dh";
+  if (refP) refP.textContent = fmt(prixPublic) + " dh";
+
+  // Read chosen price directly from input
+  const inputEl  = document.getElementById("inp-prix-custom");
+  const inputVal = inputEl ? parseFloat(inputEl.value) : NaN;
+  const prixDevis = (!isNaN(inputVal) && inputVal > 0) ? inputVal : 0;
 
   // Warn
   const warnEl = document.getElementById("warn-prix");
-  warnEl.style.display = (state.prixMode === "custom" && state.prixCustom > 0 && state.prixCustom < prixMin) ? "block" : "none";
+  warnEl.style.display = (prixDevis > 0 && prixDevis < prixMin) ? "block" : "none";
   if (warnEl.style.display === "block") {
     warnEl.textContent = `⚠️ Ce prix est inférieur au prix minimum de vente (${fmt(prixMin)} dh)`;
   }
@@ -751,8 +765,13 @@ function refreshPreview() {
     (antifog ? " · Anti-buée" : "") + (sablage ? " · Sablage" : "") + (led ? " · LED" : "");
 
   // Total
-  document.getElementById("prev-acompte").textContent = `Acompte 50% : ${fmt(prixDevis * 0.5)} dh`;
-  document.getElementById("prev-total").textContent = `${fmt(prixDevis)} dh`;
+  if (prixDevis > 0) {
+    document.getElementById("prev-acompte").textContent = `Acompte 50% : ${fmt(prixDevis * 0.5)} dh`;
+    document.getElementById("prev-total").textContent   = `${fmt(prixDevis)} dh`;
+  } else {
+    document.getElementById("prev-acompte").textContent = "Acompte 50% : — dh";
+    document.getElementById("prev-total").textContent   = "— dh";
+  }
 
   // Note
   const noteEl = document.getElementById("prev-note");
@@ -793,8 +812,13 @@ function buildPrintRoot(lines, prixDevis, prixMin, name, phone, city, note) {
     (antifog ? " · Anti-buée" : "") + (sablage ? " · Sablage" : "") + (led ? " · LED" : "") +
     (installation ? " · Installation incluse" : " · Livraison");
 
-  document.getElementById("p-acompte").textContent = `Acompte 50% : ${fmt(prixDevis * 0.5)} dh · Solde à la livraison : ${fmt(prixDevis * 0.5)} dh`;
-  document.getElementById("p-total").innerHTML = `${fmt(prixDevis)} <span style="font-size:16px;color:#888">dh</span>`;
+  if (prixDevis > 0) {
+    document.getElementById("p-acompte").textContent = `Acompte 50% : ${fmt(prixDevis * 0.5)} dh · Solde à la livraison : ${fmt(prixDevis * 0.5)} dh`;
+    document.getElementById("p-total").innerHTML = `${fmt(prixDevis)} <span style="font-size:16px;color:#888">dh</span>`;
+  } else {
+    document.getElementById("p-acompte").textContent = "Acompte 50% : — dh";
+    document.getElementById("p-total").innerHTML = `<span style="color:#bbb">— dh</span>`;
+  }
 
   const noteEl = document.getElementById("p-note");
   if (note) {
@@ -846,9 +870,8 @@ function openDevis() {
   devisNum = `NS-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`;
   document.getElementById("modal").classList.remove("hidden");
   document.body.style.overflow = "hidden";
-  const { prixMin, prixPublic } = calc();
   document.getElementById("inp-prix-custom").value = "";
-  selectPrix("pub");
+  refreshPreview();
 }
 function closeModal() {
   document.getElementById("modal").classList.add("hidden");
@@ -858,21 +881,8 @@ document.getElementById("modal").addEventListener("click", e => {
   if (e.target === document.getElementById("modal")) closeModal();
 });
 
-// ── PRIX SELECTOR ──
-function selectPrix(mode) {
-  const customVal = parseFloat(document.getElementById("inp-prix-custom").value);
-
-  if (mode === "custom") {
-    state.prixMode   = "custom";
-    state.prixCustom = isNaN(customVal) ? 0 : customVal;
-  } else {
-    state.prixMode = mode;
-    if (mode !== "custom") document.getElementById("inp-prix-custom").value = "";
-  }
-
-  document.getElementById("btn-prix-min").className = "prix-btn" + (state.prixMode === "min" ? " active-min" : "");
-  document.getElementById("btn-prix-pub").className = "prix-btn" + (state.prixMode === "pub" ? " active-pub" : "");
-
+// ── PRIX INPUT ──
+function onPrixInput() {
   refreshPreview();
 }
 
