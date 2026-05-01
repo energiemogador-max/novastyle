@@ -6646,7 +6646,7 @@
 
     async function loadSettingsIntoForm() {
       try {
-        const res = await fetch(`${DB}/settings.json`);
+        const res = await fetch(`${DB_REST}/settings.json`);
         const data = (res.ok ? await res.json() : null) || SETTINGS_DEFAULTS;
         Object.entries(S_ID_MAP).forEach(([k, id]) => {
           const el = document.getElementById(id);
@@ -6674,7 +6674,7 @@
         const fbToken = await window.__NOVA_FIREBASE__?.auth?.currentUser?.getIdToken();
         if (!fbToken) throw new Error('Token Firebase manquant — reconnectez-vous.');
         const s = readSettingsFromForm();
-        const res = await fetch(`${DB}/settings.json?auth=${fbToken}`, {
+        const res = await fetch(`${DB_REST}/settings.json?auth=${fbToken}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(s)
@@ -6966,7 +6966,7 @@
 
       settingsStatus('⏳ Lecture des settings…', '#6b7280');
       try {
-        const res = await fetch(`${DB}/settings.json`);
+        const res = await fetch(`${DB_REST}/settings.json`);
         if (!res.ok) throw new Error('Impossible de lire les settings Firebase.');
         const s = await res.json();
         if (!s) throw new Error('Enregistrez d\'abord les settings dans Firebase.');
