@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova Style — Calculateur de Prix Miroir</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #e8c96d;
+      --gold-dark: #c8a840;
+      --gold-dim: #a08030;
+      --bg: #0a0a0a;
+      --panel: #111;
+      --border: #1e1e1e;
+      --border2: #2a2a2a;
+      --text: #eee;
+      --muted: #aaa;
+      --dim: #666;
+      --dimmer: #555;
+      --faint: #444;
+      --green: #8ac840;
+      --green-dark: #4a8020;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      min-height: 100vh;
+      padding: 32px 16px 80px;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    input[type=number] { -moz-appearance: textfield; }
+
+    /* ── LAYOUT ── */
+    .app { max-width: 860px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+    .col-left  { flex: 1 1 340px; display: flex; flex-direction: column; gap: 14px; }
+    .col-right { flex: 0 0 270px; display: flex; flex-direction: column; gap: 14px; }
+
+    /* ── PANEL ── */
+    .panel { background: var(--panel); border-radius: 12px; border: 1px solid var(--border); padding: 16px 18px; }
+    .panel-label { font-size: 11px; color: var(--dimmer); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+
+    /* ── CHIPS ── */
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      padding: 9px 16px; border-radius: 8px; cursor: pointer;
+      border: 1.5px solid var(--border2); background: var(--panel);
+      color: var(--dimmer); font-family: 'DM Mono', monospace;
+      font-size: 13px; font-weight: 600; transition: all .15s; white-space: nowrap;
+    }
+    .chip.active { border-color: var(--gold); background: #1a1500; color: var(--gold); }
+
+    /* ── TOGGLE ── */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .toggle-label { font-size: 13px; color: var(--muted); }
+    .toggle-label small { display: block; font-size: 10px; color: var(--faint); margin-top: 2px; }
+    .toggle-btn {
+      width: 48px; height: 26px; border-radius: 13px;
+      background: #222; border: none; cursor: pointer;
+      position: relative; transition: background .2s; flex-shrink: 0;
+    }
+    .toggle-btn.on { background: var(--gold); }
+    .toggle-knob {
+      width: 20px; height: 20px; border-radius: 10px; background: #fff;
+      position: absolute; top: 3px; left: 3px;
+      transition: left .2s; box-shadow: 0 1px 4px rgba(0,0,0,.4);
+    }
+    .toggle-btn.on .toggle-knob { left: 25px; }
+
+    /* ── NUM INPUTS ── */
+    .dim-row { display: flex; gap: 12px; }
+    .num-input-wrap { flex: 1; }
+    .num-input-wrap .lbl { font-size: 11px; color: var(--dimmer); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .num-input-inner { display: flex; align-items: center; gap: 6px; background: var(--panel); border: 1.5px solid var(--border2); border-radius: 8px; padding: 8px 12px; }
+    .num-input-inner input { background: none; border: none; outline: none; width: 100%; color: var(--text); font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 700; }
+    .num-input-inner .unit { color: var(--faint); font-size: 12px; }
+
+    /* ── STATS MINI ── */
+    .stats-row { margin-top: 12px; display: flex; gap: 12px; }
+    .stat-box { flex: 1; background: #0d0d0d; border-radius: 8px; padding: 8px 12px; }
+    .stat-box .s-lbl { font-size: 10px; color: var(--faint); text-transform: uppercase; letter-spacing: 1px; }
+    .stat-box .s-val { font-size: 15px; font-weight: 700; color: var(--dim); margin-top: 2px; }
+
+    /* ── MIRROR PREVIEW ── */
+    .mirror-wrap { width: 100%; display: flex; justify-content: center; }
+    .mirror-canvas {
+      width: 100%; max-height: 160px;
+      border-radius: 4px; border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 8px 32px rgba(0,0,0,.7);
+      position: relative; overflow: hidden;
+    }
+    .mirror-canvas.cadre { box-shadow: 0 0 0 10px #8b6914, 0 8px 32px rgba(0,0,0,.7); border-radius: 2px; }
+    .mirror-canvas .led-glow {
+      position: absolute; inset: 0; border-radius: 3px;
+      box-shadow: inset 0 0 20px 6px rgba(255,240,150,.45); pointer-events: none;
+    }
+    .mirror-canvas .sablage-tex {
+      position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0,rgba(255,255,255,.04) 2px,transparent 2px,transparent 8px);
+    }
+    .mirror-sub { font-size: 11px; color: #3a3a3a; margin-top: 6px; }
+
+    /* ── DETAIL LIST ── */
+    .detail-line { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #1a1a1a; }
+    .detail-line .dl { font-size: 12px; color: var(--dim); }
+    .detail-line .dr { font-size: 12px; font-weight: 700; color: var(--muted); }
+
+    /* ── PRICING CARDS ── */
+    .price-card { border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+    .price-card .pc-dot { width: 6px; height: 6px; border-radius: 3px; display: inline-block; margin-right: 6px; vertical-align: middle; }
+    .price-card .pc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; font-family: 'DM Mono', monospace; }
+    .price-card .pc-amount { font-family: 'Sora', sans-serif; font-weight: 800; letter-spacing: -0.5px; }
+    .price-card .pc-amount span { font-family: 'DM Mono', monospace; font-weight: 600; }
+    .price-card .pc-note { font-size: 10px; margin-top: 4px; }
+
+    .card-revient { background: #0d0d0d; border: 1px solid var(--border); }
+    .card-revient .pc-label { color: var(--dimmer); }
+    .card-revient .pc-amount { font-size: 22px; color: #777; }
+    .card-revient .pc-amount span { font-size: 12px; color: var(--dimmer); }
+    .card-revient .pc-note { color: #3a3a3a; }
+
+    .card-min { background: #081200; border: 1px solid #1a2a00; }
+    .card-min .pc-label { color: var(--green-dark); }
+    .card-min .pc-amount { font-size: 26px; color: var(--green); }
+    .card-min .pc-amount span { font-size: 13px; color: #5a8020; }
+    .card-min .pc-note { color: #3a5a10; }
+
+    .card-public { background: #0d0900; border: 1.5px solid #2a2000; }
+    .card-public .pc-label { color: var(--gold-dim); }
+    .card-public .pc-amount { font-size: 30px; color: var(--gold); }
+    .card-public .pc-amount span { font-size: 14px; color: var(--gold-dim); }
+    .card-public .pc-note { color: #5a4010; }
+
+    /* ── DEVIS BUTTON ── */
+    .devis-btn {
+      width: 100%; padding: 14px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      border: none; cursor: pointer;
+      font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 700; color: #0a0a0a;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: opacity .15s;
+    }
+    .devis-btn:hover { opacity: .88; }
+
+    /* ── CADRE BADGE ── */
+    .cadre-badge {
+      margin-top: 6px; padding: 8px 12px; background: #0d0d0d;
+      border-radius: 8px; font-size: 12px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.85);
+      z-index: 1000; display: flex; align-items: center; justify-content: center;
+      padding: 16px; overflow-y: auto;
+    }
+    .modal-overlay.hidden { display: none; }
+    .modal-box {
+      background: #111; border-radius: 16px; border: 1px solid var(--border2);
+      width: 100%; max-width: 660px; max-height: 93vh; overflow-y: auto;
+      display: flex; flex-direction: column;
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 24px; border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; background: #111; z-index: 1;
+    }
+    .modal-title { font-family: 'Sora', sans-serif; font-size: 17px; font-weight: 700; color: var(--text); }
+    .btn-print {
+      padding: 9px 20px; background: var(--gold); border: none; border-radius: 8px;
+      cursor: pointer; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 700; color: #0a0a0a;
+      transition: opacity .15s;
+    }
+    .btn-print:hover { opacity: .85; }
+    .btn-close {
+      width: 34px; height: 34px; background: none; border: 1px solid var(--border2);
+      border-radius: 8px; cursor: pointer; color: #888; font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .modal-section { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .modal-section.dark { background: #0d0d0d; }
+    .section-label { font-size: 11px; color: var(--dimmer); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+
+    .field-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .field { flex: 1 1 140px; }
+    .field label { display: block; font-size: 11px; color: var(--dimmer); margin-bottom: 5px; }
+    .field input, .field textarea {
+      width: 100%; background: #0d0d0d; border: 1.5px solid var(--border2);
+      border-radius: 8px; padding: 8px 12px; color: var(--text);
+      font-family: 'DM Mono', monospace; font-size: 13px; outline: none;
+      transition: border-color .15s;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--gold); }
+    .field textarea { resize: none; }
+
+    /* ── PRIX DEVIS SELECTOR ── */
+    .prix-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+    .prix-btn {
+      padding: 7px 14px; border-radius: 8px; border: 1.5px solid var(--border2);
+      background: var(--panel); color: var(--dimmer);
+      font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 600; cursor: pointer;
+      transition: all .15s;
+    }
+    .prix-btn.active-min { border-color: var(--green); background: #081200; color: var(--green); }
+    .prix-btn.active-pub { border-color: var(--gold); background: #0d0900; color: var(--gold); }
+    .custom-prix-row { display: flex; align-items: center; gap: 10px; }
+    .custom-prix-row label { font-size: 11px; color: var(--dimmer); white-space: nowrap; }
+    .custom-prix-inner { display: flex; align-items: center; gap: 6px; background: var(--panel); border: 1.5px solid var(--border2); border-radius: 8px; padding: 6px 12px; flex: 1; transition: border-color .15s; }
+    .custom-prix-inner:focus-within { border-color: var(--gold); }
+    .custom-prix-inner input { background: none; border: none; outline: none; width: 100%; color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 700; }
+    .custom-prix-inner .unit { color: var(--faint); font-size: 12px; }
+    .warn-prix { margin-top: 8px; padding: 6px 10px; background: #1a0000; border: 1px solid #3a0000; border-radius: 6px; font-size: 11px; color: #e05050; }
+
+    /* ── DEVIS PREVIEW (white paper) ── */
+    .paper {
+      background: #fff; border-radius: 10px; padding: 24px 28px;
+      color: #111; font-size: 13px; font-family: 'DM Mono', monospace;
+    }
+    .paper-header { display: flex; justify-content: space-between; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1.5px solid #111; }
+    .paper-brand { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+    .paper-sub { font-size: 11px; color: #888; margin-top: 2px; }
+    .paper-devis-label { font-weight: 800; font-size: 16px; }
+    .paper-devis-num { font-size: 11px; color: #777; }
+    .paper-client-box { background: #f8f8f8; border-radius: 6px; padding: 10px 14px; margin-bottom: 16px; }
+    .paper-client-name { font-weight: 700; }
+    .paper-client-contact { color: #666; font-size: 12px; }
+    .paper-line { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #eee; font-size: 12px; }
+    .paper-line .pl { font-weight: 700; }
+    .paper-line .pd { color: #999; font-size: 11px; }
+    .paper-specs { margin-top: 12px; background: #f4f4f4; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #888; }
+    .paper-total { margin-top: 14px; background: #f0f0f0; border-radius: 8px; padding: 14px 16px; }
+    .paper-total-label { font-weight: 800; font-size: 16px; }
+    .paper-total-sub { font-size: 11px; color: #888; margin-top: 3px; }
+    .paper-total-amount { font-family: 'Sora', sans-serif; font-size: 26px; font-weight: 800; color: #111; }
+    .paper-note { margin-top: 12px; padding: 10px 14px; background: #fafafa; border-radius: 6px; font-size: 12px; color: #666; }
+    .paper-sigs { display: flex; gap: 24px; margin-top: 18px; }
+    .paper-sig { flex: 1; border-top: 1px solid #ccc; padding-top: 6px; font-size: 10px; color: #ccc; }
+    .paper-footer { margin-top: 14px; font-size: 10px; color: #ccc; border-top: 1px solid #eee; padding-top: 10px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
+
+    /* ── PRINT ── */
+    @media print {
+      body > * { display: none !important; }
+      #print-root { display: block !important; }
+    }
+    #print-root { display: none; }
+    .print-paper {
+      background: #fff; color: #111;
+      font-family: 'DM Mono', monospace;
+      padding: 40px 50px; font-size: 13px;
+    }
+    .print-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 2px solid #111; }
+    .print-brand { font-family: 'Sora', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -.5px; }
+    .print-brand-sub { font-size: 12px; color: #888; margin-top: 4px; line-height: 1.7; }
+    .print-devis-title { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .print-devis-meta { font-size: 12px; color: #777; line-height: 1.8; }
+    .print-client { background: #f8f8f8; border-radius: 8px; padding: 14px 18px; margin-bottom: 24px; }
+    .print-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .print-table th { text-align: left; padding: 8px 0; font-size: 11px; color: #888; font-weight: 600; border-bottom: 2px solid #111; }
+    .print-table td { padding: 10px 0; border-bottom: 1px solid #eee; }
+    .print-table td:first-child { font-weight: 700; color: #111; padding-right: 16px; white-space: nowrap; }
+    .print-table td:last-child { font-size: 12px; color: #888; }
+    .print-specs { background: #f4f4f4; border-radius: 8px; padding: 12px 18px; margin-bottom: 20px; font-size: 12px; color: #666; line-height: 1.8; }
+    .print-total { border: 2px solid #111; border-radius: 10px; padding: 16px 20px; background: #fafafa; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .print-total-label { font-weight: 800; font-size: 18px; }
+    .print-total-sub { font-size: 11px; color: #888; margin-top: 3px; }
+    .print-total-amount { font-family: 'Sora', sans-serif; font-size: 34px; font-weight: 800; color: #111; letter-spacing: -1px; }
+    .print-note { background: #f8f8f8; border-radius: 8px; padding: 12px 18px; margin-bottom: 20px; font-size: 12px; color: #555; }
+    .print-sigs { display: flex; gap: 32px; margin: 24px 0 20px; }
+    .print-sig { flex: 1; border-top: 1px solid #ccc; padding-top: 8px; font-size: 11px; color: #aaa; }
+    .print-footer { border-top: 1px solid #ddd; padding-top: 14px; font-size: 11px; color: #bbb; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+
+    /* ── TITLE AREA ── */
+    .app-eyebrow { font-size: 11px; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+    .app-title { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; color: var(--text); line-height: 1.2; }
+
+    /* ── DELIVERY INFO ── */
+    .delivery-info { margin-top: 10px; padding: 8px 12px; background: #0d0d0d; border-radius: 8px; font-size: 12px; color: var(--dimmer); }
+
+    @media (max-width: 620px) {
+      .col-right { flex: 1 1 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PRINT ROOT (hidden, shown only on print) -->
+<div id="print-root">
+  <div class="print-paper">
+    <div class="print-header">
+      <div>
+        <div class="print-brand">Nova Style</div>
+        <div class="print-brand-sub">Bd Oued Sebou, Casablanca<br>07 07 07 47 48 · novastyle.ma</div>
+      </div>
+      <div style="text-align:right">
+        <div class="print-devis-title">DEVIS</div>
+        <div class="print-devis-meta" id="p-meta"></div>
+      </div>
+    </div>
+    <div class="print-client" id="p-client"></div>
+    <table class="print-table">
+      <thead><tr><th>Désignation</th><th>Détail</th></tr></thead>
+      <tbody id="p-lines"></tbody>
+    </table>
+    <div class="print-specs" id="p-specs"></div>
+    <div class="print-total">
+      <div>
+        <div class="print-total-label">Total TTC</div>
+        <div class="print-total-sub" id="p-acompte"></div>
+      </div>
+      <div class="print-total-amount" id="p-total"></div>
+    </div>
+    <div class="print-note" id="p-note" style="display:none"></div>
+    <div class="print-sigs">
+      <div class="print-sig">Signature client</div>
+      <div class="print-sig">Cachet &amp; Signature Nova Style</div>
+    </div>
+    <div class="print-footer">
+      <div>Délai fabrication : 5 à 10 jours ouvrés · Garantie anticorrosion 3 ans</div>
+      <div>Verre AGC Belgique · Fabrication Casablanca</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app">
+
+  <!-- ── LEFT COLUMN ── -->
+  <div class="col-left">
+
+    <div>
+      <div class="app-eyebrow">Nova Style</div>
+      <div class="app-title">Calculateur<br>de Prix Miroir</div>
+    </div>
+
+    <!-- Dimensions -->
+    <div class="panel">
+      <div class="panel-label">Dimensions</div>
+      <div class="dim-row">
+        <div class="num-input-wrap">
+          <div class="lbl">Largeur</div>
+          <div class="num-input-inner">
+            <input type="number" id="inp-w" min="1" max="600" value="80">
+            <span class="unit">cm</span>
+          </div>
+        </div>
+        <div class="num-input-wrap">
+          <div class="lbl">Hauteur</div>
+          <div class="num-input-inner">
+            <input type="number" id="inp-h" min="1" max="600" value="100">
+            <span class="unit">cm</span>
+          </div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="s-lbl">Surface</div>
+          <div class="s-val" id="stat-surface">0.80 m²</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-lbl">Périmètre</div>
+          <div class="s-val" id="stat-perim">3.60 ml</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Type de verre -->
+    <div class="panel">
+      <div class="panel-label">Type de verre</div>
+      <div class="chips" id="chips-type">
+        <button class="chip active" data-val="clair">Clair</button>
+        <button class="chip" data-val="bronze">Bronze</button>
+        <button class="chip" data-val="gris">Gris</button>
+      </div>
+    </div>
+
+    <!-- Épaisseur -->
+    <div class="panel">
+      <div class="panel-label">Épaisseur</div>
+      <div class="chips" id="chips-thick">
+        <button class="chip" data-val="4">4 mm</button>
+        <button class="chip active" data-val="6">6 mm</button>
+      </div>
+      <div style="margin-top:8px;font-size:12px;color:var(--faint)">Tarif matière : <span id="price-m2" style="color:var(--dim)">240 dh/m²</span></div>
+    </div>
+
+    <!-- Finition -->
+    <div class="panel">
+      <div class="panel-label">Finition des bords</div>
+      <div class="chips" id="chips-finition">
+        <button class="chip active" data-val="simple">Simple</button>
+        <button class="chip" data-val="biseaute">Biseauté · 55 dh/ml</button>
+      </div>
+    </div>
+
+    <!-- Options -->
+    <div class="panel">
+      <div class="panel-label" style="margin-bottom:4px">Options</div>
+
+      <div class="toggle-row">
+        <span class="toggle-label" id="lbl-antifog">Anti-buée · 1 résistance — 70 dh</span>
+        <button class="toggle-btn" id="tog-antifog" onclick="toggleOpt('antifog')"><div class="toggle-knob"></div></button>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label" id="lbl-sablage">Sablage · 0 dh</span>
+        <button class="toggle-btn" id="tog-sablage" onclick="toggleOpt('sablage')"><div class="toggle-knob"></div></button>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label" id="lbl-led">LED · 0 dh</span>
+        <button class="toggle-btn" id="tog-led" onclick="toggleOpt('led')"><div class="toggle-knob"></div></button>
+      </div>
+
+      <!-- Cadre -->
+      <div class="toggle-row" style="border-bottom:none">
+        <div>
+          <span class="toggle-label" id="lbl-cadre">Cadre · 0 dh</span>
+          <small style="font-size:10px;color:var(--faint);display:block;margin-top:2px">300 dh/m²</small>
+        </div>
+        <button class="toggle-btn" id="tog-cadre" onclick="toggleOpt('cadre')"><div class="toggle-knob"></div></button>
+      </div>
+      <div class="cadre-badge" id="cadre-badge">
+        <span style="color:var(--dimmer)">Sans cadre</span>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- Livraison -->
+    <div class="panel">
+      <div class="panel-label" style="margin-bottom:4px">Livraison</div>
+      <div class="toggle-row" style="border-bottom:none">
+        <span class="toggle-label">Installation à domicile — 80 dh</span>
+        <button class="toggle-btn" id="tog-install" onclick="toggleOpt('installation')"><div class="toggle-knob"></div></button>
+      </div>
+      <div class="delivery-info" id="delivery-info">
+        Livraison : <span id="delivery-price" style="color:var(--muted)">50 dh</span>
+        <span id="delivery-note" style="color:#3a3a3a"> · surface ≤ 1.3 m²</span>
+      </div>
+    </div>
+
+  </div><!-- /col-left -->
+
+  <!-- ── RIGHT COLUMN ── -->
+  <div class="col-right">
+
+    <!-- Mirror preview -->
+    <div class="panel" style="align-items:center">
+      <div class="mirror-wrap">
+        <div class="mirror-canvas" id="mirror-canvas" style="aspect-ratio:80/100;background:linear-gradient(135deg,#c0d4e0 0%,#e4f0f8 50%,#a8c0d0 100%)">
+          <div class="led-glow" id="led-glow" style="display:none"></div>
+          <div class="sablage-tex" id="sablage-tex" style="display:none"></div>
+        </div>
+      </div>
+      <div class="mirror-sub" id="mirror-sub">80×100 cm · Clair 6mm · Sans cadre</div>
+    </div>
+
+    <!-- Detail breakdown -->
+    <div class="panel">
+      <div class="panel-label">Détail des coûts</div>
+      <div id="detail-lines"></div>
+    </div>
+
+    <!-- Pricing cards -->
+    <div class="panel">
+      <div class="panel-label">Tarification</div>
+
+      <div class="price-card card-revient">
+        <div class="pc-label"><span class="pc-dot" style="background:#555"></span>Prix de revient</div>
+        <div class="pc-amount" id="val-revient">0 <span>dh</span></div>
+        <div class="pc-note">Coût de production réel (interne)</div>
+      </div>
+
+      <div class="price-card card-min">
+        <div class="pc-label"><span class="pc-dot" style="background:var(--green)"></span>Prix min. de vente</div>
+        <div class="pc-amount" id="val-min">0 <span style="font-size:13px;color:#5a8020">dh</span></div>
+        <div class="pc-note">Prix de revient × 1.3 · marge 23%</div>
+      </div>
+
+      <div class="price-card card-public" style="margin-bottom:0">
+        <div class="pc-label"><span class="pc-dot" style="background:var(--gold)"></span>Prix public</div>
+        <div class="pc-amount" id="val-public">0 <span style="font-size:14px;color:var(--gold-dim)">dh</span></div>
+        <div class="pc-note">Prix de revient × 2 · marge 50%</div>
+      </div>
+    </div>
+
+    <button class="devis-btn" onclick="openDevis()">🖨️ Générer devis client</button>
+
+  </div><!-- /col-right -->
+</div><!-- /app -->
+
+<!-- ── DEVIS MODAL ── -->
+<div class="modal-overlay hidden" id="modal">
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <div class="modal-title">Devis client</div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn-print" onclick="doPrint()">🖨️ Imprimer</button>
+        <button class="btn-close" onclick="closeModal()">×</button>
+      </div>
+    </div>
+
+    <!-- Client info -->
+    <div class="modal-section">
+      <div class="section-label">Informations client</div>
+      <div class="field-row">
+        <div class="field"><label>Nom client</label><input type="text" id="cl-name" placeholder="M. Dupont" oninput="refreshPreview()"></div>
+        <div class="field"><label>Téléphone</label><input type="text" id="cl-phone" placeholder="06 XX XX XX XX" oninput="refreshPreview()"></div>
+        <div class="field"><label>Ville</label><input type="text" id="cl-city" placeholder="Casablanca" oninput="refreshPreview()"></div>
+      </div>
+      <div class="field"><label>Note / Remarques</label><textarea id="cl-note" rows="2" placeholder="Informations supplémentaires…" oninput="refreshPreview()"></textarea></div>
+    </div>
+
+    <!-- Prix de vente -->
+    <div class="modal-section dark">
+      <div class="section-label">Prix de vente (pour le devis)</div>
+      <div class="prix-btns">
+        <button class="prix-btn" id="btn-prix-min" onclick="selectPrix('min')">Prix min. — <span id="lbl-btn-min">0</span> dh</button>
+        <button class="prix-btn active-pub" id="btn-prix-pub" onclick="selectPrix('pub')">Prix public — <span id="lbl-btn-pub">0</span> dh</button>
+      </div>
+      <div class="custom-prix-row">
+        <label>Prix personnalisé :</label>
+        <div class="custom-prix-inner">
+          <input type="number" id="inp-prix-custom" placeholder="0" oninput="selectPrix('custom')">
+          <span class="unit">dh</span>
+        </div>
+      </div>
+      <div class="warn-prix" id="warn-prix" style="display:none">⚠️ Ce prix est inférieur au prix minimum de vente</div>
+    </div>
+
+    <!-- Preview -->
+    <div class="modal-section dark" style="border-bottom:none">
+      <div class="section-label">Aperçu devis</div>
+      <div class="paper">
+        <div class="paper-header">
+          <div>
+            <div class="paper-brand">Nova Style</div>
+            <div class="paper-sub">07 07 07 47 48 · novastyle.ma</div>
+          </div>
+          <div style="text-align:right">
+            <div class="paper-devis-label">DEVIS</div>
+            <div class="paper-devis-num" id="prev-meta"></div>
+          </div>
+        </div>
+        <div class="paper-client-box" id="prev-client" style="display:none"></div>
+        <div id="prev-lines"></div>
+        <div class="paper-specs" id="prev-specs"></div>
+        <div class="paper-total">
+          <div>
+            <div class="paper-total-label">Total TTC</div>
+            <div class="paper-total-sub" id="prev-acompte"></div>
+          </div>
+          <div class="paper-total-amount" id="prev-total"></div>
+        </div>
+        <div class="paper-note" id="prev-note" style="display:none"></div>
+        <div class="paper-sigs">
+          <div class="paper-sig">Signature client</div>
+          <div class="paper-sig">Cachet Nova Style</div>
+        </div>
+        <div class="paper-footer">
+          <span>Fabrication 5–10 jours ouvrés · Garantie 3 ans</span>
+          <span>Verre AGC Belgique · Casablanca</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+const PRICES = {
+  clair:  { "4": 210, "6": 240 },
+  bronze: { "4": 550, "6": 650 },
+  gris:   { "4": 550, "6": 650 },
+};
+const TYPE_LABELS = { clair: "Clair", bronze: "Bronze", gris: "Gris" };
+const MIRROR_BG = {
+  clair:  "linear-gradient(135deg,#c0d4e0 0%,#e4f0f8 50%,#a8c0d0 100%)",
+  bronze: "linear-gradient(135deg,#5c3a18 0%,#b8864a 50%,#7a4e28 100%)",
+  gris:   "linear-gradient(135deg,#303030 0%,#585858 50%,#3c3c3c 100%)",
+};
+
+let state = {
+  w: 80, h: 100,
+  type: "clair", thickness: "6",
+  antifog: false, sablage: false, led: false, cadre: false,
+  finition: "simple", installation: false,
+  prixMode: "pub", prixCustom: 0,
+};
+
+let devisNum = `NS-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`;
+const todayStr = new Date().toLocaleDateString("fr-MA", { day:"2-digit", month:"long", year:"numeric" });
+
+function fmt(n) {
+  return n.toLocaleString("fr-MA", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+}
+
+function calc() {
+  const { w, h, type, thickness, antifog, sablage, led, cadre, finition, installation } = state;
+  const surface   = (w * h) / 10000;
+  const perimeter = (2 * (w + h)) / 100;
+  const priceM2   = PRICES[type][thickness];
+
+  const mirrorBase  = surface * priceM2;
+  const antifogP    = antifog ? (surface <= 1.2 ? 70 : 140) : 0;
+  const sablageP    = sablage ? surface * 80 : 0;
+  const ledP        = led ? perimeter * 13 : 0;
+  const cadreP      = cadre ? surface * 300 : 0;
+  const biseauP     = finition === "biseaute" ? perimeter * 55 : 0;
+  const installP    = installation ? 80 : 0;
+  const shippingP   = !installation ? (surface <= 1.3 ? 50 : 90) : 0;
+
+  const revient  = mirrorBase + antifogP + sablageP + ledP + cadreP + biseauP + installP + shippingP;
+  const prixMin  = revient * 1.3;
+  const prixPublic = revient * 2;
+
+  const lines = [
+    { label: "Miroir", detail: `${w}×${h} cm · ${TYPE_LABELS[type]} ${thickness}mm · ${fmt(surface)} m² × ${priceM2} dh/m²`, amount: mirrorBase },
+    antifog && { label: "Anti-buée", detail: surface <= 1.2 ? "1 résistance (surface ≤ 1.2 m²)" : "2 résistances (surface > 1.2 m²)", amount: antifogP },
+    sablage && { label: "Sablage", detail: `${fmt(surface)} m² × 80 dh/m²`, amount: sablageP },
+    led     && { label: "Éclairage LED", detail: `${fmt(perimeter)} ml × 13 dh/ml`, amount: ledP },
+    cadre   && { label: "Cadre", detail: `${fmt(surface)} m² × 300 dh/m²`, amount: cadreP },
+    finition === "biseaute" && { label: "Finition biseautée", detail: `${fmt(perimeter)} ml × 55 dh/ml`, amount: biseauP },
+    installation && { label: "Installation", detail: "Pose à domicile Casablanca", amount: installP },
+    !installation && { label: "Livraison", detail: surface <= 1.3 ? "Surface ≤ 1.3 m²" : "Surface > 1.3 m²", amount: shippingP },
+  ].filter(Boolean);
+
+  return { surface, perimeter, priceM2, revient, prixMin, prixPublic, lines };
+}
+
+function getPrixDevis(prixMin, prixPublic) {
+  if (state.prixMode === "min") return prixMin;
+  if (state.prixMode === "custom" && state.prixCustom > 0) return state.prixCustom;
+  return prixPublic;
+}
+
+// ── RENDER ──
+function render() {
+  const { surface, perimeter, priceM2, revient, prixMin, prixPublic, lines } = calc();
+  const { w, h, type, thickness, finition, installation, cadre, led, sablage, antifog } = state;
+
+  // Stats
+  document.getElementById("stat-surface").textContent = fmt(surface) + " m²";
+  document.getElementById("stat-perim").textContent   = fmt(perimeter) + " ml";
+  document.getElementById("price-m2").textContent = priceM2 + " dh/m²";
+
+  // Toggle labels
+  document.getElementById("lbl-antifog").textContent = `Anti-buée · ${surface <= 1.2 ? "1 résistance — 70 dh" : "2 résistances — 140 dh"}`;
+  document.getElementById("lbl-sablage").textContent = `Sablage · ${fmt(surface * 80)} dh`;
+  document.getElementById("lbl-led").textContent     = `LED · ${fmt(perimeter * 13)} dh`;
+  document.getElementById("lbl-cadre").textContent   = `Cadre · ${fmt(surface * 300)} dh`;
+
+  // Cadre badge
+  const badge = document.getElementById("cadre-badge");
+  if (cadre) {
+    badge.innerHTML = `<span style="color:var(--muted)">Avec cadre</span><span style="color:var(--gold);font-weight:700">+${fmt(surface*300)} dh</span>`;
+  } else {
+    badge.innerHTML = `<span style="color:#3a3a3a">Sans cadre</span><span></span>`;
+  }
+
+  // Delivery
+  const installInfo = document.getElementById("delivery-info");
+  if (installation) {
+    installInfo.style.display = "none";
+  } else {
+    installInfo.style.display = "block";
+    document.getElementById("delivery-price").textContent = (surface <= 1.3 ? "50" : "90") + " dh";
+    document.getElementById("delivery-note").textContent  = ` · surface ${surface <= 1.3 ? "≤" : ">"} 1.3 m²`;
+  }
+
+  // Mirror preview
+  const canvas = document.getElementById("mirror-canvas");
+  canvas.style.aspectRatio = `${w}/${h}`;
+  canvas.style.background  = MIRROR_BG[type];
+  canvas.classList.toggle("cadre", cadre);
+  canvas.style.border = finition === "biseaute" ? "3px solid rgba(255,255,255,0.25)" : "1px solid rgba(255,255,255,0.08)";
+  document.getElementById("led-glow").style.display    = led ? "block" : "none";
+  document.getElementById("sablage-tex").style.display = sablage ? "block" : "none";
+  document.getElementById("mirror-sub").textContent    = `${w}×${h} cm · ${TYPE_LABELS[type]} ${thickness}mm · ${cadre ? "Avec cadre" : "Sans cadre"}`;
+
+  // Detail lines
+  const dlWrap = document.getElementById("detail-lines");
+  dlWrap.innerHTML = lines.map(l =>
+    `<div class="detail-line"><span class="dl">${l.label}</span><span class="dr">${fmt(l.amount)} dh</span></div>`
+  ).join("");
+
+  // Pricing cards
+  document.getElementById("val-revient").innerHTML = `${fmt(revient)} <span>dh</span>`;
+  document.getElementById("val-min").innerHTML     = `${fmt(prixMin)} <span style="font-size:13px;color:#5a8020">dh</span>`;
+  document.getElementById("val-public").innerHTML  = `${fmt(prixPublic)} <span style="font-size:14px;color:var(--gold-dim)">dh</span>`;
+
+  // Devis modal buttons
+  document.getElementById("lbl-btn-min").textContent = fmt(prixMin);
+  document.getElementById("lbl-btn-pub").textContent = fmt(prixPublic);
+
+  refreshPreview();
+}
+
+function refreshPreview() {
+  const { surface, perimeter, revient, prixMin, prixPublic, lines } = calc();
+  const { w, h, type, thickness, finition, cadre, antifog, sablage, led, installation } = state;
+  const prixDevis = getPrixDevis(prixMin, prixPublic);
+
+  // Warn
+  const warnEl = document.getElementById("warn-prix");
+  warnEl.style.display = (state.prixMode === "custom" && state.prixCustom > 0 && state.prixCustom < prixMin) ? "block" : "none";
+  if (warnEl.style.display === "block") {
+    warnEl.textContent = `⚠️ Ce prix est inférieur au prix minimum de vente (${fmt(prixMin)} dh)`;
+  }
+
+  // Preview meta
+  document.getElementById("prev-meta").innerHTML = `N° ${devisNum}<br>${todayStr}`;
+
+  // Client
+  const name  = document.getElementById("cl-name")?.value  || "";
+  const phone = document.getElementById("cl-phone")?.value || "";
+  const city  = document.getElementById("cl-city")?.value  || "";
+  const note  = document.getElementById("cl-note")?.value  || "";
+
+  const clientBox = document.getElementById("prev-client");
+  if (name) {
+    clientBox.style.display = "block";
+    clientBox.innerHTML = `<div class="paper-client-name">${name}</div>
+      ${phone ? `<div class="paper-client-contact">📞 ${phone}</div>` : ""}
+      ${city  ? `<div class="paper-client-contact">📍 ${city}</div>`  : ""}`;
+  } else {
+    clientBox.style.display = "none";
+  }
+
+  // Lines (no prices shown to client)
+  document.getElementById("prev-lines").innerHTML = lines.map(l =>
+    `<div class="paper-line"><div><div class="pl">${l.label}</div><div class="pd">${l.detail}</div></div></div>`
+  ).join("");
+
+  // Specs
+  document.getElementById("prev-specs").textContent =
+    `${w}×${h} cm · ${TYPE_LABELS[type]} ${thickness}mm${cadre ? " · Avec cadre" : " · Sans cadre"}` +
+    (finition === "biseaute" ? " · Bords biseautés" : " · Bords polis droits") +
+    (antifog ? " · Anti-buée" : "") + (sablage ? " · Sablage" : "") + (led ? " · LED" : "");
+
+  // Total
+  document.getElementById("prev-acompte").textContent = `Acompte 50% : ${fmt(prixDevis * 0.5)} dh`;
+  document.getElementById("prev-total").textContent = `${fmt(prixDevis)} dh`;
+
+  // Note
+  const noteEl = document.getElementById("prev-note");
+  if (note) {
+    noteEl.style.display = "block";
+    noteEl.innerHTML = `<strong style="color:#333">Note : </strong>${note}`;
+  } else {
+    noteEl.style.display = "none";
+  }
+
+  // Update print root
+  buildPrintRoot(lines, prixDevis, prixMin, name, phone, city, note);
+}
+
+function buildPrintRoot(lines, prixDevis, prixMin, name, phone, city, note) {
+  const { w, h, type, thickness, finition, cadre, antifog, sablage, led, installation } = state;
+
+  document.getElementById("p-meta").innerHTML =
+    `N° ${devisNum}<br>Date : ${todayStr}<br>Validité : 30 jours`;
+
+  const clientHtml = name
+    ? `<div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Client</div>
+       <div style="font-size:15px;font-weight:700">${name}</div>
+       ${phone ? `<div style="color:#666;margin-top:2px">📞 ${phone}</div>` : ""}
+       ${city  ? `<div style="color:#666">📍 ${city}</div>` : ""}`
+    : `<div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Client</div>
+       <div style="font-size:15px;font-weight:700">—</div>`;
+  document.getElementById("p-client").innerHTML = clientHtml;
+
+  document.getElementById("p-lines").innerHTML = lines.map(l =>
+    `<tr><td>${l.label}</td><td>${l.detail}</td></tr>`
+  ).join("");
+
+  document.getElementById("p-specs").innerHTML =
+    `<strong style="color:#333">Spécifications : </strong>` +
+    `${w}×${h} cm · ${TYPE_LABELS[type]} ${thickness}mm${cadre ? " · Avec cadre" : " · Sans cadre"}` +
+    (finition === "biseaute" ? " · Bords biseautés" : " · Bords polis droits") +
+    (antifog ? " · Anti-buée" : "") + (sablage ? " · Sablage" : "") + (led ? " · LED" : "") +
+    (installation ? " · Installation incluse" : " · Livraison");
+
+  document.getElementById("p-acompte").textContent = `Acompte 50% : ${fmt(prixDevis * 0.5)} dh · Solde à la livraison : ${fmt(prixDevis * 0.5)} dh`;
+  document.getElementById("p-total").innerHTML = `${fmt(prixDevis)} <span style="font-size:16px;color:#888">dh</span>`;
+
+  const noteEl = document.getElementById("p-note");
+  if (note) {
+    noteEl.style.display = "block";
+    noteEl.innerHTML = `<div style="font-weight:700;color:#333;margin-bottom:4px">Remarques :</div>${note}`;
+  } else {
+    noteEl.style.display = "none";
+  }
+}
+
+// ── TOGGLE ──
+function toggleOpt(key) {
+  state[key] = !state[key];
+  const btn = document.getElementById(`tog-${key === "installation" ? "install" : key}`);
+  btn.classList.toggle("on", state[key]);
+  render();
+}
+
+// ── CHIPS ──
+function setupChips(groupId, stateKey, callback) {
+  const group = document.getElementById(groupId);
+  group.querySelectorAll(".chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      group.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      state[stateKey] = chip.dataset.val;
+      if (callback) callback();
+      render();
+    });
+  });
+}
+
+setupChips("chips-type",    "type");
+setupChips("chips-thick",   "thickness");
+setupChips("chips-finition","finition");
+
+// ── NUM INPUTS ──
+document.getElementById("inp-w").addEventListener("input", e => {
+  state.w = Math.max(1, parseInt(e.target.value) || 1);
+  render();
+});
+document.getElementById("inp-h").addEventListener("input", e => {
+  state.h = Math.max(1, parseInt(e.target.value) || 1);
+  render();
+});
+
+// ── MODAL ──
+function openDevis() {
+  devisNum = `NS-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`;
+  document.getElementById("modal").classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+  const { prixMin, prixPublic } = calc();
+  document.getElementById("inp-prix-custom").value = "";
+  selectPrix("pub");
+}
+function closeModal() {
+  document.getElementById("modal").classList.add("hidden");
+  document.body.style.overflow = "";
+}
+document.getElementById("modal").addEventListener("click", e => {
+  if (e.target === document.getElementById("modal")) closeModal();
+});
+
+// ── PRIX SELECTOR ──
+function selectPrix(mode) {
+  const customVal = parseFloat(document.getElementById("inp-prix-custom").value);
+
+  if (mode === "custom") {
+    state.prixMode   = "custom";
+    state.prixCustom = isNaN(customVal) ? 0 : customVal;
+  } else {
+    state.prixMode = mode;
+    if (mode !== "custom") document.getElementById("inp-prix-custom").value = "";
+  }
+
+  document.getElementById("btn-prix-min").className = "prix-btn" + (state.prixMode === "min" ? " active-min" : "");
+  document.getElementById("btn-prix-pub").className = "prix-btn" + (state.prixMode === "pub" ? " active-pub" : "");
+
+  refreshPreview();
+}
+
+// ── PRINT ──
+function doPrint() {
+  window.print();
+}
+
+// ── INIT ──
+render();
+</script>
+</body>
+</html>
