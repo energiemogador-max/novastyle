@@ -7008,7 +7008,7 @@
         ADS_FIELDS.forEach(({ id, key }) => {
           cfg[key] = document.getElementById(id)?.value.trim() || '';
         });
-        const res = await fetch(`${DB}/ads_config.json?auth=${fbToken}`, {
+        const res = await fetch(`${DB_REST}/ads_config.json?auth=${fbToken}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(cfg)
