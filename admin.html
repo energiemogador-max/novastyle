@@ -4076,7 +4076,9 @@
     // Avoid top-level await (some browsers/environments fail silently and the page appears stuck on "Connexion Firebase…")
     setPersistence(auth, browserLocalPersistence).catch(() => { });
 
-    const DB_REST = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
+    const DB_REST   = "https://nova-9ac76-default-rtdb.europe-west1.firebasedatabase.app";
+    const REPO      = "energiemogador-max/novastyle";
+    const GH_BRANCH = "main";
 
     // ── EmailJS (same credentials as cart.js) ────────────────────────────────────
     const EJS_KEY      = "k3e_LOpxkERLpQnz1";
