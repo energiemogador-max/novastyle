@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova Style — Calculateur de Prix Miroir</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&family=Sora:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #f5f2eb; color: #2a2218; font-family: 'DM Mono', monospace; min-height: 100vh; }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    input[type=number] { -moz-appearance: textfield; }
+    input, textarea, button { font-family: 'DM Mono', monospace; }
+    @keyframes slideUp { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+    @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+    @keyframes mirrorSheen2 {
+      0%   { transform: translateX(-110%) skewX(-18deg); opacity: 0; }
+      15%  { opacity: 1; }
+      85%  { opacity: 0.7; }
+      100% { transform: translateX(220%) skewX(-18deg); opacity: 0; }
+    }
+    @keyframes mirrorSheen2b {
+      0%   { transform: translateX(-110%) skewX(-18deg); opacity: 0; }
+      15%  { opacity: 0.5; }
+      85%  { opacity: 0.3; }
+      100% { transform: translateX(220%) skewX(-18deg); opacity: 0; }
+    }
+    @keyframes backlightPulse {
+      0%,100% { opacity: 0.82; }
+      50%      { opacity: 1; }
+    }
+    @keyframes backlightEdge {
+      0%,100% { opacity: 0.7; }
+      50%      { opacity: 1; }
+    }
+    @keyframes antifogWire {
+      0%,100% { opacity: 0.5; }
+      50%      { opacity: 0.85; }
+    }
+    @keyframes sablageShimmer2 {
+      0%,100% { opacity: 0.88; }
+      50%      { opacity: 1; }
+    }
+    @keyframes badgePop2 {
+      0%   { transform: scale(.75); opacity: 0; }
+      65%  { transform: scale(1.06); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes roomFloat {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-3px); }
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f0ece3; }
+    ::-webkit-scrollbar-thumb { background: #d0ccc0; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useReducer, useEffect, useRef, useMemo } = React;
+
+    // ── CONSTANTS ──
+    const PRICES = {
+      clair:  { "4": 210, "6": 260 },
+      bronze: { "4": 550, "6": 650 },
+      gris:   { "4": 550, "6": 650 },
+    };
+    const TYPE_LABELS = { clair: "Clair", bronze: "Bronze", gris: "Gris" };
+    const fmt = (n) => Number(n).toLocaleString("fr-MA", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    const todayStr = new Date().toLocaleDateString("fr-MA", { day: "2-digit", month: "long", year: "numeric" });
+    const genDevisNum = () => `NS-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`;
+
+    // ── CALC HOOK ──
+    function useCalc(cfg) {
+      return useMemo(() => {
+        const { w, h, type, thickness, antifog, sablage, led, cadre, finition, installation } = cfg;
+        const surface   = (w * h) / 10000;
+        const perimeter = (2 * (w + h)) / 100;
+        const priceM2   = PRICES[type][thickness];
+        const mirrorBase = surface * priceM2;
+        const antifogP  = antifog ? (surface <= 1.2 ? 70 : 140) : 0;
+        const sablageP  = sablage ? surface * 80 : 0;
+        const ledP      = led ? perimeter * 13 : 0;
+        const cadreP    = cadre ? surface * 300 : 0;
+        const biseauP   = finition === "biseaute" ? perimeter * 55 : 0;
+        const installP  = installation ? 80 : 0;
+        const shippingP = !installation ? (surface <= 1.3 ? 50 : 90) : 0;
+        const revient   = mirrorBase + antifogP + sablageP + ledP + cadreP + biseauP + installP + shippingP;
+        const prixMin   = revient * 1.5;
+        const prixPublic = revient * 2.1;
+        const lines = [
+          { label: "Miroir",           detail: `${w}×${h} cm · ${TYPE_LABELS[type]} ${thickness}mm · ${fmt(surface)} m² × ${priceM2} dh/m²`, amount: mirrorBase },
+          antifog && { label: "Anti-buée",        detail: surface <= 1.2 ? "1 résistance" : "2 résistances", amount: antifogP },
+          sablage && { label: "Sablage",          detail: `${fmt(surface)} m² × 80 dh/m²`, amount: sablageP },
+          led     && { label: "Éclairage LED",    detail: `${fmt(perimeter)} ml × 13 dh/ml`, amount: ledP },
+          cadre   && { label: "Cadre",            detail: `${fmt(surface)} m² × 300 dh/m²`, amount: cadreP },
+          finition === "biseaute" && { label: "Finition biseautée", detail: `${fmt(perimeter)} ml × 55 dh/ml`, amount: biseauP },
+          installation && { label: "Installation", detail: "Pose à domicile Casablanca", amount: installP },
+          !installation && { label: "Livraison",  detail: surface <= 1.3 ? "Surface ≤ 1.3 m²" : "Surface > 1.3 m²", amount: shippingP },
+        ].filter(Boolean);
+        return { surface, perimeter, priceM2, revient, prixMin, prixPublic, lines };
+      }, [cfg]);
+    }
+
+    // ── ANIMATED NUMBER ──
+    function AnimNum({ value }) {
+      const [display, setDisplay] = useState(value);
+      const prev = useRef(value);
+      const raf  = useRef(null);
+      useEffect(() => {
+        const from = prev.current, to = value;
+        if (from === to) return;
+        const dur = 380, start = performance.now();
+        const tick = (now) => {
+          const t = Math.min((now - start) / dur, 1);
+          const ease = 1 - Math.pow(1 - t, 3);
+          setDisplay(Math.round(from + (to - from) * ease));
+          if (t < 1) raf.current = requestAnimationFrame(tick);
+          else { prev.current = to; setDisplay(to); }
+        };
+        raf.current = requestAnimationFrame(tick);
+        return () => cancelAnimationFrame(raf.current);
+      }, [value]);
+      return <>{fmt(display)}</>;
+    }
+
+    // ── TOGGLE ──
+    function Toggle({ on, onToggle }) {
+      return (
+        <button onClick={onToggle} style={{
+          width: 46, height: 25, borderRadius: 13, border: "none", cursor: "pointer",
+          background: on ? "#c8a84a" : "#d0cfc8", position: "relative",
+          transition: "background .2s", flexShrink: 0, outline: "none",
+          boxShadow: on ? "0 1px 4px rgba(180,140,40,.3)" : "0 1px 3px rgba(0,0,0,.12)",
+        }}>
+          <div style={{
+            width: 19, height: 19, borderRadius: 10,
+            background: "#fff",
+            position: "absolute", top: 3, left: on ? 24 : 3,
+            transition: "left .2s",
+            boxShadow: "0 1px 4px rgba(0,0,0,.25)",
+          }} />
+        </button>
+      );
+    }
+
+    // ── CHIP GROUP ──
+    function ChipGroup({ options, value, onChange }) {
+      return (
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          {options.map(opt => (
+            <button key={opt.value} onClick={() => onChange(opt.value)} style={{
+              padding: "8px 16px", borderRadius: 8, cursor: "pointer",
+              border: `1.5px solid ${value === opt.value ? "#c8a84a" : "#e0ddd6"}`,
+              background: value === opt.value ? "#fdf6e3" : "#fafaf8",
+              color: value === opt.value ? "#8a6a10" : "#888",
+              fontFamily: "inherit", fontSize: 13, fontWeight: 600,
+              transition: "all .15s", whiteSpace: "nowrap",
+              boxShadow: value === opt.value ? "0 1px 6px rgba(180,140,40,.15)" : "none",
+            }}>{opt.label}</button>
+          ))}
+        </div>
+      );
+    }
+
+    // ── PANEL ──
+    function Panel({ label, children, style: extraStyle = {} }) {
+      return (
+        <div style={{
+          background: "#fff", borderRadius: 14, border: "1px solid #ede9e0",
+          padding: "16px 18px",
+          boxShadow: "0 1px 4px rgba(0,0,0,.05)",
+          ...extraStyle,
+        }}>
+          {label && <div style={{ fontSize: 10, color: "#b0a890", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 12, fontWeight: 700 }}>{label}</div>}
+          {children}
+        </div>
+      );
+    }
+
+    // ── MIRROR PREVIEW ──
+    function MirrorPreview({ cfg }) {
+      const { w, h, type, thickness, cadre, led, sablage, finition, antifog } = cfg;
+      const BAND = 16;
+
+      const mirrorColors = {
+        clair: {
+          base: "linear-gradient(158deg, #e8f4fc 0%, #c5dff0 18%, #ddeefa 32%, #b8d4e8 48%, #cfe6f5 60%, #a8ccdf 75%, #d0e8f5 88%, #b5d5e8 100%)",
+          tint: "rgba(180,215,240,0.18)",
+          deepReflect: "rgba(80,140,180,0.12)",
+          highlight: "rgba(255,255,255,0.85)",
+          edgeGlow: "rgba(190,225,248,0.6)",
+          ambient: "rgba(160,210,240,0.15)",
+        },
+        bronze: {
+          base: "linear-gradient(158deg, #c8803a 0%, #7a4010 18%, #e0a050 32%, #9a5828 48%, #d09040 60%, #6a3808 75%, #c07030 88%, #884820 100%)",
+          tint: "rgba(180,100,30,0.2)",
+          deepReflect: "rgba(100,50,10,0.18)",
+          highlight: "rgba(255,220,160,0.75)",
+          edgeGlow: "rgba(220,140,50,0.5)",
+          ambient: "rgba(180,100,20,0.12)",
+        },
+        gris: {
+          base: "linear-gradient(158deg, #6a6a6a 0%, #2e2e2e 18%, #787878 32%, #3a3a3a 48%, #6e6e6e 60%, #282828 75%, #727272 88%, #383838 100%)",
+          tint: "rgba(90,90,90,0.2)",
+          deepReflect: "rgba(20,20,20,0.2)",
+          highlight: "rgba(255,255,255,0.55)",
+          edgeGlow: "rgba(160,160,160,0.45)",
+          ambient: "rgba(80,80,80,0.1)",
+        },
+      };
+      const mc = mirrorColors[type];
+
+      const roomReflection = type === "clair"
+        ? { c1: "rgba(180,215,250,0.22)", c2: "rgba(240,248,255,0.18)", c3: "rgba(140,190,230,0.15)" }
+        : type === "bronze"
+        ? { c1: "rgba(160,90,20,0.22)", c2: "rgba(220,160,60,0.16)", c3: "rgba(100,50,10,0.15)" }
+        : { c1: "rgba(80,80,80,0.22)", c2: "rgba(140,140,140,0.16)", c3: "rgba(40,40,40,0.15)" };
+
+      return (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, width: "100%" }}>
+          <div style={{
+            width: "100%", display: "flex", justifyContent: "center",
+            padding: led ? "44px 24px 38px" : "20px 10px 14px",
+            background: led
+              ? "linear-gradient(180deg, #e2ddd0 0%, #d8d3c6 100%)"
+              : "linear-gradient(180deg, #f0ece3 0%, #e8e3d8 100%)",
+            borderRadius: 12,
+            boxShadow: "inset 0 2px 12px rgba(0,0,0,.07), inset 0 -2px 8px rgba(0,0,0,.04)",
+            position: "relative",
+            transition: "padding .4s ease, background .5s ease",
+          }}>
+            <div style={{
+              position: "absolute", inset: 0, opacity: 0.04,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            }} />
+            <div style={{
+              position: "relative",
+              width: "100%", maxWidth: 200,
+              aspectRatio: `${Math.min(w, 600)}/${Math.min(h, 600)}`,
+              maxHeight: 210,
+            }}>
+              {led && (
+                <div style={{
+                  position: "absolute", inset: -30, borderRadius: cadre ? 18 : 12,
+                  background: "transparent",
+                  boxShadow: [
+                    "0 0 36px 18px rgba(255,225,80,.52)",
+                    "0 0 72px 36px rgba(255,200,50,.26)",
+                    "0 0 120px 55px rgba(255,175,25,.11)",
+                  ].join(", "),
+                  animation: "backlightPulse 3s ease-in-out infinite",
+                  zIndex: 0, pointerEvents: "none",
+                }} />
+              )}
+              <div style={{
+                position: "absolute", inset: cadre ? -14 : -10,
+                borderRadius: cadre ? 10 : 4, background: "transparent",
+                boxShadow: led
+                  ? "0 8px 24px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.07)"
+                  : cadre
+                    ? "0 18px 48px rgba(0,0,0,.22), 0 6px 18px rgba(0,0,0,.14), 0 2px 6px rgba(0,0,0,.1)"
+                    : "0 14px 38px rgba(0,0,0,.18), 0 4px 12px rgba(0,0,0,.1)",
+                zIndex: 0,
+              }} />
+              {cadre && (
+                <div style={{
+                  position: "absolute", inset: -11, borderRadius: 7, zIndex: 1,
+                  background: "linear-gradient(145deg, #c9992a 0%, #8c5e12 12%, #e8b840 22%, #b07820 35%, #d4a030 50%, #8a5610 65%, #e0b038 78%, #a06818 90%, #c89028 100%)",
+                  boxShadow: "inset 0 1px 0 rgba(255,230,100,.45), inset 0 -1px 0 rgba(80,40,0,.5), inset 1px 0 0 rgba(255,220,80,.3), inset -1px 0 0 rgba(60,30,0,.4), 0 2px 8px rgba(0,0,0,.3)",
+                }}>
+                  <div style={{
+                    position: "absolute", inset: 3, borderRadius: 4,
+                    background: "linear-gradient(135deg, rgba(80,40,0,.4) 0%, transparent 40%, transparent 60%, rgba(255,200,60,.2) 100%)",
+                    boxShadow: "inset 0 1px 3px rgba(0,0,0,.5), inset 0 -1px 2px rgba(255,200,60,.3)",
+                  }} />
+                  {[{top:-2,left:-2},{top:-2,right:-2},{bottom:-2,left:-2},{bottom:-2,right:-2}].map((pos,i) => (
+                    <div key={i} style={{
+                      position:"absolute", width:10, height:10, borderRadius:"50%",
+                      background:"radial-gradient(circle at 35% 35%, #ffe090, #c89030 60%, #7a4a08)",
+                      boxShadow:"0 1px 3px rgba(0,0,0,.5)", zIndex:3, ...pos,
+                    }} />
+                  ))}
+                </div>
+              )}
+              {!cadre && (
+                <div style={{
+                  position: "absolute", top: 3, left: 3, right: -3, bottom: -3,
+                  background: type === "clair"
+                    ? "linear-gradient(135deg, #9abcce, #6a9ab0)"
+                    : type === "bronze"
+                    ? "linear-gradient(135deg, #4a2008, #2e1004)"
+                    : "linear-gradient(135deg, #1a1a1a, #0a0a0a)",
+                  borderRadius: 3, opacity: 0.7, zIndex: 1,
+                }} />
+              )}
+              <div style={{
+                position: "absolute", inset: 0, background: mc.base,
+                borderRadius: cadre ? 2 : 3,
+                border: !cadre
+                  ? finition === "biseaute"
+                    ? "2px solid rgba(255,255,255,0.5)"
+                    : `1px solid ${mc.edgeGlow}`
+                  : "none",
+                overflow: "hidden", zIndex: 2, transition: "background .5s",
+              }}>
+                <svg style={{ position:"absolute", inset:0, width:"100%", height:"100%", opacity:0.55 }} viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+                  <rect x="15" y="8" width="22" height="30" rx="2" fill={roomReflection.c2} opacity="0.9"/>
+                  <line x1="26" y1="8" x2="26" y2="38" stroke={roomReflection.c1} strokeWidth="1" opacity="0.7"/>
+                  <line x1="15" y1="22" x2="37" y2="22" stroke={roomReflection.c1} strokeWidth="1" opacity="0.7"/>
+                  <rect x="60" y="60" width="35" height="16" rx="2" fill={roomReflection.c3} opacity="0.6"/>
+                  <rect x="65" y="50" width="6" height="12" rx="1" fill={roomReflection.c3} opacity="0.5"/>
+                  <rect x="82" y="50" width="6" height="12" rx="1" fill={roomReflection.c3} opacity="0.5"/>
+                  <ellipse cx="50" cy="5" rx="18" ry="4" fill={roomReflection.c2} opacity="0.5"/>
+                  <rect x="0" y="80" width="100" height="20" fill={roomReflection.c3} opacity="0.3"/>
+                </svg>
+
+                <div style={{
+                  position: "absolute", top: 0, left: 0, width: "55%", height: "45%",
+                  background: `radial-gradient(ellipse at 20% 15%, ${mc.highlight} 0%, rgba(255,255,255,0.3) 30%, transparent 70%)`,
+                  pointerEvents: "none", zIndex: 8,
+                }} />
+                <div style={{
+                  position: "absolute", bottom: 0, right: 0, width: "40%", height: "35%",
+                  background: `radial-gradient(ellipse at 80% 85%, ${mc.highlight.replace(".85","0.35")} 0%, transparent 60%)`,
+                  pointerEvents: "none", zIndex: 8,
+                }} />
+                <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 9 }}>
+                  <div style={{
+                    position: "absolute", top: "5%", bottom: "5%", width: "18%",
+                    background: `linear-gradient(90deg, transparent 0%, ${mc.highlight.replace(".85","0.5")} 40%, rgba(255,255,255,0.6) 50%, ${mc.highlight.replace(".85","0.5")} 60%, transparent 100%)`,
+                    filter: "blur(2px)",
+                    animation: "mirrorSheen2 5s ease-in-out infinite",
+                    animationDelay: "0.5s",
+                  }} />
+                </div>
+                <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 9 }}>
+                  <div style={{
+                    position: "absolute", top: "30%", bottom: "20%", width: "8%",
+                    background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%)`,
+                    filter: "blur(1px)",
+                    animation: "mirrorSheen2b 5s ease-in-out infinite",
+                    animationDelay: "2.8s",
+                  }} />
+                </div>
+                <div style={{
+                  position: "absolute", inset: 0,
+                  background: `linear-gradient(135deg, ${mc.edgeGlow} 0%, transparent 25%, transparent 75%, ${mc.ambient} 100%)`,
+                  pointerEvents: "none", zIndex: 7,
+                }} />
+
+                {finition === "biseaute" && (
+                  <>
+                    <div style={{ position:"absolute", top:0, left:0, right:0, height:7, background:"linear-gradient(to bottom, rgba(255,255,255,.65) 0%, rgba(255,255,255,.3) 60%, transparent 100%)", pointerEvents:"none", zIndex:10 }} />
+                    <div style={{ position:"absolute", bottom:0, left:0, right:0, height:7, background:"linear-gradient(to top, rgba(255,255,255,.45) 0%, rgba(255,255,255,.2) 60%, transparent 100%)", pointerEvents:"none", zIndex:10 }} />
+                    <div style={{ position:"absolute", top:0, bottom:0, left:0, width:7, background:"linear-gradient(to right, rgba(255,255,255,.55) 0%, rgba(255,255,255,.2) 60%, transparent 100%)", pointerEvents:"none", zIndex:10 }} />
+                    <div style={{ position:"absolute", top:0, bottom:0, right:0, width:7, background:"linear-gradient(to left, rgba(255,255,255,.45) 0%, rgba(255,255,255,.18) 60%, transparent 100%)", pointerEvents:"none", zIndex:10 }} />
+                    <div style={{ position:"absolute", top:0, left:0, right:0, height:4, background:"linear-gradient(90deg, rgba(255,80,80,.15), rgba(255,200,80,.15), rgba(80,255,80,.12), rgba(80,180,255,.15), rgba(200,80,255,.1))", pointerEvents:"none", zIndex:11 }} />
+                  </>
+                )}
+
+                {led && (
+                  <>
+                    <div style={{
+                      position:"absolute", inset:0,
+                      background: [
+                        "linear-gradient(to bottom, rgba(255,220,70,.28) 0%, transparent 22%)",
+                        "linear-gradient(to top,    rgba(255,220,70,.28) 0%, transparent 22%)",
+                        "linear-gradient(to right,  rgba(255,220,70,.22) 0%, transparent 22%)",
+                        "linear-gradient(to left,   rgba(255,220,70,.22) 0%, transparent 22%)",
+                      ].join(", "),
+                      pointerEvents:"none", zIndex:6,
+                      animation: "backlightEdge 3s ease-in-out infinite",
+                    }} />
+                    <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse at 50% 50%, rgba(255,215,60,.07) 0%, transparent 70%)", pointerEvents:"none", zIndex:6 }} />
+                  </>
+                )}
+
+                {antifog && (
+                  <div style={{
+                    position:"absolute", inset: sablage ? BAND+2 : 10,
+                    zIndex:6, pointerEvents:"none",
+                    display:"flex", flexDirection:"column", justifyContent:"space-evenly",
+                  }}>
+                    {Array.from({ length: 7 }).map((_,i) => (
+                      <div key={i} style={{
+                        height: 1,
+                        background: type === "clair"
+                          ? "linear-gradient(90deg, transparent, rgba(255,155,70,.6) 18%, rgba(255,175,90,.75) 50%, rgba(255,155,70,.6) 82%, transparent)"
+                          : "linear-gradient(90deg, transparent, rgba(255,130,50,.55) 18%, rgba(255,150,70,.7) 50%, rgba(255,130,50,.55) 82%, transparent)",
+                        boxShadow: "0 0 3px 1px rgba(255,120,40,.28)",
+                        borderRadius: 1,
+                        animation: "antifogWire 2.2s ease-in-out infinite",
+                        animationDelay: `${i*0.28}s`,
+                      }} />
+                    ))}
+                    <div style={{ position:"absolute", bottom:-16, right:2, fontSize:7, color:"rgba(255,140,60,.7)", letterSpacing:.5, fontFamily:"inherit", fontWeight:700 }}>≋ CHAUFFANT</div>
+                  </div>
+                )}
+
+                {sablage && (
+                  <>
+                    {[
+                      { top:0, left:0, right:0, height:BAND, dir:"to bottom" },
+                      { bottom:0, left:0, right:0, height:BAND, dir:"to top" },
+                    ].map((s,i) => (
+                      <div key={i} style={{
+                        position:"absolute", ...s,
+                        background: type === "clair"
+                          ? `linear-gradient(${s.dir}, rgba(220,235,245,.72) 0%, rgba(200,220,235,.5) 50%, transparent 100%)`
+                          : type === "bronze"
+                          ? `linear-gradient(${s.dir}, rgba(200,140,60,.55) 0%, rgba(180,110,40,.35) 50%, transparent 100%)`
+                          : `linear-gradient(${s.dir}, rgba(130,130,130,.6) 0%, rgba(100,100,100,.38) 50%, transparent 100%)`,
+                        backdropFilter: "blur(3px) saturate(0.7)",
+                        animation: "sablageShimmer2 3.5s ease-in-out infinite",
+                        animationDelay: `${i*0.8}s`,
+                        borderBottom: i===0 ? "1px solid rgba(255,255,255,.2)" : "none",
+                        borderTop: i===1 ? "1px solid rgba(255,255,255,.2)" : "none",
+                        zIndex: 5,
+                      }} />
+                    ))}
+                    {[
+                      { top:0, bottom:0, left:0, width:BAND, dir:"to right" },
+                      { top:0, bottom:0, right:0, width:BAND, dir:"to left" },
+                    ].map((s,i) => (
+                      <div key={i} style={{
+                        position:"absolute", ...s,
+                        background: type === "clair"
+                          ? `linear-gradient(${s.dir}, rgba(220,235,245,.72) 0%, rgba(200,220,235,.5) 50%, transparent 100%)`
+                          : type === "bronze"
+                          ? `linear-gradient(${s.dir}, rgba(200,140,60,.55) 0%, rgba(180,110,40,.35) 50%, transparent 100%)`
+                          : `linear-gradient(${s.dir}, rgba(130,130,130,.6) 0%, rgba(100,100,100,.38) 50%, transparent 100%)`,
+                        backdropFilter: "blur(3px) saturate(0.7)",
+                        animation: "sablageShimmer2 3.5s ease-in-out infinite",
+                        animationDelay: `${(i+1)*0.5}s`,
+                        borderRight: i===0 ? "1px solid rgba(255,255,255,.2)" : "none",
+                        borderLeft: i===1 ? "1px solid rgba(255,255,255,.2)" : "none",
+                        zIndex: 5,
+                      }} />
+                    ))}
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display:"flex", gap:5, flexWrap:"wrap", justifyContent:"center" }}>
+            {[
+              sablage           && { label:"Sablage",    color:"#4a7a9b", bg:"#e8f2f8", border:"#b8d4e8" },
+              led               && { label:"LED",        color:"#a07010", bg:"#fdf5e0", border:"#e8c96d" },
+              antifog           && { label:"Anti-buée",  color:"#b04020", bg:"#fdf0ed", border:"#e8a090" },
+              cadre             && { label:"Cadre",      color:"#8a6010", bg:"#fdf5e0", border:"#d4a030" },
+              finition==="biseaute" && { label:"Biseauté", color:"#5a7a90", bg:"#eef4f8", border:"#a8c4d8" },
+            ].filter(Boolean).map((b,i) => (
+              <span key={i} style={{
+                fontSize:9, fontWeight:700, padding:"3px 9px", borderRadius:20,
+                background:b.bg, color:b.color, border:`1px solid ${b.border}`,
+                animation:"badgePop2 .3s cubic-bezier(.4,0,.2,1) both",
+                animationDelay:`${i*0.06}s`, letterSpacing:.6, textTransform:"uppercase",
+              }}>{b.label}</span>
+            ))}
+          </div>
+          <div style={{ fontSize:11, color:"#b0a890", letterSpacing:.3 }}>
+            {w}×{h} cm · {TYPE_LABELS[type]} {thickness}mm
+          </div>
+        </div>
+      );
+    }
+
+    // ── TOAST ──
+    function Toast({ msg, visible }) {
+      return (
+        <div style={{
+          position:"fixed", bottom:24, left:"50%", transform:`translateX(-50%) translateY(${visible ? 0 : 80}px)`,
+          background:"#1a3a00", border:"1px solid #4a8020", borderRadius:10,
+          padding:"10px 20px", fontSize:13, color:"#8ac840",
+          transition:"transform .3s, opacity .3s",
+          opacity: visible ? 1 : 0, pointerEvents:"none",
+          zIndex:9999, whiteSpace:"nowrap",
+        }}>
+          ✓ {msg}
+        </div>
+      );
+    }
+
+    // ── SAVED CONFIGS ──
+    const smallBtn = (bg, color, border) => ({
+      padding:"4px 10px", borderRadius:6, border:`1px solid ${border}`, cursor:"pointer",
+      background:bg, color, fontSize:11, fontWeight:700, fontFamily:"inherit",
+    });
+
+    function SavedConfigs({ configs, onLoad, onDelete }) {
+      if (!configs.length) return null;
+      return (
+        <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+          {configs.map((c,i) => (
+            <div key={i} style={{
+              display:"flex", alignItems:"center", justifyContent:"space-between",
+              background:"#fafaf8", borderRadius:8, padding:"8px 12px",
+              border:"1px solid #ede9e0",
+            }}>
+              <div>
+                <div style={{ fontSize:12, color:"#555", fontWeight:700 }}>{c.name}</div>
+                <div style={{ fontSize:10, color:"#aaa", marginTop:2 }}>{c.cfg.w}×{c.cfg.h} cm · {TYPE_LABELS[c.cfg.type]} {c.cfg.thickness}mm</div>
+              </div>
+              <div style={{ display:"flex", gap:6 }}>
+                <button onClick={() => onLoad(c.cfg)} style={smallBtn("#f0f8e8","#5a9020","#c8e0a0")}>Charger</button>
+                <button onClick={() => onDelete(i)} style={smallBtn("#fdf0ee","#c04030","#f0c0b8")}>×</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // ── DEVIS MODAL ──
+    function DevisModal({ open, onClose, calc, cfg }) {
+      const [client, setClient] = useState({ name:"", phone:"", city:"", note:"" });
+      const [prixInput, setPrixInput] = useState("");
+      const [devisNum] = useState(genDevisNum);
+      const { prixMin, prixPublic, lines, revient } = calc;
+      const prixDevis = parseFloat(prixInput) || 0;
+      const belowMin = prixDevis > 0 && prixDevis < prixMin;
+
+      useEffect(() => {
+        if (open) document.body.style.overflow = "hidden";
+        else document.body.style.overflow = "";
+        return () => { document.body.style.overflow = ""; };
+      }, [open]);
+
+      useEffect(() => {
+        const h = (e) => { if (e.key === "Escape") onClose(); };
+        window.addEventListener("keydown", h);
+        return () => window.removeEventListener("keydown", h);
+      }, [onClose]);
+
+      const handlePrint = () => {
+        const win = window.open("", "_blank");
+        win.document.write(`
+          <html><head>
+            <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
+            <style>
+              *{box-sizing:border-box;margin:0;padding:0}
+              body{font-family:'DM Mono',monospace;background:#fff;color:#111;padding:40px 50px;font-size:13px}
+              .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid #111}
+              .brand{font-family:'Sora',sans-serif;font-size:26px;font-weight:800}
+              .brand-sub{font-size:11px;color:#888;margin-top:4px;line-height:1.7}
+              .devis-title{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;text-align:right}
+              .devis-meta{font-size:12px;color:#777;line-height:1.8;text-align:right}
+              .client{background:#f8f8f4;border-radius:8px;padding:14px 18px;margin-bottom:24px}
+              table{width:100%;border-collapse:collapse;margin-bottom:20px}
+              th{text-align:left;padding:8px 0;font-size:11px;color:#888;border-bottom:2px solid #111}
+              td{padding:10px 0;border-bottom:1px solid #eee;font-weight:700}
+              .specs{background:#f4f4f0;border-radius:8px;padding:12px 18px;margin-bottom:20px;font-size:12px;color:#666;line-height:1.8}
+              .total{border:2px solid #111;border-radius:10px;padding:16px 20px;background:#fafaf8;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
+              .total-label{font-weight:800;font-size:18px}
+              .footer{margin-top:20px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:10px;display:flex;justify-content:space-between}
+            </style>
+          </head><body>
+            <div class="header">
+              <div><div class="brand">Nova Style</div><div class="brand-sub">07 07 07 47 48 · novastyle.ma<br/>Casablanca, Maroc</div></div>
+              <div><div class="devis-title">DEVIS</div><div class="devis-meta">N° ${devisNum}<br/>${todayStr}</div></div>
+            </div>
+            ${client.name ? `<div class="client"><strong>${client.name}</strong>${client.phone ? `<br/>📞 ${client.phone}` : ""}${client.city ? `<br/>📍 ${client.city}` : ""}</div>` : ""}
+            <table>
+              <thead><tr><th>Désignation</th><th>Détail</th><th style="text-align:right">Montant</th></tr></thead>
+              <tbody>${lines.map(l => `<tr><td>${l.label}</td><td style="color:#666;font-weight:400;font-size:12px">${l.detail||""}</td><td style="text-align:right">${fmt(l.amount)} dh</td></tr>`).join("")}</tbody>
+            </table>
+            <div class="specs">${cfg.w}×${cfg.h} cm · ${TYPE_LABELS[cfg.type]} ${cfg.thickness}mm${cfg.cadre?" · Avec cadre":" · Sans cadre"}${cfg.finition==="biseaute"?" · Bords biseautés":" · Bords polis droits"}${cfg.antifog?" · Anti-buée":""}${cfg.sablage?" · Sablage":""}${cfg.led?" · LED":""}</div>
+            <div class="total"><div><div class="total-label">Total TTC</div><div style="font-size:11px;color:#888;margin-top:3px">${prixDevis > 0 ? `Acompte 50% : ${fmt(prixDevis*0.5)} dh` : "Acompte 50% : — dh"}</div></div><div style="font-family:'Sora',sans-serif;font-size:28px;font-weight:800">${prixDevis > 0 ? `${fmt(prixDevis)} dh` : "— dh"}</div></div>
+            ${client.note ? `<div style="background:#fafaf8;border-radius:6px;padding:10px 14px;font-size:12px;color:#666;margin-bottom:16px"><strong>Note : </strong>${client.note}</div>` : ""}
+            <div style="display:flex;gap:40px;margin-top:24px"><div style="flex:1;border-top:1px solid #ccc;padding-top:6px;font-size:10px;color:#bbb">Signature client</div><div style="flex:1;border-top:1px solid #ccc;padding-top:6px;font-size:10px;color:#bbb">Cachet & Signature Nova Style</div></div>
+            <div class="footer"><span>Fabrication 5–10 jours ouvrés · Garantie 3 ans</span><span>Verre AGC Belgique · Casablanca</span></div>
+          </body></html>
+        `);
+        win.document.close();
+        win.print();
+      };
+
+      if (!open) return null;
+      return (
+        <div style={{
+          position:"fixed", inset:0, background:"rgba(60,55,45,.5)", backdropFilter:"blur(4px)",
+          zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", padding:16, overflowY:"auto",
+        }}>
+          <div style={{
+            background:"#fff", borderRadius:18, border:"1px solid #e8e3d8",
+            width:"100%", maxWidth:660, maxHeight:"93vh", overflowY:"auto",
+            display:"flex", flexDirection:"column",
+            boxShadow:"0 24px 80px rgba(0,0,0,.18), 0 8px 28px rgba(0,0,0,.1)",
+            animation:"slideUp .25s cubic-bezier(.4,0,.2,1)",
+          }}>
+            <div style={{
+              display:"flex", justifyContent:"space-between", alignItems:"center",
+              padding:"18px 24px", borderBottom:"1px solid #ede9e0",
+              position:"sticky", top:0, background:"#fff", zIndex:1, borderRadius:"18px 18px 0 0",
+            }}>
+              <div style={{ fontFamily:"'Sora',sans-serif", fontSize:17, fontWeight:700, color:"#2a2218" }}>Devis client</div>
+              <div style={{ display:"flex", gap:10, alignItems:"center" }}>
+                <button onClick={handlePrint} style={{
+                  padding:"9px 20px", background:"linear-gradient(135deg,#e8c96d,#c8a840)", border:"none", borderRadius:9,
+                  cursor:"pointer", fontFamily:"inherit", fontSize:13, fontWeight:700, color:"#3a2800",
+                  boxShadow:"0 2px 8px rgba(180,140,40,.25)",
+                }}>🖨️ Imprimer</button>
+                <button onClick={onClose} style={{
+                  width:34, height:34, background:"none", border:"1px solid #e0ddd6",
+                  borderRadius:8, cursor:"pointer", color:"#aaa", fontSize:20,
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                }}>×</button>
+              </div>
+            </div>
+
+            <div style={{ padding:"20px 24px", borderBottom:"1px solid #ede9e0" }}>
+              <div style={{ fontSize:10, color:"#b0a890", textTransform:"uppercase", letterSpacing:1.5, marginBottom:12, fontWeight:700 }}>Informations client</div>
+              <div style={{ display:"flex", gap:10, flexWrap:"wrap", marginBottom:10 }}>
+                {[["Nom client","name","M. Alaoui"],["Téléphone","phone","06 XX XX XX XX"],["Ville","city","Casablanca"]].map(([lbl,key,ph]) => (
+                  <div key={key} style={{ flex:"1 1 140px" }}>
+                    <label style={{ display:"block", fontSize:11, color:"#aaa", marginBottom:5 }}>{lbl}</label>
+                    <input type="text" placeholder={ph} value={client[key]}
+                      onChange={e => setClient(p => ({ ...p, [key]: e.target.value }))}
+                      style={{
+                        width:"100%", background:"#fafaf8", border:"1.5px solid #e0ddd6",
+                        borderRadius:8, padding:"8px 12px", color:"#333",
+                        fontFamily:"inherit", fontSize:13, outline:"none",
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div>
+                <label style={{ display:"block", fontSize:11, color:"#aaa", marginBottom:5 }}>Note / Remarques</label>
+                <textarea rows={2} placeholder="Informations supplémentaires…" value={client.note}
+                  onChange={e => setClient(p => ({ ...p, note: e.target.value }))}
+                  style={{
+                    width:"100%", background:"#fafaf8", border:"1.5px solid #e0ddd6",
+                    borderRadius:8, padding:"8px 12px", color:"#333",
+                    fontFamily:"inherit", fontSize:13, outline:"none", resize:"none",
+                  }}
+                />
+              </div>
+            </div>
+
+            <div style={{ padding:"20px 24px", borderBottom:"1px solid #ede9e0", background:"#fdfcf8" }}>
+              <div style={{ fontSize:10, color:"#b0a890", textTransform:"uppercase", letterSpacing:1.5, marginBottom:12, fontWeight:700 }}>Prix de vente client</div>
+              <label style={{ fontSize:11, color:"#aaa", display:"block", marginBottom:6 }}>Prix choisi pour le devis :</label>
+              <div style={{
+                display:"flex", alignItems:"center", gap:6, background:"#fff",
+                border:`1.5px solid ${belowMin ? "#e0a090" : "#e0ddd6"}`, borderRadius:8,
+                padding:"6px 12px", maxWidth:260, transition:"border-color .2s",
+              }}>
+                <input type="number" placeholder="Saisir le prix…" value={prixInput}
+                  onChange={e => setPrixInput(e.target.value)}
+                  style={{
+                    background:"none", border:"none", outline:"none", width:"100%",
+                    color:"#333", fontFamily:"inherit", fontSize:18, fontWeight:700,
+                  }}
+                />
+                <span style={{ color:"#ccc", fontSize:14 }}>dh</span>
+              </div>
+              {belowMin && (
+                <div style={{
+                  marginTop:8, padding:"6px 10px", background:"#fdf0ee",
+                  border:"1px solid #f0c0b0", borderRadius:6, fontSize:11, color:"#c04030",
+                }}>
+                  ⚠️ Ce prix est inférieur au prix minimum de vente ({fmt(prixMin)} dh)
+                </div>
+              )}
+            </div>
+
+            <div style={{ padding:"20px 24px", background:"#fdfcf8" }}>
+              <div style={{ fontSize:10, color:"#b0a890", textTransform:"uppercase", letterSpacing:1.5, marginBottom:12, fontWeight:700 }}>Aperçu devis</div>
+              <div style={{
+                background:"#fff", borderRadius:12, padding:"24px 28px",
+                color:"#111", fontSize:13, fontFamily:"inherit",
+                border:"1px solid #ede9e0",
+                boxShadow:"0 2px 8px rgba(0,0,0,.04)",
+              }}>
+                <div style={{ display:"flex", justifyContent:"space-between", marginBottom:18, paddingBottom:14, borderBottom:"1.5px solid #111" }}>
+                  <div>
+                    <div style={{ fontFamily:"'Sora',sans-serif", fontSize:20, fontWeight:800 }}>Nova Style</div>
+                    <div style={{ fontSize:11, color:"#888", marginTop:2 }}>07 07 07 47 48 · novastyle.ma</div>
+                  </div>
+                  <div style={{ textAlign:"right" }}>
+                    <div style={{ fontWeight:800, fontSize:16 }}>DEVIS</div>
+                    <div style={{ fontSize:11, color:"#777" }}>N° {devisNum}<br/>{todayStr}</div>
+                  </div>
+                </div>
+                {client.name && (
+                  <div style={{ background:"#f8f8f4", borderRadius:6, padding:"10px 14px", marginBottom:16 }}>
+                    <div style={{ fontWeight:700 }}>{client.name}</div>
+                    {client.phone && <div style={{ color:"#666", fontSize:12 }}>📞 {client.phone}</div>}
+                    {client.city  && <div style={{ color:"#666", fontSize:12 }}>📍 {client.city}</div>}
+                  </div>
+                )}
+                {lines.map((l,i) => (
+                  <div key={i} style={{ display:"flex", justifyContent:"space-between", padding:"7px 0", borderBottom:"1px solid #f0ede6", fontSize:12 }}>
+                    <div style={{ fontWeight:700 }}>{l.label}</div>
+                    <div style={{ color:"#888" }}>{fmt(l.amount)} dh</div>
+                  </div>
+                ))}
+                <div style={{ marginTop:12, background:"#f4f4f0", borderRadius:6, padding:"8px 12px", fontSize:11, color:"#888" }}>
+                  {cfg.w}×{cfg.h} cm · {TYPE_LABELS[cfg.type]} {cfg.thickness}mm{cfg.cadre?" · Avec cadre":" · Sans cadre"}
+                  {cfg.finition==="biseaute"?" · Bords biseautés":" · Bords polis droits"}
+                  {cfg.antifog?" · Anti-buée":""}{cfg.sablage?" · Sablage":""}{cfg.led?" · LED":""}
+                </div>
+                <div style={{ marginTop:14, background:"#f4f4f0", borderRadius:10, padding:"14px 18px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                  <div>
+                    <div style={{ fontWeight:800, fontSize:16 }}>Total TTC</div>
+                    <div style={{ fontSize:11, color:"#888", marginTop:3 }}>
+                      {prixDevis > 0 ? `Acompte 50% : ${fmt(prixDevis*0.5)} dh` : "Acompte 50% : — dh"}
+                    </div>
+                  </div>
+                  <div style={{ fontFamily:"'Sora',sans-serif", fontSize:26, fontWeight:800 }}>
+                    {prixDevis > 0 ? `${fmt(prixDevis)} dh` : "— dh"}
+                  </div>
+                </div>
+                {client.note && (
+                  <div style={{ marginTop:12, padding:"10px 14px", background:"#fafaf8", borderRadius:6, fontSize:12, color:"#666" }}>
+                    <strong>Note : </strong>{client.note}
+                  </div>
+                )}
+                <div style={{ display:"flex", gap:24, marginTop:18 }}>
+                  <div style={{ flex:1, borderTop:"1px solid #ddd", paddingTop:6, fontSize:10, color:"#ccc" }}>Signature client</div>
+                  <div style={{ flex:1, borderTop:"1px solid #ddd", paddingTop:6, fontSize:10, color:"#ccc" }}>Cachet & Signature Nova Style</div>
+                </div>
+                <div style={{ marginTop:14, fontSize:10, color:"#ccc", borderTop:"1px solid #eee", paddingTop:10, display:"flex", justifyContent:"space-between", flexWrap:"wrap", gap:4 }}>
+                  <span>Fabrication 5–10 jours ouvrés · Garantie 3 ans</span>
+                  <span>Verre AGC Belgique · Casablanca</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── MAIN APP ──
+    const INIT = {
+      w:80, h:100, type:"clair", thickness:"6",
+      antifog:false, sablage:false, led:false, cadre:false,
+      finition:"simple", installation:false,
+    };
+
+    function reducer(state, action) {
+      switch (action.type) {
+        case "SET":    return { ...state, [action.key]: action.value };
+        case "TOGGLE": return { ...state, [action.key]: !state[action.key] };
+        case "LOAD":   return { ...action.cfg };
+        default:       return state;
+      }
+    }
+
+    function App() {
+      const [cfg, dispatch] = useReducer(reducer, INIT);
+      const [devisOpen, setDevisOpen] = useState(false);
+      const [savedConfigs, setSaved]  = useState(() => {
+        try { return JSON.parse(localStorage.getItem("ns-configs") || "[]"); } catch { return []; }
+      });
+      const [saveName, setSaveName] = useState("");
+      const [toast, setToast]       = useState({ msg:"", visible:false });
+      const toastTimer = useRef(null);
+      const calc = useCalc(cfg);
+
+      const showToast = (msg) => {
+        clearTimeout(toastTimer.current);
+        setToast({ msg, visible:true });
+        toastTimer.current = setTimeout(() => setToast(p => ({ ...p, visible:false })), 3000);
+      };
+
+      const saveConfig = () => {
+        const name = saveName.trim() || `Config ${savedConfigs.length + 1}`;
+        const updated = [...savedConfigs, { name, cfg }];
+        setSaved(updated);
+        localStorage.setItem("ns-configs", JSON.stringify(updated));
+        setSaveName("");
+        showToast(`"${name}" sauvegardé`);
+      };
+
+      const deleteConfig = (i) => {
+        const updated = savedConfigs.filter((_,idx) => idx !== i);
+        setSaved(updated);
+        localStorage.setItem("ns-configs", JSON.stringify(updated));
+      };
+
+      const loadConfig  = (c) => { dispatch({ type:"LOAD", cfg:c }); showToast("Configuration chargée"); };
+      const set         = (key) => (value) => dispatch({ type:"SET", key, value });
+      const toggle      = (key) => () => dispatch({ type:"TOGGLE", key });
+      const setNum      = (key) => (e) => dispatch({ type:"SET", key, value:Math.max(1, parseInt(e.target.value)||1) });
+
+      const { surface, perimeter, priceM2, revient, prixMin, prixPublic, lines } = calc;
+
+      const shareUrl = () => {
+        const params = new URLSearchParams(cfg);
+        navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?${params}`);
+        showToast("Lien copié dans le presse-papier");
+      };
+
+      useEffect(() => {
+        const p = new URLSearchParams(window.location.search);
+        if (p.has("type")) {
+          const loaded = {};
+          for (const [k,v] of p.entries()) {
+            if (["antifog","sablage","led","cadre","installation"].includes(k)) loaded[k] = v === "true";
+            else if (["w","h"].includes(k)) loaded[k] = parseInt(v);
+            else loaded[k] = v;
+          }
+          dispatch({ type:"LOAD", cfg:{ ...INIT, ...loaded } });
+        }
+      }, []);
+
+      const inputStyle = {
+        background:"none", border:"none", outline:"none", width:"100%",
+        color:"#2a2218", fontFamily:"inherit", fontSize:17, fontWeight:700,
+      };
+
+      const rowToggle = (key, label, detail) => (
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"10px 0", borderBottom:"1px solid #f0ede6" }}>
+          <div>
+            <span style={{ fontSize:13, color:"#555" }}>{label}</span>
+            {detail && <div style={{ fontSize:11, color:"#c0b898", marginTop:2 }}>{detail}</div>}
+          </div>
+          <Toggle on={cfg[key]} onToggle={toggle(key)} />
+        </div>
+      );
+
+      return (
+        <>
+          <div style={{ maxWidth:920, margin:"0 auto", padding:"36px 16px 80px", animation:"fadeIn .4s ease" }}>
+
+            {/* ── HEADER ── */}
+            <div style={{ marginBottom:32, display:"flex", alignItems:"flex-end", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
+              <div>
+                <div style={{ fontSize:10, color:"#c8a84a", letterSpacing:3, textTransform:"uppercase", marginBottom:6, fontWeight:700 }}>Nova Style</div>
+                <div style={{ fontFamily:"'Sora',sans-serif", fontSize:30, fontWeight:800, lineHeight:1.15, color:"#1a1510" }}>
+                  Calculateur<br/>de Prix Miroir
+                </div>
+              </div>
+              <div style={{ fontSize:11, color:"#c0b898", textAlign:"right", lineHeight:1.7 }}>
+                07 07 07 47 48<br/>novastyle.ma
+              </div>
+            </div>
+
+            <div style={{ display:"flex", gap:20, flexWrap:"wrap", alignItems:"flex-start" }}>
+
+              {/* ══ LEFT COLUMN ══ */}
+              <div style={{ flex:"1 1 350px", display:"flex", flexDirection:"column", gap:14 }}>
+
+                {/* DIMENSIONS */}
+                <Panel label="Dimensions">
+                  <div style={{ display:"flex", gap:12 }}>
+                    {[["Largeur","w"],["Hauteur","h"]].map(([lbl,key]) => (
+                      <div key={key} style={{ flex:1 }}>
+                        <div style={{ fontSize:10, color:"#b0a890", marginBottom:6, textTransform:"uppercase", letterSpacing:1, fontWeight:700 }}>{lbl}</div>
+                        <div style={{ display:"flex", alignItems:"center", gap:6, background:"#fafaf8", border:"1.5px solid #e0ddd6", borderRadius:8, padding:"8px 12px" }}>
+                          <input type="number" min="1" max="600" value={cfg[key]} onChange={setNum(key)} style={inputStyle} />
+                          <span style={{ color:"#c8c4b8", fontSize:12 }}>cm</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop:12, display:"flex", gap:12 }}>
+                    {[["Surface",`${(surface).toFixed(2)} m²`],["Périmètre",`${(perimeter).toFixed(2)} ml`]].map(([lbl,val]) => (
+                      <div key={lbl} style={{ flex:1, background:"#fafaf8", borderRadius:8, padding:"8px 12px", border:"1px solid #ede9e0" }}>
+                        <div style={{ fontSize:10, color:"#b0a890", textTransform:"uppercase", letterSpacing:1, fontWeight:700 }}>{lbl}</div>
+                        <div style={{ fontSize:15, fontWeight:700, color:"#555", marginTop:2 }}>{val}</div>
+                      </div>
+                    ))}
+                  </div>
+                </Panel>
+
+                {/* TYPE */}
+                <Panel label="Type de verre">
+                  <ChipGroup
+                    options={[{value:"clair",label:"Clair"},{value:"bronze",label:"Bronze"},{value:"gris",label:"Gris"}]}
+                    value={cfg.type} onChange={set("type")}
+                  />
+                </Panel>
+
+                {/* ÉPAISSEUR */}
+                <Panel label="Épaisseur">
+                  <ChipGroup
+                    options={[{value:"4",label:"4 mm"},{value:"6",label:"6 mm"}]}
+                    value={cfg.thickness} onChange={set("thickness")}
+                  />
+                  <div style={{ marginTop:8, fontSize:12, color:"#b0a890" }}>
+                    Tarif matière : <span style={{ color:"#888", fontWeight:700 }}>{priceM2} dh/m²</span>
+                  </div>
+                </Panel>
+
+                {/* FINITION */}
+                <Panel label="Finition des bords">
+                  <ChipGroup
+                    options={[{value:"simple",label:"Simple"},{value:"biseaute",label:"Biseauté · 55 dh/ml"}]}
+                    value={cfg.finition} onChange={set("finition")}
+                  />
+                </Panel>
+
+                {/* OPTIONS */}
+                <Panel label="Options">
+                  {rowToggle("antifog","Anti-buée",`${surface <= 1.2 ? "70" : "140"} dh · ${surface <= 1.2 ? "1 résistance" : "2 résistances"}`)}
+                  {rowToggle("sablage","Sablage",`${fmt(surface * 80)} dh · ${(surface).toFixed(2)} m² × 80 dh/m²`)}
+                  {rowToggle("led","Éclairage LED",`${fmt(perimeter * 13)} dh · ${(perimeter).toFixed(2)} ml × 13 dh/ml`)}
+                  <div style={{ padding:"10px 0", borderBottom:"1px solid #f0ede6" }}>
+                    <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+                      <div>
+                        <span style={{ fontSize:13, color:"#555" }}>Cadre</span>
+                        <div style={{ fontSize:11, color:"#c0b898", marginTop:2 }}>{fmt(surface * 300)} dh · 300 dh/m²</div>
+                      </div>
+                      <Toggle on={cfg.cadre} onToggle={toggle("cadre")} />
+                    </div>
+                  </div>
+                  <div style={{ padding:"10px 0" }}>
+                    <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+                      <div>
+                        <span style={{ fontSize:13, color:"#555" }}>Installation à domicile</span>
+                        <div style={{ fontSize:11, color:"#c0b898", marginTop:2 }}>80 dh · Casablanca</div>
+                      </div>
+                      <Toggle on={cfg.installation} onToggle={toggle("installation")} />
+                    </div>
+                    {!cfg.installation && (
+                      <div style={{ marginTop:8, padding:"7px 11px", background:"#fafaf8", borderRadius:7, fontSize:11, color:"#aaa", border:"1px solid #ede9e0" }}>
+                        Livraison : <span style={{ color:"#888", fontWeight:700 }}>{surface <= 1.3 ? "50" : "90"} dh</span>
+                        <span style={{ color:"#c8c4b8" }}> · surface {surface <= 1.3 ? "≤" : ">"} 1.3 m²</span>
+                      </div>
+                    )}
+                  </div>
+                </Panel>
+
+                {/* SAVE/LOAD */}
+                <Panel label="Configurations sauvegardées">
+                  <div style={{ display:"flex", gap:8, marginBottom:12 }}>
+                    <input
+                      type="text" placeholder="Nom de la config…" value={saveName}
+                      onChange={e => setSaveName(e.target.value)}
+                      style={{
+                        flex:1, background:"#fafaf8", border:"1.5px solid #e0ddd6",
+                        borderRadius:8, padding:"7px 12px", color:"#333",
+                        fontFamily:"inherit", fontSize:12, outline:"none",
+                      }}
+                    />
+                    <button onClick={saveConfig} style={{
+                      padding:"7px 14px", borderRadius:8, cursor:"pointer",
+                      background:"#f0f8e8", color:"#5a9020", fontSize:12, fontWeight:700,
+                      border:"1px solid #c8e0a0",
+                    }}>Sauvegarder</button>
+                  </div>
+                  <SavedConfigs configs={savedConfigs} onLoad={loadConfig} onDelete={deleteConfig} />
+                  {!savedConfigs.length && (
+                    <div style={{ fontSize:11, color:"#c8c4b8", textAlign:"center", padding:"8px 0" }}>Aucune configuration sauvegardée</div>
+                  )}
+                </Panel>
+
+                {/* MIRROR PREVIEW */}
+                <Panel label="Aperçu miroir">
+                  <MirrorPreview cfg={cfg} />
+                </Panel>
+
+              </div>{/* end left */}
+
+              {/* ══ RIGHT COLUMN ══ */}
+              <div style={{ flex:"0 0 268px", display:"flex", flexDirection:"column", gap:14 }}>
+
+                {/* COST DETAIL */}
+                <Panel label="Détail des coûts">
+                  {lines.map((l,i) => (
+                    <div key={i} style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", padding:"8px 0", borderBottom:"1px solid #f0ede6" }}>
+                      <div>
+                        <div style={{ fontSize:12, color:"#777", fontWeight:700 }}>{l.label}</div>
+                        {l.detail && <div style={{ fontSize:10, color:"#b8b4a8", marginTop:2, lineHeight:1.4 }}>{l.detail}</div>}
+                      </div>
+                      <span style={{ fontSize:12, fontWeight:700, color:"#555", flexShrink:0, marginLeft:8 }}>
+                        <AnimNum value={l.amount} /> dh
+                      </span>
+                    </div>
+                  ))}
+                </Panel>
+
+                {/* PRICING */}
+                <Panel label="Tarification">
+                  <div style={{ background:"#fafaf8", border:"1px solid #e8e4da", borderRadius:10, padding:"12px 16px", marginBottom:10 }}>
+                    <div style={{ fontSize:10, color:"#b8b4a8", textTransform:"uppercase", letterSpacing:1.5, marginBottom:4, fontWeight:700 }}>
+                      <span style={{ display:"inline-block", width:6, height:6, borderRadius:3, background:"#d0ccc0", marginRight:6, verticalAlign:"middle" }} />
+                      Prix de revient
+                    </div>
+                    <div style={{ fontFamily:"'Sora',sans-serif", fontWeight:800, fontSize:22, color:"#999" }}>
+                      <AnimNum value={revient} /> <span style={{ fontSize:12, color:"#bbb", fontWeight:600 }}>dh</span>
+                    </div>
+                    <div style={{ fontSize:10, color:"#c8c4b8", marginTop:4 }}>Coût de production réel (interne)</div>
+                  </div>
+
+                  <div style={{ background:"#f4fbec", border:"1px solid #d0e8a8", borderRadius:10, padding:"12px 16px", marginBottom:10 }}>
+                    <div style={{ fontSize:10, color:"#6a9030", textTransform:"uppercase", letterSpacing:1.5, marginBottom:4, fontWeight:700 }}>
+                      <span style={{ display:"inline-block", width:6, height:6, borderRadius:3, background:"#8ac840", marginRight:6, verticalAlign:"middle" }} />
+                      Prix min. de vente
+                    </div>
+                    <div style={{ fontFamily:"'Sora',sans-serif", fontWeight:800, fontSize:26, color:"#5a9020" }}>
+                      <AnimNum value={prixMin} /> <span style={{ fontSize:13, color:"#8ab850", fontWeight:600 }}>dh</span>
+                    </div>
+                    <div style={{ fontSize:10, color:"#98c068", marginTop:4 }}>Prix de revient × 1.5 · marge 33%</div>
+                  </div>
+
+                  <div style={{ background:"#fdf8ec", border:"1.5px solid #e8d090", borderRadius:10, padding:"12px 16px" }}>
+                    <div style={{ fontSize:10, color:"#a08030", textTransform:"uppercase", letterSpacing:1.5, marginBottom:4, fontWeight:700 }}>
+                      <span style={{ display:"inline-block", width:6, height:6, borderRadius:3, background:"#c8a84a", marginRight:6, verticalAlign:"middle" }} />
+                      Prix public
+                    </div>
+                    <div style={{ fontFamily:"'Sora',sans-serif", fontWeight:800, fontSize:30, color:"#9a7018" }}>
+                      <AnimNum value={prixPublic} /> <span style={{ fontSize:14, color:"#c8a040", fontWeight:600 }}>dh</span>
+                    </div>
+                    <div style={{ fontSize:10, color:"#c0a050", marginTop:4 }}>Prix de revient × 2.1 · marge 52%</div>
+                  </div>
+                </Panel>
+
+                {/* ACTIONS */}
+                <button
+                  onClick={() => setDevisOpen(true)}
+                  style={{
+                    width:"100%", padding:14, borderRadius:12,
+                    background:"linear-gradient(135deg, #e8c96d, #c8a840)",
+                    border:"none", cursor:"pointer",
+                    fontFamily:"'Sora',sans-serif", fontSize:15, fontWeight:700, color:"#3a2800",
+                    display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+                    transition:"opacity .15s, transform .15s",
+                    boxShadow:"0 4px 16px rgba(180,140,40,.3)",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.opacity=".88"; e.currentTarget.style.transform="translateY(-1px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.opacity="1"; e.currentTarget.style.transform="translateY(0)"; }}
+                >
+                  🖨️ Générer devis client
+                </button>
+
+                <button
+                  onClick={shareUrl}
+                  style={{
+                    width:"100%", padding:12, borderRadius:12,
+                    background:"#fff", border:"1.5px solid #e0ddd6",
+                    cursor:"pointer", color:"#aaa",
+                    fontFamily:"inherit", fontSize:13, fontWeight:600,
+                    transition:"border-color .15s, color .15s",
+                    boxShadow:"0 1px 4px rgba(0,0,0,.04)",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor="#c8a84a"; e.currentTarget.style.color="#9a7828"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor="#e0ddd6"; e.currentTarget.style.color="#aaa"; }}
+                >
+                  🔗 Partager la configuration
+                </button>
+
+              </div>{/* end right */}
+
+            </div>
+          </div>
+
+          <DevisModal open={devisOpen} onClose={() => setDevisOpen(false)} calc={calc} cfg={cfg} />
+          <Toast msg={toast.msg} visible={toast.visible} />
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
