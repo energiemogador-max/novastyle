@@ -1,219 +1,187 @@
 /**
- * product-page-enhancer.js
- * Upgrades all product pages with:
- *  1. "Commander maintenant" primary CTA (full-width, bold)
- *  2. Deposit hint line (50% à la commande)
- *  3. 4-step prepayment trust block
- *  4. Trust badge strip below CTA
+ * product-page-enhancer.js — Impeccable edition
+ * Applied to all product pages. Uses only design system tokens (var(--*)).
+ * 1. Upgrade add-to-cart button style
+ * 2. Trust micro-strip (guaranteed, delivery, AGC)
+ * 3. Sticky WA floating button on mobile
+ * 4. Gallery fade-in handler
  */
 (function () {
-  if (!document.querySelector('.product-info, .product-page, [class*="product"]')) return;
+  if (!document.querySelector('.product-info, .product-page')) return;
 
-  // ── Styles ────────────────────────────────────────────────────────────────
   const css = `
-  /* ── Commander button ─────────────────────────────── */
+  /* ── Add to cart button ── */
   #add-to-cart-btn {
     width: 100%;
-    font-size: 16px !important;
+    font-size: 1rem !important;
     font-weight: 700 !important;
-    padding: 16px 24px !important;
-    border-radius: 10px !important;
+    padding: 15px 24px !important;
+    border-radius: var(--radius-pill) !important;
     letter-spacing: 0.01em;
-    box-shadow: 0 4px 18px rgba(107,41,41,.22);
+    background: var(--brand) !important;
+    color: var(--surface) !important;
+    border: none !important;
+    cursor: pointer;
     transition: opacity .15s, transform .1s !important;
+    min-height: 52px !important;
   }
   #add-to-cart-btn:hover { opacity: .92; transform: translateY(-1px); }
   #add-to-cart-btn:active { transform: translateY(0); }
 
-  /* ── Deposit hint line ────────────────────────────── */
+  /* ── Deposit hint ── */
   .ns-deposit-hint {
-    font-size: 13px;
-    color: #555;
-    margin: 6px 0 14px;
-    background: #f8f4ff;
-    border: 1px solid #e2d8f5;
-    border-radius: 7px;
+    font-size: 0.8125rem;
+    color: var(--text-soft);
+    margin: 8px 0 16px;
+    background: var(--brand-dim);
+    border: 1px solid oklch(38% 0.12 28 / 0.15);
+    border-radius: var(--radius);
     padding: 9px 14px;
     line-height: 1.5;
   }
-  .ns-deposit-hint strong { color: #6b2929; font-size: 14px; }
+  .ns-deposit-hint strong { color: var(--brand); }
 
-  /* ── Trust badge strip ────────────────────────────── */
-  .ns-trust-strip-mini {
+  /* ── Trust micro-strip ── */
+  .ns-trust-micro {
     display: flex;
-    gap: 8px;
     flex-wrap: wrap;
-    margin: 10px 0 0;
+    gap: 8px;
+    margin: 16px 0;
   }
-  .ns-trust-strip-mini span {
-    font-size: 11px;
+  .ns-trust-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 5px 10px;
+    font-size: 0.6875rem;
     font-weight: 600;
-    color: #444;
-    background: #f5f5f5;
-    border: 1px solid #e8e8e8;
-    border-radius: 20px;
-    padding: 4px 10px;
+    color: var(--text-soft);
     white-space: nowrap;
   }
 
-  /* ── Prepayment trust block ───────────────────────── */
-  .ns-prepayment-trust {
-    margin: 20px 0 10px;
-    background: linear-gradient(135deg,#fdfcff 0%,#f9f5ff 100%);
-    border: 1.5px solid #e0d4f5;
-    border-radius: 12px;
-    padding: 18px 20px;
-  }
-  .ns-prepayment-trust .pt-header {
-    font-size: 13px;
+  /* ── Floating WA btn (mobile only) ── */
+  .ns-float-wa {
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 16px;
+    z-index: 450;
+    background: var(--wa);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 12px 18px;
+    font-size: 0.875rem;
     font-weight: 700;
-    color: #6b2929;
-    margin-bottom: 12px;
-    display: flex;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 20px oklch(58% 0.18 148 / 0.35);
+    transition: transform .15s, opacity .15s;
     align-items: center;
-    gap: 7px;
+    gap: 6px;
+    font-family: var(--font-ui);
   }
-  .ns-prepayment-trust ol.pt-steps {
-    margin: 0 0 14px 0;
-    padding-left: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-  }
-  .ns-prepayment-trust ol.pt-steps li {
-    font-size: 13px;
-    color: #333;
-    line-height: 1.5;
-  }
-  .ns-prepayment-trust .pt-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    border-top: 1px solid #e8dff5;
-    padding-top: 12px;
-    margin-top: 2px;
-  }
-  .ns-prepayment-trust .pt-badges span {
-    font-size: 11px;
-    font-weight: 600;
-    color: #2a6b3a;
-    background: #f0faf3;
-    border: 1px solid #c8ecd2;
-    border-radius: 20px;
-    padding: 4px 10px;
+  .ns-float-wa:hover { transform: translateY(-2px); opacity: .95; }
+  @media (max-width: 768px) {
+    .ns-float-wa { display: inline-flex; }
   }
 
-  /* ── Mobile optimizations ─────────────────────────── */
-  @media (max-width: 600px) {
-    #add-to-cart-btn {
-      font-size: 15px !important;
-      padding: 14px 20px !important;
-    }
-
-    .ns-deposit-hint {
-      font-size: 12px;
-      padding: 8px 12px;
-      margin: 4px 0 12px;
-    }
-    .ns-deposit-hint strong {
-      font-size: 13px;
-    }
-
-    .ns-trust-strip-mini {
-      gap: 6px;
-      margin: 8px 0 0;
-    }
-    .ns-trust-strip-mini span {
-      font-size: 10px;
-      padding: 3px 8px;
-    }
-
-    .ns-prepayment-trust {
-      margin: 16px 0 8px;
-      padding: 14px 16px;
-      border-radius: 10px;
-    }
-    .ns-prepayment-trust .pt-header {
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
-    .ns-prepayment-trust ol.pt-steps {
-      padding-left: 16px;
-      gap: 6px;
-    }
-    .ns-prepayment-trust ol.pt-steps li {
-      font-size: 12px;
-      line-height: 1.4;
-    }
-    .ns-prepayment-trust .pt-badges {
-      gap: 6px;
-      padding-top: 10px;
-    }
-    .ns-prepayment-trust .pt-badges span {
-      font-size: 10px;
-      padding: 3px 8px;
-    }
+  /* ── Gallery fade-in ── */
+  .product-gallery img#main-img {
+    opacity: 0;
+    transition: opacity .25s ease-out;
+    background: var(--surface-2);
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
   }
+  .product-gallery img#main-img.loaded { opacity: 1; }
   `;
-  const styleEl = document.createElement('style');
-  styleEl.textContent = css;
-  document.head.appendChild(styleEl);
 
-  // ── Rename button ─────────────────────────────────────────────────────────
-  const btn = document.getElementById('add-to-cart-btn');
-  if (btn) {
-    btn.textContent = 'Commander maintenant';
-  }
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
 
-  // ── Inject deposit hint after price element ───────────────────────────────
-  const priceEl = document.getElementById('current-price');
-  if (priceEl && !document.getElementById('ns-deposit-hint')) {
-    priceEl.insertAdjacentHTML('afterend',
-      '<div class="ns-deposit-hint" id="ns-deposit-hint">Réservez avec <strong>50% à la commande</strong> — solde en cash à la livraison après inspection</div>'
-    );
-  }
-
-  // ── Inject trust strip + prepayment block after .p-cta ────────────────────
-  const ctaDiv = document.querySelector('.p-cta');
-  if (ctaDiv && !document.querySelector('.ns-prepayment-trust')) {
-    ctaDiv.insertAdjacentHTML('afterend', `
-<div class="ns-trust-strip-mini">
-  <span>🇧🇪 Verre AGC Belgique</span>
-  <span>🏭 Fabriqué Casablanca</span>
-  <span>🛡️ Garantie 3 ans</span>
-  <span>✔ Atelier visitable</span>
-</div>
-<div class="ns-prepayment-trust">
-  <div class="pt-header">🔐 Comment fonctionne votre commande</div>
-  <ol class="pt-steps">
-    <li>Vous payez <strong>50% maintenant</strong> pour lancer la fabrication sur mesure</li>
-    <li>Votre miroir est fabriqué dans notre atelier en <strong>5 à 7 jours</strong></li>
-    <li>Vous recevez <strong>3 photos de validation</strong> avant l'expédition</li>
-    <li>Vous réglez les <strong>50% restants à la livraison</strong>, après inspection</li>
-  </ol>
-  <div class="pt-badges">
-    <span>✅ Facture officielle</span>
-    <span>✅ Garantie 3 ans</span>
-    <span>✅ Échange immédiat si défaut</span>
-    <span>✅ Atelier Bd Oued Sebou, Casa</span>
-  </div>
-</div>`
-    );
-  }
-
-  // ── Enhanced thumbs functionality ───────────────────────────────────────
-  const thumbs = document.querySelectorAll('.thumbs img');
+  // ── Gallery ───────────────────────────────────────────────────────────────
   const mainImg = document.getElementById('main-img');
-  if (thumbs.length && mainImg) {
-    thumbs.forEach((thumb, index) => {
-      if (index === 0) thumb.classList.add('active');
-      
-      const originalOnClick = thumb.onclick;
-      thumb.onclick = function() {
-        if (originalOnClick) originalOnClick.call(this);
-        thumbs.forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-      };
+  if (mainImg) {
+    function markLoaded() { mainImg.classList.add('loaded'); }
+    if (mainImg.complete) markLoaded();
+    else mainImg.addEventListener('load', markLoaded);
+
+    // Thumb click
+    document.querySelectorAll('.thumbs img').forEach(function(thumb) {
+      thumb.style.display = '';
+      thumb.addEventListener('click', function() {
+        document.querySelectorAll('.thumbs img').forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+        mainImg.classList.remove('loaded');
+        mainImg.src = thumb.src;
+        mainImg.addEventListener('load', function onLoad() {
+          mainImg.classList.add('loaded');
+          mainImg.removeEventListener('load', onLoad);
+        });
+      });
+      if (thumb.src === mainImg.src) thumb.classList.add('active');
     });
+
+    // Show thumbs container
+    const thumbsEl = document.querySelector('.thumbs');
+    if (thumbsEl) thumbsEl.style.display = '';
+  }
+
+  // ── Trust micro-strip ─────────────────────────────────────────────────────
+  const infoEl = document.querySelector('.product-info');
+  if (infoEl) {
+    const trust = document.createElement('div');
+    trust.className = 'ns-trust-micro';
+    trust.innerHTML = `
+      <span class="ns-trust-pill">🇧🇪 Verre AGC Belgique</span>
+      <span class="ns-trust-pill">💧 Anti-buée 3 ans</span>
+      <span class="ns-trust-pill">🚚 Livraison gratuite</span>
+      <span class="ns-trust-pill">🏭 Fabriqué à Casablanca</span>`;
+    const priceEl = document.getElementById('current-price');
+    if (priceEl) priceEl.after(trust);
+    else infoEl.appendChild(trust);
+
+    // Deposit hint
+    const depositHint = document.createElement('div');
+    depositHint.className = 'ns-deposit-hint';
+    depositHint.innerHTML = '<strong>💡 Acompte 50%</strong> à la commande — solde à la livraison ou installation.';
+    const ctaEl = document.querySelector('.p-cta');
+    if (ctaEl) ctaEl.before(depositHint);
+  }
+
+  // ── Floating WA ───────────────────────────────────────────────────────────
+  const WA = '212635228074';
+  const waBtn = document.getElementById('wa-order-btn');
+  const waHref = waBtn ? waBtn.href : `https://wa.me/${WA}`;
+  const floatWA = document.createElement('a');
+  floatWA.className = 'ns-float-wa';
+  floatWA.href = waHref;
+  floatWA.target = '_blank';
+  floatWA.rel = 'noopener';
+  floatWA.innerHTML = '💬 Commander';
+  document.body.appendChild(floatWA);
+
+  // Sync href with variant selection
+  if (waBtn) {
+    new MutationObserver(() => { floatWA.href = waBtn.href; })
+      .observe(waBtn, { attributes: true, attributeFilter: ['href'] });
+  }
+
+  // Hide when cart CTA is visible on screen
+  if ('IntersectionObserver' in window) {
+    const ctaEl = document.querySelector('.p-cta');
+    if (ctaEl) {
+      new IntersectionObserver(([entry]) => {
+        floatWA.style.opacity = entry.isIntersecting ? '0' : '1';
+        floatWA.style.pointerEvents = entry.isIntersecting ? 'none' : 'auto';
+      }, { threshold: 0.5 }).observe(ctaEl);
+    }
   }
 })();
