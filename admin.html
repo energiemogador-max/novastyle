@@ -6962,16 +6962,24 @@
 
       const ghToken = localStorage.getItem('nova_gh_pat') || localStorage.getItem('nova_github_token') || '';
       if (!ghToken) {
-        settingsStatus('⚠️ Configure d\'abord le token GitHub PAT dans l\'onglet Accueil.', '#e8194b');
+        settingsStatus('⚠️ Configure d\'abord le token GitHub PAT dans l\'onglet Accueil.', '#f59e0b');
         btn.disabled = false; return;
       }
 
-      settingsStatus('⏳ Lecture des settings…', '#6b7280');
+      settingsStatus('⏳ Lecture des settings Firebase…', '#6b7280');
       try {
         const res = await fetch(`${DB_REST}/settings.json`);
         if (!res.ok) throw new Error('Impossible de lire les settings Firebase.');
         const s = await res.json();
-        if (!s) throw new Error('Enregistrez d\'abord les settings dans Firebase.');
+        if (!s) throw new Error('Enregistrez d\'abord les settings puis réessayez.');
+
+        // Wait for _ghPutFile to be ready
+        let waited = 0;
+        while (!window._ghPutFile && waited < 30) {
+          await new Promise(r => setTimeout(r, 100));
+          waited++;
+        }
+        if (!window._ghPutFile) throw new Error('GitHub writer non disponible — rechargez la page.');
 
         const files = [
           { path: 'assets/footer.js', content: buildFooterJs(s) },
@@ -6979,16 +6987,16 @@
         ];
 
         for (const file of files) {
-          settingsStatus(`⏳ Commit ${file.path}…`, '#6b7280');
-          // get current sha
+          settingsStatus(`⏳ Mise à jour de ${file.path}…`, '#6b7280');
           const getR = await fetch(`https://api.github.com/repos/${REPO}/contents/${file.path}`, {
             headers: { Authorization: `token ${ghToken}`, Accept: 'application/vnd.github+json' }
           });
+          if (!getR.ok && getR.status !== 404) throw new Error(`SHA fetch failed for ${file.path}: ${getR.status}`);
           const existing = getR.ok ? await getR.json() : null;
           await window._ghPutFile(ghToken, file.path, file.content, `⚙️ Settings: update ${file.path}`, existing?.sha || null);
         }
 
-        settingsStatus('✅ footer.js + header.js mis à jour sur GitHub. Déploiement GitHub Pages en cours (1–2 min).', '#16a34a');
+        settingsStatus('✅ footer.js + header.js mis à jour. GitHub Pages redéploie en 1–2 min.', '#16a34a');
       } catch (e) {
         settingsStatus('❌ ' + e.message, '#e8194b');
       } finally { btn.disabled = false; }
@@ -7018,19 +7026,38 @@
         if (!res.ok) throw new Error(`Firebase HTTP ${res.status}`);
         updateAdsBadges();
 
-        // Also write static ads_config.json to GitHub so ads-loader.js can read it without auth
+        // Write static ads_config.json to GitHub so ads-loader.js can read it
         const ghToken = localStorage.getItem('nova_github_token') || localStorage.getItem('nova_gh_pat');
-        if (ghToken && window._ghPutFile) {
-          try {
-            await window._ghPutFile(ghToken, 'ads_config.json', JSON.stringify(cfg, null, 2), 'Update ads_config.json', null);
-          } catch (ghErr) {
-            console.warn('ads_config.json GitHub write failed:', ghErr);
+        if (ghToken) {
+          // Ensure _ghPutFile is available (second module may not have run yet — wait up to 3s)
+          let waited = 0;
+          while (!window._ghPutFile && waited < 30) {
+            await new Promise(r => setTimeout(r, 100));
+            waited++;
           }
+          if (!window._ghPutFile) throw new Error('GitHub writer not ready — rechargez la page.');
+          try {
+            statusEl.style.color = '#6b7280';
+            statusEl.textContent = '⏳ Publication GitHub en cours…';
+            // Fetch current SHA (required to update existing file)
+            const shaRes = await fetch(`https://api.github.com/repos/${REPO}/contents/ads_config.json`, {
+              headers: { Authorization: `token ${ghToken}`, Accept: 'application/vnd.github+json' }
+            });
+            const shaData = shaRes.ok ? await shaRes.json() : null;
+            const currentSha = shaData?.sha || null;
+            await window._ghPutFile(ghToken, 'ads_config.json', JSON.stringify(cfg, null, 2), '📣 Update ads pixels config', currentSha);
+            statusEl.style.color = '#16a34a';
+            statusEl.textContent = '✅ Pixels sauvegardés et publiés sur GitHub !';
+          } catch (ghErr) {
+            statusEl.style.color = '#f59e0b';
+            statusEl.textContent = '⚠️ Firebase OK — GitHub échoué: ' + ghErr.message;
+            console.error('ads_config.json GitHub write failed:', ghErr);
+          }
+        } else {
+          statusEl.style.color = '#f59e0b';
+          statusEl.textContent = '⚠️ Pixels sauvegardés Firebase — GitHub non configuré (saisir PAT dans l\'onglet Accueil)';
         }
-
-        statusEl.style.color = '#16a34a';
-        statusEl.textContent = '✅ Pixels sauvegardés et déployés automatiquement !';
-        setTimeout(() => { statusEl.textContent = ''; }, 4000);
+        setTimeout(() => { statusEl.textContent = ''; }, 6000);
       } catch (e) {
         statusEl.style.color = '#e8194b';
         statusEl.textContent = '❌ ' + e.message;
