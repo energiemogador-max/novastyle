@@ -267,8 +267,8 @@
   min-height: 48px;
 }
 .btn-checkout:hover { opacity: .9; }
-.btn-whatsapp { background: var(--wa); color: #fff; }
-.btn-form { background: var(--surface-2); border: 1px solid var(--border-strong); color: var(--text); }
+
+.btn-form { background: #25a244; border: none; color: #fff; }
 
 .trust-micro {
   display: flex;
@@ -624,11 +624,8 @@ function renderCheckoutButtons(cart, total, fmt) {
   const waUrl = `https://wa.me/${WA}?text=${waText}`;
 
   el.innerHTML = `
-    <a href="${waUrl}" target="_blank" rel="noopener" class="btn-checkout btn-whatsapp">
-      💬 Commander via WhatsApp
-    </a>
     <button type="button" class="btn-checkout btn-form" id="open-form-btn">
-      📝 Formulaire de commande
+      📝 Remplir le formulaire
     </button>`;
 
   document.getElementById('open-form-btn').addEventListener('click', e => {
