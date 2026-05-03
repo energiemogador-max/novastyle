@@ -4263,16 +4263,16 @@
 
       async function getStorePhone() {
         try { const r = await fetch(DB_REST+'/settings/whatsapp.json'); if (r.ok) { const v = await r.json(); if (v) return String(v); } } catch(e) {}
-        return '212635228074';
+        return '212709344943';
       }
       async function getStorePhoneDisplay() {
         try { const r = await fetch(DB_REST+'/settings/phoneDisplay.json'); if (r.ok) { const v = await r.json(); if (v) return String(v); } } catch(e) {}
-        return '06 35 22 80 74';
+        return '07 09 34 49 43';
       }
 
       function patchHTML(html, products, waPhone, phoneDisplay) {
-        const wa  = waPhone || '212635228074';
-        const tel = phoneDisplay || '06 35 22 80 74';
+        const wa  = waPhone || '212709344943';
+        const tel = phoneDisplay || '07 09 34 49 43';
         const featured = products.filter(p => p.featured);
         const regular  = products.filter(p => !p.featured);
         const ordered  = [...featured, ...regular];
@@ -4310,7 +4310,7 @@
         CATS.forEach(c => setCat(c.id, 'wait'));
 
         let errors = 0;
-        let waPhone = '212635228074', phoneDisplay = '06 35 22 80 74';
+        let waPhone = '212709344943', phoneDisplay = '07 09 34 49 43';
         try {
           // ① Fetch phone from settings
           log('📱 Lecture du numéro depuis Firebase Settings…', 'info');
@@ -5826,7 +5826,7 @@
           if (phone && total > 0) {
             const intl = phone.replace(/[^0-9]/g,"").replace(/^0/,"212");
             const itemsSummary = items.map(it => `• ${it.name}${it.variant?' ('+it.variant+')':''} × ${it.quantity} = ${it.lineTotal?.toLocaleString('fr-MA')} MAD`).join('\n');
-            const msg = encodeURIComponent(`Bonjour ${name},\n\nVotre commande Nova Style a bien été enregistrée.\n\n${itemsSummary}\n\nTotal : ${total.toLocaleString("fr-MA")} MAD\nAcompte (50%) : ${Math.round(total*.5).toLocaleString("fr-MA")} MAD\n\nNous vous contacterons pour confirmer les détails.\n📞 +212635228074`);
+            const msg = encodeURIComponent(`Bonjour ${name},\n\nVotre commande Nova Style a bien été enregistrée.\n\n${itemsSummary}\n\nTotal : ${total.toLocaleString("fr-MA")} MAD\nAcompte (50%) : ${Math.round(total*.5).toLocaleString("fr-MA")} MAD\n\nNous vous contacterons pour confirmer les détails.\n📞 +212709344943`);
             if (confirm("Envoyer la confirmation au client par WhatsApp ?")) window.open(`https://wa.me/${intl}?text=${msg}`,"_blank");
           }
         }
@@ -6624,8 +6624,8 @@
     const SETTINGS_DEFAULTS = {
       storeName:    'Nova Style',
       tagline:      'Fabricant de miroirs — Casablanca',
-      whatsapp:     '212635228074',
-      phoneDisplay: '06 35 22 80 74',
+      whatsapp:     '212709344943',
+      phoneDisplay: '07 09 34 49 43',
       street:       'Bd Oued Sebou, Rue 13 N°24',
       city:         'Casablanca',
       postal:       '20000',

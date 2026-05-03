@@ -374,7 +374,7 @@
 
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 .modal-actions button { flex: 1; padding: 13px; border: none; border-radius: var(--radius-pill); font-weight: 700; cursor: pointer; font-size: 0.9375rem; font-family: var(--font-ui); min-height: 48px; }
-.btn-submit { background: var(--wa); color: #fff; }
+.btn-submit { background: var(--brand, #6b2929); color: #fff; }
 .btn-submit:hover { opacity: .9; }
 .btn-cancel { background: var(--surface-2); border: 1px solid var(--border-strong); color: var(--text); }
 .btn-cancel:hover { background: var(--surface-3); }
@@ -489,7 +489,7 @@
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-submit" type="button" onclick="submitOrder()">💬 Envoyer par WhatsApp</button>
+      <button class="btn-submit" type="button" onclick="submitOrder()">✅ Confirmer la commande</button>
       <button class="btn-cancel" onclick="closeOrderModal()">Annuler</button>
     </div>
   </div>
@@ -498,7 +498,7 @@
 <script src="/assets/footer.js" defer></script>
 <script type="module" src="/assets/cart.js"></script>
 <script>
-const WA = '212635228074';
+const WA = '212709344943';
 
 function waitForCart(cb) {
   if (typeof window.getCart === 'function') { cb(); return; }
